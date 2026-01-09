@@ -9,9 +9,9 @@ interface ContentSectionComponentProps {
 }
 
 export function ContentSectionComponent({ data }: ContentSectionComponentProps) {
-  const { label, heading, body, cta, image, layout = 'imageRight' } = data
+  const { labelText, heading, body, ctaText, ctaHref, image, imagePosition = 'right' } = data
 
-  const isReversed = layout === 'imageLeft'
+  const isReversed = imagePosition === 'left'
 
   return (
     <section className={styles.section}>
@@ -19,18 +19,18 @@ export function ContentSectionComponent({ data }: ContentSectionComponentProps) 
         {/* Image */}
         <div className={styles.imageWrapper}>
           {image?.asset && (
-            <Image src={urlFor(image).url()} alt={image.alt || heading} fill sizes="50vw" />
+            <Image src={urlFor(image).url()} alt={image.alt || heading || ''} fill sizes="50vw" />
           )}
         </div>
 
         {/* Content */}
         <div className={styles.content}>
-          {label && <span className={styles.label}>{label}</span>}
-          <h2 className={styles.heading}>{heading}</h2>
+          {labelText && <span className={styles.label}>{labelText}</span>}
+          {heading && <h2 className={styles.heading}>{heading}</h2>}
           {body && <p className={styles.body}>{body}</p>}
-          {cta?.label && cta?.href && (
-            <Link href={cta.href} className={styles.cta}>
-              {cta.label}
+          {ctaText && ctaHref && (
+            <Link href={ctaHref} className={styles.cta}>
+              {ctaText}
             </Link>
           )}
         </div>
