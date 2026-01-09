@@ -1,0 +1,37 @@
+/* ===========================================
+   Hero Section - Full width image
+   =========================================== */
+
+.container {
+  max-width: var(--container-max-width);
+  margin-inline: auto;
+  padding-inline: var(--container-padding);
+  padding-block: var(--space-lg);
+  position: relative;
+}
+
+.container::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: var(--container-padding);
+  right: var(--container-padding);
+  height: 1px;
+  background-color: var(--color-border);
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+.imageWrapper img {
+  object-fit: cover;
+}
+
+@media (max-width: 768px) {
+  .imageWrapper {
+    aspect-ratio: 4 / 3;
+  }
+}

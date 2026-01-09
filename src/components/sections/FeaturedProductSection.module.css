@@ -1,0 +1,211 @@
+.section {}
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding-inline: var(--container-padding);
+  position: relative;
+}
+
+.container::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: var(--container-padding);
+  right: var(--container-padding);
+  height: 1px;
+  background-color: var(--color-border);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  padding-left: 0;
+}
+
+.label {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 3rem;
+  color: var(--color-secondary);
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: var(--text-4xl);
+  font-weight: 400;
+  line-height: 1.1;
+  margin: 0 0 0.75rem 0;
+}
+
+.description {
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--color-secondary);
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+}
+
+.buttonRow {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.buttonPrimary,
+.buttonSecondary {
+  position: relative;
+  padding: var(--space-sm) var(--space-lg);
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  flex: 1;
+  overflow: hidden;
+  z-index: 1;
+  letter-spacing: 0;
+  transition: none;
+}
+
+.buttonPrimary:hover,
+.buttonSecondary:hover {
+  letter-spacing: 0.05em;
+}
+
+/* Left half */
+.buttonPrimary::before,
+.buttonSecondary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: none;
+  z-index: -1;
+}
+
+/* Right half */
+.buttonPrimary::after,
+.buttonSecondary::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: none;
+  z-index: -1;
+}
+
+/* Hover - both halves meet in middle */
+.buttonPrimary:hover::before,
+.buttonSecondary:hover::before {
+  transform: scaleX(1);
+  transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.buttonPrimary:hover::after,
+.buttonSecondary:hover::after {
+  transform: scaleX(1);
+  transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Primary button - black bg, accent on hover */
+.buttonPrimary {
+  color: var(--color-background);
+  border: 1px solid var(--color-foreground);
+  background-color: var(--color-foreground);
+}
+
+.buttonPrimary:hover {
+  transition:
+    color 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s,
+    letter-spacing 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.buttonPrimary::before,
+.buttonPrimary::after {
+  background-color: var(--color-accent);
+}
+
+/* Secondary button - transparent, black fill on hover */
+.buttonSecondary {
+  color: var(--color-foreground);
+  border: 1px solid var(--color-border);
+  background-color: transparent;
+}
+
+.buttonSecondary:hover {
+  color: var(--color-background);
+  text-decoration: none;
+  transition:
+    color 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s,
+    letter-spacing 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.buttonSecondary::before,
+.buttonSecondary::after {
+  background-color: var(--color-foreground);
+}
+
+.imageCol {
+  position: relative;
+  padding: var(--space-lg);
+  padding-right: 0;
+}
+
+/* Vertical separator line */
+.imageCol::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: var(--space-lg);
+  bottom: var(--space-lg);
+  width: 1px;
+  background-color: var(--color-border);
+}
+
+.image {
+  width: 100%;
+  height: auto;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+
+  .content {
+    padding: var(--space-lg) 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .imageCol {
+    padding: var(--space-lg) 0;
+  }
+
+  .imageCol::before {
+    display: none;
+  }
+
+  .title {
+    font-size: var(--text-3xl);
+  }
+}

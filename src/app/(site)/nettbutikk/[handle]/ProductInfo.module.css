@@ -1,0 +1,215 @@
+/* ===========================================
+   Product Info
+   =========================================== */
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: var(--text-4xl);
+  font-weight: 400;
+  margin: 0;
+  line-height: 1.1;
+}
+
+.price {
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  margin: 0;
+}
+
+.description {
+  font-size: var(--text-base);
+  line-height: 1.7;
+  color: var(--color-secondary);
+}
+
+.description p {
+  margin: 0;
+}
+
+/* ===========================================
+   Variant Options
+   =========================================== */
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.optionGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.optionLabel {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.optionValues {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.optionButton {
+  padding: var(--space-sm) var(--space-md);
+  background: none;
+  border: 1px solid var(--color-border);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.optionButton:hover {
+  border-color: var(--color-foreground);
+}
+
+.optionButtonActive {
+  border-color: var(--color-foreground);
+  background-color: var(--color-foreground);
+  color: var(--color-background);
+}
+
+/* ===========================================
+   Quantity Selector
+   =========================================== */
+
+.quantitySection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.quantityLabel {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.quantity {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--color-border);
+  width: fit-content;
+}
+
+.quantityButton {
+  background: none;
+  border: none;
+  width: 44px;
+  height: 44px;
+  font-size: var(--text-lg);
+  cursor: pointer;
+  color: var(--color-foreground);
+  transition: opacity var(--transition-fast);
+}
+
+.quantityButton:hover:not(:disabled) {
+  opacity: 0.6;
+}
+
+.quantityButton:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.quantityValue {
+  font-size: var(--text-base);
+  min-width: 44px;
+  text-align: center;
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+  padding: var(--space-sm) 0;
+}
+
+/* ===========================================
+   Accordion
+   =========================================== */
+
+.accordion {
+  display: flex;
+  flex-direction: column;
+  margin-top: var(--space-lg);
+  border-top: 1px solid var(--color-border);
+}
+
+.accordionItem {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.accordionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: var(--space-md) 0;
+  background: none;
+  border: none;
+  font-size: var(--text-base);
+  font-weight: 400;
+  text-align: left;
+  cursor: pointer;
+  color: var(--color-foreground);
+  transition: opacity var(--transition-fast);
+}
+
+.accordionHeader:hover {
+  opacity: 0.6;
+}
+
+.accordionIcon {
+  transition: transform var(--transition-fast);
+}
+
+.accordionIconOpen {
+  transform: rotate(180deg);
+}
+
+.accordionContent {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+.accordionContentOpen {
+  max-height: 200px;
+  padding-bottom: var(--space-md);
+}
+
+.accordionContent p {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: 1.7;
+  color: var(--color-secondary);
+}
+
+/* ===========================================
+   Mobile
+   =========================================== */
+
+@media (max-width: 768px) {
+  .title {
+    font-size: var(--text-3xl);
+  }
+
+  .price {
+    font-size: var(--text-xl);
+  }
+}

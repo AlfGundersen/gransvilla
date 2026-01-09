@@ -1,0 +1,108 @@
+/* ==========================================================================
+   Utility Classes
+   ========================================================================== */
+
+/* --------------------------------------
+   Layout
+   -------------------------------------- */
+
+.container {
+  width: 100%;
+  max-width: var(--container-max-width, 1200px);
+  margin-inline: auto;
+  padding-inline: var(--container-padding, 1rem);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --------------------------------------
+   Flexbox
+   -------------------------------------- */
+
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.flex-wrap { flex-wrap: wrap; }
+.items-center { align-items: center; }
+.items-start { align-items: flex-start; }
+.items-end { align-items: flex-end; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.justify-end { justify-content: flex-end; }
+.gap-xs { gap: 0.25rem; }
+.gap-sm { gap: 0.5rem; }
+.gap-md { gap: 1rem; }
+.gap-lg { gap: 2rem; }
+.gap-xl { gap: 4rem; }
+
+/* --------------------------------------
+   Grid
+   -------------------------------------- */
+
+.grid { display: grid; }
+
+/* --------------------------------------
+   Spacing
+   -------------------------------------- */
+
+.m-0 { margin: 0; }
+.mt-auto { margin-top: auto; }
+.mb-auto { margin-bottom: auto; }
+.ml-auto { margin-left: auto; }
+.mr-auto { margin-right: auto; }
+.mx-auto { margin-inline: auto; }
+
+/* --------------------------------------
+   Text
+   -------------------------------------- */
+
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+.uppercase { text-transform: uppercase; }
+.lowercase { text-transform: lowercase; }
+.capitalize { text-transform: capitalize; }
+.font-bold { font-weight: 700; }
+.font-medium { font-weight: 500; }
+.font-normal { font-weight: 400; }
+
+/* --------------------------------------
+   Lists
+   -------------------------------------- */
+
+.list-none {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* --------------------------------------
+   Buttons (reset)
+   -------------------------------------- */
+
+.btn-reset {
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* --------------------------------------
+   Interactive
+   -------------------------------------- */
+
+.pointer { cursor: pointer; }
+.no-select { user-select: none; }

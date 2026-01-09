@@ -1,0 +1,27 @@
+/* ===========================================
+   Hero Section
+   =========================================== */
+
+.hero {
+  max-width: var(--container-max-width);
+  margin-inline: auto;
+  padding-inline: var(--container-padding);
+  padding-block: var(--space-lg);
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+.imageWrapper img {
+  object-fit: cover;
+}
+
+/* Taller hero on desktop */
+@media (min-width: 768px) {
+  .imageWrapper {
+    aspect-ratio: 2.5 / 1;
+  }
+}

@@ -1,0 +1,72 @@
+/* ===========================================
+   Product Gallery
+   =========================================== */
+
+.gallery {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  position: sticky;
+  top: calc(var(--header-height) + var(--space-lg));
+}
+
+.mainImage {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--color-border);
+}
+
+.image {
+  object-fit: cover;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mainImage:hover .image {
+  transform: scale(1.02);
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--color-secondary);
+  font-size: var(--text-sm);
+}
+
+.thumbnails {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-sm);
+}
+
+.thumbnail {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--color-border);
+  cursor: pointer;
+  border: 1px solid transparent;
+  padding: 0;
+  transition: border-color var(--transition-fast), opacity var(--transition-fast);
+}
+
+.thumbnail:hover {
+  opacity: 0.8;
+}
+
+.thumbnailActive {
+  border-color: var(--color-foreground);
+}
+
+@media (max-width: 768px) {
+  .gallery {
+    position: relative;
+    top: 0;
+  }
+
+  .thumbnails {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

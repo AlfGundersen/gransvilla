@@ -1,0 +1,128 @@
+/* ===========================================
+   404 Page - Elegant Typography
+   =========================================== */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - var(--header-height));
+  min-height: calc(100dvh - var(--header-height));
+  text-align: center;
+  padding: var(--space-lg);
+  background-color: var(--color-background);
+}
+
+.number {
+  font-family: var(--font-heading);
+  font-size: clamp(8rem, 25vw, 20rem);
+  font-weight: var(--font-heading-weight);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin: 0;
+  animation: expandLetters 3s ease-out forwards;
+}
+
+@keyframes expandLetters {
+  0% {
+    letter-spacing: -0.02em;
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    letter-spacing: 0.15em;
+    opacity: 1;
+  }
+}
+
+.text {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-secondary);
+  margin-top: var(--space-lg);
+  opacity: 0;
+  animation: fadeIn 1s ease-out 1.5s forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.link {
+  position: relative;
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-foreground);
+  text-decoration: none;
+  margin-top: var(--space-xl);
+  padding: var(--space-sm) var(--space-lg);
+  border: 1px solid var(--color-border);
+  opacity: 0;
+  overflow: hidden;
+  z-index: 1;
+  letter-spacing: 0;
+  animation: fadeIn 1s ease-out 2s forwards;
+  transition:
+    color 0.2s ease,
+    letter-spacing 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Left half */
+.link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background-color: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.15s ease;
+  z-index: -1;
+}
+
+/* Right half */
+.link::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  background-color: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.15s ease;
+  z-index: -1;
+}
+
+.link:hover::before {
+  transform: scaleX(1);
+  transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.link:hover::after {
+  transform: scaleX(1);
+  transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.link:hover {
+  color: var(--color-background);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  transition:
+    color 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s,
+    letter-spacing 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}

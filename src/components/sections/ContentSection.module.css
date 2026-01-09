@@ -1,0 +1,145 @@
+/* ===========================================
+   Content Section - Text + Image
+   =========================================== */
+
+.section {
+  padding-block: var(--space-xl);
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xl);
+  align-items: center;
+  max-width: var(--container-max-width);
+  margin-inline: auto;
+  padding-inline: var(--container-padding);
+  padding-bottom: var(--space-xl);
+  position: relative;
+}
+
+.container::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: var(--container-padding);
+  right: var(--container-padding);
+  height: 1px;
+  background-color: var(--color-border);
+}
+
+.reversed {
+  direction: rtl;
+}
+
+.reversed > * {
+  direction: ltr;
+}
+
+/* Image */
+.imageWrapper {
+  position: relative;
+  aspect-ratio: 4 / 3;
+}
+
+.imageWrapper img {
+  object-fit: cover;
+}
+
+/* Content */
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  max-width: 500px;
+  position: relative;
+  padding-left: var(--space-xl);
+}
+
+/* Vertical separator */
+.content::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: var(--color-border);
+}
+
+.reversed .content {
+  margin-left: auto;
+  padding-left: 0;
+  padding-right: var(--space-xl);
+}
+
+.reversed .content::before {
+  left: auto;
+  right: 0;
+}
+
+.label {
+  font-size: var(--text-sm);
+  letter-spacing: 0.05em;
+  color: var(--color-secondary);
+}
+
+.heading {
+  font-family: var(--font-heading);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 400;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.body {
+  font-size: var(--text-base);
+  line-height: 1.7;
+  color: var(--color-secondary);
+}
+
+/* CTA Button */
+.cta {
+  display: inline-block;
+  padding: var(--space-sm) var(--space-lg);
+  border: 1px solid var(--color-border);
+  font-size: var(--text-sm);
+  text-decoration: none;
+  color: var(--color-foreground);
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+  align-self: flex-start;
+}
+
+.cta:hover {
+  background-color: var(--color-foreground);
+  color: var(--color-background);
+  text-decoration: none;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+
+  .reversed {
+    direction: ltr;
+  }
+
+  .content {
+    padding-left: 0;
+  }
+
+  .content::before {
+    display: none;
+  }
+
+  .reversed .content {
+    margin-left: 0;
+    padding-right: 0;
+  }
+
+  .imageWrapper {
+    aspect-ratio: 16 / 9;
+  }
+}

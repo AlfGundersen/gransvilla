@@ -1,0 +1,113 @@
+/* ===========================================
+   Newsletter Section
+   =========================================== */
+
+.newsletter {
+  padding-block: var(--space-xl);
+  border-top: 1px solid var(--color-border);
+}
+
+.container {
+  max-width: var(--container-max-width);
+  margin-inline: auto;
+  padding-inline: var(--container-padding);
+}
+
+.content {
+  max-width: 500px;
+}
+
+.label {
+  font-size: var(--text-sm);
+  letter-spacing: 0.05em;
+  color: var(--color-secondary);
+  display: block;
+  margin-bottom: var(--space-xs);
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 400;
+  margin: 0 0 var(--space-sm) 0;
+}
+
+.description {
+  font-size: var(--text-base);
+  line-height: 1.7;
+  color: var(--color-secondary);
+  margin-bottom: var(--space-lg);
+}
+
+/* Form */
+.form {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.input {
+  flex: 1;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  background-color: transparent;
+  font-size: var(--text-base);
+  color: var(--color-foreground);
+}
+
+.input::placeholder {
+  color: var(--color-secondary);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-foreground);
+}
+
+.input:disabled {
+  opacity: 0.6;
+}
+
+.button {
+  padding: var(--space-sm) var(--space-lg);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-foreground);
+  color: var(--color-background);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+  white-space: nowrap;
+}
+
+.button:hover:not(:disabled) {
+  opacity: 0.8;
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Messages */
+.successMessage {
+  margin-top: var(--space-sm);
+  color: #2e7d32;
+  font-size: var(--text-sm);
+}
+
+.errorMessage {
+  margin-top: var(--space-sm);
+  color: #c62828;
+  font-size: var(--text-sm);
+}
+
+/* Mobile responsive */
+@media (max-width: 480px) {
+  .form {
+    flex-direction: column;
+  }
+
+  .button {
+    width: 100%;
+  }
+}
