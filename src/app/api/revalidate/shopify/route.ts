@@ -36,13 +36,13 @@ export async function POST(request: NextRequest) {
       case 'products/create':
       case 'products/update':
       case 'products/delete':
-        await revalidateTag('shopify-products')
+        await revalidateTag('shopify-products', { expire: 0 })
         await revalidatePath('/', 'layout')
         await revalidatePath('/nettbutikk', 'layout')
         break
 
       case 'inventory_levels/update':
-        await revalidateTag('shopify-products')
+        await revalidateTag('shopify-products', { expire: 0 })
         await revalidatePath('/', 'layout')
         await revalidatePath('/nettbutikk', 'layout')
         break
