@@ -36,20 +36,20 @@ export async function POST(request: NextRequest) {
       case 'products/create':
       case 'products/update':
       case 'products/delete':
-        revalidateTag('shopify-products')
-        revalidatePath('/', 'layout')
-        revalidatePath('/nettbutikk', 'layout')
+        await revalidateTag('shopify-products')
+        await revalidatePath('/', 'layout')
+        await revalidatePath('/nettbutikk', 'layout')
         break
 
       case 'inventory_levels/update':
-        revalidateTag('shopify-products')
-        revalidatePath('/', 'layout')
-        revalidatePath('/nettbutikk', 'layout')
+        await revalidateTag('shopify-products')
+        await revalidatePath('/', 'layout')
+        await revalidatePath('/nettbutikk', 'layout')
         break
 
       default:
         // Revalidate everything for unknown topics
-        revalidatePath('/', 'layout')
+        await revalidatePath('/', 'layout')
     }
 
     console.log(`Shopify webhook received: ${topic}`)
