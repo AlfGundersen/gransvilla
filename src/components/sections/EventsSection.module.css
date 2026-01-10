@@ -92,7 +92,8 @@
 
 /* Image columns */
 .imageCol {
-  position: relative;
+  position: sticky;
+  top: 0;
   padding: var(--space-lg);
 }
 
@@ -160,6 +161,11 @@
 @media (min-width: 769px) and (max-width: 1024px) {
   .grid3col {
     grid-template-columns: 1fr 1fr;
+  }
+
+
+  .grid3col .imageCol {
+    padding: var(--space-lg) 0 var(--space-lg) var(--space-lg);
   }
 
   .grid3col .imageCol:last-child {

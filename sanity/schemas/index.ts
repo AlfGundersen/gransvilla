@@ -3,6 +3,7 @@ import event from './documents/event'
 import frontpage from './documents/frontpage'
 import navigation from './documents/navigation'
 import page from './documents/page'
+import shopCategory from './documents/shopCategory'
 import siteSettings from './documents/siteSettings'
 
 // Object types
@@ -25,6 +26,7 @@ export const schemaTypes = [
   siteSettings,
   navigation,
   event,
+  shopCategory,
 
   // Objects
   blockContent,

@@ -1,11 +1,12 @@
 'use client'
 
-import Link from 'next/link'
+import { Link } from 'next-view-transitions'
 import { useState } from 'react'
 import styles from './Footer.module.css'
 
 // TODO: Fetch from Sanity siteSettings
 const menuLinks = [
+  { label: 'Hjem', href: '/' },
   { label: 'Bryllup', href: '/bryllup' },
   { label: 'Selskaper', href: '/selskaper' },
   { label: 'Konserter', href: '/konserter' },

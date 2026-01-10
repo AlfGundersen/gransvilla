@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getCart } from '@/lib/shopify'
 
-// POST - Get checkout URL with customer info in note
+// POST - Get checkout URL
 export async function POST(request: NextRequest) {
   try {
-    const { cartId, customerInfo } = await request.json()
+    const { cartId } = await request.json()
 
     if (!cartId) {
       return NextResponse.json(
@@ -22,16 +22,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Build checkout URL with customer info as query params
-    // This pre-fills the Shopify checkout form
-    const checkoutUrl = new URL(cart.checkoutUrl)
-    checkoutUrl.searchParams.set('checkout[email]', customerInfo.email)
-    checkoutUrl.searchParams.set('checkout[shipping_address][first_name]', customerInfo.firstName)
-    checkoutUrl.searchParams.set('checkout[shipping_address][last_name]', customerInfo.lastName)
-    checkoutUrl.searchParams.set('checkout[shipping_address][phone]', customerInfo.phone)
-
     return NextResponse.json({
-      checkoutUrl: checkoutUrl.toString(),
+      checkoutUrl: cart.checkoutUrl,
       cart,
     })
   } catch (error) {

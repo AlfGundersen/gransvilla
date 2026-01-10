@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import Link from 'next/link'
+import { Link } from 'next-view-transitions'
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useCart } from '@/context/CartContext'
@@ -9,6 +9,7 @@ import styles from './Header.module.css'
 
 // TODO: Fetch navigation from Sanity
 const navigation = [
+  { label: 'Hjem', href: '/' },
   { label: 'Bryllup', href: '/bryllup' },
   { label: 'Selskaper', href: '/selskaper' },
   { label: 'Konserter', href: '/konserter' },

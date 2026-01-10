@@ -27,7 +27,7 @@
 .grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-xl);
+  gap: 4rem;
 }
 
 /* Newsletter */
@@ -35,11 +35,12 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-lg);
+  padding-right: 2rem;
 }
 
 .newsletterText {
   font-family: var(--font-heading);
-  font-size: var(--text-2xl);
+  font-size: var(--text-xl);
   line-height: 1.3;
   max-width: 300px;
 }
@@ -132,15 +133,16 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
-  padding-inline: var(--space-lg);
+  padding-inline: 0;
   position: relative;
 }
 
-/* Vertical separator */
+/* Vertical separator - centered in the gap between columns */
 .column::before {
   content: '';
   position: absolute;
-  left: 0;
+  left: -2rem;
+  /* center of 4rem gap */
   top: 0;
   bottom: 0;
   width: 1px;
@@ -267,8 +269,40 @@
   text-decoration: underline;
 }
 
+/* Desktop */
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+
+  .column:last-child {
+    padding-right: 0;
+  }
+}
+
+/* Tablet */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .newsletter {
+    grid-column: span 2;
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .column:nth-child(2) {
+    padding-left: 0;
+  }
+
+  .column:nth-child(2)::before {
+    display: none;
+  }
+}
+
 /* Mobile */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .grid {
     gap: var(--space-lg);
   }
@@ -297,36 +331,20 @@
     position: relative;
     margin-top: var(--space-lg);
   }
-}
 
-/* Tablet */
-@media (min-width: 769px) and (max-width: 1024px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
+  .bottom {
+    flex-direction: column;
+    gap: var(--space-md);
+    text-align: center;
   }
 
-  .newsletter {
-    grid-column: span 2;
-    padding-bottom: var(--space-lg);
-    border-bottom: 1px solid var(--color-border);
+  .newsletterText {
+    font-size: var(--text-xl);
   }
 
-  .column:nth-child(2) {
-    padding-left: 0;
-  }
-
-  .column:nth-child(2)::before {
-    display: none;
-  }
-}
-
-/* Desktop */
-@media (min-width: 1025px) {
-  .grid {
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-  }
-
-  .column:last-child {
-    padding-right: 0;
+  .linkList a,
+  .socialList a,
+  .address {
+    font-size: var(--text-lg);
   }
 }

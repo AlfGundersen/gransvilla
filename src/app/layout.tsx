@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-// import SmoothScroll from '@/components/providers/SmoothScroll'
+import { ViewTransitions } from 'next-view-transitions'
 import '@/styles/globals.css'
 
 export const metadata: Metadata = {
@@ -16,13 +16,15 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="no">
-      <head>
-        <link rel="stylesheet" href="https://use.typekit.net/ipo0piy.css" />
-      </head>
-      <body suppressHydrationWarning>
-        {children}
-      </body>
-    </html>
+    <ViewTransitions>
+      <html lang="no">
+        <head>
+          <link rel="stylesheet" href="https://use.typekit.net/ipo0piy.css" />
+        </head>
+        <body suppressHydrationWarning>
+          {children}
+        </body>
+      </html>
+    </ViewTransitions>
   )
 }

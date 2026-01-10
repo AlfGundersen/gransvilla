@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
+import { Link } from 'next-view-transitions'
 import { useCart } from '@/context/CartContext'
 import styles from './CartDrawer.module.css'
 

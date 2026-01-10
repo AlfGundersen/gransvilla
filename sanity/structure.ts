@@ -24,6 +24,12 @@ export const structure: StructureResolver = (S) =>
         .schemaType('event')
         .child(S.documentTypeList('event').title('Arrangementer')),
 
+      // Butikk-kategorier
+      S.listItem()
+        .title('Butikk-kategorier')
+        .schemaType('shopCategory')
+        .child(S.documentTypeList('shopCategory').title('Butikk-kategorier')),
+
       S.divider(),
 
       // Navigasjon

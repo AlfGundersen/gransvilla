@@ -1,7 +1,7 @@
 import { getProductByHandle } from '@/lib/shopify'
 import type { FeaturedProductSection } from '@/types/sanity'
 import Image from 'next/image'
-import Link from 'next/link'
+import { Link } from 'next-view-transitions'
 import styles from './FeaturedProductSection.module.css'
 
 interface FeaturedProductSectionProps {

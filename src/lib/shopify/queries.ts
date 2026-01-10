@@ -1,3 +1,59 @@
+// Get all collections with products
+export const COLLECTIONS_QUERY = `
+  query Collections($first: Int = 20) {
+    collections(first: $first) {
+      edges {
+        node {
+          id
+          title
+          handle
+          description
+          products(first: 50) {
+            edges {
+              node {
+                id
+                title
+                handle
+                description
+                descriptionHtml
+                priceRange {
+                  minVariantPrice {
+                    amount
+                    currencyCode
+                  }
+                }
+                images(first: 5) {
+                  edges {
+                    node {
+                      url
+                      altText
+                      width
+                      height
+                    }
+                  }
+                }
+                variants(first: 10) {
+                  edges {
+                    node {
+                      id
+                      title
+                      availableForSale
+                      price {
+                        amount
+                        currencyCode
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
 // Get all products
 export const PRODUCTS_QUERY = `
   query Products($first: Int = 20) {

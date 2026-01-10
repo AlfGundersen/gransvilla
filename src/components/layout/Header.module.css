@@ -301,3 +301,42 @@
   text-decoration: none;
   opacity: 0.5;
 }
+
+/* ===========================================
+   Responsive
+   =========================================== */
+
+/* Mobile */
+@media (max-width: 767px) {
+  .logo img {
+    width: 110px;
+    height: auto;
+  }
+
+  .cartText {
+    font-size: var(--text-xs);
+  }
+
+  .menuLink {
+    font-size: var(--text-xl);
+  }
+
+  .slideMenu {
+    padding: var(--space-md);
+  }
+
+  .menuHeader {
+    margin-bottom: var(--space-lg);
+  }
+}
+
+/* Small mobile */
+@media (max-width: 479px) {
+  .logo img {
+    width: 100px;
+  }
+
+  .menuLink {
+    font-size: var(--text-lg);
+  }
+}

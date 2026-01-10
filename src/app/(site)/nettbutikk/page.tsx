@@ -1,8 +1,7 @@
-import { getProducts } from '@/lib/shopify'
+import { getCollections } from '@/lib/shopify'
 import type { Metadata } from 'next'
-import Image from 'next/image'
-import Link from 'next/link'
 import styles from './page.module.css'
+import ProductCard from './ProductCard'
 
 export const metadata: Metadata = {
   title: 'Nettbutikk',
@@ -10,47 +9,54 @@ export const metadata: Metadata = {
 }
 
 export default async function NettbutikkPage() {
-  const products = await getProducts()
+  const collections = await getCollections()
+
+  // Filter out empty collections
+  const activeCollections = collections.filter((c) => c.products.length > 0)
 
   return (
     <div className={styles.page}>
-      <div className={styles.header}>
+      <header className={styles.header}>
         <h1 className={styles.title}>Nettbutikk</h1>
-        <p className={styles.description}>
-          Handle gavekort, matopplevelser og produkter fra Gransvilla
-        </p>
-      </div>
+      </header>
 
-      {products.length === 0 ? (
+      {activeCollections.length === 0 ? (
         <div className={styles.empty}>
           <p>Ingen produkter tilgjengelig ennå.</p>
-          <p>Legg til produkter i Shopify for å vise dem her.</p>
         </div>
       ) : (
-        <div className={styles.grid}>
-          {products.map((product) => (
-            <Link
-              key={product.id}
-              href={`/nettbutikk/${product.handle}`}
-              className={styles.product}
-            >
-              {product.images[0] && (
-                <div className={styles.imageWrapper}>
-                  <Image
-                    src={product.images[0].url}
-                    alt={product.images[0].altText || product.title}
-                    fill
-                    className={styles.image}
-                  />
+        <div className={styles.sections}>
+          {activeCollections.map((collection) => (
+            <section key={collection.id} className={`${styles.section} ${styles.grid3col}`}>
+              <div className={styles.sidebar}>
+                <div className={styles.sidebarContent}>
+                  <h2 className={styles.categoryTitle}>{collection.title}</h2>
+                  {collection.description && (
+                    <p className={styles.categoryDescription}>
+                      {collection.description}
+                    </p>
+                  )}
                 </div>
-              )}
-              <div className={styles.info}>
-                <h2 className={styles.productTitle}>{product.title}</h2>
-                <p className={styles.price}>
-                  {product.price.toLocaleString('nb-NO')} {product.currencyCode}
-                </p>
               </div>
-            </Link>
+
+              {/* First product column */}
+              <div className={styles.productColumn}>
+                {collection.products
+                  .filter((_, i) => i % 2 === 0)
+                  .map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
+              </div>
+
+              {/* Second product column */}
+              <div className={styles.productColumn}>
+                {collection.products
+                  .filter((_, i) => i % 2 === 1)
+                  .map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
+              </div>
+            </section>
           ))}
         </div>
       )}

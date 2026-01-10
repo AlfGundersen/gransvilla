@@ -252,3 +252,13 @@ export const eventQuery = groq`
     }
   }
 `
+
+// Shop categories query
+export const shopCategoriesQuery = groq`
+  *[_type == "shopCategory"] | order(order asc) {
+    _id,
+    name,
+    description,
+    order
+  }
+`

@@ -1,5 +1,5 @@
 import Header from '@/components/layout/Header'
-import Link from 'next/link'
+import { Link } from 'next-view-transitions'
 import { CartProvider } from '@/context/CartContext'
 import styles from './not-found.module.css'
 

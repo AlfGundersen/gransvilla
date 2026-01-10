@@ -60,13 +60,24 @@
   border-color: var(--color-foreground);
 }
 
-@media (max-width: 768px) {
+/* Tablet */
+@media (max-width: 1023px) {
   .gallery {
     position: relative;
     top: 0;
   }
+}
 
+/* Mobile */
+@media (max-width: 767px) {
   .thumbnails {
     grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Small mobile - 3 column thumbnails */
+@media (max-width: 479px) {
+  .thumbnails {
+    grid-template-columns: repeat(3, 1fr);
   }
 }

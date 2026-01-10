@@ -153,7 +153,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
 export function useCart() {
   const context = useContext(CartContext)
   if (!context) {
-    throw new Error('useCart must be used within a CartProvider')
+    // Return a default context for SSR - actions will be no-ops
+    return {
+      cart: null,
+      isOpen: false,
+      isLoading: true,
+      openCart: () => {},
+      closeCart: () => {},
+      addToCart: async () => {},
+      updateQuantity: async () => {},
+      removeFromCart: async () => {},
+      cartCount: 0,
+    } as CartContextType
   }
   return context
 }

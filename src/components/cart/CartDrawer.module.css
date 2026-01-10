@@ -304,9 +304,40 @@
   }
 }
 
+/* Tablet */
+@media (max-width: 1023px) {
+  .drawer {
+    max-width: 380px;
+  }
+}
+
 /* Mobile */
-@media (max-width: 480px) {
+@media (max-width: 767px) {
   .drawer {
     max-width: 100%;
+  }
+
+  .header {
+    padding: var(--space-md);
+  }
+
+  .items {
+    padding: var(--space-md);
+  }
+
+  .footer {
+    padding: var(--space-md);
+  }
+
+  .title {
+    font-size: var(--text-xl);
+  }
+}
+
+/* Small mobile */
+@media (max-width: 479px) {
+  .itemImage {
+    width: 70px;
+    height: 70px;
   }
 }

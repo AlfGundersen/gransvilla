@@ -186,6 +186,12 @@
   height: auto;
 }
 
+
+.imageCol img {
+  position: sticky;
+  top: 80px;
+}
+
 /* Mobile */
 @media (max-width: 768px) {
   .container {
@@ -203,6 +209,11 @@
 
   .imageCol::before {
     display: none;
+  }
+
+  .imageCol img {
+    position: relative;
+    top: 0;
   }
 
   .title {

@@ -1,5 +1,6 @@
 import { shopifyFetch } from './client'
 import {
+  COLLECTIONS_QUERY,
   PRODUCTS_QUERY,
   PRODUCT_BY_HANDLE_QUERY,
   CREATE_CART_MUTATION,
@@ -16,6 +17,15 @@ import type {
   Cart,
   CartItem,
 } from './types'
+
+// Collection type
+export type Collection = {
+  id: string
+  title: string
+  handle: string
+  description: string
+  products: Product[]
+}
 
 // Helper to transform Shopify product to simplified format
 function transformProduct(product: ShopifyProduct): Product {
@@ -64,6 +74,36 @@ export async function getProducts(first = 20): Promise<Product[]> {
   })
 
   return data.products.edges.map((edge) => transformProduct(edge.node))
+}
+
+// Get all collections with products
+export async function getCollections(first = 20): Promise<Collection[]> {
+  const data = await shopifyFetch<{
+    collections: {
+      edges: {
+        node: {
+          id: string
+          title: string
+          handle: string
+          description: string
+          products: { edges: { node: ShopifyProduct }[] }
+        }
+      }[]
+    }
+  }>({
+    query: COLLECTIONS_QUERY,
+    variables: { first },
+  })
+
+  return data.collections.edges.map((edge) => ({
+    id: edge.node.id,
+    title: edge.node.title,
+    handle: edge.node.handle,
+    description: edge.node.description,
+    products: edge.node.products.edges.map((productEdge) =>
+      transformProduct(productEdge.node)
+    ),
+  }))
 }
 
 // Get single product by handle
