@@ -4,7 +4,7 @@ export const structure: StructureResolver = (S) =>
   S.list()
     .title('Innhold')
     .items([
-      // Forside - singleton
+      // ── Forside ──
       S.listItem()
         .title('Forside')
         .id('frontpage')
@@ -12,33 +12,34 @@ export const structure: StructureResolver = (S) =>
 
       S.divider(),
 
-      // Sider
+      // ── Sider ──
       S.listItem()
         .title('Sider')
         .schemaType('page')
         .child(S.documentTypeList('page').title('Sider')),
 
-      // Arrangementer
       S.listItem()
-        .title('Arrangementer')
+        .title('Arrangementsider')
         .schemaType('event')
-        .child(S.documentTypeList('event').title('Arrangementer')),
-
-      // Butikk-kategorier
-      S.listItem()
-        .title('Butikk-kategorier')
-        .schemaType('shopCategory')
-        .child(S.documentTypeList('shopCategory').title('Butikk-kategorier')),
+        .child(S.documentTypeList('event').title('Arrangementsider')),
 
       S.divider(),
 
-      // Navigasjon
+      // ── Butikk ──
       S.listItem()
-        .title('Navigasjon')
-        .schemaType('navigation')
-        .child(S.documentTypeList('navigation').title('Navigasjon')),
+        .title('Butikk-kategorier')
+        .schemaType('shopCategory')
+        .child(
+          S.documentList()
+            .title('Butikk-kategorier')
+            .schemaType('shopCategory')
+            .filter('_type == "shopCategory"')
+            .initialValueTemplates([]),
+        ),
 
-      // Innstillinger - singleton
+      S.divider(),
+
+      // ── Innstillinger ──
       S.listItem()
         .title('Innstillinger')
         .id('siteSettings')

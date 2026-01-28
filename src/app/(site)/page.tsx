@@ -1,5 +1,6 @@
 import { EventsSectionComponent } from '@/components/sections/EventsSection'
 import { FeaturedProductSectionComponent } from '@/components/sections/FeaturedProductSection'
+import { FeaturedSectionComponent } from '@/components/sections/FeaturedSection'
 import { HeroSectionComponent } from '@/components/sections/HeroSection'
 import { TimelineSectionComponent } from '@/components/sections/TimelineSection'
 import { client } from '@/lib/sanity/client'
@@ -26,6 +27,12 @@ export default async function HomePage() {
       {frontpage.hero && (
         <HeroSectionComponent
           data={{ ...frontpage.hero, _type: 'heroSection', _key: 'hero' }}
+        />
+      )}
+
+      {frontpage.featured && (
+        <FeaturedSectionComponent
+          data={{ ...frontpage.featured, _type: 'featuredSection', _key: 'featured' }}
         />
       )}
 

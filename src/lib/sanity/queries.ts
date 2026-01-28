@@ -18,9 +18,27 @@ export const frontpageQuery = groq`
       ctaText,
       ctaHref
     },
+    featured {
+      columns[] {
+        _key,
+        heading,
+        description,
+        link-> {
+          _id,
+          _type,
+          title,
+          slug
+        },
+        image {
+          ${imageFragment},
+          alt
+        }
+      }
+    },
     events {
       items[] {
         _key,
+        imageLayout,
         event-> {
           _id,
           title,
@@ -37,14 +55,15 @@ export const frontpageQuery = groq`
       }
     },
     timeline {
+      image {
+        ${imageFragment},
+        alt
+      },
+      heading,
       entries[] {
         _key,
         year,
-        title,
-        description,
-        image {
-          ${imageFragment}
-        }
+        description
       }
     },
     featuredProduct {
@@ -79,11 +98,32 @@ const heroSectionFragment = groq`
   }
 `
 
+// Fragment for featured section
+const featuredSectionFragment = groq`
+  _type == "featuredSection" => {
+    columns[] {
+      _key,
+      heading,
+      description,
+      link-> {
+        _id,
+        title,
+        slug
+      },
+      image {
+        ${imageFragment},
+        alt
+      }
+    }
+  }
+`
+
 // Fragment for events section
 const eventsSectionFragment = groq`
   _type == "eventsSection" => {
     items[] {
       _key,
+      imageLayout,
       event-> {
         _id,
         title,
@@ -104,14 +144,15 @@ const eventsSectionFragment = groq`
 // Fragment for timeline section
 const timelineSectionFragment = groq`
   _type == "timelineSection" => {
+    image {
+      ${imageFragment},
+      alt
+    },
+    heading,
     entries[] {
       _key,
       year,
-      title,
-      description,
-      image {
-        ${imageFragment}
-      }
+      description
     }
   }
 `
@@ -156,6 +197,7 @@ const sectionsFragment = groq`
     _type,
     _key,
     ${heroSectionFragment},
+    ${featuredSectionFragment},
     ${eventsSectionFragment},
     ${timelineSectionFragment},
     ${contentSectionFragment},
@@ -208,24 +250,6 @@ export const siteSettingsQuery = groq`
   }
 `
 
-// Navigation query
-export const navigationQuery = groq`
-  *[_type == "navigation" && identifier == $identifier][0] {
-    title,
-    identifier,
-    items[] {
-      _key,
-      label,
-      linkType,
-      internalLink-> {
-        slug
-      },
-      externalUrl,
-      openInNewTab
-    }
-  }
-`
-
 // Events query
 export const eventsQuery = groq`
   *[_type == "event"] | order(_createdAt desc) {
@@ -257,7 +281,9 @@ export const eventQuery = groq`
 export const shopCategoriesQuery = groq`
   *[_type == "shopCategory"] | order(order asc) {
     _id,
-    name,
+    title,
+    shopifyCollectionId,
+    shopifyHandle,
     description,
     order
   }

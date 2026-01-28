@@ -32,8 +32,10 @@
      Typography - Gransvilla brand
      =========================================== */
   --font-heading: 'mendl-serif-variable', 'mendl-serif', Georgia, 'Times New Roman', serif;
-  --font-body: 'aktiv-grotesk', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-heading-weight: 400;
+  --font-body: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-weight-normal: 300;
+  --font-weight-bold: 400;
+  --font-heading-weight: var(--font-weight-normal);
 
   /* Font sizes */
   --text-xs: 0.75rem;
@@ -59,7 +61,7 @@
   /* ===========================================
      Layout
      =========================================== */
-  --container-max-width: 1400px;
+  --container-max-width: 1900px;
   --container-padding: 1.5rem;
   --header-height: 80px;
   --menu-width: 430px;
@@ -131,10 +133,16 @@ html {
 body {
   margin: 0;
   font-family: var(--font-body);
+  font-weight: var(--font-weight-normal);
   color: var(--color-foreground);
   background-color: var(--color-background);
   line-height: 1.6;
   font-size: 16px;
+}
+
+strong,
+b {
+  font-weight: var(--font-weight-bold);
 }
 
 /* --------------------------------------
@@ -194,6 +202,7 @@ select {
 
 button {
   cursor: pointer;
+  font-weight: var(--font-weight-bold) !important;
 }
 
 /* --------------------------------------
@@ -217,7 +226,7 @@ body>div {
 
 body.menu-open>div {
   transform: translateX(var(--menu-width));
-  filter: blur(2px);
+  filter: blur(8px);
 }
 
 /* --------------------------------------
@@ -245,23 +254,43 @@ html.inverted img[alt="GransVilla"] {
    -------------------------------------- */
 
 @keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes fade-out {
-  from { opacity: 1; }
-  to { opacity: 0; }
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
 }
 
 @keyframes slide-from-right {
-  from { transform: translateX(30px); }
-  to { transform: translateX(0); }
+  from {
+    transform: translateX(30px);
+  }
+
+  to {
+    transform: translateX(0);
+  }
 }
 
 @keyframes slide-to-left {
-  from { transform: translateX(0); }
-  to { transform: translateX(-30px); }
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-30px);
+  }
 }
 
 /* Default page transition */
@@ -279,6 +308,7 @@ html.inverted img[alt="GransVilla"] {
 
 /* Reduce motion for accessibility */
 @media (prefers-reduced-motion: reduce) {
+
   ::view-transition-old(root),
   ::view-transition-new(root) {
     animation: none;

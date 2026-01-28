@@ -5,6 +5,9 @@ import { ProductGallery } from './ProductGallery'
 import { ProductInfo } from './ProductInfo'
 import styles from './page.module.css'
 
+export const revalidate = 60
+export const dynamicParams = true
+
 interface Props {
   params: Promise<{ handle: string }>
 }

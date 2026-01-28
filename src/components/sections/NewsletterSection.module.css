@@ -3,14 +3,14 @@
    =========================================== */
 
 .section {
-  padding-block: var(--space-xl);
+  padding-block: var(--space-lg);
 }
 
 .container {
   max-width: var(--container-max-width);
   margin-inline: auto;
   padding-inline: var(--container-padding);
-  padding-bottom: var(--space-xl);
+  padding-bottom: var(--space-lg);
   position: relative;
 }
 
@@ -31,7 +31,7 @@
 .heading {
   font-family: var(--font-heading);
   font-size: clamp(1.5rem, 3vw, 2rem);
-  font-weight: 400;
+  font-weight: var(--font-weight-bold);
   margin: 0 0 var(--space-sm) 0;
 }
 
@@ -76,7 +76,7 @@
   background-color: var(--color-foreground);
   color: var(--color-background);
   font-size: var(--text-sm);
-  font-weight: 500;
+  font-weight: var(--font-weight-bold);
   cursor: pointer;
   transition: opacity var(--transition-fast);
   white-space: nowrap;

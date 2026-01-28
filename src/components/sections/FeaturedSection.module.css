@@ -1,0 +1,149 @@
+/* ===========================================
+   Featured Section - Two-column layout
+   Each column: text left, image right
+   =========================================== */
+
+.section {
+  padding-top: var(--space-lg);
+  padding-bottom: 0;
+}
+
+.container {
+  max-width: var(--container-max-width);
+  margin-inline: auto;
+  padding-inline: var(--container-padding);
+  padding-bottom: var(--space-lg);
+  position: relative;
+}
+
+/* Bottom line */
+.container::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: var(--container-padding);
+  right: var(--container-padding);
+  height: 1px;
+  background-color: var(--color-border);
+}
+
+/* Outer grid: 2 columns */
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-xl);
+  align-items: stretch;
+  position: relative;
+}
+
+/* Center vertical divider between the two columns */
+.grid::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: var(--color-border);
+}
+
+/* Inner column: text + image side by side */
+.column {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-xl);
+}
+
+/* Text content */
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.heading {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  line-height: 1.2;
+  margin: 0;
+}
+
+.description {
+  font-size: var(--text-sm);
+  line-height: 1.7;
+  color: var(--color-secondary);
+}
+
+/* Type 1 - Outlined: no bg, border → black bg on hover */
+.cta {
+  display: inline-block;
+  padding: var(--space-sm) var(--space-lg);
+  border: 1px solid var(--color-border);
+  font-size: var(--text-sm);
+  text-decoration: none;
+  color: var(--color-foreground);
+  background-color: transparent;
+  transition: background-color var(--transition-base), color var(--transition-base);
+  align-self: flex-start;
+  margin-top: auto;
+}
+
+.cta:hover {
+  background-color: var(--color-foreground);
+  color: var(--color-background);
+  text-decoration: none;
+}
+
+/* Image - stretches to match text column height */
+.imageWrapper {
+  position: relative;
+  min-height: 300px;
+}
+
+/* Vertical line to the left of each image */
+.imageWrapper::before {
+  content: '';
+  position: absolute;
+  left: calc(var(--space-xl) / -2);
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: var(--color-border);
+}
+
+.imageWrapper img {
+  object-fit: cover;
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+
+  .grid::before {
+    display: none;
+  }
+
+  .column {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .column {
+    grid-template-columns: 1fr;
+  }
+
+  .imageWrapper {
+    aspect-ratio: 4 / 3;
+  }
+
+  .imageWrapper::before {
+    display: none;
+  }
+}

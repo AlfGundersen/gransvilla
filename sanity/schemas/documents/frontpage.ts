@@ -9,9 +9,10 @@ export default defineType({
   type: 'document',
   groups: [
     { name: 'hero', title: 'Hero', default: true },
-    { name: 'events', title: 'Fremhevet arrangement' },
+    { name: 'featured', title: 'Fremhevet' },
+    { name: 'events', title: 'Arrangementer' },
     { name: 'timeline', title: 'Historie' },
-    { name: 'featuredProduct', title: 'Fremhevet produkt' },
+    { name: 'featuredProduct', title: 'Produkter' },
     { name: 'seo', title: 'SEO' },
   ],
   fields: [
@@ -20,8 +21,17 @@ export default defineType({
       name: 'hero',
       title: 'Hero-seksjon',
       type: 'heroSection',
-      description: 'Stort bilde øverst på forsiden',
+      description: 'Velg et stort bilde som vises øverst på forsiden og setter stemningen',
       group: 'hero',
+    }),
+
+    // Featured Section
+    defineField({
+      name: 'featured',
+      title: 'Fremhevet-seksjon',
+      type: 'featuredSection',
+      description: 'Fremhev to ting du vil trekke oppmerksomhet til, f.eks. søndagsfrokost og et arrangement',
+      group: 'featured',
     }),
 
     // Events Section
@@ -29,7 +39,7 @@ export default defineType({
       name: 'events',
       title: 'Arrangementer-seksjon',
       type: 'eventsSection',
-      description: 'Navigasjonslenker til ulike arrangementstyper',
+      description: 'Velg arrangementer som besøkende kan utforske med tilhørende bilder',
       group: 'events',
     }),
 
@@ -38,14 +48,14 @@ export default defineType({
       name: 'timeline',
       title: 'Tidslinje-seksjon',
       type: 'timelineSection',
-      description: 'Historie og informasjon om Gransvilla',
+      description: 'Fortell historien til Gransvilla gjennom viktige årstall og milepæler',
       group: 'timeline',
     }),
 
     // Featured Product Section
     defineField({
       name: 'featuredProduct',
-      title: 'Fremhevet produkt',
+      title: 'Produkter',
       type: 'featuredProductSection',
       description: 'Velg et produkt fra nettbutikken som skal fremheves',
       group: 'featuredProduct',

@@ -1,6 +1,13 @@
 import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
 import { ViewTransitions } from 'next-view-transitions'
 import '@/styles/globals.css'
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: {
@@ -21,7 +28,7 @@ export default function RootLayout({
         <head>
           <link rel="stylesheet" href="https://use.typekit.net/ipo0piy.css" />
         </head>
-        <body suppressHydrationWarning>
+        <body className={inter.variable} suppressHydrationWarning>
           {children}
         </body>
       </html>

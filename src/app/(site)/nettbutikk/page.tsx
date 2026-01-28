@@ -1,7 +1,12 @@
 import { getCollections } from '@/lib/shopify'
+import { client } from '@/lib/sanity/client'
+import { shopCategoriesQuery } from '@/lib/sanity/queries'
+import type { ShopCategory } from '@/types/sanity'
 import type { Metadata } from 'next'
 import styles from './page.module.css'
 import ProductCard from './ProductCard'
+
+export const revalidate = 60
 
 export const metadata: Metadata = {
   title: 'Nettbutikk',
@@ -9,10 +14,26 @@ export const metadata: Metadata = {
 }
 
 export default async function NettbutikkPage() {
-  const collections = await getCollections()
+  const [collections, shopCategories] = await Promise.all([
+    getCollections(),
+    client.fetch<ShopCategory[]>(shopCategoriesQuery),
+  ])
 
-  // Filter out empty collections
-  const activeCollections = collections.filter((c) => c.products.length > 0)
+  // Filter out empty collections and merge with Sanity descriptions
+  const activeCollections = collections
+    .filter((c) => c.products.length > 0)
+    .map((collection) => {
+      // Find matching Sanity category by Shopify collection ID
+      const sanityCategory = shopCategories.find(
+        (cat) => cat.shopifyCollectionId === collection.id
+      )
+      return {
+        ...collection,
+        description: sanityCategory?.description || collection.description,
+        order: sanityCategory?.order ?? 999,
+      }
+    })
+    .sort((a, b) => a.order - b.order)
 
   return (
     <div className={styles.page}>

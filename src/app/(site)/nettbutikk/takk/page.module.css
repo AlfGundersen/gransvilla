@@ -19,7 +19,7 @@
 .title {
   font-family: var(--font-heading);
   font-size: var(--text-4xl);
-  font-weight: 400;
+  font-weight: var(--font-weight-bold);
   margin: 0 0 var(--space-md);
 }
 

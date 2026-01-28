@@ -28,6 +28,7 @@ export default defineType({
       type: 'array',
       of: [
         { type: 'heroSection' },
+        { type: 'featuredSection' },
         { type: 'eventsSection' },
         { type: 'timelineSection' },
         { type: 'contentSection' },

@@ -11,7 +11,7 @@ interface TimelineSectionComponentProps {
 }
 
 export function TimelineSectionComponent({ data }: TimelineSectionComponentProps) {
-  const { entries = [] } = data
+  const { entries = [], image, heading } = data
 
   // Sort entries by year, newest first
   const sortedEntries = [...entries].sort((a, b) => b.year - a.year)
@@ -30,30 +30,25 @@ export function TimelineSectionComponent({ data }: TimelineSectionComponentProps
     <section className={styles.section}>
       <div className={styles.container}>
         <div className={styles.grid}>
-          {/* Left: Title and Image */}
+          {/* Left: Image and heading */}
           <div className={styles.leftCol}>
-            {activeEntry && (
-              <h2 key={`title-${activeEntry._key}`} className={styles.title}>
-                {activeEntry.title && <span>{activeEntry.title}</span>}
-                <span className={styles.titleYear}>{activeEntry.year}</span>
-              </h2>
+            {image?.asset && (
+              <div className={styles.imageWrapper}>
+                <Image
+                  src={urlFor(image).url()}
+                  alt={image.alt || ''}
+                  fill
+                  sizes="50vw"
+                  className={styles.sectionImage}
+                />
+              </div>
             )}
-
-            <div className={styles.imageWrapper}>
-              {/* All images stacked, crossfade via opacity */}
-              {sortedEntries.map((entry, index) => (
-                entry.image?.asset && (
-                  <Image
-                    key={entry._key}
-                    src={urlFor(entry.image).url()}
-                    alt={entry.title || String(entry.year)}
-                    fill
-                    sizes="50vw"
-                    className={`${styles.image} ${index === activeIndex ? styles.imageActive : ''}`}
-                  />
-                )
-              ))}
-            </div>
+            {heading && <h2 className={styles.heading}>{heading}</h2>}
+            {activeEntry && (
+              <p key={`year-${activeEntry._key}`} className={styles.activeYear}>
+                {activeEntry.year}
+              </p>
+            )}
           </div>
 
           {/* Right: Year list */}

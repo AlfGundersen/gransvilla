@@ -21,7 +21,7 @@
 .title {
   font-family: var(--font-heading);
   font-size: var(--text-5xl);
-  font-weight: 400;
+  font-weight: var(--font-weight-bold);
   margin: 0;
 }
 
@@ -80,7 +80,7 @@
 .categoryTitle {
   font-family: var(--font-heading);
   font-size: var(--text-3xl);
-  font-weight: 400;
+  font-weight: var(--font-weight-bold);
   margin: 0 0 var(--space-md);
 }
 
@@ -147,7 +147,7 @@
 .productTitle {
   font-family: var(--font-heading);
   font-size: var(--text-xl);
-  font-weight: 400;
+  font-weight: var(--font-weight-bold);
   margin: 0;
   line-height: 1.3;
 }

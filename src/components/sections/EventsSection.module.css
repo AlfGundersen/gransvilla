@@ -22,23 +22,31 @@
 
 .grid {
   display: grid;
-  min-height: 500px;
+  min-height: 750px;
+  transition: grid-template-columns 0.6s ease;
 }
 
-/* 2-column layout (1 image) - nav 33%, image 66% */
+/* 2-column layout (1 image) - third column collapses */
 .grid2col {
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 30% 70% 0%;
 }
 
-/* 3-column layout (2 images) - nav narrower, middle wider to compensate for double padding */
+@media (min-width: 768px) {
+  .grid2col .imageCol {
+    padding-right: 0;
+  }
+}
+
+/* 3-column layout (2 images) */
 .grid3col {
-  grid-template-columns: calc(33.333% - var(--space-lg)) calc(33.333% + var(--space-lg)) 33.333%;
+  grid-template-columns: 30% 37% 33%;
 }
 
 /* Last image column - no right padding */
 .imageCol:last-child {
   padding-right: 0;
 }
+
 
 /* Navigation column */
 .nav {
@@ -53,7 +61,7 @@
 .heading {
   font-family: var(--font-body);
   font-size: var(--text-sm);
-  font-weight: 400;
+  font-weight: var(--font-weight-bold);
   letter-spacing: 0.1em;
   color: var(--color-foreground);
   margin: 0 0 var(--space-md) 0;
@@ -71,7 +79,7 @@
 .navLink {
   font-family: var(--font-heading);
   font-size: var(--text-3xl);
-  font-weight: 300;
+  font-weight: var(--font-weight-normal);
   width: fit-content;
   color: var(--color-foreground);
   text-decoration: none;
@@ -82,12 +90,12 @@
 
 .navLink:hover {
   opacity: 0.6;
-  font-weight: 500;
+  font-weight: var(--font-weight-bold);
   text-decoration: none;
 }
 
 .navLinkActive {
-  font-weight: 500;
+  font-weight: var(--font-weight-bold);
 }
 
 /* Image columns */
@@ -95,6 +103,7 @@
   position: sticky;
   top: 0;
   padding: var(--space-lg);
+  transition: opacity 0.6s ease, padding 0.6s ease;
 }
 
 /* Vertical separator line */
@@ -106,6 +115,18 @@
   bottom: var(--space-lg);
   width: 1px;
   background-color: var(--color-border);
+  transition: opacity 0.6s ease;
+}
+
+/* Collapsed second image column */
+.imageColHidden {
+  opacity: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.imageColHidden::before {
+  opacity: 0;
 }
 
 
@@ -130,10 +151,6 @@
 
 /* Mobile */
 @media (max-width: 768px) {
-  .grid {
-    grid-template-columns: 1fr !important;
-    min-height: auto;
-  }
 
   .nav {
     padding: var(--space-lg) 0;

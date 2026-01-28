@@ -41,6 +41,15 @@ export default function CheckoutPage() {
         throw new Error(data.error || 'Noe gikk galt')
       }
 
+      // Validate checkout URL points to Shopify before redirecting
+      const checkoutUrl = new URL(data.checkoutUrl)
+      if (
+        checkoutUrl.protocol !== 'https:' ||
+        (!checkoutUrl.hostname.endsWith('.myshopify.com') &&
+          !checkoutUrl.hostname.endsWith('.shopify.com'))
+      ) {
+        throw new Error('Ugyldig betalingslenke')
+      }
       window.location.href = data.checkoutUrl
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Noe gikk galt')

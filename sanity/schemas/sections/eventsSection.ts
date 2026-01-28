@@ -7,7 +7,7 @@ import { defineArrayMember, defineField, defineType } from 'sanity'
  */
 export default defineType({
   name: 'eventsSection',
-  title: 'Fremhevet arrangement',
+  title: 'Arrangementer',
   type: 'object',
   fields: [
     defineField({
@@ -28,6 +28,21 @@ export default defineType({
               options: {
                 disableNew: true,
               },
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: 'imageLayout',
+              title: 'Antall bilder',
+              type: 'string',
+              options: {
+                list: [
+                  { title: '1 bilde', value: '1' },
+                  { title: '2 bilder', value: '2' },
+                ],
+                layout: 'radio',
+                direction: 'horizontal',
+              },
+              initialValue: '2',
               validation: (Rule) => Rule.required(),
             }),
             defineField({
@@ -60,7 +75,7 @@ export default defineType({
                   type: 'string',
                 }),
               ],
-              validation: (Rule) => Rule.required(),
+              hidden: ({ parent }) => parent?.imageLayout === '1',
             }),
           ],
           preview: {
@@ -91,7 +106,7 @@ export default defineType({
     prepare({ item0, item1, item2, media }) {
       const items = [item0, item1, item2].filter(Boolean)
       return {
-        title: 'Fremhevet arrangement',
+        title: 'Arrangementer',
         subtitle: `${items.length} arrangement${items.length !== 1 ? 'er' : ''}`,
         media,
       }

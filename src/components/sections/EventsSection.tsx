@@ -19,10 +19,14 @@ export function EventsSectionComponent({ data }: EventsSectionComponentProps) {
     return null
   }
 
+  const activeItem = items[activeIndex]
+  const hasAnySecondImage = items.some((item) => item.imageLayout !== '1' && item.image2?.asset)
+  const singleImage = activeItem?.imageLayout === '1'
+
   return (
     <section className={styles.section}>
       <div className={styles.container}>
-        <div className={`${styles.grid} ${styles.grid3col}`}>
+        <div className={`${styles.grid} ${!hasAnySecondImage || singleImage ? styles.grid2col : styles.grid3col}`}>
           {/* Navigation column */}
           <div className={styles.nav}>
             <h2 className={styles.heading}>Arrangementer</h2>
@@ -51,7 +55,7 @@ export function EventsSectionComponent({ data }: EventsSectionComponentProps) {
                     src={urlFor(item.image1).url()}
                     alt={item.image1.alt || ''}
                     fill
-                    sizes="33vw"
+                    sizes="50vw"
                     className={`${styles.image} ${index === activeIndex ? styles.imageActive : ''}`}
                   />
                 )
@@ -59,23 +63,25 @@ export function EventsSectionComponent({ data }: EventsSectionComponentProps) {
             </div>
           </div>
 
-          {/* Image column 2 - all images stacked, crossfade via opacity */}
-          <div className={styles.imageCol}>
-            <div className={styles.imageWrapper}>
-              {items.map((item, index) => (
-                item.image2?.asset && (
-                  <Image
-                    key={`img2-${item._key}`}
-                    src={urlFor(item.image2).url()}
-                    alt={item.image2.alt || ''}
-                    fill
-                    sizes="33vw"
-                    className={`${styles.image} ${index === activeIndex ? styles.imageActive : ''}`}
-                  />
-                )
-              ))}
+          {/* Image column 2 - stays in DOM, collapses via CSS */}
+          {hasAnySecondImage && (
+            <div className={`${styles.imageCol} ${singleImage ? styles.imageColHidden : ''}`}>
+              <div className={styles.imageWrapper}>
+                {items.map((item, index) => (
+                  item.image2?.asset && (
+                    <Image
+                      key={`img2-${item._key}`}
+                      src={urlFor(item.image2).url()}
+                      alt={item.image2.alt || ''}
+                      fill
+                      sizes="33vw"
+                      className={`${styles.image} ${index === activeIndex ? styles.imageActive : ''}`}
+                    />
+                  )
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </section>

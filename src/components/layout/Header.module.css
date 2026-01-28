@@ -210,7 +210,7 @@
 .menuLabel {
   font-size: var(--text-sm);
   letter-spacing: 0.1em;
-  font-weight: 400;
+  font-weight: var(--font-weight-bold);
 }
 
 .closeButton {
@@ -262,17 +262,33 @@
   font-family: var(--font-heading);
   width: fit-content;
   font-size: var(--text-2xl);
-  font-weight: 300;
+  font-weight: var(--font-weight-normal);
   color: var(--color-foreground);
   text-decoration: none;
   padding: var(--space-xs) 0;
   transition: opacity var(--transition-fast), font-weight 0.45s ease;
+  position: relative;
+}
+
+.menuLink::before {
+  content: '';
+  position: absolute;
+  bottom: 6px;
+  left: 0;
+  width: 150%;
+  height: 1px;
+  background: linear-gradient(to right, var(--color-foreground) 0%, var(--color-foreground) 60%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.menuLink:hover::before {
+  opacity: 1;
 }
 
 .menuLink:hover {
   text-decoration: none;
-  opacity: 0.5;
-  font-weight: 500;
+  font-weight: var(--font-weight-bold);
 }
 
 /* Separator */

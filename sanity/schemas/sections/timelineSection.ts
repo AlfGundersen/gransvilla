@@ -3,8 +3,7 @@ import { defineArrayMember, defineField, defineType } from 'sanity'
 /**
  * Historie-seksjon - Interaktiv tidslinje
  *
- * Layout: Bilde til venstre, klikkbar årsliste til høyre
- * Klikk på et år for å se beskrivelse og endre bildet
+ * Layout: Klikkbar årsliste med beskrivelse per år
  */
 export default defineType({
   name: 'timelineSection',
@@ -12,8 +11,28 @@ export default defineType({
   type: 'object',
   fields: [
     defineField({
+      name: 'image',
+      title: 'Bilde',
+      type: 'image',
+      options: { hotspot: true },
+      fields: [
+        defineField({
+          name: 'alt',
+          title: 'Alt-tekst',
+          type: 'string',
+        }),
+      ],
+    }),
+    defineField({
+      name: 'heading',
+      title: 'Overskrift',
+      type: 'string',
+      description: 'Vises over tidslinjen',
+    }),
+    defineField({
       name: 'entries',
       title: 'Tidslinje',
+      description: 'Fortell historien til Gransvilla gjennom viktige årstall og milepæler',
       type: 'array',
       of: [
         defineArrayMember({
@@ -27,57 +46,59 @@ export default defineType({
               type: 'number',
               validation: (Rule) => Rule.required().min(1900).max(2100),
             }),
-            defineField({
-              name: 'title',
-              title: 'Tittel',
-              type: 'string',
-              description: 'Overskrift som vises over bildet',
-            }),
+            // --- Commented out for now, can be re-enabled later ---
+            // defineField({
+            //   name: 'title',
+            //   title: 'Tittel',
+            //   type: 'string',
+            //   description: 'Overskrift som vises over bildet',
+            // }),
             defineField({
               name: 'description',
               title: 'Beskrivelse',
               type: 'text',
               rows: 3,
+              description: 'Teksten som vises når dette årstallet er valgt',
             }),
-            defineField({
-              name: 'image',
-              title: 'Bilde',
-              type: 'image',
-              options: {
-                hotspot: true,
-              },
-            }),
+            // --- Commented out for now, can be re-enabled later ---
+            // defineField({
+            //   name: 'image',
+            //   title: 'Bilde',
+            //   type: 'image',
+            //   options: {
+            //     hotspot: true,
+            //   },
+            // }),
           ],
           preview: {
             select: {
               year: 'year',
-              title: 'title',
-              media: 'image',
+              // title: 'title',
+              // media: 'image',
             },
-            prepare({ year, title, media }) {
+            prepare({ year /*, title, media */ }) {
               return {
-                title: `${year || 'Ukjent år'}${title ? ` - ${title}` : ''}`,
-                subtitle: title || '',
-                media,
+                title: `${year || 'Ukjent år'}`,
+                // subtitle: title || '',
+                // media,
               }
             },
           },
         }),
       ],
-      description: 'Legg til år med tittel, bilde og beskrivelse. Sorteres automatisk med nyeste først.',
     }),
   ],
   preview: {
     select: {
       entries: 'entries',
-      media: 'entries.0.image',
+      // media: 'entries.0.image',
     },
-    prepare({ entries, media }) {
+    prepare({ entries /*, media */ }) {
       const count = entries?.length || 0
       return {
         title: 'Historie',
         subtitle: `${count} element${count !== 1 ? 'er' : ''}`,
-        media,
+        // media,
       }
     },
   },
