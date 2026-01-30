@@ -65,7 +65,7 @@ export default defineType({
       name: 'bilder',
       title: 'Bilder',
       type: 'array',
-      description: 'Last opp opptil 4 bilder. Klikk på et bilde for å legge til alternativ tekst',
+      description: 'Last opp opptil 10 bilder. Klikk på et bilde for å legge til alternativ tekst',
       of: [
         {
           type: 'image',
@@ -83,7 +83,7 @@ export default defineType({
           ],
         },
       ],
-      validation: (Rule) => Rule.max(4),
+      validation: (Rule) => Rule.max(10),
     }),
   ],
   preview: {
