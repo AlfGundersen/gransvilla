@@ -11,6 +11,8 @@ const imageFragment = groq`
 // Frontpage query - singleton document
 export const frontpageQuery = groq`
   *[_type == "frontpage"][0] {
+    _id,
+    _type,
     hero {
       image {
         ${imageFragment}
@@ -312,6 +314,7 @@ const eventSectionsFragment = groq`
 export const eventQuery = groq`
   *[_type == "event" && slug.current == $slug][0] {
     _id,
+    _type,
     title,
     slug,
     description,
@@ -327,6 +330,7 @@ export const eventQuery = groq`
 export const pageQuery = groq`
   *[_type == "page" && slug.current == $slug][0] {
     _id,
+    _type,
     title,
     slug,
     description,

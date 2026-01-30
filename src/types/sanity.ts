@@ -173,6 +173,7 @@ export type EventPageSection =
 // Event document
 export interface Event {
   _id: string
+  _type: 'event'
   title: string
   slug: {
     current: string
@@ -194,6 +195,8 @@ export type PageSection =
 
 // Frontpage document - singleton with predefined sections
 export interface Frontpage {
+  _id: string
+  _type: 'frontpage'
   hero?: Omit<HeroSection, '_type' | '_key'>
   featured?: Omit<FeaturedSection, '_type' | '_key'>
   events?: Omit<EventsSection, '_type' | '_key'>
@@ -277,6 +280,7 @@ export interface ShopCategory {
 // Page document
 export interface Page {
   _id: string
+  _type: 'page'
   title: string
   slug: {
     current: string

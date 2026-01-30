@@ -1,3 +1,4 @@
+import { createDataAttribute } from 'next-sanity'
 import { EventsSectionComponent } from '@/components/sections/EventsSection'
 import { FeaturedProductSectionComponent } from '@/components/sections/FeaturedProductSection'
 import { FeaturedSectionComponent } from '@/components/sections/FeaturedSection'
@@ -25,37 +26,47 @@ export default async function HomePage() {
   return (
     <div className={styles.page}>
       {frontpage.hero && (
-        <HeroSectionComponent
-          data={{ ...frontpage.hero, _type: 'heroSection', _key: 'hero' }}
-        />
+        <div data-sanity={createDataAttribute({ id: frontpage._id, type: frontpage._type, path: 'hero' }).toString()}>
+          <HeroSectionComponent
+            data={{ ...frontpage.hero, _type: 'heroSection', _key: 'hero' }}
+          />
+        </div>
       )}
 
       {frontpage.featured && (
-        <FeaturedSectionComponent
-          data={{ ...frontpage.featured, _type: 'featuredSection', _key: 'featured' }}
-        />
+        <div data-sanity={createDataAttribute({ id: frontpage._id, type: frontpage._type, path: 'featured' }).toString()}>
+          <FeaturedSectionComponent
+            data={{ ...frontpage.featured, _type: 'featuredSection', _key: 'featured' }}
+          />
+        </div>
       )}
 
       {frontpage.events && (
-        <EventsSectionComponent
-          data={{ ...frontpage.events, _type: 'eventsSection', _key: 'events' }}
-        />
+        <div data-sanity={createDataAttribute({ id: frontpage._id, type: frontpage._type, path: 'events' }).toString()}>
+          <EventsSectionComponent
+            data={{ ...frontpage.events, _type: 'eventsSection', _key: 'events' }}
+          />
+        </div>
       )}
 
       {frontpage.timeline && (
-        <TimelineSectionComponent
-          data={{ ...frontpage.timeline, _type: 'timelineSection', _key: 'timeline' }}
-        />
+        <div data-sanity={createDataAttribute({ id: frontpage._id, type: frontpage._type, path: 'timeline' }).toString()}>
+          <TimelineSectionComponent
+            data={{ ...frontpage.timeline, _type: 'timelineSection', _key: 'timeline' }}
+          />
+        </div>
       )}
 
       {frontpage.featuredProduct && (
-        <FeaturedProductSectionComponent
-          data={{
-            ...frontpage.featuredProduct,
-            _type: 'featuredProductSection',
-            _key: 'featuredProduct',
-          }}
-        />
+        <div data-sanity={createDataAttribute({ id: frontpage._id, type: frontpage._type, path: 'featuredProduct' }).toString()}>
+          <FeaturedProductSectionComponent
+            data={{
+              ...frontpage.featuredProduct,
+              _type: 'featuredProductSection',
+              _key: 'featuredProduct',
+            }}
+          />
+        </div>
       )}
     </div>
   )

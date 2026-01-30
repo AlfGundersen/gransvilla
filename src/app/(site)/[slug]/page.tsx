@@ -81,7 +81,11 @@ export default async function SlugPage({ params }: Props) {
           </div>
         )}
         {content.sections && content.sections.length > 0 && (
-          <PageSectionRenderer sections={content.sections} />
+          <PageSectionRenderer
+            sections={content.sections}
+            documentId={content._id}
+            documentType={content._type}
+          />
         )}
       </div>
     </div>
