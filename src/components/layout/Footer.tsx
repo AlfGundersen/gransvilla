@@ -6,6 +6,7 @@ import { PortableText } from '@portabletext/react'
 import { useState } from 'react'
 import type { NavLink, SocialLink } from '@/types/sanity'
 import { socialPlatformLabels } from '@/types/sanity'
+import { useCookieConsent } from '@/context/CookieConsentContext'
 import styles from './Footer.module.css'
 
 interface FooterProps {
@@ -24,6 +25,7 @@ interface FooterProps {
 
 export default function Footer({ navigation, socialLinks, contactInfo, faviconUrl }: FooterProps) {
   const [email, setEmail] = useState('')
+  const { openSettings } = useCookieConsent()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -144,9 +146,9 @@ export default function Footer({ navigation, socialLinks, contactInfo, faviconUr
           <Link href="/personvern" className={styles.legalLink}>
             Personvernerklæring
           </Link>
-          <Link href="/cookies" className={styles.legalLink}>
+          <button type="button" className={styles.legalLink} onClick={openSettings}>
             Cookies
-          </Link>
+          </button>
         </div>
       </div>
     </footer>

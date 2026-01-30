@@ -2,7 +2,10 @@ import Footer from '@/components/layout/Footer'
 import Header from '@/components/layout/Header'
 import ScrollToTop from '@/components/layout/ScrollToTop'
 import { CartProvider } from '@/context/CartContext'
+import { CookieConsentProvider } from '@/context/CookieConsentContext'
 import { CartDrawer } from '@/components/cart/CartDrawer'
+import CookieBanner from '@/components/cookie/CookieBanner'
+import GoogleAnalytics from '@/components/analytics/GoogleAnalytics'
 import { sanityFetch } from '@/lib/sanity/live'
 import { siteSettingsQuery } from '@/lib/sanity/queries'
 import { resolveMenu } from '@/lib/sanity/resolveMenu'
@@ -23,22 +26,26 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
     : undefined
 
   return (
-    <CartProvider>
-      <div className={styles.wrapper} data-site>
-        <ScrollToTop />
-        <a href="#main-content" className="visually-hidden">
-          Hopp til innhold
-        </a>
-        <Header navigation={mainMenu} socialLinks={socialLinks} />
-        <main id="main-content" className={styles.main}>{children}</main>
-        <Footer
-          navigation={footerMenu}
-          socialLinks={socialLinks}
-          contactInfo={settings?.contactInfo}
-          faviconUrl={faviconUrl}
-        />
-      </div>
-      <CartDrawer />
-    </CartProvider>
+    <CookieConsentProvider>
+      <CartProvider>
+        <div className={styles.wrapper} data-site>
+          <ScrollToTop />
+          <a href="#main-content" className="visually-hidden">
+            Hopp til innhold
+          </a>
+          <Header navigation={mainMenu} socialLinks={socialLinks} />
+          <main id="main-content" className={styles.main}>{children}</main>
+          <Footer
+            navigation={footerMenu}
+            socialLinks={socialLinks}
+            contactInfo={settings?.contactInfo}
+            faviconUrl={faviconUrl}
+          />
+        </div>
+        <CartDrawer />
+        <CookieBanner />
+        <GoogleAnalytics />
+      </CartProvider>
+    </CookieConsentProvider>
   )
 }
