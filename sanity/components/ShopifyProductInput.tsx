@@ -138,7 +138,7 @@ export function ShopifyProductInput({ value, onChange }: ShopifyProductInputProp
         <option value="">Velg et produkt...</option>
         {products.map((product) => (
           <option key={product.id} value={product.handle}>
-            {product.title} - {parseFloat(product.priceRange.minVariantPrice.amount).toLocaleString('nb-NO')} {product.priceRange.minVariantPrice.currencyCode}
+            {product.title} - {parseFloat(product.priceRange.minVariantPrice.amount).toLocaleString('nb-NO')} {product.priceRange.minVariantPrice.currencyCode === 'NOK' ? 'kr' : product.priceRange.minVariantPrice.currencyCode}
           </option>
         ))}
       </Select>
@@ -160,7 +160,7 @@ export function ShopifyProductInput({ value, onChange }: ShopifyProductInputProp
             </Box>
             <Text size={1} weight="semibold">{selectedProduct.title}</Text>
             <Text size={1} muted>
-              {parseFloat(selectedProduct.priceRange.minVariantPrice.amount).toLocaleString('nb-NO')} {selectedProduct.priceRange.minVariantPrice.currencyCode}
+              {parseFloat(selectedProduct.priceRange.minVariantPrice.amount).toLocaleString('nb-NO')} {selectedProduct.priceRange.minVariantPrice.currencyCode === 'NOK' ? 'kr' : selectedProduct.priceRange.minVariantPrice.currencyCode}
             </Text>
           </Stack>
         </Card>

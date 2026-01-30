@@ -27,6 +27,10 @@ export type Collection = {
   products: Product[]
 }
 
+function displayCurrency(code: string): string {
+  return code === 'NOK' ? 'kr' : code
+}
+
 // Helper to transform Shopify product to simplified format
 function transformProduct(product: ShopifyProduct): Product {
   return {
@@ -36,7 +40,7 @@ function transformProduct(product: ShopifyProduct): Product {
     description: product.description,
     descriptionHtml: product.descriptionHtml,
     price: parseFloat(product.priceRange.minVariantPrice.amount),
-    currencyCode: product.priceRange.minVariantPrice.currencyCode,
+    currencyCode: displayCurrency(product.priceRange.minVariantPrice.currencyCode),
     images: product.images.edges.map((edge) => edge.node),
     variants: product.variants.edges.map((edge) => edge.node),
     options: product.options,
@@ -55,12 +59,12 @@ function transformCart(cart: ShopifyCart): Cart {
       variantTitle: edge.node.merchandise.title,
       quantity: edge.node.quantity,
       price: parseFloat(edge.node.merchandise.price.amount),
-      currencyCode: edge.node.merchandise.price.currencyCode,
+      currencyCode: displayCurrency(edge.node.merchandise.price.currencyCode),
       image: edge.node.merchandise.product.images.edges[0]?.node,
       handle: edge.node.merchandise.product.handle,
     })),
     totalAmount: parseFloat(cart.cost.totalAmount.amount),
-    currencyCode: cart.cost.totalAmount.currencyCode,
+    currencyCode: displayCurrency(cart.cost.totalAmount.currencyCode),
   }
 }
 
