@@ -54,6 +54,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             src={product.images[0].url}
             alt={product.images[0].altText || product.title}
             fill
+            loading="eager"
             className={styles.shopImage}
             sizes="(max-width: 767px) 100vw, 33vw"
           />
