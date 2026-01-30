@@ -12,6 +12,7 @@ export const client = createClient({
   useCdn: process.env.NODE_ENV === 'production',
   stega: {
     studioUrl: '/studio',
+    enabled: false,
   },
 })
 
