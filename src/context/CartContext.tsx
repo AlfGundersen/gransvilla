@@ -6,9 +6,10 @@ import {
   useState,
   useEffect,
   useCallback,
+  useRef,
   type ReactNode,
 } from 'react'
-import type { Cart } from '@/lib/shopify/types'
+import type { Cart, CartItem } from '@/lib/shopify/types'
 
 interface CartContextType {
   cart: Cart | null
@@ -16,7 +17,7 @@ interface CartContextType {
   isLoading: boolean
   openCart: () => void
   closeCart: () => void
-  addToCart: (variantId: string, quantity?: number) => Promise<void>
+  addToCart: (variantId: string, quantity?: number) => Promise<{ requestedQuantity: number; actualQuantity: number }>
   updateQuantity: (lineId: string, quantity: number) => Promise<void>
   removeFromCart: (lineId: string) => Promise<void>
   cartCount: number
@@ -30,6 +31,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<Cart | null>(null)
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const cartRef = useRef<Cart | null>(null)
+
+  // Keep ref in sync with state so callbacks can read current cart
+  useEffect(() => {
+    cartRef.current = cart
+  }, [cart])
 
   // Load cart on mount
   useEffect(() => {
@@ -63,6 +70,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
     try {
       const cartId = localStorage.getItem(CART_ID_KEY)
 
+      // Track the quantity of this variant before adding
+      const previousQuantity = cartRef.current?.items
+        .filter((item) => item.variantId === variantId)
+        .reduce((sum, item) => sum + item.quantity, 0) ?? 0
+
       const response = await fetch('/api/cart', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -75,6 +87,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
       setCart(data.cart)
       localStorage.setItem(CART_ID_KEY, data.cart.id)
       setIsOpen(true)
+
+      // Check how many were actually added by comparing cart quantities
+      const newQuantity = (data.cart as Cart).items
+        .filter((item: CartItem) => item.variantId === variantId)
+        .reduce((sum: number, item: CartItem) => sum + item.quantity, 0)
+      const actualAdded = newQuantity - previousQuantity
+
+      return { requestedQuantity: quantity, actualQuantity: actualAdded }
     } catch (error) {
       console.error('Failed to add to cart:', error)
       throw error
@@ -160,7 +180,7 @@ export function useCart() {
       isLoading: true,
       openCart: () => {},
       closeCart: () => {},
-      addToCart: async () => {},
+      addToCart: async () => ({ requestedQuantity: 0, actualQuantity: 0 }),
       updateQuantity: async () => {},
       removeFromCart: async () => {},
       cartCount: 0,

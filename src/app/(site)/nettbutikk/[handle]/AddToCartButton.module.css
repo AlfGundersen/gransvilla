@@ -21,3 +21,10 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+.stockNotice {
+  margin-top: var(--space-sm);
+  font-size: var(--text-sm);
+  color: var(--color-primary);
+  font-style: italic;
+}
