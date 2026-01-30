@@ -14,22 +14,22 @@ export function ContentSectionComponent({ data }: ContentSectionComponentProps) 
   const isReversed = imagePosition === 'left'
 
   return (
-    <section className={styles.section}>
-      <div className={`${styles.container} ${isReversed ? styles.reversed : ''}`}>
+    <section className={styles.contentSection}>
+      <div className={`${styles.contentContainer} ${isReversed ? styles.contentReversed : ''}`}>
         {/* Image */}
-        <div className={styles.imageWrapper}>
+        <div className={styles.contentImageWrap}>
           {image?.asset && (
-            <Image src={urlFor(image).url()} alt={image.alt || heading || ''} fill sizes="50vw" />
+            <Image src={urlFor(image).url()} alt={image.alt || image.assetAltText || heading || ''} fill sizes="50vw" />
           )}
         </div>
 
         {/* Content */}
-        <div className={styles.content}>
-          {labelText && <span className={styles.label}>{labelText}</span>}
-          {heading && <h2 className={styles.heading}>{heading}</h2>}
-          {body && <p className={styles.body}>{body}</p>}
+        <div className={styles.contentBody}>
+          {labelText && <span className={styles.contentLabel}>{labelText}</span>}
+          {heading && <h2 className={styles.contentHeading}>{heading}</h2>}
+          {body && <p className={styles.contentText}>{body}</p>}
           {ctaText && ctaHref && (
-            <Link href={ctaHref} className={styles.cta}>
+            <Link href={ctaHref} className={styles.contentCta}>
               {ctaText}
             </Link>
           )}

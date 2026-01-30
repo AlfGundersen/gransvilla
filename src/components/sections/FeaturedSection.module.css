@@ -3,12 +3,12 @@
    Each column: text left, image right
    =========================================== */
 
-.section {
+.featuredSection {
   padding-top: var(--space-lg);
   padding-bottom: 0;
 }
 
-.container {
+.featuredContainer {
   max-width: var(--container-max-width);
   margin-inline: auto;
   padding-inline: var(--container-padding);
@@ -17,7 +17,7 @@
 }
 
 /* Bottom line */
-.container::after {
+.featuredContainer::after {
   content: '';
   position: absolute;
   bottom: 0;
@@ -28,7 +28,7 @@
 }
 
 /* Outer grid: 2 columns */
-.grid {
+.featuredGrid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: var(--space-xl);
@@ -37,7 +37,7 @@
 }
 
 /* Center vertical divider between the two columns */
-.grid::before {
+.featuredGrid::before {
   content: '';
   position: absolute;
   left: 50%;
@@ -48,34 +48,34 @@
 }
 
 /* Inner column: text + image side by side */
-.column {
+.featuredColumn {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: var(--space-xl);
 }
 
 /* Text content */
-.content {
+.featuredContent {
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
 }
 
-.heading {
+.featuredHeading {
   font-family: var(--font-heading);
   font-size: clamp(1.5rem, 3vw, 2rem);
   line-height: 1.2;
   margin: 0;
 }
 
-.description {
+.featuredDescription {
   font-size: var(--text-sm);
   line-height: 1.7;
   color: var(--color-secondary);
 }
 
 /* Type 1 - Outlined: no bg, border → black bg on hover */
-.cta {
+.featuredCta {
   display: inline-block;
   padding: var(--space-sm) var(--space-lg);
   border: 1px solid var(--color-border);
@@ -88,20 +88,21 @@
   margin-top: auto;
 }
 
-.cta:hover {
+.featuredCta:hover,
+.featuredCta:focus-visible {
   background-color: var(--color-foreground);
   color: var(--color-background);
   text-decoration: none;
 }
 
 /* Image - stretches to match text column height */
-.imageWrapper {
+.featuredImageWrap {
   position: relative;
   min-height: 300px;
 }
 
 /* Vertical line to the left of each image */
-.imageWrapper::before {
+.featuredImageWrap::before {
   content: '';
   position: absolute;
   left: calc(var(--space-xl) / -2);
@@ -111,13 +112,13 @@
   background-color: var(--color-border);
 }
 
-.imageWrapper img {
+.featuredImageWrap img {
   object-fit: cover;
 }
 
 /* Tablet */
 @media (max-width: 1024px) {
-  .grid {
+  .featuredGrid {
     grid-template-columns: 1fr;
   }
 }
@@ -125,25 +126,25 @@
 /* Mobile */
 @media (max-width: 768px) {
 
-  .grid::before {
+  .featuredGrid::before {
     display: none;
   }
 
-  .column {
+  .featuredColumn {
     grid-template-columns: 1fr 1fr;
   }
 }
 
 @media (max-width: 480px) {
-  .column {
+  .featuredColumn {
     grid-template-columns: 1fr;
   }
 
-  .imageWrapper {
+  .featuredImageWrap {
     aspect-ratio: 4 / 3;
   }
 
-  .imageWrapper::before {
+  .featuredImageWrap::before {
     display: none;
   }
 }

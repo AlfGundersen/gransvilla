@@ -2,14 +2,14 @@
    Historie Section - Interactive timeline
    =========================================== */
 
-.container {
+.timelineContainer {
   max-width: var(--container-max-width);
   margin-inline: auto;
   padding-inline: var(--container-padding);
   position: relative;
 }
 
-.container::after {
+.timelineContainer::after {
   content: '';
   position: absolute;
   bottom: 0;
@@ -19,14 +19,14 @@
   background-color: var(--color-border);
 }
 
-.grid {
+.timelineGrid {
   display: grid;
   grid-template-columns: 2fr 1fr;
   min-height: 500px;
 }
 
 /* Left column - Title and Image */
-.leftCol {
+.timelineLeftCol {
   padding: var(--space-lg);
   padding-left: 0;
   display: flex;
@@ -34,34 +34,35 @@
   gap: var(--space-lg);
 }
 
-.imageWrapper {
+.timelineImageWrap {
   position: relative;
   aspect-ratio: 3 / 2;
 }
 
-.sectionImage {
+.timelineImage {
   object-fit: cover;
 }
 
-.heading {
+.timelineHeading {
   font-family: var(--font-heading);
-  font-size: var(--text-3xl);
-  font-weight: var(--font-weight-bold);
+  font-size: var(--text-5xl);
+  font-weight: 200;
   line-height: 1.2;
   margin: 0;
+  max-width: 7ch;
 }
 
-.activeYear {
+.timelineActiveYear {
   font-family: var(--font-heading);
   font-size: clamp(2rem, 6vw, 4rem);
   font-weight: var(--font-weight-bold);
   line-height: 1;
   margin: 0;
-  animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: timelineFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Right column - Year list */
-.yearList {
+.timelineYearList {
   display: flex;
   flex-direction: column;
   padding: var(--space-lg);
@@ -70,7 +71,7 @@
 }
 
 /* Vertical separator */
-.yearList::before {
+.timelineYearList::before {
   content: '';
   position: absolute;
   left: 0;
@@ -80,7 +81,7 @@
   background-color: var(--color-border);
 }
 
-.yearItem {
+.timelineYearItem {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -92,33 +93,35 @@
   width: 100%;
 }
 
-.year {
+.timelineYear {
   font-family: var(--font-heading);
   font-size: var(--text-4xl);
-  font-weight: var(--font-weight-normal);
+  font-weight: 200;
   color: var(--color-secondary);
   transition: color var(--transition-fast), font-size var(--transition-base), font-weight 0.6s ease;
 }
 
-.yearItem:hover .year {
+.timelineYearItem:hover .timelineYear,
+.timelineYearItem:focus-visible .timelineYear {
   color: var(--color-foreground);
   font-weight: var(--font-weight-bold);
 }
 
-.yearItemActive .year {
+.timelineYearItemActive .timelineYear {
   color: var(--color-foreground);
   font-size: var(--text-5xl);
+  font-weight: var(--font-weight-bold);
 }
 
-.description {
+.timelineDescription {
   font-size: var(--text-base);
   line-height: 1.6;
   color: var(--color-secondary);
   margin: var(--space-sm) 0;
-  animation: slideIn 0.3s ease-out;
+  animation: timelineSlideIn 0.3s ease-out;
 }
 
-@keyframes slideIn {
+@keyframes timelineSlideIn {
   from {
     opacity: 0;
     transform: translateY(-8px);
@@ -132,26 +135,26 @@
 
 /* Mobile */
 @media (max-width: 768px) {
-  .grid {
+  .timelineGrid {
     grid-template-columns: 1fr;
     min-height: auto;
   }
 
-  .leftCol {
+  .timelineLeftCol {
     padding: var(--space-lg) 0;
     border-bottom: 1px solid var(--color-border);
   }
 
-  .imageWrapper {
+  .timelineImageWrap {
     aspect-ratio: 16 / 9;
     min-height: auto;
   }
 
-  .yearList {
+  .timelineYearList {
     padding: var(--space-lg) 0;
   }
 
-  .yearList::before {
+  .timelineYearList::before {
     display: none;
   }
 }

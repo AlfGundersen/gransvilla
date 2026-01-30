@@ -2,7 +2,7 @@
    Hero Section - Full width image
    =========================================== */
 
-.container {
+.heroContainer {
   max-width: var(--container-max-width);
   margin-inline: auto;
   padding-inline: var(--container-padding);
@@ -10,7 +10,7 @@
   position: relative;
 }
 
-.container::after {
+.heroContainer::after {
   content: '';
   position: absolute;
   bottom: 0;
@@ -20,18 +20,18 @@
   background-color: var(--color-border);
 }
 
-.imageWrapper {
+.heroImageWrap {
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
 }
 
-.imageWrapper img {
+.heroImageWrap img {
   object-fit: cover;
 }
 
 @media (max-width: 768px) {
-  .imageWrapper {
+  .heroImageWrap {
     aspect-ratio: 4 / 3;
   }
 }

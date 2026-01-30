@@ -3,14 +3,14 @@
    Layout adapts based on number of images
    =========================================== */
 
-.container {
+.eventsContainer {
   max-width: var(--container-max-width);
   margin-inline: auto;
   padding-inline: var(--container-padding);
   position: relative;
 }
 
-.container::after {
+.eventsContainer::after {
   content: '';
   position: absolute;
   bottom: 0;
@@ -20,36 +20,36 @@
   background-color: var(--color-border);
 }
 
-.grid {
+.eventsGrid {
   display: grid;
   min-height: 750px;
   transition: grid-template-columns 0.6s ease;
 }
 
 /* 2-column layout (1 image) - third column collapses */
-.grid2col {
+.eventsGrid2col {
   grid-template-columns: 30% 70% 0%;
 }
 
 @media (min-width: 768px) {
-  .grid2col .imageCol {
+  .eventsGrid2col .eventsImageCol {
     padding-right: 0;
   }
 }
 
 /* 3-column layout (2 images) */
-.grid3col {
+.eventsGrid3col {
   grid-template-columns: 30% 37% 33%;
 }
 
 /* Last image column - no right padding */
-.imageCol:last-child {
+.eventsImageCol:last-child {
   padding-right: 0;
 }
 
 
 /* Navigation column */
-.nav {
+.eventsNav {
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
@@ -58,16 +58,15 @@
   padding-right: var(--space-lg);
 }
 
-.heading {
+.eventsHeading {
   font-family: var(--font-body);
   font-size: var(--text-sm);
-  font-weight: var(--font-weight-bold);
   letter-spacing: 0.1em;
   color: var(--color-foreground);
   margin: 0 0 var(--space-md) 0;
 }
 
-.navList {
+.eventsNavList {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -76,7 +75,7 @@
   gap: var(--space-xs);
 }
 
-.navLink {
+.eventsNavLink {
   font-family: var(--font-heading);
   font-size: var(--text-3xl);
   font-weight: var(--font-weight-normal);
@@ -88,18 +87,19 @@
   padding: var(--space-xs) 0;
 }
 
-.navLink:hover {
+.eventsNavLink:hover,
+.eventsNavLink:focus-visible {
   opacity: 0.6;
   font-weight: var(--font-weight-bold);
   text-decoration: none;
 }
 
-.navLinkActive {
+.eventsNavLinkActive {
   font-weight: var(--font-weight-bold);
 }
 
 /* Image columns */
-.imageCol {
+.eventsImageCol {
   position: sticky;
   top: 0;
   padding: var(--space-lg);
@@ -107,7 +107,7 @@
 }
 
 /* Vertical separator line */
-.imageCol::before {
+.eventsImageCol::before {
   content: '';
   position: absolute;
   left: 0;
@@ -119,73 +119,73 @@
 }
 
 /* Collapsed second image column */
-.imageColHidden {
+.eventsImageColHidden {
   opacity: 0;
   padding: 0;
   overflow: hidden;
 }
 
-.imageColHidden::before {
+.eventsImageColHidden::before {
   opacity: 0;
 }
 
 
-.imageWrapper {
+.eventsImageWrap {
   position: relative;
   width: 100%;
   height: 100%;
 }
 
-.imageWrapper img {
+.eventsImageWrap img {
   object-fit: cover;
 }
 
-.image {
+.eventsImage {
   opacity: 0;
   transition: opacity 1.2s ease-in-out;
 }
 
-.imageActive {
+.eventsImageActive {
   opacity: 1;
 }
 
 /* Mobile */
 @media (max-width: 768px) {
 
-  .nav {
+  .eventsNav {
     padding: var(--space-lg) 0;
     border-bottom: 1px solid var(--color-border);
   }
 
-  .imageCol {
+  .eventsImageCol {
     padding: var(--space-lg) 0;
   }
 
-  .imageWrapper {
+  .eventsImageWrap {
     aspect-ratio: 16 / 9;
   }
 
-  .imageCol::before {
+  .eventsImageCol::before {
     display: none;
   }
 
-  .imageCol:not(:last-child) {
+  .eventsImageCol:not(:last-child) {
     border-bottom: 1px solid var(--color-border);
   }
 }
 
 /* Tablet */
 @media (min-width: 769px) and (max-width: 1024px) {
-  .grid3col {
+  .eventsGrid3col {
     grid-template-columns: 1fr 1fr;
   }
 
 
-  .grid3col .imageCol {
+  .eventsGrid3col .eventsImageCol {
     padding: var(--space-lg) 0 var(--space-lg) var(--space-lg);
   }
 
-  .grid3col .imageCol:last-child {
+  .eventsGrid3col .eventsImageCol:last-child {
     display: none;
   }
 }

@@ -1,4 +1,6 @@
 import { defineArrayMember, defineField, defineType } from 'sanity'
+import { AltTextInput } from '../../components/AltTextInput'
+import { ReferenceLinkless } from '../../components/ReferenceLinkless'
 
 /**
  * Arrangementer-seksjon - Fremhevede arrangementer med bilder
@@ -24,16 +26,19 @@ export default defineType({
               name: 'event',
               title: 'Arrangement',
               type: 'reference',
+              description: 'Velg en arrangementside som dette elementet skal lenke til',
               to: [{ type: 'event' }],
               options: {
                 disableNew: true,
               },
+              components: { input: ReferenceLinkless },
               validation: (Rule) => Rule.required(),
             }),
             defineField({
               name: 'imageLayout',
               title: 'Antall bilder',
               type: 'string',
+              description: 'Velg om det skal vises ett eller to bilder for dette arrangementet',
               options: {
                 list: [
                   { title: '1 bilde', value: '1' },
@@ -49,6 +54,7 @@ export default defineType({
               name: 'image1',
               title: 'Bilde 1',
               type: 'image',
+              description: 'Hovedbildet som vises for arrangementet',
               options: {
                 hotspot: true,
               },
@@ -57,6 +63,8 @@ export default defineType({
                   name: 'alt',
                   title: 'Alternativ tekst',
                   type: 'string',
+                  description: 'Beskrivelse av bildet for skjermlesere',
+                  components: { input: AltTextInput },
                 }),
               ],
               validation: (Rule) => Rule.required(),
@@ -65,6 +73,7 @@ export default defineType({
               name: 'image2',
               title: 'Bilde 2',
               type: 'image',
+              description: 'Ekstra bilde som vises ved siden av hovedbildet',
               options: {
                 hotspot: true,
               },
@@ -73,6 +82,8 @@ export default defineType({
                   name: 'alt',
                   title: 'Alternativ tekst',
                   type: 'string',
+                  description: 'Beskrivelse av bildet for skjermlesere',
+                  components: { input: AltTextInput },
                 }),
               ],
               hidden: ({ parent }) => parent?.imageLayout === '1',

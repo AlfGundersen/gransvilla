@@ -47,7 +47,6 @@
 .title {
   font-family: var(--font-heading);
   font-size: var(--text-2xl);
-  font-weight: var(--font-weight-bold);
   margin: 0;
 }
 
@@ -60,7 +59,8 @@
   transition: opacity var(--transition-fast);
 }
 
-.closeButton:hover {
+.closeButton:hover,
+.closeButton:focus-visible {
   opacity: 0.6;
 }
 
@@ -89,7 +89,8 @@
   transition: opacity var(--transition-fast);
 }
 
-.continueLink:hover {
+.continueLink:hover,
+.continueLink:focus-visible {
   opacity: 0.6;
 }
 
@@ -136,13 +137,13 @@
 .itemTitle {
   font-family: var(--font-heading);
   font-size: var(--text-base);
-  font-weight: var(--font-weight-bold);
   color: var(--color-foreground);
   text-decoration: none;
   transition: opacity var(--transition-fast);
 }
 
-.itemTitle:hover {
+.itemTitle:hover,
+.itemTitle:focus-visible {
   opacity: 0.6;
   text-decoration: none;
 }
@@ -185,7 +186,8 @@
   transition: opacity var(--transition-fast);
 }
 
-.quantityButton:hover:not(:disabled) {
+.quantityButton:hover:not(:disabled),
+.quantityButton:focus-visible:not(:disabled) {
   opacity: 0.6;
 }
 
@@ -210,7 +212,8 @@
   transition: color var(--transition-fast);
 }
 
-.removeButton:hover:not(:disabled) {
+.removeButton:hover:not(:disabled),
+.removeButton:focus-visible:not(:disabled) {
   color: var(--color-foreground);
 }
 
@@ -254,7 +257,8 @@
   transition: background-color var(--transition-fast), color var(--transition-fast);
 }
 
-.checkoutButton:hover {
+.checkoutButton:hover,
+.checkoutButton:focus-visible {
   background-color: var(--color-accent);
   border-color: var(--color-accent);
   text-decoration: none;
@@ -275,7 +279,8 @@
   transition: border-color var(--transition-fast);
 }
 
-.continueButton:hover {
+.continueButton:hover,
+.continueButton:focus-visible {
   border-color: var(--color-foreground);
 }
 

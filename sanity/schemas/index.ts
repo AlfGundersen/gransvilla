@@ -18,6 +18,12 @@ import heroSection from './sections/heroSection'
 import newsletter from './sections/newsletter'
 import timelineSection from './sections/timelineSection'
 
+// Event page sections
+import tekstSeksjon from './sections/tekstSeksjon'
+import bildeSeksjon from './sections/bildeSeksjon'
+import bildeTekstSeksjon from './sections/bildeTekstSeksjon'
+import bildegalleriSeksjon from './sections/bildegalleriSeksjon'
+
 export const schemaTypes = [
   // Documents
   frontpage,
@@ -38,4 +44,10 @@ export const schemaTypes = [
   contentSection,
   featuredProductSection,
   newsletter,
+
+  // Event page sections
+  tekstSeksjon,
+  bildeSeksjon,
+  bildeTekstSeksjon,
+  bildegalleriSeksjon,
 ]

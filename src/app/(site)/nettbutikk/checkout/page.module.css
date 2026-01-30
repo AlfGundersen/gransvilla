@@ -2,7 +2,7 @@
    Checkout Page
    =========================================== */
 
-.page {
+.checkoutPage {
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -11,12 +11,12 @@
   background: var(--color-background);
 }
 
-.container {
+.checkoutContainer {
   width: 100%;
   max-width: 480px;
 }
 
-.loading {
+.checkoutLoading {
   text-align: center;
   padding: var(--space-2xl);
   color: var(--color-secondary);
@@ -26,19 +26,18 @@
    Header
    =========================================== */
 
-.header {
+.checkoutHeader {
   text-align: center;
   margin-bottom: var(--space-lg);
 }
 
-.title {
+.checkoutTitle {
   font-family: var(--font-heading);
   font-size: var(--text-3xl);
-  font-weight: var(--font-weight-bold);
   margin: 0 0 var(--space-xs);
 }
 
-.subtitle {
+.checkoutSubtitle {
   font-size: var(--text-sm);
   color: var(--color-secondary);
   margin: 0;
@@ -48,23 +47,23 @@
    Items
    =========================================== */
 
-.items {
+.checkoutItems {
   border: 1px solid var(--color-border);
   margin-bottom: var(--space-lg);
 }
 
-.item {
+.checkoutItem {
   display: flex;
   gap: var(--space-md);
   padding: var(--space-md);
   align-items: center;
 }
 
-.item:not(:last-child) {
+.checkoutItem:not(:last-child) {
   border-bottom: 1px solid var(--color-border);
 }
 
-.itemImage {
+.checkoutItemImage {
   position: relative;
   width: 64px;
   height: 64px;
@@ -73,36 +72,35 @@
   flex-shrink: 0;
 }
 
-.itemImage img {
+.checkoutItemImage img {
   object-fit: cover;
 }
 
-.itemDetails {
+.checkoutItemDetails {
   flex: 1;
   min-width: 0;
 }
 
-.itemTitle {
+.checkoutItemTitle {
   font-family: var(--font-heading);
   font-size: var(--text-base);
-  font-weight: var(--font-weight-bold);
   margin: 0 0 var(--space-xs);
   line-height: 1.3;
 }
 
-.itemVariant {
+.checkoutItemVariant {
   font-size: var(--text-sm);
   color: var(--color-secondary);
   margin: 0;
 }
 
-.itemMeta {
+.checkoutItemMeta {
   font-size: var(--text-sm);
   color: var(--color-secondary);
   margin: 0;
 }
 
-.itemTotal {
+.checkoutItemTotal {
   font-family: var(--font-heading);
   font-size: var(--text-base);
   margin: 0;
@@ -113,17 +111,17 @@
    Totals
    =========================================== */
 
-.totals {
+.checkoutTotals {
   margin-bottom: var(--space-lg);
 }
 
-.totalRow {
+.checkoutTotalRow {
   display: flex;
   justify-content: space-between;
   font-size: var(--text-base);
 }
 
-.totalRowFinal {
+.checkoutTotalRowFinal {
   font-family: var(--font-heading);
   font-size: var(--text-2xl);
 }
@@ -132,7 +130,7 @@
    Error
    =========================================== */
 
-.error {
+.checkoutError {
   padding: var(--space-md);
   background: #fee;
   border: 1px solid #c00;
@@ -155,12 +153,12 @@
   border: 1px solid var(--color-foreground);
   font-family: var(--font-heading);
   font-size: var(--text-base);
-  font-weight: var(--font-weight-bold);
   cursor: pointer;
   transition: background-color var(--transition-fast), border-color var(--transition-fast);
 }
 
-.checkoutButton:hover:not(:disabled) {
+.checkoutButton:hover:not(:disabled),
+.checkoutButton:focus-visible:not(:disabled) {
   background-color: var(--color-accent);
   border-color: var(--color-accent);
 }
@@ -170,7 +168,7 @@
   cursor: not-allowed;
 }
 
-.secureNote {
+.checkoutSecureNote {
   text-align: center;
   font-size: var(--text-xs);
   color: var(--color-secondary);
@@ -182,29 +180,29 @@
    =========================================== */
 
 @media (max-width: 767px) {
-  .page {
+  .checkoutPage {
     align-items: flex-start;
     padding-top: var(--space-lg);
   }
 
-  .title {
+  .checkoutTitle {
     font-size: var(--text-2xl);
   }
 
-  .itemImage {
+  .checkoutItemImage {
     width: 56px;
     height: 56px;
   }
 
-  .itemTitle {
+  .checkoutItemTitle {
     font-size: var(--text-sm);
   }
 
-  .itemTotal {
+  .checkoutItemTotal {
     font-size: var(--text-sm);
   }
 
-  .totalRowFinal {
+  .checkoutTotalRowFinal {
     font-size: var(--text-xl);
   }
 }

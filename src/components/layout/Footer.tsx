@@ -2,34 +2,21 @@
 
 import { Link } from 'next-view-transitions'
 import { useState } from 'react'
+import type { NavLink, SocialLink } from '@/types/sanity'
+import { socialPlatformLabels } from '@/types/sanity'
 import styles from './Footer.module.css'
 
-// TODO: Fetch from Sanity siteSettings
-const menuLinks = [
-  { label: 'Hjem', href: '/' },
-  { label: 'Bryllup', href: '/bryllup' },
-  { label: 'Selskaper', href: '/selskaper' },
-  { label: 'Konserter', href: '/konserter' },
-  { label: 'Søndagsfrokost', href: '/sondagsfrokost' },
-  { label: 'Kantine', href: '/kantine' },
-  { label: 'Nettbutikk', href: '/nettbutikk' },
-  { label: 'Om oss', href: '/om-oss' },
-  { label: 'Praktisk info', href: '/praktisk-info' },
-  { label: 'Kontakt oss', href: '/kontakt' },
-]
+interface FooterProps {
+  navigation: NavLink[]
+  socialLinks: SocialLink[]
+  contactInfo?: {
+    email?: string
+    phone?: string
+    address?: string
+  }
+}
 
-const locations = [
-  { address: 'Jahnebakken 6,', city: '5007 Bergen' },
-  { address: 'Jahnebakken 6,', city: '5007 Bergen' },
-  { address: 'Jahnebakken 6,', city: '5007 Bergen' },
-]
-
-const socialLinks = [
-  { label: 'Facebook', href: 'https://facebook.com' },
-  { label: 'Instagram', href: 'https://instagram.com' },
-]
-
-export default function Footer() {
+export default function Footer({ navigation, socialLinks, contactInfo }: FooterProps) {
   const [email, setEmail] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -52,8 +39,10 @@ export default function Footer() {
             <p className={styles.newsletterText}>
               Holde deg oppdatert og meld deg på nyhetsbrevet
             </p>
-            <form className={styles.form} onSubmit={handleSubmit}>
+            <form className={styles.form} onSubmit={handleSubmit} aria-label="Nyhetsbrev">
+              <label htmlFor="footer-email" className="visually-hidden">E-postadresse</label>
               <input
+                id="footer-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -68,39 +57,42 @@ export default function Footer() {
           </div>
 
           {/* Menu Links */}
-          <div className={styles.column}>
+          <nav className={styles.column} aria-label="Bunntekst-navigasjon">
             <h3 className={styles.heading}>MENY</h3>
             <ul className={styles.linkList}>
-              {menuLinks.map((link) => (
+              {navigation.map((link) => (
                 <li key={link.href}>
                   <Link href={link.href}>{link.label}</Link>
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
 
-          {/* Locations */}
-          <div className={styles.column}>
-            <h3 className={styles.heading}>STED</h3>
-            <div className={styles.locations}>
-              {locations.map((location, index) => (
-                <address key={index} className={styles.address}>
-                  {location.address}
-                  <br />
-                  {location.city}
+          {/* Location */}
+          {contactInfo?.address && (
+            <div className={styles.column}>
+              <h3 className={styles.heading}>STED</h3>
+              <div className={styles.locations}>
+                <address className={styles.address}>
+                  {contactInfo.address}
                 </address>
-              ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Social */}
           <div className={styles.column}>
             <h3 className={styles.heading}>SOSIAL</h3>
             <ul className={styles.socialList}>
               {socialLinks.map((link) => (
-                <li key={link.label}>
-                  <a href={link.href} target="_blank" rel="noopener noreferrer">
-                    {link.label}
+                <li key={link.platform}>
+                  <a
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${socialPlatformLabels[link.platform] || link.platform} (åpnes i nytt vindu)`}
+                  >
+                    {socialPlatformLabels[link.platform] || link.platform}
                   </a>
                 </li>
               ))}
@@ -113,7 +105,7 @@ export default function Footer() {
               type="button"
               className={styles.circleDecoration}
               onClick={handleColorFlip}
-              aria-label="Toggle color mode"
+              aria-label="Bytt fargemodus"
             />
           </div>
         </div>

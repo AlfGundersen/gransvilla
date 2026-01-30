@@ -1,0 +1,58 @@
+import { PortableText } from '@portabletext/react'
+import { urlFor } from '@/lib/sanity/image'
+import type { BildegalleriSeksjon } from '@/types/sanity'
+import { GalleryClient } from './GalleryClient'
+import styles from './GallerySection.module.css'
+
+const RATIO_MAP: Record<string, number> = {
+  '16/9': 9 / 16,
+  '3/2': 2 / 3,
+  '4/3': 3 / 4,
+  '1/1': 1,
+  '3/4': 4 / 3,
+  '2/3': 3 / 2,
+}
+
+interface GallerySectionProps {
+  data: BildegalleriSeksjon
+}
+
+export function GallerySection({ data }: GallerySectionProps) {
+  const ratio = data.bildeforhold || '3/4'
+  const thumbWidth = 700
+  const thumbHeight = Math.round(thumbWidth * (RATIO_MAP[ratio] || 2 / 3))
+  const fullWidth = 1800
+  const fullHeight = Math.round(fullWidth * (RATIO_MAP[ratio] || 2 / 3))
+
+  const images = (data.bilder || []).map((bilde) => ({
+    src: urlFor(bilde).width(thumbWidth).height(thumbHeight).fit('crop').url(),
+    fullSrc: urlFor(bilde).width(fullWidth).height(fullHeight).fit('crop').url(),
+    alt: bilde.alt || bilde.assetAltText || '',
+    width: thumbWidth,
+    height: thumbHeight,
+  }))
+
+  return (
+    <div className={styles.gallerySection} data-fullwidth>
+      {data.visInnhold && (data.overskrift || data.tekst) && (
+        <div className={styles.galleryContent}>
+          {data.overskrift && (
+            <h2 className={styles.galleryHeading}>{data.overskrift}</h2>
+          )}
+          {data.tekst && (
+            <div className={styles.galleryBody}>
+              <PortableText value={data.tekst} />
+            </div>
+          )}
+        </div>
+      )}
+      {images.length > 0 && (
+        <GalleryClient
+          images={images}
+          columns={data.antallKolonner || 2}
+          hasContent={!!(data.visInnhold && (data.overskrift || data.tekst))}
+        />
+      )}
+    </div>
+  )
+}

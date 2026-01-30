@@ -46,6 +46,8 @@ export function AddToCartButton({ variantId, available, quantity = 1 }: AddToCar
       className={styles.button}
       onClick={handleAddToCart}
       disabled={isLoading}
+      aria-busy={isAdding}
+      aria-live="polite"
     >
       {isAdding ? 'Legger til...' : added ? 'Lagt til!' : 'Legg i handlekurv'}
     </button>

@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity'
+import { AltTextInput } from '../../components/AltTextInput'
 
 export default defineType({
   name: 'event',
@@ -9,6 +10,7 @@ export default defineType({
       name: 'title',
       title: 'Tittel',
       type: 'string',
+      description: 'Hovedtittelen som vises øverst på siden',
       validation: (Rule) => Rule.required().error('Tittel er påkrevd'),
     }),
     defineField({
@@ -39,30 +41,45 @@ export default defineType({
       description: 'Kort sammendrag som vises i lister',
     }),
     defineField({
-      name: 'body',
-      title: 'Full beskrivelse',
-      type: 'blockContent',
-    }),
-    defineField({
-      name: 'image',
-      title: 'Bilde',
+      name: 'featuredImage',
+      title: 'Fremhevet bilde',
       type: 'image',
+      description: 'Stort bilde som vises ved siden av tittelen øverst på siden',
       options: {
         hotspot: true,
       },
+      fields: [
+        defineField({
+          name: 'alt',
+          title: 'Alternativ tekst',
+          type: 'string',
+          description: 'Viktig for tilgjengelighet og SEO',
+          components: { input: AltTextInput },
+        }),
+      ],
+    }),
+    defineField({
+      name: 'sections',
+      title: 'Seksjoner',
+      type: 'array',
+      description: 'Bygg opp siden med ulike innholdsseksjoner',
+      of: [
+        { type: 'tekstSeksjon' },
+        { type: 'bildeSeksjon' },
+        { type: 'bildeTekstSeksjon' },
+        { type: 'bildegalleriSeksjon' },
+      ],
     }),
   ],
   preview: {
     select: {
       title: 'title',
       description: 'description',
-      media: 'image',
     },
-    prepare({ title, description, media }) {
+    prepare({ title, description }) {
       return {
         title,
         subtitle: description ? description.substring(0, 50) + (description.length > 50 ? '...' : '') : '',
-        media,
       }
     },
   },

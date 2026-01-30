@@ -1,0 +1,115 @@
+.eventPage {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: var(--space-xl) var(--container-padding) 0 var(--container-padding);
+}
+
+.eventGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 0 var(--space-lg);
+}
+
+.eventGrid>*:not(:first-child):not(.featuredImage) {
+  padding-top: var(--space-lg);
+  position: relative;
+}
+
+.eventGrid>*:not(:first-child):not(.featuredImage)::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background-color: var(--color-border);
+}
+
+.featuredImage+*::before {
+  display: none !important;
+}
+
+/* Suppress top border on sections immediately after a full-width section
+   (full-width sections already have a bottom border, so this avoids doubling) */
+.eventGrid>[data-fullwidth]+*::before {
+  display: none;
+}
+
+/* Last section should not have a bottom border */
+.eventGrid>*:last-child::after {
+  display: none;
+}
+
+.featuredImage {
+  grid-column: 2 / -1;
+  position: relative;
+  padding: 0 0 var(--space-lg) var(--space-lg);
+}
+
+.featuredImage::before {
+  content: "";
+  background-color: var(--color-border);
+  height: 1px;
+  position: absolute;
+  bottom: 0;
+  left: var(--space-lg);
+  right: 0;
+}
+
+.featuredImage::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  background-color: var(--color-border);
+}
+
+.featuredImageImg {
+  width: 100%;
+  height: auto;
+  display: block;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.eventTitle {
+  grid-column: 1 / 2;
+  font-family: var(--font-heading);
+  font-size: var(--text-4xl);
+  font-weight: var(--font-heading-weight);
+  line-height: 1.1;
+  margin: 0;
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+  .eventGrid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  .eventGrid>*:not(:first-child):not(.featuredImage) {
+    padding-top: 0;
+  }
+
+  .eventGrid>*:not(:first-child):not(.featuredImage)::before {
+    display: none;
+  }
+
+  .eventTitle {
+    grid-column: 1 / -1;
+    font-size: var(--text-3xl);
+  }
+
+  .featuredImage {
+    grid-column: 1 / -1;
+    padding-left: 0;
+  }
+
+  .featuredImage::after {
+    display: none;
+  }
+}

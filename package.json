@@ -12,6 +12,7 @@
     "check:fix": "biome check --write ./src"
   },
   "dependencies": {
+    "@portabletext/react": "^6.0.2",
     "@sanity/image-url": "^2.0.2",
     "@sanity/ui": "^3.1.11",
     "@sanity/vision": "^5.2.0",
@@ -25,7 +26,8 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "sanity": "^5.2.0",
-    "sanity-plugin-asset-source-unsplash": "^7.0.2"
+    "sanity-plugin-asset-source-unsplash": "^7.0.2",
+    "sanity-plugin-media": "^4.1.1"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.11",

@@ -52,7 +52,8 @@
   padding: var(--space-xs) 0;
 }
 
-.navLink:hover {
+.navLink:hover,
+.navLink:focus-visible {
   opacity: 0.6;
   text-decoration: none;
 }

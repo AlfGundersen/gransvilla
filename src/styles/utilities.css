@@ -25,6 +25,25 @@
   border: 0;
 }
 
+/* Skip link becomes visible on focus */
+.visually-hidden:focus {
+  position: fixed;
+  top: var(--space-sm, 8px);
+  left: var(--space-sm, 8px);
+  width: auto;
+  height: auto;
+  padding: var(--space-sm, 8px) var(--space-md, 16px);
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+  background: var(--color-foreground, #000);
+  color: var(--color-background, #fff);
+  font-family: var(--font-body, sans-serif);
+  font-size: var(--text-sm, 0.875rem);
+  z-index: 10000;
+}
+
 /* --------------------------------------
    Flexbox
    -------------------------------------- */

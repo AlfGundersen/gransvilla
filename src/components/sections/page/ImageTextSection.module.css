@@ -1,0 +1,79 @@
+.imageTextSection {
+  grid-column: 2 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+  align-items: start;
+  position: relative;
+  padding-left: var(--space-lg);
+}
+
+.imageTextSection::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: var(--space-lg);
+  left: 0;
+  width: 1px;
+  background-color: var(--color-border);
+}
+
+.imageTextReversed {
+  direction: rtl;
+}
+
+.imageTextReversed>* {
+  direction: ltr;
+}
+
+.imageTextImageWrap {
+  width: 100%;
+}
+
+.imageTextImage {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.imageTextContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.imageTextHeading {
+  font-family: var(--font-heading);
+  font-size: var(--text-3xl);
+  font-weight: var(--font-heading-weight);
+  line-height: 1.2;
+}
+
+.imageTextBody {
+  font-size: var(--text-base);
+  line-height: 1.7;
+}
+
+.imageTextBody p {
+  margin: 0 0 var(--space-md);
+}
+
+.imageTextBody p:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 767px) {
+  .imageTextSection {
+    grid-column: 1 / -1;
+    grid-template-columns: 1fr;
+    padding-left: 0;
+  }
+
+  .imageTextSection::after {
+    display: none;
+  }
+
+  .imageTextReversed {
+    direction: ltr;
+  }
+}

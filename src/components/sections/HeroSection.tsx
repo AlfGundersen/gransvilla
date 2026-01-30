@@ -11,13 +11,14 @@ export function HeroSectionComponent({ data }: HeroSectionComponentProps) {
   const { image } = data
 
   return (
-    <section className={styles.hero}>
-      <div className={styles.container}>
-        <div className={styles.imageWrapper}>
+    <section className={styles.heroSection}>
+      <div className={styles.heroContainer}>
+        <div className={styles.heroImageWrap}>
           {image?.asset && (
             <Image
               src={urlFor(image).url()}
-              alt="Hero"
+              alt={image.alt || image.assetAltText || ''}
+              role={!image.alt ? 'presentation' : undefined}
               fill
               sizes="100vw"
               priority

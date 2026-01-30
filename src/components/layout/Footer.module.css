@@ -59,8 +59,9 @@
   width: 100%;
 }
 
-.input:focus {
-  outline: none;
+.input:focus-visible {
+  outline: 1px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
 /* Type 3 - Accent: black bg → accent pink bg on hover */
@@ -75,7 +76,8 @@
   transition: background-color var(--transition-base), border-color var(--transition-base);
 }
 
-.button:hover {
+.button:hover,
+.button:focus-visible {
   background-color: var(--color-accent);
   border-color: var(--color-accent);
 }
@@ -129,7 +131,8 @@
   transition: opacity var(--transition-fast), font-weight 0.45s ease;
 }
 
-.linkList a:hover {
+.linkList a:hover,
+.linkList a:focus-visible {
   opacity: 0.6;
   font-weight: var(--font-weight-bold);
   text-decoration: none;
@@ -168,7 +171,8 @@
   transition: opacity var(--transition-fast), font-weight 0.45s ease;
 }
 
-.socialList a:hover {
+.socialList a:hover,
+.socialList a:focus-visible {
   opacity: 0.6;
   font-weight: var(--font-weight-bold);
   text-decoration: none;
@@ -194,7 +198,8 @@
   transition: transform var(--transition-base);
 }
 
-.circleDecoration:hover {
+.circleDecoration:hover,
+.circleDecoration:focus-visible {
   transform: scale(1.05);
 }
 
@@ -217,7 +222,8 @@
   text-decoration: none;
 }
 
-.legalLink:hover {
+.legalLink:hover,
+.legalLink:focus-visible {
   text-decoration: underline;
 }
 

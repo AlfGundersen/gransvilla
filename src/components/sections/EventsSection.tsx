@@ -24,19 +24,20 @@ export function EventsSectionComponent({ data }: EventsSectionComponentProps) {
   const singleImage = activeItem?.imageLayout === '1'
 
   return (
-    <section className={styles.section}>
-      <div className={styles.container}>
-        <div className={`${styles.grid} ${!hasAnySecondImage || singleImage ? styles.grid2col : styles.grid3col}`}>
+    <section className={styles.eventsSection} aria-label="Arrangementer">
+      <div className={styles.eventsContainer}>
+        <div className={`${styles.eventsGrid} ${!hasAnySecondImage || singleImage ? styles.eventsGrid2col : styles.eventsGrid3col}`}>
           {/* Navigation column */}
-          <div className={styles.nav}>
-            <h2 className={styles.heading}>Arrangementer</h2>
-            <ul className={styles.navList}>
+          <div className={styles.eventsNav}>
+            <h2 className={styles.eventsHeading}>Arrangementer</h2>
+            <ul className={styles.eventsNavList}>
               {items.map((item, index) => (
                 <li key={item._key}>
                   <Link
-                    href={`/arrangementer/${item.event.slug.current}`}
-                    className={`${styles.navLink} ${index === activeIndex ? styles.navLinkActive : ''}`}
+                    href={`/${item.event.slug.current}`}
+                    className={`${styles.eventsNavLink} ${index === activeIndex ? styles.eventsNavLinkActive : ''}`}
                     onMouseEnter={() => setActiveIndex(index)}
+                    onFocus={() => setActiveIndex(index)}
                   >
                     {item.event.title}
                   </Link>
@@ -46,17 +47,17 @@ export function EventsSectionComponent({ data }: EventsSectionComponentProps) {
           </div>
 
           {/* Image column 1 - all images stacked, crossfade via opacity */}
-          <div className={styles.imageCol}>
-            <div className={styles.imageWrapper}>
+          <div className={styles.eventsImageCol}>
+            <div className={styles.eventsImageWrap}>
               {items.map((item, index) => (
                 item.image1?.asset && (
                   <Image
                     key={`img1-${item._key}`}
                     src={urlFor(item.image1).url()}
-                    alt={item.image1.alt || ''}
+                    alt={item.image1.alt || item.image1.assetAltText || ''}
                     fill
                     sizes="50vw"
-                    className={`${styles.image} ${index === activeIndex ? styles.imageActive : ''}`}
+                    className={`${styles.eventsImage} ${index === activeIndex ? styles.eventsImageActive : ''}`}
                   />
                 )
               ))}
@@ -65,17 +66,17 @@ export function EventsSectionComponent({ data }: EventsSectionComponentProps) {
 
           {/* Image column 2 - stays in DOM, collapses via CSS */}
           {hasAnySecondImage && (
-            <div className={`${styles.imageCol} ${singleImage ? styles.imageColHidden : ''}`}>
-              <div className={styles.imageWrapper}>
+            <div className={`${styles.eventsImageCol} ${singleImage ? styles.eventsImageColHidden : ''}`}>
+              <div className={styles.eventsImageWrap}>
                 {items.map((item, index) => (
                   item.image2?.asset && (
                     <Image
                       key={`img2-${item._key}`}
                       src={urlFor(item.image2).url()}
-                      alt={item.image2.alt || ''}
+                      alt={item.image2.alt || item.image2.assetAltText || ''}
                       fill
                       sizes="33vw"
-                      className={`${styles.image} ${index === activeIndex ? styles.imageActive : ''}`}
+                      className={`${styles.eventsImage} ${index === activeIndex ? styles.eventsImageActive : ''}`}
                     />
                   )
                 ))}

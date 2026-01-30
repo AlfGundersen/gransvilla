@@ -1,7 +1,7 @@
 import { defineConfig } from 'sanity'
 import { structureTool } from 'sanity/structure'
 import { visionTool } from '@sanity/vision'
-import { unsplashImageAsset } from 'sanity-plugin-asset-source-unsplash'
+import { media, mediaAssetSource } from 'sanity-plugin-media'
 import { schemaTypes } from './sanity/schemas'
 import { structure } from './sanity/structure'
 
@@ -20,10 +20,16 @@ export default defineConfig({
   plugins: [
     structureTool({ structure }),
     visionTool(),
-    unsplashImageAsset(),
+    media(),
   ],
 
   schema: {
     types: schemaTypes,
+  },
+
+  form: {
+    image: {
+      assetSources: () => [mediaAssetSource],
+    },
   },
 })

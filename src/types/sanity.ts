@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type BlockContent = any[]
+
 // Sanity Types for Section System
 
 export interface SanityImage {
@@ -13,6 +16,7 @@ export interface SanityImage {
     width: number
   }
   alt?: string
+  assetAltText?: string
 }
 
 // Hero Section
@@ -119,6 +123,65 @@ export interface NewsletterSection {
   successMessage?: string
 }
 
+// Event page section types
+
+export interface TekstSeksjon {
+  _type: 'tekstSeksjon'
+  _key: string
+  overskrift?: string
+  tekst?: BlockContent
+}
+
+export type AspectRatio = '16/9' | '3/2' | '4/3' | '1/1' | '3/4' | '2/3'
+
+export interface BildeSeksjon {
+  _type: 'bildeSeksjon'
+  _key: string
+  bilde?: SanityImage & { alt?: string }
+  bildeforhold?: AspectRatio
+  fullBredde?: boolean
+}
+
+export interface BildeTekstSeksjon {
+  _type: 'bildeTekstSeksjon'
+  _key: string
+  bilde?: SanityImage & { alt?: string }
+  bildeforhold?: AspectRatio
+  tekst?: BlockContent
+  visOverskrift?: boolean
+  overskrift?: string
+  bildeForst?: boolean
+}
+
+export interface BildegalleriSeksjon {
+  _type: 'bildegalleriSeksjon'
+  _key: string
+  visInnhold?: boolean
+  overskrift?: string
+  tekst?: BlockContent
+  bildeforhold?: AspectRatio
+  antallKolonner?: number
+  bilder?: (SanityImage & { alt?: string })[]
+}
+
+export type EventPageSection =
+  | TekstSeksjon
+  | BildeSeksjon
+  | BildeTekstSeksjon
+  | BildegalleriSeksjon
+
+// Event document
+export interface Event {
+  _id: string
+  title: string
+  slug: {
+    current: string
+  }
+  description?: string
+  featuredImage?: SanityImage & { alt?: string }
+  sections?: EventPageSection[]
+}
+
 // Union of all section types
 export type PageSection =
   | HeroSection
@@ -141,6 +204,64 @@ export interface Frontpage {
     metaDescription?: string
     ogImage?: SanityImage
   }
+}
+
+// Menu item (used in siteSettings navigation)
+export interface MenuItem {
+  customLink?: boolean
+  label?: string
+  href?: string
+  page?: {
+    _id: string
+    _type: 'page' | 'event'
+    title: string
+    slug: {
+      current: string
+    }
+  }
+}
+
+// Resolved navigation link (computed from MenuItem)
+export interface NavLink {
+  label: string
+  href: string
+}
+
+// Social link
+export interface SocialLink {
+  platform: string
+  url: string
+}
+
+export const socialPlatformLabels: Record<string, string> = {
+  facebook: 'Facebook',
+  instagram: 'Instagram',
+  linkedin: 'LinkedIn',
+  twitter: 'X (Twitter)',
+  spotify: 'Spotify',
+  youtube: 'YouTube',
+  tiktok: 'TikTok',
+  tripadvisor: 'Tripadvisor',
+}
+
+// Site Settings
+export interface SiteSettings {
+  siteName: string
+  siteDescription?: string
+  logo?: SanityImage
+  favicon?: SanityImage
+  mainMenu?: MenuItem[]
+  footerMenu?: MenuItem[]
+  contactInfo?: {
+    email?: string
+    phone?: string
+    address?: string
+  }
+  openingHours?: {
+    days: string
+    hours: string
+  }[]
+  socialLinks?: SocialLink[]
 }
 
 // Shop Category (synced from Shopify)

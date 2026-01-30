@@ -2,11 +2,11 @@
    Newsletter Section
    =========================================== */
 
-.section {
+.newsletterSection {
   padding-block: var(--space-lg);
 }
 
-.container {
+.newsletterContainer {
   max-width: var(--container-max-width);
   margin-inline: auto;
   padding-inline: var(--container-padding);
@@ -14,7 +14,7 @@
   position: relative;
 }
 
-.container::after {
+.newsletterContainer::after {
   content: '';
   position: absolute;
   bottom: 0;
@@ -24,18 +24,17 @@
   background-color: var(--color-border);
 }
 
-.content {
+.newsletterContent {
   max-width: 500px;
 }
 
-.heading {
+.newsletterHeading {
   font-family: var(--font-heading);
   font-size: clamp(1.5rem, 3vw, 2rem);
-  font-weight: var(--font-weight-bold);
   margin: 0 0 var(--space-sm) 0;
 }
 
-.description {
+.newsletterDescription {
   font-size: var(--text-base);
   line-height: 1.7;
   color: var(--color-secondary);
@@ -43,12 +42,12 @@
 }
 
 /* Form */
-.form {
+.newsletterForm {
   display: flex;
   gap: var(--space-sm);
 }
 
-.input {
+.newsletterInput {
   flex: 1;
   padding: var(--space-sm) var(--space-md);
   border: 1px solid var(--color-border);
@@ -57,48 +56,48 @@
   color: var(--color-foreground);
 }
 
-.input::placeholder {
+.newsletterInput::placeholder {
   color: var(--color-secondary);
 }
 
-.input:focus {
+.newsletterInput:focus {
   outline: none;
   border-color: var(--color-foreground);
 }
 
-.input:disabled {
+.newsletterInput:disabled {
   opacity: 0.6;
 }
 
-.button {
+.newsletterButton {
   padding: var(--space-sm) var(--space-lg);
   border: 1px solid var(--color-border);
   background-color: var(--color-foreground);
   color: var(--color-background);
   font-size: var(--text-sm);
-  font-weight: var(--font-weight-bold);
   cursor: pointer;
   transition: opacity var(--transition-fast);
   white-space: nowrap;
 }
 
-.button:hover:not(:disabled) {
+.newsletterButton:hover:not(:disabled),
+.newsletterButton:focus-visible:not(:disabled) {
   opacity: 0.8;
 }
 
-.button:disabled {
+.newsletterButton:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
 /* Messages */
-.successMessage {
+.newsletterSuccess {
   margin-top: var(--space-sm);
   color: #2e7d32;
   font-size: var(--text-sm);
 }
 
-.errorMessage {
+.newsletterError {
   margin-top: var(--space-sm);
   color: #c62828;
   font-size: var(--text-sm);
@@ -106,11 +105,11 @@
 
 /* Mobile */
 @media (max-width: 480px) {
-  .form {
+  .newsletterForm {
     flex-direction: column;
   }
 
-  .button {
+  .newsletterButton {
     width: 100%;
   }
 }

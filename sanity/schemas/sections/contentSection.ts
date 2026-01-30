@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity'
+import { AltTextInput } from '../../components/AltTextInput'
 
 /**
  * Innholdsseksjon - Tekst med bilde
@@ -25,6 +26,7 @@ export default defineType({
           title: 'Alternativ tekst',
           type: 'string',
           description: 'Beskrivelse av bildet for skjermlesere',
+          components: { input: AltTextInput },
         }),
       ],
     }),

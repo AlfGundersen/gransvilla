@@ -1,4 +1,5 @@
 import { defineArrayMember, defineType } from 'sanity'
+import { AltTextInput } from '../../components/AltTextInput'
 
 export default defineType({
   name: 'blockContent',
@@ -58,6 +59,7 @@ export default defineType({
           name: 'alt',
           type: 'string',
           title: 'Alternativ tekst',
+          components: { input: AltTextInput },
         },
         {
           name: 'caption',

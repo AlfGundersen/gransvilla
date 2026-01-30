@@ -21,9 +21,9 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
 
   if (images.length === 0) {
     return (
-      <div className={styles.gallery}>
-        <div className={styles.mainImage}>
-          <div className={styles.placeholder}>Ingen bilde</div>
+      <div className={styles.productGallery}>
+        <div className={styles.productGalleryMainImage}>
+          <div className={styles.productGalleryPlaceholder}>Ingen bilde</div>
         </div>
       </div>
     )
@@ -32,33 +32,34 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
   const selectedImage = images[selectedIndex]
 
   return (
-    <div className={styles.gallery}>
-      <div className={styles.mainImage}>
+    <div className={styles.productGallery}>
+      <div className={styles.productGalleryMainImage}>
         <Image
           src={selectedImage.url}
           alt={selectedImage.altText || title}
           fill
-          className={styles.image}
+          className={styles.productGalleryImage}
           priority
           sizes="(max-width: 768px) 100vw, 50vw"
         />
       </div>
 
       {images.length > 1 && (
-        <div className={styles.thumbnails}>
+        <div className={styles.productGalleryThumbnails}>
           {images.map((image, idx) => (
             <button
               key={idx}
               type="button"
-              className={`${styles.thumbnail} ${idx === selectedIndex ? styles.thumbnailActive : ''}`}
+              className={`${styles.productGalleryThumbnail} ${idx === selectedIndex ? styles.productGalleryThumbnailActive : ''}`}
               onClick={() => setSelectedIndex(idx)}
               aria-label={`Vis bilde ${idx + 1}`}
+              aria-current={idx === selectedIndex ? 'true' : undefined}
             >
               <Image
                 src={image.url}
                 alt={image.altText || `${title} ${idx + 1}`}
                 fill
-                className={styles.image}
+                className={styles.productGalleryImage}
                 sizes="80px"
               />
             </button>

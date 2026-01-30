@@ -40,44 +40,46 @@ export default function ProductCard({ product }: ProductCardProps) {
 
 
   return (
-    <Link
-      href={`/nettbutikk/${product.handle}`}
-      className={styles.product}
-    >
-      <div className={styles.productInfo}>
-        <h3 className={styles.productTitle}>{product.title}</h3>
-        <p className={styles.price}>
+    <div className={styles.shopProduct}>
+      <div className={styles.shopProductInfo}>
+        <h3 className={styles.shopProductTitle}>{product.title}</h3>
+        <p className={styles.shopPrice}>
           {product.price.toLocaleString('nb-NO')} {product.currencyCode}
         </p>
       </div>
 
-      <div className={styles.imageWrapper}>
+      <div className={styles.shopImageWrapper}>
         {product.images[0] && (
           <Image
             src={product.images[0].url}
             alt={product.images[0].altText || product.title}
             fill
-            className={styles.image}
+            className={styles.shopImage}
             sizes="(max-width: 767px) 100vw, 33vw"
           />
         )}
 
         {/* Hover overlay with description and buttons */}
-        <div className={styles.productOverlay}>
-          <p className={styles.productDescription}>{product.description}</p>
-          <div className={styles.productActions}>
+        <div className={styles.shopProductOverlay}>
+          <p className={styles.shopProductDescription}>{product.description}</p>
+          <div className={styles.shopProductActions}>
             <button
               type="button"
-              className={styles.addToCartButton}
+              className={styles.shopAddToCartButton}
               onClick={handleAddToCart}
               disabled={isAdding}
             >
               {isAdding ? 'Legger til...' : 'Legg i handlekurv'}
             </button>
-            <span className={styles.readMoreButton}>Les mer</span>
+            <Link
+              href={`/nettbutikk/${product.handle}`}
+              className={styles.shopReadMoreButton}
+            >
+              Les mer
+            </Link>
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   )
 }

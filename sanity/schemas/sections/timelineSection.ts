@@ -1,4 +1,5 @@
 import { defineArrayMember, defineField, defineType } from 'sanity'
+import { AltTextInput } from '../../components/AltTextInput'
 
 /**
  * Historie-seksjon - Interaktiv tidslinje
@@ -20,6 +21,7 @@ export default defineType({
           name: 'alt',
           title: 'Alt-tekst',
           type: 'string',
+          components: { input: AltTextInput },
         }),
       ],
     }),

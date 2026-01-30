@@ -2,39 +2,38 @@
    Product Info
    =========================================== */
 
-.info {
+.productInfoSection {
   display: flex;
   flex-direction: column;
   gap: var(--space-lg);
 }
 
-.header {
+.productInfoHeader {
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
 }
 
-.title {
+.productInfoTitle {
   font-family: var(--font-heading);
   font-size: var(--text-4xl);
-  font-weight: var(--font-weight-bold);
   margin: 0;
   line-height: 1.1;
 }
 
-.price {
+.productInfoPrice {
   font-family: var(--font-heading);
   font-size: var(--text-2xl);
   margin: 0;
 }
 
-.description {
+.productInfoDescription {
   font-size: var(--text-base);
   line-height: 1.7;
   color: var(--color-secondary);
 }
 
-.description p {
+.productInfoDescription p {
   margin: 0;
 }
 
@@ -42,32 +41,34 @@
    Variant Options
    =========================================== */
 
-.options {
+.productInfoOptions {
   display: flex;
   flex-direction: column;
   gap: var(--space-lg);
 }
 
-.optionGroup {
+.productInfoOptionGroup {
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
+  border: none;
+  padding: 0;
+  margin: 0;
 }
 
-.optionLabel {
+.productInfoOptionLabel {
   font-size: var(--text-sm);
-  font-weight: var(--font-weight-bold);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
-.optionValues {
+.productInfoOptionValues {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-sm);
 }
 
-.optionButton {
+.productInfoOptionButton {
   padding: var(--space-sm) var(--space-md);
   background: none;
   border: 1px solid var(--color-border);
@@ -76,11 +77,12 @@
   transition: border-color var(--transition-fast), background-color var(--transition-fast);
 }
 
-.optionButton:hover {
+.productInfoOptionButton:hover,
+.productInfoOptionButton:focus-visible {
   border-color: var(--color-foreground);
 }
 
-.optionButtonActive {
+.productInfoOptionButtonActive {
   border-color: var(--color-foreground);
   background-color: var(--color-foreground);
   color: var(--color-background);
@@ -90,27 +92,26 @@
    Quantity Selector
    =========================================== */
 
-.quantitySection {
+.productInfoQuantitySection {
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
 }
 
-.quantityLabel {
+.productInfoQuantityLabel {
   font-size: var(--text-sm);
-  font-weight: var(--font-weight-bold);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
-.quantity {
+.productInfoQuantity {
   display: flex;
   align-items: center;
   border: 1px solid var(--color-border);
   width: fit-content;
 }
 
-.quantityButton {
+.productInfoQuantityButton {
   background: none;
   border: none;
   width: 44px;
@@ -121,16 +122,17 @@
   transition: opacity var(--transition-fast);
 }
 
-.quantityButton:hover:not(:disabled) {
+.productInfoQuantityButton:hover:not(:disabled),
+.productInfoQuantityButton:focus-visible:not(:disabled) {
   opacity: 0.6;
 }
 
-.quantityButton:disabled {
+.productInfoQuantityButton:disabled {
   opacity: 0.3;
   cursor: not-allowed;
 }
 
-.quantityValue {
+.productInfoQuantityValue {
   font-size: var(--text-base);
   min-width: 44px;
   text-align: center;
@@ -143,18 +145,18 @@
    Accordion
    =========================================== */
 
-.accordion {
+.productInfoAccordion {
   display: flex;
   flex-direction: column;
   margin-top: var(--space-lg);
   border-top: 1px solid var(--color-border);
 }
 
-.accordionItem {
+.productInfoAccordionItem {
   border-bottom: 1px solid var(--color-border);
 }
 
-.accordionHeader {
+.productInfoAccordionHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -163,37 +165,37 @@
   background: none;
   border: none;
   font-size: var(--text-base);
-  font-weight: var(--font-weight-bold);
   text-align: left;
   cursor: pointer;
   color: var(--color-foreground);
   transition: opacity var(--transition-fast);
 }
 
-.accordionHeader:hover {
+.productInfoAccordionHeader:hover,
+.productInfoAccordionHeader:focus-visible {
   opacity: 0.6;
 }
 
-.accordionIcon {
+.productInfoAccordionIcon {
   transition: transform var(--transition-fast);
 }
 
-.accordionIconOpen {
+.productInfoAccordionIconOpen {
   transform: rotate(180deg);
 }
 
-.accordionContent {
+.productInfoAccordionContent {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease, padding 0.3s ease;
 }
 
-.accordionContentOpen {
+.productInfoAccordionContentOpen {
   max-height: 200px;
   padding-bottom: var(--space-md);
 }
 
-.accordionContent p {
+.productInfoAccordionContent p {
   margin: 0;
   font-size: var(--text-sm);
   line-height: 1.7;
@@ -205,11 +207,11 @@
    =========================================== */
 
 @media (max-width: 768px) {
-  .title {
+  .productInfoTitle {
     font-size: var(--text-3xl);
   }
 
-  .price {
+  .productInfoPrice {
     font-size: var(--text-xl);
   }
 }

@@ -27,42 +27,39 @@ export function TimelineSectionComponent({ data }: TimelineSectionComponentProps
   }
 
   return (
-    <section className={styles.section}>
-      <div className={styles.container}>
-        <div className={styles.grid}>
+    <section className={styles.timelineSection} aria-label={heading || 'Tidslinje'}>
+      <div className={styles.timelineContainer}>
+        <div className={styles.timelineGrid}>
           {/* Left: Image and heading */}
-          <div className={styles.leftCol}>
+          <div className={styles.timelineLeftCol}>
+            {heading && <h2 className={styles.timelineHeading}>{heading}</h2>}
             {image?.asset && (
-              <div className={styles.imageWrapper}>
+              <div className={styles.timelineImageWrap}>
                 <Image
                   src={urlFor(image).url()}
-                  alt={image.alt || ''}
+                  alt={image.alt || image.assetAltText || ''}
                   fill
                   sizes="50vw"
-                  className={styles.sectionImage}
+                  className={styles.timelineImage}
                 />
               </div>
-            )}
-            {heading && <h2 className={styles.heading}>{heading}</h2>}
-            {activeEntry && (
-              <p key={`year-${activeEntry._key}`} className={styles.activeYear}>
-                {activeEntry.year}
-              </p>
             )}
           </div>
 
           {/* Right: Year list */}
-          <div className={styles.yearList}>
+          <div className={styles.timelineYearList}>
             {sortedEntries.map((entry, index) => (
               <button
                 key={entry._key}
-                className={`${styles.yearItem} ${index === activeIndex ? styles.yearItemActive : ''}`}
+                className={`${styles.timelineYearItem} ${index === activeIndex ? styles.timelineYearItemActive : ''}`}
                 onClick={() => setActiveIndex(index)}
+                onFocus={() => setActiveIndex(index)}
                 aria-expanded={index === activeIndex}
+                aria-label={`${entry.year}${entry.description ? ` – ${entry.description}` : ''}`}
               >
-                <span className={styles.year}>{entry.year}</span>
+                <span className={styles.timelineYear}>{entry.year}</span>
                 {index === activeIndex && entry.description && (
-                  <p className={styles.description}>{entry.description}</p>
+                  <p className={styles.timelineDescription}>{entry.description}</p>
                 )}
               </button>
             ))}

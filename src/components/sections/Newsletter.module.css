@@ -28,7 +28,6 @@
 .title {
   font-family: var(--font-heading);
   font-size: clamp(1.5rem, 3vw, 2rem);
-  font-weight: var(--font-weight-bold);
   margin: 0 0 var(--space-sm) 0;
 }
 
@@ -73,13 +72,13 @@
   background-color: var(--color-foreground);
   color: var(--color-background);
   font-size: var(--text-sm);
-  font-weight: var(--font-weight-bold);
   cursor: pointer;
   transition: opacity var(--transition-fast);
   white-space: nowrap;
 }
 
-.button:hover:not(:disabled) {
+.button:hover:not(:disabled),
+.button:focus-visible:not(:disabled) {
   opacity: 0.8;
 }
 

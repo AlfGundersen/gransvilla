@@ -59,8 +59,8 @@ export default function CheckoutPage() {
 
   if (cartLoading) {
     return (
-      <div className={styles.page}>
-        <div className={styles.loading}>Laster...</div>
+      <div className={styles.checkoutPage}>
+        <div className={styles.checkoutLoading}>Laster...</div>
       </div>
     )
   }
@@ -70,19 +70,19 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className={styles.page}>
-      <div className={styles.container}>
-        <div className={styles.header}>
-          <h1 className={styles.title}>Bekreft bestilling</h1>
-          <p className={styles.subtitle}>
+    <div className={styles.checkoutPage}>
+      <div className={styles.checkoutContainer}>
+        <div className={styles.checkoutHeader}>
+          <h1 className={styles.checkoutTitle}>Bekreft bestilling</h1>
+          <p className={styles.checkoutSubtitle}>
             Se over bestillingen din før du går til betaling
           </p>
         </div>
 
-        <div className={styles.items}>
+        <div className={styles.checkoutItems}>
           {cart.items.map((item) => (
-            <div key={item.id} className={styles.item}>
-              <div className={styles.itemImage}>
+            <div key={item.id} className={styles.checkoutItem}>
+              <div className={styles.checkoutItemImage}>
                 {item.image && (
                   <Image
                     src={item.image.url}
@@ -92,31 +92,31 @@ export default function CheckoutPage() {
                   />
                 )}
               </div>
-              <div className={styles.itemDetails}>
-                <p className={styles.itemTitle}>{item.title}</p>
+              <div className={styles.checkoutItemDetails}>
+                <p className={styles.checkoutItemTitle}>{item.title}</p>
                 {item.variantTitle !== 'Default Title' && (
-                  <p className={styles.itemVariant}>{item.variantTitle}</p>
+                  <p className={styles.checkoutItemVariant}>{item.variantTitle}</p>
                 )}
-                <p className={styles.itemMeta}>
+                <p className={styles.checkoutItemMeta}>
                   {item.quantity} stk × {item.price.toLocaleString('nb-NO')} {item.currencyCode}
                 </p>
               </div>
-              <p className={styles.itemTotal}>
+              <p className={styles.checkoutItemTotal}>
                 {(item.price * item.quantity).toLocaleString('nb-NO')} {item.currencyCode}
               </p>
             </div>
           ))}
         </div>
 
-        <div className={styles.totals}>
-          <div className={`${styles.totalRow} ${styles.totalRowFinal}`}>
+        <div className={styles.checkoutTotals}>
+          <div className={`${styles.checkoutTotalRow} ${styles.checkoutTotalRowFinal}`}>
             <span>Totalt</span>
             <span>{cart.totalAmount.toLocaleString('nb-NO')} {cart.currencyCode}</span>
           </div>
         </div>
 
         {error && (
-          <div className={styles.error}>{error}</div>
+          <div className={styles.checkoutError}>{error}</div>
         )}
 
         <button
@@ -128,7 +128,7 @@ export default function CheckoutPage() {
           {isSubmitting ? 'Behandler...' : 'Gå til betaling'}
         </button>
 
-        <p className={styles.secureNote}>
+        <p className={styles.checkoutSecureNote}>
           Du blir sendt til en sikker betalingsside
         </p>
       </div>

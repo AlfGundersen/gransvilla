@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef, useCallback } from 'react'
 import Image from 'next/image'
 import { Link } from 'next-view-transitions'
 import { useCart } from '@/context/CartContext'
@@ -16,12 +16,21 @@ export function CartDrawer() {
     removeFromCart,
   } = useCart()
 
-  // Lock body scroll when open
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
+  const drawerRef = useRef<HTMLDivElement>(null)
+  const previousFocusRef = useRef<HTMLElement | null>(null)
+
+  // Lock body scroll when open + manage focus
   useEffect(() => {
     if (isOpen) {
+      previousFocusRef.current = document.activeElement as HTMLElement
       document.body.style.overflow = 'hidden'
+      // Move focus into drawer
+      setTimeout(() => closeButtonRef.current?.focus(), 100)
     } else {
       document.body.style.overflow = ''
+      // Restore focus to trigger element
+      previousFocusRef.current?.focus()
     }
     return () => {
       document.body.style.overflow = ''
@@ -37,6 +46,27 @@ export function CartDrawer() {
     return () => document.removeEventListener('keydown', handleEscape)
   }, [closeCart])
 
+  // Focus trap
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key !== 'Tab' || !drawerRef.current) return
+
+    const focusable = drawerRef.current.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )
+    if (focusable.length === 0) return
+
+    const first = focusable[0]
+    const last = focusable[focusable.length - 1]
+
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault()
+      last.focus()
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault()
+      first.focus()
+    }
+  }, [])
+
   return (
     <>
       {/* Backdrop */}
@@ -48,14 +78,17 @@ export function CartDrawer() {
 
       {/* Drawer */}
       <div
+        ref={drawerRef}
         className={`${styles.drawer} ${isOpen ? styles.drawerOpen : ''}`}
         role="dialog"
-        aria-label="Handlekurv"
+        aria-labelledby="cart-drawer-title"
         aria-modal="true"
+        onKeyDown={handleKeyDown}
       >
         <div className={styles.header}>
-          <h2 className={styles.title}>Handlekurv</h2>
+          <h2 id="cart-drawer-title" className={styles.title}>Handlekurv</h2>
           <button
+            ref={closeButtonRef}
             className={styles.closeButton}
             onClick={closeCart}
             aria-label="Lukk handlekurv"
@@ -164,7 +197,7 @@ export function CartDrawer() {
         )}
 
         {isLoading && (
-          <div className={styles.loadingOverlay}>
+          <div className={styles.loadingOverlay} role="status" aria-label="Laster">
             <div className={styles.spinner} />
           </div>
         )}

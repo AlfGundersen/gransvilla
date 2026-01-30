@@ -2,35 +2,26 @@
 
 import Image from 'next/image'
 import { Link } from 'next-view-transitions'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useCart } from '@/context/CartContext'
+import type { NavLink, SocialLink } from '@/types/sanity'
+import { socialPlatformLabels } from '@/types/sanity'
 import styles from './Header.module.css'
 
-// TODO: Fetch navigation from Sanity
-const navigation = [
-  { label: 'Hjem', href: '/' },
-  { label: 'Bryllup', href: '/bryllup' },
-  { label: 'Selskaper', href: '/selskaper' },
-  { label: 'Konserter', href: '/konserter' },
-  { label: 'Søndagsfrokost', href: '/sondagsfrokost' },
-  { label: 'Kantine', href: '/kantine' },
-  { label: 'Nettbutikk', href: '/nettbutikk' },
-  { label: 'Om oss', href: '/om-oss' },
-  { label: 'Kontakt oss', href: '/kontakt' },
-  { label: 'Praktisk info', href: '/praktisk-info' },
-]
+interface HeaderProps {
+  navigation: NavLink[]
+  socialLinks: SocialLink[]
+}
 
-const socialLinks = [
-  { label: 'Facebook', href: 'https://facebook.com' },
-  { label: 'Instagram', href: 'https://instagram.com' },
-]
-
-export default function Header() {
+export default function Header({ navigation, socialLinks }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const { cartCount, openCart } = useCart()
+  const menuRef = useRef<HTMLElement>(null)
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
+  const menuButtonRef = useRef<HTMLButtonElement>(null)
 
   // Wait for client-side mount for portal
   useEffect(() => {
@@ -66,6 +57,43 @@ export default function Header() {
 
   const closeMenu = () => setIsMenuOpen(false)
 
+  // Focus management: move focus into menu when opened, restore when closed
+  const wasOpenRef = useRef(false)
+  useEffect(() => {
+    if (isMenuOpen) {
+      wasOpenRef.current = true
+      setTimeout(() => closeButtonRef.current?.focus(), 100)
+    } else if (wasOpenRef.current) {
+      wasOpenRef.current = false
+      menuButtonRef.current?.focus()
+    }
+  }, [isMenuOpen])
+
+  // Focus trap within menu
+  const handleMenuKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      closeMenu()
+      return
+    }
+    if (e.key !== 'Tab' || !menuRef.current) return
+
+    const focusable = menuRef.current.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )
+    if (focusable.length === 0) return
+
+    const first = focusable[0]
+    const last = focusable[focusable.length - 1]
+
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault()
+      last.focus()
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault()
+      first.focus()
+    }
+  }, [])
+
   // Menu content to be portaled
   const menuContent = (
     <>
@@ -79,13 +107,19 @@ export default function Header() {
 
       {/* Slide-out Menu */}
       <nav
+        ref={menuRef}
         className={`${styles.slideMenu} ${isMenuOpen ? styles.slideMenuOpen : ''}`}
         aria-hidden={!isMenuOpen}
+        id="main-menu"
+        aria-label="Hovedmeny"
+        onKeyDown={handleMenuKeyDown}
+        inert={!isMenuOpen}
       >
         {/* Menu Header */}
         <div className={styles.menuHeader}>
           <span className={styles.menuLabel}>MENY</span>
           <button
+            ref={closeButtonRef}
             type="button"
             className={styles.closeButton}
             onClick={closeMenu}
@@ -128,13 +162,14 @@ export default function Header() {
         <div className={styles.socialLinks}>
           {socialLinks.map((item) => (
             <a
-              key={item.label}
-              href={item.href}
+              key={item.platform}
+              href={item.url}
               className={styles.socialLink}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label={`${socialPlatformLabels[item.platform] || item.platform} (åpnes i nytt vindu)`}
             >
-              {item.label}
+              {socialPlatformLabels[item.platform] || item.platform}
             </a>
           ))}
         </div>
@@ -150,10 +185,12 @@ export default function Header() {
           {/* Left: Menu button */}
           <div className={styles.headerLeft}>
             <button
+              ref={menuButtonRef}
               type="button"
               className={styles.menuButton}
               aria-label={isMenuOpen ? 'Lukk meny' : 'Åpne meny'}
               aria-expanded={isMenuOpen}
+              aria-controls="main-menu"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               <span className={styles.menuIcon} />
@@ -161,8 +198,8 @@ export default function Header() {
           </div>
 
           {/* Center: Logo */}
-          <Link href="/" className={styles.logo}>
-            <Image src="/logo.svg" alt="GransVilla" width={128} height={22} priority />
+          <Link href="/" className={styles.logo} aria-label="GransVilla logo – Til forsiden">
+            <Image src="/logo.svg" alt="" width={128} height={22} priority aria-hidden="true" />
           </Link>
 
           {/* Right: Shopping cart */}
@@ -171,7 +208,7 @@ export default function Header() {
               type="button"
               className={styles.cartButton}
               onClick={openCart}
-              aria-label="Handlekurv"
+              aria-label={`Handlekurv, ${cartCount} ${cartCount === 1 ? 'vare' : 'varer'}`}
             >
               <span className={styles.cartText}>Handlevogn ({cartCount})</span>
             </button>

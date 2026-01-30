@@ -26,36 +26,36 @@ export async function FeaturedProductSectionComponent({ data }: FeaturedProductS
   const productImage = product.images[0]
 
   return (
-    <section className={styles.section}>
-      <div className={styles.container}>
-        <div className={styles.content}>
-          <span className={styles.label}>Fokusprodukt</span>
-          <h2 className={styles.title}>{product.title}</h2>
-          {product.description && <p className={styles.description}>{product.description}</p>}
+    <section className={styles.featProductSection} aria-label={`Fokusprodukt: ${product.title}`}>
+      <div className={styles.featProductContainer}>
+        <div className={styles.featProductContent}>
+          <span className={styles.featProductLabel}>Fokusprodukt</span>
+          <h2 className={styles.featProductTitle}>{product.title}</h2>
+          {product.description && <p className={styles.featProductDescription}>{product.description}</p>}
 
-          <div className={styles.buttons}>
-            <div className={styles.buttonRow}>
-              <button type="button" className={styles.buttonPrimary}>
+          <div className={styles.featProductButtons}>
+            <div className={styles.featProductButtonRow}>
+              <button type="button" className={styles.featProductBtnPrimary}>
                 Legg i handlevogn
               </button>
-              <Link href={productUrl} className={styles.buttonSecondary}>
+              <Link href={productUrl} className={styles.featProductBtnSecondary}>
                 Les mer
               </Link>
             </div>
-            <Link href="/nettbutikk" className={styles.buttonSecondary}>
+            <Link href="/nettbutikk" className={styles.featProductBtnSecondary}>
               Se alle produkter
             </Link>
           </div>
         </div>
 
         {productImage && (
-          <div className={styles.imageCol}>
+          <div className={styles.featProductImageCol}>
             <Image
               src={productImage.url}
               alt={productImage.altText || product.title}
               width={productImage.width || 800}
               height={productImage.height || 600}
-              className={styles.image}
+              className={styles.featProductImage}
             />
           </div>
         )}

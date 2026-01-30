@@ -16,32 +16,29 @@ export function FeaturedSectionComponent({ data }: FeaturedSectionComponentProps
   }
 
   return (
-    <section className={styles.section}>
-      <div className={styles.container}>
-        <div className={styles.grid}>
+    <section className={styles.featuredSection}>
+      <div className={styles.featuredContainer}>
+        <div className={styles.featuredGrid}>
           {columns.map((column) => (
-            <div key={column._key} className={styles.column}>
-              <div className={styles.content}>
-                {column.heading && <h2 className={styles.heading}>{column.heading}</h2>}
-                {column.description && <p className={styles.description}>{column.description}</p>}
+            <div key={column._key} className={styles.featuredColumn}>
+              <div className={styles.featuredContent}>
+                {column.heading && <h2 className={styles.featuredHeading}>{column.heading}</h2>}
+                {column.description && <p className={styles.featuredDescription}>{column.description}</p>}
                 {column.link?.slug?.current && (
                   <Link
-                    href={
-                      column.link._type === 'event'
-                        ? `/arrangementer/${column.link.slug.current}`
-                        : `/${column.link.slug.current}`
-                    }
-                    className={styles.cta}
+                    href={`/${column.link.slug.current}`}
+                    className={styles.featuredCta}
+                    aria-label={column.heading ? `Vis mer om ${column.heading}` : 'Vis mer'}
                   >
                     Vis mer
                   </Link>
                 )}
               </div>
               {column.image?.asset && (
-                <div className={styles.imageWrapper}>
+                <div className={styles.featuredImageWrap}>
                   <Image
                     src={urlFor(column.image).url()}
-                    alt={column.image.alt || column.heading || ''}
+                    alt={column.image.alt || column.image.assetAltText || column.heading || ''}
                     fill
                     sizes="(max-width: 768px) 100vw, 25vw"
                   />

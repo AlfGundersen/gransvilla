@@ -2,11 +2,11 @@
    Content Section - Text + Image
    =========================================== */
 
-.section {
+.contentSection {
   padding-block: var(--space-lg);
 }
 
-.container {
+.contentContainer {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-lg);
@@ -18,7 +18,7 @@
   position: relative;
 }
 
-.container::after {
+.contentContainer::after {
   content: '';
   position: absolute;
   bottom: 0;
@@ -28,26 +28,26 @@
   background-color: var(--color-border);
 }
 
-.reversed {
+.contentReversed {
   direction: rtl;
 }
 
-.reversed > * {
+.contentReversed>* {
   direction: ltr;
 }
 
 /* Image */
-.imageWrapper {
+.contentImageWrap {
   position: relative;
   aspect-ratio: 4 / 3;
 }
 
-.imageWrapper img {
+.contentImageWrap img {
   object-fit: cover;
 }
 
 /* Content */
-.content {
+.contentBody {
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
@@ -57,7 +57,7 @@
 }
 
 /* Vertical separator */
-.content::before {
+.contentBody::before {
   content: '';
   position: absolute;
   left: 0;
@@ -67,39 +67,38 @@
   background-color: var(--color-border);
 }
 
-.reversed .content {
+.contentReversed .contentBody {
   margin-left: auto;
   padding-left: 0;
   padding-right: var(--space-lg);
 }
 
-.reversed .content::before {
+.contentReversed .contentBody::before {
   left: auto;
   right: 0;
 }
 
-.label {
+.contentLabel {
   font-size: var(--text-sm);
   letter-spacing: 0.05em;
   color: var(--color-secondary);
 }
 
-.heading {
+.contentHeading {
   font-family: var(--font-heading);
   font-size: clamp(1.75rem, 4vw, 2.5rem);
-  font-weight: var(--font-weight-bold);
   line-height: 1.2;
   margin: 0;
 }
 
-.body {
+.contentText {
   font-size: var(--text-base);
   line-height: 1.7;
   color: var(--color-secondary);
 }
 
 /* Type 1 - Outlined: no bg, border → black bg on hover */
-.cta {
+.contentCta {
   display: inline-block;
   padding: var(--space-sm) var(--space-lg);
   border: 1px solid var(--color-border);
@@ -111,7 +110,8 @@
   align-self: flex-start;
 }
 
-.cta:hover {
+.contentCta:hover,
+.contentCta:focus-visible {
   background-color: var(--color-foreground);
   color: var(--color-background);
   text-decoration: none;
@@ -119,28 +119,28 @@
 
 /* Mobile */
 @media (max-width: 768px) {
-  .container {
+  .contentContainer {
     grid-template-columns: 1fr;
   }
 
-  .reversed {
+  .contentReversed {
     direction: ltr;
   }
 
-  .content {
+  .contentBody {
     padding-left: 0;
   }
 
-  .content::before {
+  .contentBody::before {
     display: none;
   }
 
-  .reversed .content {
+  .contentReversed .contentBody {
     margin-left: 0;
     padding-right: 0;
   }
 
-  .imageWrapper {
+  .contentImageWrap {
     aspect-ratio: 16 / 9;
   }
 }

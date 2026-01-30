@@ -1,0 +1,130 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(5px);
+}
+
+.closeButton {
+  position: absolute;
+  top: var(--space-md);
+  right: var(--space-md);
+  z-index: 3;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  padding: var(--space-xs);
+  transition: color var(--transition-base);
+}
+
+.closeButton:hover {
+  color: #fff;
+}
+
+.closeButton:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.imageContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl);
+  touch-action: none;
+  user-select: none;
+}
+
+.imageContainer img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.navButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity var(--transition-base), background var(--transition-base), color var(--transition-base);
+}
+
+.overlay:hover .navButton,
+.navButton:focus-visible {
+  opacity: 1;
+}
+
+.navButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.navButton:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 2px;
+}
+
+.navPrev {
+  left: var(--space-md);
+}
+
+.navNext {
+  right: var(--space-md);
+}
+
+.counter {
+  position: absolute;
+  bottom: var(--space-md);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  background: rgba(0, 0, 0, 0.5);
+  color: rgba(255, 255, 255, 0.8);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: 4px;
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 767px) {
+  .imageContainer {
+    padding: var(--space-md);
+  }
+
+  .navButton {
+    width: 44px;
+    height: 44px;
+    opacity: 1;
+  }
+
+  .navPrev {
+    left: var(--space-xs);
+  }
+
+  .navNext {
+    right: var(--space-xs);
+  }
+}

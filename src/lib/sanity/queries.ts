@@ -1,8 +1,9 @@
 import { groq } from 'next-sanity'
 
-// Image fragment
+// Image fragment — includes asset alt text from media library as fallback
 const imageFragment = groq`
   asset,
+  "assetAltText": asset->altText,
   hotspot,
   crop
 `
@@ -223,6 +224,19 @@ export const pageQuery = groq`
   }
 `
 
+// Menu item fragment
+const menuItemFragment = groq`
+  customLink,
+  label,
+  href,
+  page-> {
+    _id,
+    _type,
+    title,
+    slug
+  }
+`
+
 // Site settings query
 export const siteSettingsQuery = groq`
   *[_type == "siteSettings"][0] {
@@ -233,6 +247,12 @@ export const siteSettingsQuery = groq`
     },
     favicon {
       asset
+    },
+    mainMenu[] {
+      ${menuItemFragment}
+    },
+    footerMenu[] {
+      ${menuItemFragment}
     },
     contactInfo {
       email,
@@ -263,6 +283,48 @@ export const eventsQuery = groq`
   }
 `
 
+// Event page sections fragment
+const eventSectionsFragment = groq`
+  sections[] {
+    _type,
+    _key,
+    _type == "tekstSeksjon" => {
+      overskrift,
+      tekst
+    },
+    _type == "bildeSeksjon" => {
+      bilde {
+        ${imageFragment},
+        alt
+      },
+      bildeforhold,
+      fullBredde
+    },
+    _type == "bildeTekstSeksjon" => {
+      bilde {
+        ${imageFragment},
+        alt
+      },
+      bildeforhold,
+      tekst,
+      visOverskrift,
+      overskrift,
+      bildeForst
+    },
+    _type == "bildegalleriSeksjon" => {
+      visInnhold,
+      overskrift,
+      tekst,
+      bildeforhold,
+      antallKolonner,
+      bilder[] {
+        ${imageFragment},
+        alt
+      }
+    }
+  }
+`
+
 // Single event query
 export const eventQuery = groq`
   *[_type == "event" && slug.current == $slug][0] {
@@ -270,10 +332,11 @@ export const eventQuery = groq`
     title,
     slug,
     description,
-    body,
-    image {
-      ${imageFragment}
-    }
+    featuredImage {
+      ${imageFragment},
+      alt
+    },
+    ${eventSectionsFragment}
   }
 `
 

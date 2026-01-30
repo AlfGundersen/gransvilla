@@ -28,31 +28,35 @@ export function NewsletterSectionComponent({ data }: NewsletterSectionComponentP
   }
 
   return (
-    <section className={styles.section}>
-      <div className={styles.container}>
-        <div className={styles.content}>
-          <h2 className={styles.heading}>{heading}</h2>
-          {description && <p className={styles.description}>{description}</p>}
+    <section className={styles.newsletterSection} aria-label={heading}>
+      <div className={styles.newsletterContainer}>
+        <div className={styles.newsletterContent}>
+          <h2 className={styles.newsletterHeading}>{heading}</h2>
+          {description && <p className={styles.newsletterDescription}>{description}</p>}
 
-          <form className={styles.form} onSubmit={handleSubmit}>
+          <form className={styles.newsletterForm} onSubmit={handleSubmit}>
+            <label htmlFor="newsletter-email" className="visually-hidden">E-postadresse</label>
             <input
+              id="newsletter-email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Din e-postadresse"
-              className={styles.input}
+              className={styles.newsletterInput}
               required
               disabled={status === 'loading'}
             />
-            <button type="submit" className={styles.button} disabled={status === 'loading'}>
+            <button type="submit" className={styles.newsletterButton} disabled={status === 'loading'}>
               {status === 'loading' ? 'Sender...' : 'Meld på'}
             </button>
           </form>
 
-          {status === 'success' && <p className={styles.successMessage}>Takk for påmeldingen!</p>}
-          {status === 'error' && (
-            <p className={styles.errorMessage}>Noe gikk galt. Vennligst prøv igjen.</p>
-          )}
+          <div aria-live="polite" aria-atomic="true">
+            {status === 'success' && <p className={styles.newsletterSuccess}>Takk for påmeldingen!</p>}
+            {status === 'error' && (
+              <p className={styles.newsletterError}>Noe gikk galt. Vennligst prøv igjen.</p>
+            )}
+          </div>
         </div>
       </div>
     </section>

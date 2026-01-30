@@ -86,33 +86,35 @@ export function ProductInfo({ product }: ProductInfoProps) {
     : product.price
 
   return (
-    <div className={styles.info}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>{product.title}</h1>
-        <p className={styles.price}>
+    <div className={styles.productInfoSection}>
+      <div className={styles.productInfoHeader}>
+        <h1 className={styles.productInfoTitle}>{product.title}</h1>
+        <p className={styles.productInfoPrice}>
           {variantPrice.toLocaleString('nb-NO')} {product.currencyCode}
         </p>
       </div>
 
       {product.description && (
-        <div className={styles.description}>
+        <div className={styles.productInfoDescription}>
           <p>{product.description}</p>
         </div>
       )}
 
       {/* Variant Options */}
       {hasOptions && (
-        <div className={styles.options}>
+        <div className={styles.productInfoOptions}>
           {product.options?.filter(opt => opt.name !== 'Title').map((option) => (
-            <div key={option.name} className={styles.optionGroup}>
-              <label className={styles.optionLabel}>{option.name}</label>
-              <div className={styles.optionValues}>
+            <fieldset key={option.name} className={styles.productInfoOptionGroup}>
+              <legend className={styles.productInfoOptionLabel}>{option.name}</legend>
+              <div className={styles.productInfoOptionValues} role="radiogroup" aria-label={option.name}>
                 {option.values.map((value) => (
                   <button
                     key={value}
                     type="button"
-                    className={`${styles.optionButton} ${
-                      selectedOptions[option.name] === value ? styles.optionButtonActive : ''
+                    role="radio"
+                    aria-checked={selectedOptions[option.name] === value}
+                    className={`${styles.productInfoOptionButton} ${
+                      selectedOptions[option.name] === value ? styles.productInfoOptionButtonActive : ''
                     }`}
                     onClick={() => handleOptionChange(option.name, value)}
                   >
@@ -120,28 +122,28 @@ export function ProductInfo({ product }: ProductInfoProps) {
                   </button>
                 ))}
               </div>
-            </div>
+            </fieldset>
           ))}
         </div>
       )}
 
       {/* Quantity Selector */}
-      <div className={styles.quantitySection}>
-        <label className={styles.quantityLabel}>Antall</label>
-        <div className={styles.quantity}>
+      <div className={styles.productInfoQuantitySection}>
+        <label className={styles.productInfoQuantityLabel}>Antall</label>
+        <div className={styles.productInfoQuantity}>
           <button
             type="button"
-            className={styles.quantityButton}
+            className={styles.productInfoQuantityButton}
             onClick={decreaseQuantity}
             disabled={quantity <= 1}
             aria-label="Reduser antall"
           >
             -
           </button>
-          <span className={styles.quantityValue}>{quantity}</span>
+          <span className={styles.productInfoQuantityValue}>{quantity}</span>
           <button
             type="button"
-            className={styles.quantityButton}
+            className={styles.productInfoQuantityButton}
             onClick={increaseQuantity}
             aria-label="Øk antall"
           >
@@ -160,18 +162,18 @@ export function ProductInfo({ product }: ProductInfoProps) {
       )}
 
       {/* Accordion */}
-      <div className={styles.accordion}>
+      <div className={styles.productInfoAccordion}>
         {accordionItems.map((item, index) => (
-          <div key={index} className={styles.accordionItem}>
+          <div key={index} className={styles.productInfoAccordionItem}>
             <button
               type="button"
-              className={styles.accordionHeader}
+              className={styles.productInfoAccordionHeader}
               onClick={() => toggleAccordion(index)}
               aria-expanded={openAccordion === index}
             >
               <span>{item.title}</span>
               <svg
-                className={`${styles.accordionIcon} ${openAccordion === index ? styles.accordionIconOpen : ''}`}
+                className={`${styles.productInfoAccordionIcon} ${openAccordion === index ? styles.productInfoAccordionIconOpen : ''}`}
                 width="16"
                 height="16"
                 viewBox="0 0 16 16"
@@ -183,7 +185,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
               </svg>
             </button>
             <div
-              className={`${styles.accordionContent} ${openAccordion === index ? styles.accordionContentOpen : ''}`}
+              className={`${styles.productInfoAccordionContent} ${openAccordion === index ? styles.productInfoAccordionContentOpen : ''}`}
             >
               <p>{item.content}</p>
             </div>
