@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import { useState } from 'react'
+import { PortableText } from '@portabletext/react'
 import { urlFor } from '@/lib/sanity/image'
 import type { TimelineSection } from '@/types/sanity'
 import styles from './TimelineSection.module.css'
@@ -55,11 +56,13 @@ export function TimelineSectionComponent({ data }: TimelineSectionComponentProps
                 onClick={() => setActiveIndex(index)}
                 onFocus={() => setActiveIndex(index)}
                 aria-expanded={index === activeIndex}
-                aria-label={`${entry.year}${entry.description ? ` – ${entry.description}` : ''}`}
+                aria-label={`${entry.year}`}
               >
                 <span className={styles.timelineYear}>{entry.year}</span>
                 {index === activeIndex && entry.description && (
-                  <p className={styles.timelineDescription}>{entry.description}</p>
+                  <div className={styles.timelineDescription}>
+                    <PortableText value={entry.description} />
+                  </div>
                 )}
               </button>
             ))}

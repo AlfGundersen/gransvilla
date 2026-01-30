@@ -7,6 +7,7 @@ import siteSettings from './documents/siteSettings'
 
 // Object types
 import blockContent from './objects/blockContent'
+import simpleBlockContent from './objects/simpleBlockContent'
 import seo from './objects/seo'
 
 // Page sections - Predefined section types with variations
@@ -34,6 +35,7 @@ export const schemaTypes = [
 
   // Objects
   blockContent,
+  simpleBlockContent,
   seo,
 
   // Sections

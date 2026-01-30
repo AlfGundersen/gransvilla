@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { AnimatePresence } from 'framer-motion'
 import { GalleryLightbox } from './GalleryLightbox'
@@ -36,6 +36,14 @@ export function GalleryClient({ images, columns, hasContent }: GalleryClientProp
   const scrollRef = useRef<HTMLDivElement>(null)
   const dragState = useRef({ isDown: false, startX: 0, scrollLeft: 0, dragged: false })
   const buttonRefs = useRef<(HTMLButtonElement | null)[]>([])
+
+  // Preload full-resolution images so lightbox opens instantly
+  useEffect(() => {
+    images.forEach((image) => {
+      const img = new window.Image()
+      img.src = image.fullSrc
+    })
+  }, [images])
 
   const onMouseDown = useCallback((e: React.MouseEvent) => {
     const el = scrollRef.current

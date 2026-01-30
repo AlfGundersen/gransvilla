@@ -32,6 +32,6 @@
 
 @media (max-width: 768px) {
   .heroImageWrap {
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 2.5 / 3;
   }
 }

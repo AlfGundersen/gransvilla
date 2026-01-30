@@ -181,6 +181,7 @@
 
 @media (max-width: 767px) {
   .checkoutPage {
+    min-height: unset;
     align-items: flex-start;
     padding-top: var(--space-lg);
   }

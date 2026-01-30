@@ -37,6 +37,12 @@
   }
 }
 
+@media (max-width: 768px) {
+  .eventsGrid2col {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* 3-column layout (2 images) */
 .eventsGrid3col {
   grid-template-columns: 30% 37% 33%;
@@ -45,6 +51,12 @@
 /* Last image column - no right padding */
 .eventsImageCol:last-child {
   padding-right: 0;
+}
+
+@media (max-width: 768px) {
+  .eventsGrid3col {
+    grid-template-columns: 1fr;
+  }
 }
 
 

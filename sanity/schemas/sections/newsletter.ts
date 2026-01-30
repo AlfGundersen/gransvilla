@@ -16,8 +16,7 @@ export default defineType({
     defineField({
       name: 'description',
       title: 'Beskrivelse',
-      type: 'text',
-      rows: 2,
+      type: 'simpleBlockContent',
     }),
     defineField({
       name: 'placeholder',

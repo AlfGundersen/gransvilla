@@ -45,8 +45,7 @@ export default defineType({
     defineField({
       name: 'body',
       title: 'Brødtekst',
-      type: 'text',
-      rows: 4,
+      type: 'simpleBlockContent',
     }),
     defineField({
       name: 'ctaText',

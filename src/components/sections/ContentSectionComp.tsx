@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import { Link } from 'next-view-transitions'
+import { PortableText } from '@portabletext/react'
 import { urlFor } from '@/lib/sanity/image'
 import type { ContentSection } from '@/types/sanity'
 import styles from './ContentSection.module.css'
@@ -27,7 +28,11 @@ export function ContentSectionComponent({ data }: ContentSectionComponentProps) 
         <div className={styles.contentBody}>
           {labelText && <span className={styles.contentLabel}>{labelText}</span>}
           {heading && <h2 className={styles.contentHeading}>{heading}</h2>}
-          {body && <p className={styles.contentText}>{body}</p>}
+          {body && (
+            <div className={styles.contentText}>
+              {Array.isArray(body) ? <PortableText value={body} /> : <p>{body}</p>}
+            </div>
+          )}
           {ctaText && ctaHref && (
             <Link href={ctaHref} className={styles.contentCta}>
               {ctaText}

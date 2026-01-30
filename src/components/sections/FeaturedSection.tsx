@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import { Link } from 'next-view-transitions'
+import { PortableText } from '@portabletext/react'
 import { urlFor } from '@/lib/sanity/image'
 import type { FeaturedSection } from '@/types/sanity'
 import styles from './FeaturedSection.module.css'
@@ -23,7 +24,11 @@ export function FeaturedSectionComponent({ data }: FeaturedSectionComponentProps
             <div key={column._key} className={styles.featuredColumn}>
               <div className={styles.featuredContent}>
                 {column.heading && <h2 className={styles.featuredHeading}>{column.heading}</h2>}
-                {column.description && <p className={styles.featuredDescription}>{column.description}</p>}
+                {column.description && (
+                  <div className={styles.featuredDescription}>
+                    {Array.isArray(column.description) ? <PortableText value={column.description} /> : <p>{column.description}</p>}
+                  </div>
+                )}
                 {column.link?.slug?.current && (
                   <Link
                     href={`/${column.link.slug.current}`}

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { PortableText } from '@portabletext/react'
 import type { NewsletterSection } from '@/types/sanity'
 import styles from './NewsletterSection.module.css'
 
@@ -32,7 +33,11 @@ export function NewsletterSectionComponent({ data }: NewsletterSectionComponentP
       <div className={styles.newsletterContainer}>
         <div className={styles.newsletterContent}>
           <h2 className={styles.newsletterHeading}>{heading}</h2>
-          {description && <p className={styles.newsletterDescription}>{description}</p>}
+          {description && (
+            <div className={styles.newsletterDescription}>
+              {Array.isArray(description) ? <PortableText value={description} /> : <p>{description}</p>}
+            </div>
+          )}
 
           <form className={styles.newsletterForm} onSubmit={handleSubmit}>
             <label htmlFor="newsletter-email" className="visually-hidden">E-postadresse</label>

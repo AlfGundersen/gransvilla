@@ -9,8 +9,7 @@ export default defineType({
     defineField({
       name: 'description',
       title: 'Beskrivelse',
-      type: 'text',
-      rows: 3,
+      type: 'simpleBlockContent',
       description: 'Kort beskrivelse som vises ved siden av produktene',
     }),
     defineField({

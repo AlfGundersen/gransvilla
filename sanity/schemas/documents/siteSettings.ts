@@ -89,8 +89,7 @@ export default defineType({
     defineField({
       name: 'siteDescription',
       title: 'Nettstedsbeskrivelse',
-      type: 'text',
-      rows: 3,
+      type: 'simpleBlockContent',
       group: 'general',
     }),
     defineField({
@@ -190,7 +189,7 @@ export default defineType({
       fields: [
         { name: 'email', type: 'string', title: 'E-post' },
         { name: 'phone', type: 'string', title: 'Telefon' },
-        { name: 'address', type: 'text', title: 'Adresse' },
+        { name: 'address', type: 'simpleBlockContent', title: 'Adresse' },
       ],
     }),
     defineField({

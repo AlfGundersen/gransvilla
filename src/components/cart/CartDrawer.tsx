@@ -177,14 +177,11 @@ export function CartDrawer() {
 
             <div className={styles.footer}>
               <div className={styles.subtotal}>
-                <span>Subtotal</span>
+                <span>Total sum</span>
                 <span>
                   {cart.totalAmount.toLocaleString('nb-NO')} {cart.currencyCode}
                 </span>
               </div>
-              <p className={styles.shippingNote}>
-                Frakt beregnes ved utsjekking
-              </p>
               <Link
                 href="/nettbutikk/checkout"
                 className={styles.checkoutButton}

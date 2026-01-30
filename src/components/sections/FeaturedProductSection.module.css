@@ -74,7 +74,7 @@
   transition: background-color var(--transition-base), color var(--transition-base), border-color var(--transition-base);
 }
 
-/* Type 3 - Accent: black bg → accent pink bg on hover */
+/* Primary: black bg → accent on hover */
 .featProductBtnPrimary {
   color: var(--color-background);
   border: 1px solid var(--color-foreground);
@@ -87,7 +87,7 @@
   border-color: var(--color-accent);
 }
 
-/* Type 1 - Outlined: no bg, border → black bg on hover */
+/* Secondary: outlined → black bg on hover */
 .featProductBtnSecondary {
   color: var(--color-foreground);
   border: 1px solid var(--color-border);
@@ -123,16 +123,25 @@
   height: auto;
 }
 
-
 .featProductImageCol img {
   position: sticky;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
   top: 80px;
 }
 
-/* Mobile */
+/* ===========================================
+   Mobile
+   =========================================== */
+
 @media (max-width: 768px) {
   .featProductContainer {
     grid-template-columns: 1fr;
+  }
+
+  .featProductButtonRow {
+    flex-direction: column;
+    gap: var(--space-md);
   }
 
   .featProductContent {

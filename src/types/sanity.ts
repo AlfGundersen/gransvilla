@@ -56,7 +56,7 @@ export interface TimelineEntry {
   _key: string
   year: number
   // title?: string  // Re-enable when per-year titles are needed
-  description?: string
+  description?: BlockContent
   // image?: SanityImage  // Re-enable when per-year images are needed
 }
 
@@ -73,7 +73,7 @@ export interface TimelineSection {
 export interface FeaturedColumn {
   _key: string
   heading?: string
-  description?: string
+  description?: BlockContent
   link?: {
     _id: string
     _type: 'page' | 'event'
@@ -99,7 +99,7 @@ export interface ContentSection {
   image?: SanityImage & { alt?: string }
   labelText?: string
   heading?: string
-  body?: string
+  body?: BlockContent
   ctaText?: string
   ctaHref?: string
   imagePosition?: 'left' | 'right'
@@ -117,7 +117,7 @@ export interface NewsletterSection {
   _type: 'newsletter'
   _key: string
   heading?: string
-  description?: string
+  description?: BlockContent
   placeholder?: string
   buttonText?: string
   successMessage?: string
@@ -178,7 +178,7 @@ export interface Event {
   slug: {
     current: string
   }
-  description?: string
+  description?: BlockContent
   featuredImage?: SanityImage & { alt?: string }
   sections?: EventPageSection[]
 }
@@ -258,7 +258,7 @@ export interface SiteSettings {
   contactInfo?: {
     email?: string
     phone?: string
-    address?: string
+    address?: BlockContent
   }
   openingHours?: {
     days: string
@@ -273,7 +273,7 @@ export interface ShopCategory {
   title: string
   shopifyCollectionId: string
   shopifyHandle: string
-  description: string | null
+  description: BlockContent | null
   order: number
 }
 
@@ -285,7 +285,7 @@ export interface Page {
   slug: {
     current: string
   }
-  description?: string
+  description?: BlockContent
   featuredImage?: SanityImage & { alt?: string }
   sections?: EventPageSection[]
   seo?: {

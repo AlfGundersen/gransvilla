@@ -37,10 +37,12 @@
 .timelineImageWrap {
   position: relative;
   aspect-ratio: 3 / 2;
+  max-width: 80%;
 }
 
 .timelineImage {
   object-fit: cover;
+
 }
 
 .timelineHeading {
@@ -148,6 +150,7 @@
 
   .timelineImageWrap {
     aspect-ratio: 16 / 9;
+    max-width: unset;
     min-height: auto;
   }
 

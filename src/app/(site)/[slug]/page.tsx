@@ -51,7 +51,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const seo = 'seo' in content ? content.seo : undefined
   return {
     title: seo?.metaTitle || content.title,
-    description: seo?.metaDescription || content.description,
+    description: seo?.metaDescription || undefined,
   }
 }
 

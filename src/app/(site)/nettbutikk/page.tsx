@@ -5,6 +5,7 @@ import type { ShopCategory } from '@/types/sanity'
 import type { Metadata } from 'next'
 import styles from './page.module.css'
 import ProductCard from './ProductCard'
+import CollapsibleSection from './CollapsibleSection'
 
 export const revalidate = 60
 
@@ -48,26 +49,17 @@ export default async function NettbutikkPage() {
       ) : (
         <div className={styles.shopSections}>
           {activeCollections.map((collection) => (
-            <section key={collection.id} className={styles.shopSection}>
-              <div className={styles.shopSidebar}>
-                <div className={styles.shopSidebarContent}>
-                  <h2 className={styles.shopCategoryTitle}>{collection.title}</h2>
-                  {collection.description && (
-                    <p className={styles.shopCategoryDescription}>
-                      {collection.description}
-                    </p>
-                  )}
+            <CollapsibleSection
+              key={collection.id}
+              title={collection.title}
+              description={collection.description}
+            >
+              {collection.products.map((product) => (
+                <div key={product.id} className={styles.shopProductColumn}>
+                  <ProductCard product={product} />
                 </div>
-              </div>
-
-              <div className={styles.shopProductGrid}>
-                {collection.products.map((product) => (
-                  <div key={product.id} className={styles.shopProductColumn}>
-                    <ProductCard product={product} />
-                  </div>
-                ))}
-              </div>
-            </section>
+              ))}
+            </CollapsibleSection>
           ))}
         </div>
       )}

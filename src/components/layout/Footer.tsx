@@ -1,6 +1,7 @@
 'use client'
 
 import { Link } from 'next-view-transitions'
+import { PortableText } from '@portabletext/react'
 import { useState } from 'react'
 import type { NavLink, SocialLink } from '@/types/sanity'
 import { socialPlatformLabels } from '@/types/sanity'
@@ -12,7 +13,8 @@ interface FooterProps {
   contactInfo?: {
     email?: string
     phone?: string
-    address?: string
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    address?: any[]
   }
 }
 
@@ -74,7 +76,7 @@ export default function Footer({ navigation, socialLinks, contactInfo }: FooterP
               <h3 className={styles.heading}>STED</h3>
               <div className={styles.locations}>
                 <address className={styles.address}>
-                  {contactInfo.address}
+                  <PortableText value={contactInfo.address} />
                 </address>
               </div>
             </div>

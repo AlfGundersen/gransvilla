@@ -22,6 +22,13 @@ export function HeroSectionComponent({ data }: HeroSectionComponentProps) {
               fill
               sizes="100vw"
               priority
+              style={
+                image.hotspot
+                  ? {
+                      objectPosition: `${image.hotspot.x * 100}% ${image.hotspot.y * 100}%`,
+                    }
+                  : undefined
+              }
             />
           )}
         </div>

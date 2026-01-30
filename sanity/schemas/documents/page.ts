@@ -36,8 +36,7 @@ export default defineType({
     defineField({
       name: 'description',
       title: 'Kort beskrivelse',
-      type: 'text',
-      rows: 4,
+      type: 'simpleBlockContent',
       description: 'Kort sammendrag som vises i lister',
     }),
     defineField({

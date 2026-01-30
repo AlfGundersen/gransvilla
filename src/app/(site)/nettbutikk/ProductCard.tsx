@@ -59,7 +59,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           />
         )}
 
-        {/* Hover overlay with description and buttons */}
+        {/* Hover overlay with description and buttons (desktop) */}
         <div className={styles.shopProductOverlay}>
           <p className={styles.shopProductDescription}>{product.description}</p>
           <div className={styles.shopProductActions}>
@@ -78,6 +78,33 @@ export default function ProductCard({ product }: ProductCardProps) {
               Les mer
             </Link>
           </div>
+        </div>
+      </div>
+
+      {/* Mobile-only details section */}
+      <div className={styles.shopMobileDetails}>
+        <div className={styles.shopMobileHeader}>
+          <h3 className={styles.shopProductTitle}>{product.title}</h3>
+          <p className={styles.shopPrice}>
+            {product.price.toLocaleString('nb-NO')} {product.currencyCode}
+          </p>
+        </div>
+        <p className={styles.shopMobileDescription}>{product.description}</p>
+        <div className={styles.shopMobileActions}>
+          <button
+            type="button"
+            className={styles.shopAddToCartButton}
+            onClick={handleAddToCart}
+            disabled={isAdding}
+          >
+            {isAdding ? 'Legger til...' : 'Legg i handlekurv'}
+          </button>
+          <Link
+            href={`/nettbutikk/${product.handle}`}
+            className={styles.shopReadMoreButton}
+          >
+            Les mer
+          </Link>
         </div>
       </div>
     </div>
