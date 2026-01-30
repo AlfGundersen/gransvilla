@@ -263,8 +263,9 @@ export const eventsQuery = groq`
     title,
     slug,
     description,
-    image {
-      ${imageFragment}
+    featuredImage {
+      ${imageFragment},
+      alt
     }
   }
 `
