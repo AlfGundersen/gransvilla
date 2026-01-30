@@ -3,6 +3,7 @@ import { structureTool } from 'sanity/structure'
 import { defineLocations, presentationTool } from 'sanity/presentation'
 import { visionTool } from '@sanity/vision'
 import { media, mediaAssetSource } from 'sanity-plugin-media'
+import { unsplashAssetSource } from 'sanity-plugin-asset-source-unsplash'
 import { schemaTypes } from './sanity/schemas'
 import { structure } from './sanity/structure'
 
@@ -59,7 +60,7 @@ export default defineConfig({
 
   form: {
     image: {
-      assetSources: () => [mediaAssetSource],
+      assetSources: () => [mediaAssetSource, unsplashAssetSource],
     },
   },
 })
