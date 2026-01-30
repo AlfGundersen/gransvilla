@@ -42,7 +42,7 @@ export function PageSectionRenderer({ sections, documentId, documentType }: Page
         if (!content) return null
 
         return sectionAttr ? (
-          <div key={section._key} data-sanity={sectionAttr}>
+          <div key={section._key} data-sanity={sectionAttr} style={{ display: 'contents' }}>
             {content}
           </div>
         ) : (
