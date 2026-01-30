@@ -4,11 +4,12 @@ import styles from './TextSection.module.css'
 
 interface TextSectionProps {
   data: TekstSeksjon
+  dataSanity?: string
 }
 
-export function TextSection({ data }: TextSectionProps) {
+export function TextSection({ data, dataSanity }: TextSectionProps) {
   return (
-    <div className={styles.textSection}>
+    <div className={styles.textSection} data-sanity={dataSanity}>
       {data.overskrift && (
         <h2 className={styles.textHeading}>{data.overskrift}</h2>
       )}

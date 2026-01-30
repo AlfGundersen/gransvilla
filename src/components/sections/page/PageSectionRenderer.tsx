@@ -15,7 +15,7 @@ export function PageSectionRenderer({ sections, documentId, documentType }: Page
   return (
     <>
       {sections.map((section) => {
-        const sectionAttr = documentId && documentType
+        const dataSanity = documentId && documentType
           ? createDataAttribute({
               id: documentId,
               type: documentType,
@@ -23,31 +23,19 @@ export function PageSectionRenderer({ sections, documentId, documentType }: Page
             }).toString()
           : undefined
 
-        const content = (() => {
-          switch (section._type) {
-            case 'tekstSeksjon':
-              return <TextSection key={section._key} data={section} />
-            case 'bildeSeksjon':
-              return <ImageSection key={section._key} data={section} />
-            case 'bildeTekstSeksjon':
-              return <ImageTextSection key={section._key} data={section} />
-            case 'bildegalleriSeksjon':
-              return <GallerySection key={section._key} data={section} />
-            default:
-              console.warn('Unknown page section type:', (section as { _type: string })._type)
-              return null
-          }
-        })()
-
-        if (!content) return null
-
-        return sectionAttr ? (
-          <div key={section._key} data-sanity={sectionAttr} style={{ display: 'contents' }}>
-            {content}
-          </div>
-        ) : (
-          content
-        )
+        switch (section._type) {
+          case 'tekstSeksjon':
+            return <TextSection key={section._key} data={section} dataSanity={dataSanity} />
+          case 'bildeSeksjon':
+            return <ImageSection key={section._key} data={section} dataSanity={dataSanity} />
+          case 'bildeTekstSeksjon':
+            return <ImageTextSection key={section._key} data={section} dataSanity={dataSanity} />
+          case 'bildegalleriSeksjon':
+            return <GallerySection key={section._key} data={section} dataSanity={dataSanity} />
+          default:
+            console.warn('Unknown page section type:', (section as { _type: string })._type)
+            return null
+        }
       })}
     </>
   )

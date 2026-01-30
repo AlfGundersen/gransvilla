@@ -12,9 +12,10 @@ const RATIO_MAP: Record<string, number> = {
 
 interface ImageSectionProps {
   data: BildeSeksjon
+  dataSanity?: string
 }
 
-export function ImageSection({ data }: ImageSectionProps) {
+export function ImageSection({ data, dataSanity }: ImageSectionProps) {
   if (!data.bilde) return null
 
   const ratio = data.bildeforhold || '3/2'
@@ -22,7 +23,7 @@ export function ImageSection({ data }: ImageSectionProps) {
   const height = Math.round(width * (RATIO_MAP[ratio] || 2 / 3))
 
   return (
-    <div className={`${styles.imageSection} ${data.fullBredde ? styles.imageSectionFull : ''}`} {...(data.fullBredde ? { 'data-fullwidth': '' } : {})}>
+    <div className={`${styles.imageSection} ${data.fullBredde ? styles.imageSectionFull : ''}`} {...(data.fullBredde ? { 'data-fullwidth': '' } : {})} data-sanity={dataSanity}>
       <Image
         src={urlFor(data.bilde).width(width).height(height).fit('crop').url()}
         alt={data.bilde.alt || data.bilde.assetAltText || ''}

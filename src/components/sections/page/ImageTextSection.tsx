@@ -13,16 +13,17 @@ const RATIO_MAP: Record<string, number> = {
 
 interface ImageTextSectionProps {
   data: BildeTekstSeksjon
+  dataSanity?: string
 }
 
-export function ImageTextSection({ data }: ImageTextSectionProps) {
+export function ImageTextSection({ data, dataSanity }: ImageTextSectionProps) {
   const bildeForst = data.bildeForst !== false
   const ratio = data.bildeforhold || '3/2'
   const width = 700
   const height = Math.round(width * (RATIO_MAP[ratio] || 2 / 3))
 
   return (
-    <div className={`${styles.imageTextSection} ${bildeForst ? '' : styles.imageTextReversed}`}>
+    <div className={`${styles.imageTextSection} ${bildeForst ? '' : styles.imageTextReversed}`} data-sanity={dataSanity}>
       {data.bilde && (
         <div className={styles.imageTextImageWrap}>
           <Image

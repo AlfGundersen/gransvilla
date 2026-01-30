@@ -21,7 +21,6 @@
 }
 
 .imageSectionFull::after {
-  display: none;
   top: auto;
   bottom: 0;
   left: 0;
