@@ -115,6 +115,7 @@
 
 .timelineDescription {
   font-size: var(--text-base);
+  font-weight: 300;
   line-height: 1.6;
   color: var(--color-secondary);
   margin: var(--space-sm) 0;

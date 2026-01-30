@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity'
+import { AltTextInput } from '../../components/AltTextInput'
 
 export default defineType({
   name: 'page',
@@ -9,6 +10,7 @@ export default defineType({
       name: 'title',
       title: 'Tittel',
       type: 'string',
+      description: 'Hovedtittelen som vises øverst på siden',
       validation: (Rule) => Rule.required().error('Tittel er påkrevd'),
     }),
     defineField({
@@ -18,24 +20,55 @@ export default defineType({
       options: {
         source: 'title',
         maxLength: 96,
+        slugify: (input) =>
+          input
+            .toLowerCase()
+            .replace(/\s+/g, '-')
+            .replace(/æ/g, 'ae')
+            .replace(/ø/g, 'o')
+            .replace(/å/g, 'a')
+            .replace(/[^a-z0-9-]/g, '')
+            .slice(0, 96),
       },
-      description: 'URL-adressen til siden (f.eks. "om-oss" gir /om-oss)',
+      description: 'Klikk "Generate" for å lage URL fra tittelen',
       validation: (Rule) => Rule.required().error('URL-slug er påkrevd'),
+    }),
+    defineField({
+      name: 'description',
+      title: 'Kort beskrivelse',
+      type: 'text',
+      rows: 4,
+      description: 'Kort sammendrag som vises i lister',
+    }),
+    defineField({
+      name: 'featuredImage',
+      title: 'Fremhevet bilde',
+      type: 'image',
+      description: 'Stort bilde som vises ved siden av tittelen øverst på siden',
+      options: {
+        hotspot: true,
+      },
+      fields: [
+        defineField({
+          name: 'alt',
+          title: 'Alternativ tekst',
+          type: 'string',
+          description: 'Viktig for tilgjengelighet og SEO',
+          components: { input: AltTextInput },
+        }),
+      ],
     }),
     defineField({
       name: 'sections',
       title: 'Seksjoner',
       type: 'array',
+      description: 'Bygg opp siden med ulike innholdsseksjoner',
       of: [
-        { type: 'heroSection' },
-        { type: 'featuredSection' },
-        { type: 'eventsSection' },
-        { type: 'timelineSection' },
-        { type: 'contentSection' },
-        { type: 'featuredProductSection' },
-        { type: 'newsletter' },
+        { type: 'tekstSeksjon' },
+        { type: 'bildeSeksjon' },
+        { type: 'bildeTekstSeksjon' },
+        { type: 'bildegalleriSeksjon' },
       ],
-      description: 'Legg til og organiser innholdsseksjoner på siden',
     }),
     defineField({
       name: 'seo',
@@ -46,12 +79,12 @@ export default defineType({
   preview: {
     select: {
       title: 'title',
-      slug: 'slug.current',
+      description: 'description',
     },
-    prepare({ title, slug }) {
+    prepare({ title, description }) {
       return {
         title,
-        subtitle: `/${slug || ''}`,
+        subtitle: description ? description.substring(0, 50) + (description.length > 50 ? '...' : '') : '',
       }
     },
   },

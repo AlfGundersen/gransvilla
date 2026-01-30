@@ -3,13 +3,13 @@ import { FeaturedProductSectionComponent } from '@/components/sections/FeaturedP
 import { FeaturedSectionComponent } from '@/components/sections/FeaturedSection'
 import { HeroSectionComponent } from '@/components/sections/HeroSection'
 import { TimelineSectionComponent } from '@/components/sections/TimelineSection'
-import { client } from '@/lib/sanity/client'
+import { sanityFetch } from '@/lib/sanity/live'
 import { frontpageQuery } from '@/lib/sanity/queries'
 import type { Frontpage } from '@/types/sanity'
 import styles from './page.module.css'
 
 export default async function HomePage() {
-  const frontpage = await client.fetch<Frontpage | null>(frontpageQuery)
+  const { data: frontpage } = await sanityFetch({ query: frontpageQuery })
 
   // If no frontpage data from Sanity yet, show placeholder
   if (!frontpage) {

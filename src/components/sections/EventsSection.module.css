@@ -78,7 +78,7 @@
 .eventsNavLink {
   font-family: var(--font-heading);
   font-size: var(--text-3xl);
-  font-weight: var(--font-weight-normal);
+  font-weight: 200;
   width: fit-content;
   color: var(--color-foreground);
   text-decoration: none;

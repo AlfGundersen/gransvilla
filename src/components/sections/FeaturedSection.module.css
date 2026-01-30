@@ -63,7 +63,8 @@
 
 .featuredHeading {
   font-family: var(--font-heading);
-  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-size: clamp(1.3rem, 3vw, 1.7rem);
+  font-weight: 200;
   line-height: 1.2;
   margin: 0;
 }
@@ -93,6 +94,7 @@
   background-color: var(--color-foreground);
   color: var(--color-background);
   text-decoration: none;
+  font-weight: 400;
 }
 
 /* Image - stretches to match text column height */

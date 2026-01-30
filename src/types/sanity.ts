@@ -281,7 +281,9 @@ export interface Page {
   slug: {
     current: string
   }
-  sections?: PageSection[]
+  description?: string
+  featuredImage?: SanityImage & { alt?: string }
+  sections?: EventPageSection[]
   seo?: {
     metaTitle?: string
     metaDescription?: string

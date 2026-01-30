@@ -1,5 +1,6 @@
 import { defineConfig } from 'sanity'
 import { structureTool } from 'sanity/structure'
+import { defineLocations, presentationTool } from 'sanity/presentation'
 import { visionTool } from '@sanity/vision'
 import { media, mediaAssetSource } from 'sanity-plugin-media'
 import { schemaTypes } from './sanity/schemas'
@@ -19,6 +20,35 @@ export default defineConfig({
 
   plugins: [
     structureTool({ structure }),
+    presentationTool({
+      previewUrl: {
+        previewMode: {
+          enable: '/api/draft-mode/enable',
+        },
+      },
+      resolve: {
+        locations: {
+          frontpage: defineLocations({
+            locations: [{ title: 'Forside', href: '/' }],
+          }),
+          event: defineLocations({
+            select: { slug: 'slug.current' },
+            resolve: (doc) => doc?.slug
+              ? { locations: [{ title: doc.slug, href: `/${doc.slug}` }] }
+              : null,
+          }),
+          page: defineLocations({
+            select: { slug: 'slug.current' },
+            resolve: (doc) => doc?.slug
+              ? { locations: [{ title: doc.slug, href: `/${doc.slug}` }] }
+              : null,
+          }),
+          siteSettings: defineLocations({
+            locations: [{ title: 'Forside', href: '/' }],
+          }),
+        },
+      },
+    }),
     visionTool(),
     media(),
   ],

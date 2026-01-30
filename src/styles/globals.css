@@ -35,7 +35,7 @@
   --font-body: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   --font-weight-normal: 300;
   --font-weight-bold: 400;
-  --font-heading-weight: var(--font-weight-normal);
+  --font-heading-weight: 200;
 
   /* Font sizes */
   --text-xs: 0.75rem;
@@ -159,6 +159,10 @@ h6 {
   font-family: var(--font-heading);
   line-height: 1.2;
   font-weight: var(--font-heading-weight);
+}
+
+h1 {
+  font-weight: 300;
 }
 
 p {

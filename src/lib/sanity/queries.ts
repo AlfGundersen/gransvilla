@@ -207,23 +207,6 @@ const sectionsFragment = groq`
   }
 `
 
-// Page query - fetches a page by slug with all sections
-export const pageQuery = groq`
-  *[_type == "page" && slug.current == $slug][0] {
-    _id,
-    title,
-    slug,
-    ${sectionsFragment},
-    seo {
-      metaTitle,
-      metaDescription,
-      ogImage {
-        asset
-      }
-    }
-  }
-`
-
 // Menu item fragment
 const menuItemFragment = groq`
   customLink,
@@ -337,6 +320,28 @@ export const eventQuery = groq`
       alt
     },
     ${eventSectionsFragment}
+  }
+`
+
+// Page query - fetches a page by slug with all sections
+export const pageQuery = groq`
+  *[_type == "page" && slug.current == $slug][0] {
+    _id,
+    title,
+    slug,
+    description,
+    featuredImage {
+      ${imageFragment},
+      alt
+    },
+    ${eventSectionsFragment},
+    seo {
+      metaTitle,
+      metaDescription,
+      ogImage {
+        asset
+      }
+    }
   }
 `
 

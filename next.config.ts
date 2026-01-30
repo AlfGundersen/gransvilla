@@ -2,8 +2,8 @@ import type { NextConfig } from 'next'
 
 const securityHeaders = [
   {
-    key: 'X-Frame-Options',
-    value: 'DENY',
+    key: 'Content-Security-Policy',
+    value: "frame-ancestors 'self' https://*.sanity.build",
   },
   {
     key: 'X-Content-Type-Options',

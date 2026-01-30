@@ -3,14 +3,14 @@ import Header from '@/components/layout/Header'
 import ScrollToTop from '@/components/layout/ScrollToTop'
 import { CartProvider } from '@/context/CartContext'
 import { CartDrawer } from '@/components/cart/CartDrawer'
-import { client } from '@/lib/sanity/client'
+import { sanityFetch } from '@/lib/sanity/live'
 import { siteSettingsQuery } from '@/lib/sanity/queries'
 import { resolveMenu } from '@/lib/sanity/resolveMenu'
 import type { SiteSettings } from '@/types/sanity'
 import styles from './layout.module.css'
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
-  const settings = await client.fetch<SiteSettings | null>(siteSettingsQuery).catch(() => null)
+  const { data: settings } = await sanityFetch({ query: siteSettingsQuery }).catch(() => ({ data: null }))
 
   const mainMenu = resolveMenu(settings?.mainMenu)
   const footerMenu = settings?.footerMenu?.length

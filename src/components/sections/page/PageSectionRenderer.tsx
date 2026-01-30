@@ -1,11 +1,11 @@
-import type { EventPageSection, PageSection } from '@/types/sanity'
+import type { EventPageSection } from '@/types/sanity'
 import { TextSection } from './TextSection'
 import { ImageSection } from './ImageSection'
 import { ImageTextSection } from './ImageTextSection'
 import { GallerySection } from './GallerySection'
 
 interface PageSectionRendererProps {
-  sections: (EventPageSection | PageSection)[]
+  sections: EventPageSection[]
 }
 
 export function PageSectionRenderer({ sections }: PageSectionRendererProps) {
