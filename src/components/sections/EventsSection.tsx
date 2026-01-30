@@ -21,7 +21,7 @@ export function EventsSectionComponent({ data }: EventsSectionComponentProps) {
 
   const activeItem = items[activeIndex]
   const hasAnySecondImage = items.some((item) => item.imageLayout !== '1' && item.image2?.asset)
-  const singleImage = activeItem?.imageLayout === '1'
+  const singleImage = activeItem?.imageLayout === '1' || !activeItem?.image2?.asset
 
   return (
     <section className={styles.eventsSection} aria-label="Arrangementer">
