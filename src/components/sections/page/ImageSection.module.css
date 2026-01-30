@@ -16,7 +16,7 @@
 
 .imageSectionFull {
   grid-column: 1 / -1;
-  padding-block: var(--space-lg) 0;
+  padding-block: var(--space-lg);
   padding-left: 0;
 }
 
