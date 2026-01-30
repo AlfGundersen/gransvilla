@@ -29,7 +29,7 @@ interface GalleryClientProps {
 }
 
 const DRAG_THRESHOLD = 5
-const MAX_FULL_WIDTH = 3840
+const MAX_FULL_WIDTH = 1920
 
 /** Append viewport-appropriate w & h params to a Sanity base URL */
 function buildFullSrc(base: string, ratio: number): string {
@@ -159,7 +159,7 @@ export function GalleryClient({ images, columns, hasContent }: GalleryClientProp
                 alt={image.alt}
                 width={image.width}
                 height={image.height}
-                loading="eager"
+                loading={index < columns ? 'eager' : 'lazy'}
                 className={styles.galleryImage}
               />
             </button>
