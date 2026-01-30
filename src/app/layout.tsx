@@ -24,11 +24,11 @@ export default function RootLayout({
 }>) {
   return (
     <ViewTransitions>
-      <html lang="no">
+      <html lang="no" className={inter.variable}>
         <head>
           <link rel="stylesheet" href="https://use.typekit.net/ipo0piy.css" />
         </head>
-        <body className={inter.variable} suppressHydrationWarning>
+        <body suppressHydrationWarning>
           {children}
         </body>
       </html>

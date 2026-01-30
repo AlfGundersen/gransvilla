@@ -9,26 +9,6 @@ interface ProductInfoProps {
   product: Product
 }
 
-interface AccordionItem {
-  title: string
-  content: string
-}
-
-const accordionItems: AccordionItem[] = [
-  {
-    title: 'Frakt',
-    content: 'Vi sender bestillinger innen 1-3 virkedager. Fri frakt på bestillinger over 500 kr. Standard frakt koster 79 kr.',
-  },
-  {
-    title: 'Retur',
-    content: 'Du har 30 dagers returrett på alle varer. Produktet må være ubrukt og i original emballasje. Kontakt oss for returinstruksjoner.',
-  },
-  {
-    title: 'Om produktet',
-    content: 'Alle våre produkter er håndplukket for kvalitet. Ta kontakt hvis du har spørsmål om produktet.',
-  },
-]
-
 export function ProductInfo({ product }: ProductInfoProps) {
   const [quantity, setQuantity] = useState(1)
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>(() => {
@@ -41,7 +21,6 @@ export function ProductInfo({ product }: ProductInfoProps) {
     })
     return initial
   })
-  const [openAccordion, setOpenAccordion] = useState<number | null>(null)
 
   // Find the selected variant based on selected options
   const selectedVariant = useMemo(() => {
@@ -67,10 +46,6 @@ export function ProductInfo({ product }: ProductInfoProps) {
       ...prev,
       [optionName]: value,
     }))
-  }
-
-  const toggleAccordion = (index: number) => {
-    setOpenAccordion(openAccordion === index ? null : index)
   }
 
   const decreaseQuantity = () => {
@@ -161,37 +136,6 @@ export function ProductInfo({ product }: ProductInfoProps) {
         />
       )}
 
-      {/* Accordion */}
-      <div className={styles.productInfoAccordion}>
-        {accordionItems.map((item, index) => (
-          <div key={index} className={styles.productInfoAccordionItem}>
-            <button
-              type="button"
-              className={styles.productInfoAccordionHeader}
-              onClick={() => toggleAccordion(index)}
-              aria-expanded={openAccordion === index}
-            >
-              <span>{item.title}</span>
-              <svg
-                className={`${styles.productInfoAccordionIcon} ${openAccordion === index ? styles.productInfoAccordionIconOpen : ''}`}
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-              >
-                <path d="M4 6l4 4 4-4" />
-              </svg>
-            </button>
-            <div
-              className={`${styles.productInfoAccordionContent} ${openAccordion === index ? styles.productInfoAccordionContentOpen : ''}`}
-            >
-              <p>{item.content}</p>
-            </div>
-          </div>
-        ))}
-      </div>
     </div>
   )
 }

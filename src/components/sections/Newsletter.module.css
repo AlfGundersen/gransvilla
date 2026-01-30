@@ -79,7 +79,8 @@
 
 .button:hover:not(:disabled),
 .button:focus-visible:not(:disabled) {
-  opacity: 0.8;
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
 }
 
 .button:disabled {

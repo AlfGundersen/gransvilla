@@ -9,22 +9,16 @@
   color: var(--color-white);
   border: none;
   cursor: pointer;
-  transition: opacity var(--transition-fast);
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
 }
 
 .button:hover:not(:disabled),
 .button:focus-visible:not(:disabled) {
-  opacity: 0.8;
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
 }
 
 .button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-.stockNotice {
-  margin-top: var(--space-sm);
-  font-size: var(--text-sm);
-  color: var(--color-primary);
-  font-style: italic;
 }

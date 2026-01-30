@@ -15,9 +15,10 @@ interface CartContextType {
   cart: Cart | null
   isOpen: boolean
   isLoading: boolean
+  stockNotice: string | null
   openCart: () => void
   closeCart: () => void
-  addToCart: (variantId: string, quantity?: number) => Promise<{ requestedQuantity: number; actualQuantity: number }>
+  addToCart: (variantId: string, quantity?: number) => Promise<void>
   updateQuantity: (lineId: string, quantity: number) => Promise<void>
   removeFromCart: (lineId: string) => Promise<void>
   cartCount: number
@@ -31,6 +32,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<Cart | null>(null)
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [stockNotice, setStockNotice] = useState<string | null>(null)
   const cartRef = useRef<Cart | null>(null)
 
   // Keep ref in sync with state so callbacks can read current cart
@@ -67,6 +69,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const addToCart = useCallback(async (variantId: string, quantity = 1) => {
     setIsLoading(true)
+    setStockNotice(null)
     try {
       const cartId = localStorage.getItem(CART_ID_KEY)
 
@@ -89,12 +92,22 @@ export function CartProvider({ children }: { children: ReactNode }) {
       setIsOpen(true)
 
       // Check how many were actually added by comparing cart quantities
-      const newQuantity = (data.cart as Cart).items
-        .filter((item: CartItem) => item.variantId === variantId)
-        .reduce((sum: number, item: CartItem) => sum + item.quantity, 0)
+      const cartItems = (data.cart as Cart).items
+      const variantItems = cartItems.filter((item: CartItem) => item.variantId === variantId)
+      const newQuantity = variantItems.reduce((sum: number, item: CartItem) => sum + item.quantity, 0)
       const actualAdded = newQuantity - previousQuantity
+      const productTitle = variantItems[0]?.title ?? 'produktet'
 
-      return { requestedQuantity: quantity, actualQuantity: actualAdded }
+      if (actualAdded < quantity) {
+        if (actualAdded === 0) {
+          setStockNotice(`${productTitle} er ikke lenger på lager`)
+        } else {
+          setStockNotice(
+            `Kun ${actualAdded} av ${quantity} ${productTitle} ble lagt til grunnet begrenset lagerbeholdning`
+          )
+        }
+        setTimeout(() => setStockNotice(null), 10000)
+      }
     } catch (error) {
       console.error('Failed to add to cart:', error)
       throw error
@@ -108,6 +121,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     if (!cartId) return
 
     setIsLoading(true)
+    setStockNotice(null)
     try {
       const response = await fetch('/api/cart', {
         method: 'PATCH',
@@ -119,6 +133,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
       const data = await response.json()
       setCart(data.cart)
+
+      // Check if Shopify capped the quantity
+      const updatedItem = (data.cart as Cart).items.find((item: CartItem) => item.id === lineId)
+      if (updatedItem && updatedItem.quantity < quantity) {
+        const productTitle = updatedItem.title
+        setStockNotice(
+          `${productTitle} har kun ${updatedItem.quantity} stk. på lager`
+        )
+        setTimeout(() => setStockNotice(null), 10000)
+      }
     } catch (error) {
       console.error('Failed to update cart:', error)
     } finally {
@@ -157,6 +181,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         cart,
         isOpen,
         isLoading,
+        stockNotice,
         openCart,
         closeCart,
         addToCart,
@@ -178,11 +203,12 @@ export function useCart() {
       cart: null,
       isOpen: false,
       isLoading: true,
-      openCart: () => {},
-      closeCart: () => {},
-      addToCart: async () => ({ requestedQuantity: 0, actualQuantity: 0 }),
-      updateQuantity: async () => {},
-      removeFromCart: async () => {},
+      stockNotice: null,
+      openCart: () => { },
+      closeCart: () => { },
+      addToCart: async () => { },
+      updateQuantity: async () => { },
+      removeFromCart: async () => { },
       cartCount: 0,
     } as CartContextType
   }

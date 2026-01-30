@@ -63,10 +63,16 @@
 }
 
 .thankYouButtonPrimary:hover,
-.thankYouButtonPrimary:focus-visible,
+.thankYouButtonPrimary:focus-visible {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
 .thankYouButtonSecondary:hover,
 .thankYouButtonSecondary:focus-visible {
-  opacity: 0.8;
+  background-color: var(--color-foreground);
+  color: var(--color-background);
+  border-color: var(--color-foreground);
 }
 
 @media (max-width: 600px) {

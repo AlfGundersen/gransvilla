@@ -82,7 +82,8 @@
 
 .newsletterButton:hover:not(:disabled),
 .newsletterButton:focus-visible:not(:disabled) {
-  opacity: 0.8;
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
 }
 
 .newsletterButton:disabled {

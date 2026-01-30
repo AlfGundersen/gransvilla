@@ -11,6 +11,7 @@ export function CartDrawer() {
     cart,
     isOpen,
     isLoading,
+    stockNotice,
     closeCart,
     updateQuantity,
     removeFromCart,
@@ -108,6 +109,11 @@ export function CartDrawer() {
           </div>
         ) : (
           <>
+            {stockNotice && (
+              <div className={styles.stockNotice} role="alert">
+                {stockNotice}
+              </div>
+            )}
             <div className={styles.items}>
               {cart.items.map((item) => (
                 <div key={item.id} className={styles.item}>

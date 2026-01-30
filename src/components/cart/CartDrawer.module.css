@@ -94,6 +94,15 @@
   opacity: 0.6;
 }
 
+/* Stock notice */
+.stockNotice {
+  padding: var(--space-sm) var(--space-lg);
+  font-size: var(--text-md);
+  color: var(--color-background);
+  background: var(--color-accent);
+  font-weight: 400;
+}
+
 /* Items list */
 .items {
   flex: 1;
