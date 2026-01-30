@@ -1,7 +1,7 @@
 const domain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN!
 const storefrontToken = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN!
 
-const endpoint = `https://${domain}/api/2024-01/graphql.json`
+const endpoint = `https://${domain}/api/2025-10/graphql.json`
 
 interface ShopifyResponse<T> {
   data: T

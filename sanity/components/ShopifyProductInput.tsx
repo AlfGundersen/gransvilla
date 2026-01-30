@@ -44,7 +44,7 @@ export function ShopifyProductInput({ value, onChange }: ShopifyProductInputProp
 
       try {
         const response = await fetch(
-          `https://${SHOPIFY_DOMAIN}/api/2024-01/graphql.json`,
+          `https://${SHOPIFY_DOMAIN}/api/2025-10/graphql.json`,
           {
             method: 'POST',
             headers: {
