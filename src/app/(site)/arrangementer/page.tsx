@@ -1,3 +1,4 @@
+import { PortableText } from '@portabletext/react'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -16,34 +17,43 @@ export default async function ArrangementerPage() {
   const { data: events } = await sanityFetch({ query: eventsQuery }) as { data: Event[] }
 
   return (
-    <div className={styles.arrangementerPage}>
-      <h1 className={styles.heading}>Arrangementer</h1>
-      {events.length > 0 ? (
-        <div className={styles.grid}>
-          {events.map((event) => (
-            <Link
-              key={event._id}
-              href={`/${event.slug.current}`}
-              className={styles.card}
-            >
+    <div className={styles.page}>
+      <div className={styles.grid}>
+        <h1 className={styles.heading}>Arrangementer</h1>
+
+        {events.length > 0 ? (
+          events.map((event) => (
+            <div key={event._id} className={styles.row}>
               {event.featuredImage?.asset && (
-                <div className={styles.imageWrap}>
-                  <Image
-                    src={urlFor(event.featuredImage).width(800).height(600).quality(80).fit('crop').url()}
-                    alt={event.featuredImage.alt || event.featuredImage.assetAltText || event.title}
-                    width={800}
-                    height={600}
-                    className={styles.image}
-                  />
+                <div className={styles.imageCol}>
+                  <Link href={`/${event.slug.current}`} className={styles.imageLink}>
+                    <Image
+                      src={urlFor(event.featuredImage).width(1200).height(900).quality(80).fit('crop').url()}
+                      alt={event.featuredImage.alt || event.featuredImage.assetAltText || event.title}
+                      width={1200}
+                      height={900}
+                      className={styles.image}
+                    />
+                  </Link>
                 </div>
               )}
-              <h2 className={styles.cardTitle}>{event.title}</h2>
-            </Link>
-          ))}
-        </div>
-      ) : (
-        <p>Ingen arrangementer for øyeblikket.</p>
-      )}
+              <div className={styles.textCol}>
+                <h2 className={styles.title}>{event.title}</h2>
+                {event.description && (
+                  <div className={styles.description}>
+                    <PortableText value={event.description} />
+                  </div>
+                )}
+                <Link href={`/${event.slug.current}`} className={styles.cta}>
+                  Les mer
+                </Link>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p>Ingen arrangementer for øyeblikket.</p>
+        )}
+      </div>
     </div>
   )
 }
