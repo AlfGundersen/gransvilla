@@ -47,7 +47,18 @@ export default defineType({
   preview: {
     select: {
       title: 'title',
-      subtitle: 'description',
+      description: 'description',
+    },
+    prepare({ title, description }) {
+      const text = Array.isArray(description)
+        ? description.map((block: { children?: { text?: string }[] }) =>
+            block.children?.map((c) => c.text).join('') ?? ''
+          ).join(' ')
+        : description || ''
+      return {
+        title,
+        subtitle: text ? text.substring(0, 50) + (text.length > 50 ? '...' : '') : '',
+      }
     },
   },
   orderings: [

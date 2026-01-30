@@ -81,9 +81,14 @@ export default defineType({
       description: 'description',
     },
     prepare({ title, description }) {
+      const text = Array.isArray(description)
+        ? description.map((block: { children?: { text?: string }[] }) =>
+            block.children?.map((c) => c.text).join('') ?? ''
+          ).join(' ')
+        : description || ''
       return {
         title,
-        subtitle: description ? description.substring(0, 50) + (description.length > 50 ? '...' : '') : '',
+        subtitle: text ? text.substring(0, 50) + (text.length > 50 ? '...' : '') : '',
       }
     },
   },
