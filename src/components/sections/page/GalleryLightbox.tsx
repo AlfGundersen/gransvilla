@@ -8,6 +8,7 @@ import styles from './GalleryLightbox.module.css'
 
 interface GalleryLightboxProps {
   images: GalleryImageData[]
+  fullSrcs: string[]
   activeIndex: number
   originRect: OriginRect | null
   onClose: () => void
@@ -20,6 +21,7 @@ const SWIPE_VELOCITY = 500
 
 export function GalleryLightbox({
   images,
+  fullSrcs,
   activeIndex,
   originRect,
   onClose,
@@ -183,10 +185,8 @@ export function GalleryLightbox({
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={current.fullSrc}
+          src={fullSrcs[activeIndex]}
           alt={current.alt}
-          width={current.width}
-          height={current.height}
         />
       </motion.div>
 

@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { Link } from 'next-view-transitions'
+import Link from 'next/link'
 import styles from './Arrangementer.module.css'
 
 // TODO: Fetch from Sanity

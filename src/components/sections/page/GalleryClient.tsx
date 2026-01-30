@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useEffect, useRef } from 'react'
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react'
 import Image from 'next/image'
 import { AnimatePresence } from 'framer-motion'
 import { GalleryLightbox } from './GalleryLightbox'
@@ -8,10 +8,11 @@ import styles from './GallerySection.module.css'
 
 export interface GalleryImageData {
   src: string
-  fullSrc: string
+  fullSrcBase: string
   alt: string
   width: number
   height: number
+  ratio: number
 }
 
 export interface OriginRect {
@@ -28,6 +29,16 @@ interface GalleryClientProps {
 }
 
 const DRAG_THRESHOLD = 5
+const MAX_FULL_WIDTH = 2560
+
+/** Append viewport-appropriate w & h params to a Sanity base URL */
+function buildFullSrc(base: string, ratio: number): string {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2)
+  const w = Math.round(Math.min(window.innerWidth * dpr, MAX_FULL_WIDTH))
+  const h = Math.round(w * ratio)
+  const sep = base.includes('?') ? '&' : '?'
+  return `${base}${sep}w=${w}&h=${h}`
+}
 
 export function GalleryClient({ images, columns, hasContent }: GalleryClientProps) {
   const isCarousel = images.length > columns
@@ -36,14 +47,30 @@ export function GalleryClient({ images, columns, hasContent }: GalleryClientProp
   const scrollRef = useRef<HTMLDivElement>(null)
   const dragState = useRef({ isDown: false, startX: 0, scrollLeft: 0, dragged: false })
   const buttonRefs = useRef<(HTMLButtonElement | null)[]>([])
+  const preloadedSet = useRef(new Set<string>())
 
-  // Preload full-resolution images so lightbox opens instantly
-  useEffect(() => {
-    images.forEach((image) => {
-      const img = new window.Image()
-      img.src = image.fullSrc
-    })
+  // Build viewport-aware full URLs (recomputed once on mount)
+  const fullSrcs = useMemo(() => {
+    if (typeof window === 'undefined') return images.map((img) => img.fullSrcBase)
+    return images.map((img) => buildFullSrc(img.fullSrcBase, img.ratio))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [images])
+
+  // Preload adjacent images when lightbox index changes
+  const preloadImage = useCallback((src: string) => {
+    if (preloadedSet.current.has(src)) return
+    preloadedSet.current.add(src)
+    const img = new window.Image()
+    img.src = src
+  }, [])
+
+  useEffect(() => {
+    if (lightboxIndex === null) return
+    // Preload current, prev, and next
+    preloadImage(fullSrcs[lightboxIndex])
+    if (lightboxIndex > 0) preloadImage(fullSrcs[lightboxIndex - 1])
+    if (lightboxIndex < fullSrcs.length - 1) preloadImage(fullSrcs[lightboxIndex + 1])
+  }, [lightboxIndex, fullSrcs, preloadImage])
 
   const onMouseDown = useCallback((e: React.MouseEvent) => {
     const el = scrollRef.current
@@ -82,8 +109,10 @@ export function GalleryClient({ images, columns, hasContent }: GalleryClientProp
     const button = e.currentTarget as HTMLElement
     const rect = button.getBoundingClientRect()
     setOriginRect({ x: rect.x, y: rect.y, width: rect.width, height: rect.height })
+    // Preload clicked image immediately
+    preloadImage(fullSrcs[index])
     setLightboxIndex(index)
-  }, [])
+  }, [fullSrcs, preloadImage])
 
   const closeLightbox = useCallback(() => {
     // Update origin rect to current thumbnail position before closing
@@ -142,6 +171,7 @@ export function GalleryClient({ images, columns, hasContent }: GalleryClientProp
         {lightboxIndex !== null && (
           <GalleryLightbox
             images={images}
+            fullSrcs={fullSrcs}
             activeIndex={lightboxIndex}
             originRect={originRect}
             onClose={closeLightbox}

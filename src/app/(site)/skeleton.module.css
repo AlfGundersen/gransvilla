@@ -1,0 +1,64 @@
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.bone {
+  background: linear-gradient(
+    90deg,
+    var(--color-border) 25%,
+    var(--color-muted) 50%,
+    var(--color-border) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+  border-radius: 2px;
+}
+
+.h1 {
+  height: 3rem;
+  max-width: 60%;
+}
+
+.h2 {
+  height: 2rem;
+  max-width: 40%;
+}
+
+.h3 {
+  height: 1.5rem;
+  max-width: 30%;
+}
+
+.text {
+  height: 1rem;
+}
+
+.textShort {
+  height: 1rem;
+  max-width: 60%;
+}
+
+.textXs {
+  height: 0.75rem;
+  max-width: 40%;
+}
+
+.button {
+  height: 2.75rem;
+  max-width: 10rem;
+}
+
+.image16x9 {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+}
+
+.imageSquare {
+  aspect-ratio: 1;
+  width: 100%;
+}

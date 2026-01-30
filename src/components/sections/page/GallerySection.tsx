@@ -20,17 +20,17 @@ interface GallerySectionProps {
 
 export function GallerySection({ data, dataSanity }: GallerySectionProps) {
   const ratio = data.bildeforhold || '3/4'
+  const ratioMultiplier = RATIO_MAP[ratio] || 2 / 3
   const thumbWidth = 700
-  const thumbHeight = Math.round(thumbWidth * (RATIO_MAP[ratio] || 2 / 3))
-  const fullWidth = 1800
-  const fullHeight = Math.round(fullWidth * (RATIO_MAP[ratio] || 2 / 3))
+  const thumbHeight = Math.round(thumbWidth * ratioMultiplier)
 
   const images = (data.bilder || []).map((bilde) => ({
     src: urlFor(bilde).width(thumbWidth).height(thumbHeight).fit('crop').url(),
-    fullSrc: urlFor(bilde).width(fullWidth).height(fullHeight).fit('crop').url(),
+    fullSrcBase: urlFor(bilde).fit('crop').url(),
     alt: bilde.alt || bilde.assetAltText || '',
     width: thumbWidth,
     height: thumbHeight,
+    ratio: ratioMultiplier,
   }))
 
   return (

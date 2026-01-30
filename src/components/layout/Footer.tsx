@@ -1,6 +1,7 @@
 'use client'
 
-import { Link } from 'next-view-transitions'
+import Link from 'next/link'
+import Image from 'next/image'
 import { PortableText } from '@portabletext/react'
 import { useState } from 'react'
 import type { NavLink, SocialLink } from '@/types/sanity'
@@ -15,10 +16,13 @@ interface FooterProps {
     phone?: string
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     address?: any[]
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    partners?: any[]
   }
+  faviconUrl?: string
 }
 
-export default function Footer({ navigation, socialLinks, contactInfo }: FooterProps) {
+export default function Footer({ navigation, socialLinks, contactInfo, faviconUrl }: FooterProps) {
   const [email, setEmail] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -70,15 +74,27 @@ export default function Footer({ navigation, socialLinks, contactInfo }: FooterP
             </ul>
           </nav>
 
-          {/* Location */}
-          {contactInfo?.address && (
+          {/* Location & Partners */}
+          {(contactInfo?.address || contactInfo?.partners) && (
             <div className={styles.column}>
-              <h3 className={styles.heading}>STED</h3>
-              <div className={styles.locations}>
-                <address className={styles.address}>
-                  <PortableText value={contactInfo.address} />
-                </address>
-              </div>
+              {contactInfo.address && (
+                <>
+                  <h3 className={styles.heading}>STED</h3>
+                  <div className={styles.locations}>
+                    <address className={styles.address}>
+                      <PortableText value={contactInfo.address} />
+                    </address>
+                  </div>
+                </>
+              )}
+              {contactInfo.partners && (
+                <div className={styles.partners}>
+                  <h3 className={styles.heading}>PARTNERE</h3>
+                  <div className={styles.partnerLinks}>
+                    <PortableText value={contactInfo.partners} />
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
@@ -108,7 +124,18 @@ export default function Footer({ navigation, socialLinks, contactInfo }: FooterP
               className={styles.circleDecoration}
               onClick={handleColorFlip}
               aria-label="Bytt fargemodus"
-            />
+            >
+              {faviconUrl ? (
+                <Image
+                  src={faviconUrl}
+                  alt=""
+                  width={100}
+                  height={100}
+                  className={styles.circleImage}
+                  unoptimized
+                />
+              ) : null}
+            </button>
           </div>
         </div>
 

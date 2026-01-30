@@ -25,7 +25,7 @@ export const frontpageQuery = groq`
       columns[] {
         _key,
         heading,
-        description,
+        "description": description[defined(_type)],
         link-> {
           _id,
           _type,
@@ -66,7 +66,7 @@ export const frontpageQuery = groq`
       entries[] {
         _key,
         year,
-        description
+        "description": description[defined(_type)]
       }
     },
     featuredProduct {
@@ -74,7 +74,7 @@ export const frontpageQuery = groq`
     },
     newsletter {
       heading,
-      description,
+      "description": description[defined(_type)],
       placeholder,
       buttonText,
       successMessage
@@ -107,7 +107,7 @@ const featuredSectionFragment = groq`
     columns[] {
       _key,
       heading,
-      description,
+      "description": description[defined(_type)],
       link-> {
         _id,
         title,
@@ -155,7 +155,7 @@ const timelineSectionFragment = groq`
     entries[] {
       _key,
       year,
-      description
+      "description": description[defined(_type)]
     }
   }
 `
@@ -169,7 +169,7 @@ const contentSectionFragment = groq`
     },
     labelText,
     heading,
-    body,
+    "body": body[defined(_type)],
     ctaText,
     ctaHref,
     imagePosition
@@ -187,7 +187,7 @@ const featuredProductSectionFragment = groq`
 const newsletterFragment = groq`
   _type == "newsletter" => {
     heading,
-    description,
+    "description": description[defined(_type)],
     placeholder,
     buttonText,
     successMessage
@@ -242,7 +242,8 @@ export const siteSettingsQuery = groq`
     contactInfo {
       email,
       phone,
-      address
+      "address": address[defined(_type)],
+      "partners": partners[defined(_type)]
     },
     openingHours[] {
       days,
@@ -275,7 +276,7 @@ const eventSectionsFragment = groq`
     _key,
     _type == "tekstSeksjon" => {
       overskrift,
-      tekst
+      "tekst": tekst[defined(_type)]
     },
     _type == "bildeSeksjon" => {
       bilde {
@@ -291,7 +292,7 @@ const eventSectionsFragment = groq`
         alt
       },
       bildeforhold,
-      tekst,
+      "tekst": tekst[defined(_type)],
       visOverskrift,
       overskrift,
       bildeForst
@@ -299,7 +300,7 @@ const eventSectionsFragment = groq`
     _type == "bildegalleriSeksjon" => {
       visInnhold,
       overskrift,
-      tekst,
+      "tekst": tekst[defined(_type)],
       bildeforhold,
       antallKolonner,
       bilder[] {

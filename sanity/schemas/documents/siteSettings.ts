@@ -190,6 +190,7 @@ export default defineType({
         { name: 'email', type: 'string', title: 'E-post' },
         { name: 'phone', type: 'string', title: 'Telefon' },
         { name: 'address', type: 'simpleBlockContent', title: 'Adresse' },
+        { name: 'partners', type: 'simpleBlockContent', title: 'Partnere', description: 'Legg til partnere med lenker' },
       ],
     }),
     defineField({

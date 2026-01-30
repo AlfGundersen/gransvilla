@@ -6,6 +6,7 @@ import { CartDrawer } from '@/components/cart/CartDrawer'
 import { sanityFetch } from '@/lib/sanity/live'
 import { siteSettingsQuery } from '@/lib/sanity/queries'
 import { resolveMenu } from '@/lib/sanity/resolveMenu'
+import { urlFor } from '@/lib/sanity/image'
 import type { SiteSettings } from '@/types/sanity'
 import styles from './layout.module.css'
 
@@ -17,6 +18,9 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
     ? resolveMenu(settings.footerMenu)
     : mainMenu
   const socialLinks = settings?.socialLinks ?? []
+  const faviconUrl = settings?.favicon?.asset
+    ? urlFor(settings.favicon).width(100).height(100).url()
+    : undefined
 
   return (
     <CartProvider>
@@ -31,6 +35,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
           navigation={footerMenu}
           socialLinks={socialLinks}
           contactInfo={settings?.contactInfo}
+          faviconUrl={faviconUrl}
         />
       </div>
       <CartDrawer />
