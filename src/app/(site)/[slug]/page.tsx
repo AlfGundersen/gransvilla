@@ -9,7 +9,6 @@ import { PageSectionRenderer } from '@/components/sections/page/PageSectionRende
 import type { Event, Page } from '@/types/sanity'
 import styles from './page.module.css'
 
-export const revalidate = 60
 export const dynamicParams = true
 
 interface Props {
