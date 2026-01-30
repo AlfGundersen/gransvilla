@@ -100,7 +100,7 @@
 /* Image - stretches to match text column height */
 .featuredImageWrap {
   position: relative;
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 2 / 3;
 }
 
 /* Vertical line to the left of each image */
