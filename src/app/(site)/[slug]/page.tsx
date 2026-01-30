@@ -48,9 +48,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: 'Side ikke funnet' }
   }
 
+  const seo = 'seo' in content ? content.seo : undefined
   return {
-    title: content.seo?.metaTitle || content.title,
-    description: content.seo?.metaDescription || ('description' in content ? content.description : undefined),
+    title: seo?.metaTitle || content.title,
+    description: seo?.metaDescription || ('description' in content ? content.description : undefined),
   }
 }
 
