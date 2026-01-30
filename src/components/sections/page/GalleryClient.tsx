@@ -29,11 +29,11 @@ interface GalleryClientProps {
 }
 
 const DRAG_THRESHOLD = 5
-const MAX_FULL_WIDTH = 2560
+const MAX_FULL_WIDTH = 3840
 
 /** Append viewport-appropriate w & h params to a Sanity base URL */
 function buildFullSrc(base: string, ratio: number): string {
-  const dpr = Math.min(window.devicePixelRatio || 1, 2)
+  const dpr = Math.min(window.devicePixelRatio || 1, 3)
   const w = Math.round(Math.min(window.innerWidth * dpr, MAX_FULL_WIDTH))
   const h = Math.round(w * ratio)
   const sep = base.includes('?') ? '&' : '?'

@@ -19,7 +19,7 @@ interface ImageTextSectionProps {
 export function ImageTextSection({ data, dataSanity }: ImageTextSectionProps) {
   const bildeForst = data.bildeForst !== false
   const ratio = data.bildeforhold || '3/2'
-  const width = 700
+  const width = 1400
   const height = Math.round(width * (RATIO_MAP[ratio] || 2 / 3))
 
   return (
@@ -27,7 +27,7 @@ export function ImageTextSection({ data, dataSanity }: ImageTextSectionProps) {
       {data.bilde && (
         <div className={styles.imageTextImageWrap}>
           <Image
-            src={urlFor(data.bilde).width(width).height(height).fit('crop').url()}
+            src={urlFor(data.bilde).width(width).height(height).quality(100).fit('crop').url()}
             alt={data.bilde.alt || data.bilde.assetAltText || ''}
             width={width}
             height={height}

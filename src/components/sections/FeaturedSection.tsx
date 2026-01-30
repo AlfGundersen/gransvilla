@@ -42,7 +42,7 @@ export function FeaturedSectionComponent({ data }: FeaturedSectionComponentProps
               {column.image?.asset && (
                 <div className={styles.featuredImageWrap}>
                   <Image
-                    src={urlFor(column.image).url()}
+                    src={urlFor(column.image).width(1400).quality(100).url()}
                     alt={column.image.alt || column.image.assetAltText || column.heading || ''}
                     fill
                     sizes="(max-width: 768px) 100vw, 25vw"
