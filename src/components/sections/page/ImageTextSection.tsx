@@ -31,6 +31,7 @@ export function ImageTextSection({ data, dataSanity }: ImageTextSectionProps) {
             alt={data.bilde.alt || data.bilde.assetAltText || ''}
             width={width}
             height={height}
+            loading="eager"
             className={styles.imageTextImage}
           />
         </div>

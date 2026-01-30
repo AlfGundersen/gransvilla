@@ -29,6 +29,7 @@ export function ImageSection({ data, dataSanity }: ImageSectionProps) {
         alt={data.bilde.alt || data.bilde.assetAltText || ''}
         width={width}
         height={height}
+        loading="eager"
         className={styles.imageSectionImage}
       />
     </div>

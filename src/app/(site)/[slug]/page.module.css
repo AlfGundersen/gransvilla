@@ -57,6 +57,12 @@
   right: 0;
 }
 
+@media (max-width: 768px) {
+  .featuredImage::before {
+    left: 0;
+  }
+}
+
 .featuredImage::after {
   content: '';
   position: absolute;
@@ -101,7 +107,7 @@
 
   .eventTitle {
     grid-column: 1 / -1;
-    font-size: var(--text-3xl);
+    font-size: var(--text-5xl);
   }
 
   .featuredImage {

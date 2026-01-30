@@ -130,6 +130,7 @@ export function GalleryClient({ images, columns, hasContent }: GalleryClientProp
                 alt={image.alt}
                 width={image.width}
                 height={image.height}
+                loading="eager"
                 className={styles.galleryImage}
               />
             </button>
