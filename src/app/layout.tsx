@@ -47,15 +47,7 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://p.typekit.net" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://cdn.sanity.io" />
         <link rel="preconnect" href="https://cdn.shopify.com" />
-        <link rel="preload" href="https://use.typekit.net/ipo0piy.css" as="style" />
-        <script dangerouslySetInnerHTML={{ __html: `
-          var l=document.createElement('link');l.rel='stylesheet';
-          l.href='https://use.typekit.net/ipo0piy.css';
-          document.head.appendChild(l);
-        `}} />
-        <noscript>
-          <link rel="stylesheet" href="https://use.typekit.net/ipo0piy.css" />
-        </noscript>
+        <link rel="stylesheet" href="https://use.typekit.net/ipo0piy.css" />
       </head>
       <body suppressHydrationWarning>
         {children}
