@@ -9,7 +9,7 @@ export async function getBlurDataURL(
   image: SanityImageSource,
 ): Promise<string | undefined> {
   try {
-    const url = urlFor(image).width(200).quality(60).blur(4).url()
+    const url = urlFor(image).width(200).quality(70).url()
     const res = await fetch(url)
     if (!res.ok) return undefined
     const buffer = await res.arrayBuffer()
