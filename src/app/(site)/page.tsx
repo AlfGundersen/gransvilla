@@ -37,6 +37,8 @@ export default async function HomePage() {
         <div data-sanity={createDataAttribute({ id: frontpage._id, type: frontpage._type, path: 'featured' }).toString()}>
           <FeaturedSectionComponent
             data={{ ...frontpage.featured, _type: 'featuredSection', _key: 'featured' }}
+            documentId={frontpage._id}
+            documentType={frontpage._type}
           />
         </div>
       )}

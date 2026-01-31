@@ -1,15 +1,18 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { PortableText } from '@portabletext/react'
+import { createDataAttribute } from 'next-sanity'
 import { urlFor } from '@/lib/sanity/image'
 import type { FeaturedSection } from '@/types/sanity'
 import styles from './FeaturedSection.module.css'
 
 interface FeaturedSectionComponentProps {
   data: FeaturedSection
+  documentId?: string
+  documentType?: string
 }
 
-export function FeaturedSectionComponent({ data }: FeaturedSectionComponentProps) {
+export function FeaturedSectionComponent({ data, documentId, documentType }: FeaturedSectionComponentProps) {
   const columns = data.columns ?? []
 
   if (columns.length === 0) {
@@ -21,7 +24,11 @@ export function FeaturedSectionComponent({ data }: FeaturedSectionComponentProps
       <div className={styles.featuredContainer}>
         <div className={styles.featuredGrid}>
           {columns.map((column) => (
-            <div key={column._key} className={styles.featuredColumn}>
+            <div
+              key={column._key}
+              className={styles.featuredColumn}
+              data-sanity={documentId && documentType ? createDataAttribute({ id: documentId, type: documentType, path: `featured.columns[_key=="${column._key}"]` }).toString() : undefined}
+            >
               <div className={styles.featuredContent}>
                 {column.heading && <h2 className={styles.featuredHeading}>{column.heading}</h2>}
                 {column.description && (
