@@ -16,7 +16,7 @@ export function HeroSectionComponent({ data }: HeroSectionComponentProps) {
         <div className={styles.heroImageWrap}>
           {image?.asset && (
             <Image
-              src={urlFor(image).width(3840).quality(82).url()}
+              src={urlFor(image).width(1920).quality(92).url()}
               alt={image.alt || image.assetAltText || ''}
               role={!image.alt ? 'presentation' : undefined}
               fill

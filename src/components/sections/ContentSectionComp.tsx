@@ -20,7 +20,7 @@ export function ContentSectionComponent({ data }: ContentSectionComponentProps) 
         {/* Image */}
         <div className={styles.contentImageWrap}>
           {image?.asset && (
-            <Image src={urlFor(image).width(1920).quality(100).url()} alt={image.alt || image.assetAltText || heading || ''} fill sizes="50vw" />
+            <Image src={urlFor(image).width(1200).quality(92).url()} alt={image.alt || image.assetAltText || heading || ''} fill sizes="50vw" />
           )}
         </div>
 

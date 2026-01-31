@@ -31,8 +31,8 @@ export async function GallerySection({ data, dataSanity }: GallerySectionProps) 
   )
 
   const images = bilder.map((bilde, i) => ({
-    src: urlFor(bilde).width(thumbWidth).height(thumbHeight).quality(80).fit('crop').url(),
-    fullSrcBase: urlFor(bilde).quality(85).fit('crop').url(),
+    src: urlFor(bilde).width(thumbWidth).height(thumbHeight).quality(92).fit('crop').url(),
+    fullSrcBase: urlFor(bilde).quality(92).fit('crop').url(),
     alt: bilde.alt || bilde.assetAltText || '',
     width: thumbWidth,
     height: thumbHeight,

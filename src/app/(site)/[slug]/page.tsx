@@ -85,7 +85,7 @@ export default async function SlugPage({ params }: Props) {
         {content.featuredImage?.asset && (
           <div className={styles.featuredImage}>
             <Image
-              src={urlFor(content.featuredImage).width(2400).quality(82).url()}
+              src={urlFor(content.featuredImage).width(1600).quality(92).url()}
               alt={content.featuredImage.alt || content.featuredImage.assetAltText || content.title}
               width={1200}
               height={675}

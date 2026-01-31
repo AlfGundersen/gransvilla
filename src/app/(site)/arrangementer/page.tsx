@@ -62,7 +62,7 @@ export default async function ArrangementerPage() {
         {heroImage?.asset && (
           <div className={isWideImage ? styles.heroImageWide : styles.heroImage}>
             <Image
-              src={urlFor(heroImage).width(1600).height(686).quality(80).fit('crop').url()}
+              src={urlFor(heroImage).width(1600).height(686).quality(92).fit('crop').url()}
               alt={heroImage.alt || heroImage.assetAltText || 'Arrangementer'}
               width={1600}
               height={686}
@@ -80,7 +80,7 @@ export default async function ArrangementerPage() {
               {event.featuredImage?.asset && (
                 <Link href={`/${event.slug.current}`} className={styles.imageLink}>
                   <Image
-                    src={urlFor(event.featuredImage).width(800).height(600).quality(80).fit('crop').url()}
+                    src={urlFor(event.featuredImage).width(800).height(600).quality(92).fit('crop').url()}
                     alt={event.featuredImage.alt || event.featuredImage.assetAltText || event.title}
                     width={800}
                     height={600}

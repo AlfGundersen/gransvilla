@@ -29,7 +29,7 @@ export function ImageTextSection({ data, dataSanity, eager = false, blurDataURL 
       {data.bilde && (
         <div className={styles.imageTextImageWrap} data-sanity={dataSanity}>
           <Image
-            src={urlFor(data.bilde).width(width).height(height).quality(100).fit('crop').url()}
+            src={urlFor(data.bilde).width(width).height(height).quality(92).fit('crop').url()}
             alt={data.bilde.alt || data.bilde.assetAltText || ''}
             width={width}
             height={height}

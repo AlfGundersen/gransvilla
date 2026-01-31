@@ -21,13 +21,13 @@ export function ImageSection({ data, dataSanity, eager = false, blurDataURL }: I
   if (!data.bilde) return null
 
   const ratio = data.bildeforhold || '3/2'
-  const width = 2800
+  const width = 1600
   const height = Math.round(width * (RATIO_MAP[ratio] || 2 / 3))
 
   return (
     <div className={`${styles.imageSection} ${data.fullBredde ? styles.imageSectionFull : ''}`} {...(data.fullBredde ? { 'data-fullwidth': '' } : {})} data-sanity={dataSanity}>
       <Image
-        src={urlFor(data.bilde).width(width).height(height).quality(100).fit('crop').url()}
+        src={urlFor(data.bilde).width(width).height(height).quality(92).fit('crop').url()}
         alt={data.bilde.alt || data.bilde.assetAltText || ''}
         width={width}
         height={height}
