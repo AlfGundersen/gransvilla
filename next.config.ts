@@ -1,9 +1,24 @@
 import type { NextConfig } from 'next'
 
+const csp = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com",
+  "style-src 'self' 'unsafe-inline' https://use.typekit.net https://p.typekit.net",
+  "font-src 'self' https://use.typekit.net https://p.typekit.net",
+  "img-src 'self' data: blob: https://cdn.sanity.io https://cdn.shopify.com",
+  "connect-src 'self' https://*.sanity.io https://www.googletagmanager.com https://www.google-analytics.com",
+  "media-src 'self' https://cdn.sanity.io",
+  "object-src 'none'",
+  "frame-ancestors 'self' https://*.sanity.build",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "worker-src 'self'",
+].join('; ')
+
 const securityHeaders = [
   {
     key: 'Content-Security-Policy',
-    value: "frame-ancestors 'self' https://*.sanity.build",
+    value: csp,
   },
   {
     key: 'X-Content-Type-Options',

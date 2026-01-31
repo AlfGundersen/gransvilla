@@ -6,6 +6,7 @@ import { SanityLive } from '@/lib/sanity/live'
 import { client } from '@/lib/sanity/client'
 import { urlFor } from '@/lib/sanity/image'
 import { groq } from 'next-sanity'
+import { ServiceWorkerRegistration } from '@/components/pwa/ServiceWorkerRegistration'
 import '@/styles/globals.css'
 
 const inter = Inter({
@@ -29,6 +30,13 @@ export async function generateMetadata(): Promise<Metadata> {
       template: '%s | Gransvilla',
     },
     description: 'Gransvilla - Restaurant, kantine og arrangementer',
+    manifest: '/manifest.webmanifest',
+    themeColor: '#000000',
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: 'default',
+      title: 'Gransvilla',
+    },
     icons,
   }
 }
@@ -53,6 +61,7 @@ export default async function RootLayout({
         {children}
         <SanityLive />
         {isDraftMode && <VisualEditing />}
+        <ServiceWorkerRegistration />
       </body>
     </html>
   )

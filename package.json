@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node scripts/generate-pwa-icons.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "biome lint ./src",
@@ -33,6 +34,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "sharp": "^0.34.5",
     "typescript": "^5"
   }
 }
