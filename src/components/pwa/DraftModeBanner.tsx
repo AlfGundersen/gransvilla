@@ -3,14 +3,15 @@
 import { useEffect, useState } from 'react'
 
 export function DraftModeBanner() {
-  const [isInIframe, setIsInIframe] = useState(true)
+  const [hidden, setHidden] = useState(true)
 
   useEffect(() => {
-    setIsInIframe(window.self !== window.top)
+    const inIframe = window.self !== window.top
+    const inStudio = window.location.pathname.startsWith('/studio')
+    setHidden(inIframe || inStudio)
   }, [])
 
-  // Don't show banner inside the Presentation tool iframe
-  if (isInIframe) return null
+  if (hidden) return null
 
   return (
     <div
