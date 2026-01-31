@@ -7,6 +7,7 @@ import { CartDrawer } from '@/components/cart/CartDrawer'
 import CookieBanner from '@/components/cookie/CookieBanner'
 import GoogleAnalytics from '@/components/analytics/GoogleAnalytics'
 import { sanityFetch } from '@/lib/sanity/live'
+import { stegaClean } from 'next-sanity'
 import { siteSettingsQuery } from '@/lib/sanity/queries'
 import { resolveMenu } from '@/lib/sanity/resolveMenu'
 import { urlFor } from '@/lib/sanity/image'
@@ -33,7 +34,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
           <a href="#main-content" className="visually-hidden">
             Hopp til innhold
           </a>
-          <Header navigation={mainMenu} socialLinks={socialLinks} />
+          <Header navigation={stegaClean(mainMenu)} socialLinks={stegaClean(socialLinks)} />
           <main id="main-content" className={styles.main}>{children}</main>
           <Footer
             navigation={footerMenu}
