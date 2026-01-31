@@ -43,6 +43,10 @@ export default async function RootLayout({
   return (
     <html lang="no" className={inter.variable}>
       <head>
+        <link rel="preconnect" href="https://use.typekit.net" />
+        <link rel="preconnect" href="https://p.typekit.net" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://cdn.sanity.io" />
+        <link rel="preconnect" href="https://cdn.shopify.com" />
         <link rel="stylesheet" href="https://use.typekit.net/ipo0piy.css" />
       </head>
       <body suppressHydrationWarning>

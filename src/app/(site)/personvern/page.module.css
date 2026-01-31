@@ -35,6 +35,8 @@
 .content h2 {
   font-family: var(--font-heading);
   font-size: var(--text-2xl);
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid;
   font-weight: var(--font-heading-weight);
   margin: var(--space-xl) 0 var(--space-md) 0;
 }
