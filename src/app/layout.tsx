@@ -7,6 +7,7 @@ import { client } from '@/lib/sanity/client'
 import { urlFor } from '@/lib/sanity/image'
 import { groq } from 'next-sanity'
 import { ServiceWorkerRegistration } from '@/components/pwa/ServiceWorkerRegistration'
+import { DraftModeBanner } from '@/components/pwa/DraftModeBanner'
 import '@/styles/globals.css'
 
 const inter = Inter({
@@ -61,7 +62,12 @@ export default async function RootLayout({
       <body suppressHydrationWarning>
         {children}
         <SanityLive />
-        {isDraftMode && <VisualEditing />}
+        {isDraftMode && (
+          <>
+            <VisualEditing />
+            <DraftModeBanner />
+          </>
+        )}
         <ServiceWorkerRegistration />
       </body>
     </html>
