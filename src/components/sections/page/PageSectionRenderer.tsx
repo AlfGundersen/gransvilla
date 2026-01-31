@@ -14,7 +14,7 @@ interface PageSectionRendererProps {
 export function PageSectionRenderer({ sections, documentId, documentType }: PageSectionRendererProps) {
   return (
     <>
-      {sections.map((section) => {
+      {sections.map((section, index) => {
         const dataSanity = documentId && documentType
           ? createDataAttribute({
               id: documentId,
@@ -23,13 +23,15 @@ export function PageSectionRenderer({ sections, documentId, documentType }: Page
             }).toString()
           : undefined
 
+        const isFirst = index === 0
+
         switch (section._type) {
           case 'tekstSeksjon':
             return <TextSection key={section._key} data={section} dataSanity={dataSanity} />
           case 'bildeSeksjon':
-            return <ImageSection key={section._key} data={section} dataSanity={dataSanity} />
+            return <ImageSection key={section._key} data={section} dataSanity={dataSanity} eager={isFirst} />
           case 'bildeTekstSeksjon':
-            return <ImageTextSection key={section._key} data={section} dataSanity={dataSanity} />
+            return <ImageTextSection key={section._key} data={section} dataSanity={dataSanity} eager={isFirst} />
           case 'bildegalleriSeksjon':
             return <GallerySection key={section._key} data={section} dataSanity={dataSanity} />
           default:

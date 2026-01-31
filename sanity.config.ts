@@ -1,4 +1,4 @@
-import { defineConfig } from 'sanity'
+import { defineConfig, type DocumentActionsResolver } from 'sanity'
 import { structureTool } from 'sanity/structure'
 import { defineLocations, presentationTool } from 'sanity/presentation'
 import { visionTool } from '@sanity/vision'
@@ -6,6 +6,16 @@ import { media, mediaAssetSource } from 'sanity-plugin-media'
 import { unsplashAssetSource } from 'sanity-plugin-asset-source-unsplash'
 import { schemaTypes } from './sanity/schemas'
 import { structure } from './sanity/structure'
+import { SetOppdatertOnPublish } from './sanity/actions/setOppdatertOnPublish'
+
+const resolveDocumentActions: DocumentActionsResolver = (prev, context) => {
+  if (context.schemaType === 'personvernerklaering') {
+    return prev.map((action) =>
+      action.action === 'publish' ? SetOppdatertOnPublish : action,
+    )
+  }
+  return prev
+}
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET!
@@ -56,6 +66,10 @@ export default defineConfig({
 
   schema: {
     types: schemaTypes,
+  },
+
+  document: {
+    actions: resolveDocumentActions,
   },
 
   form: {

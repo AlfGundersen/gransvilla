@@ -20,17 +20,111 @@
   padding-bottom: var(--space-lg);
 }
 
-/* Each event row spans all 4 columns */
-.row {
-  grid-column: 1 / -1;
+.intro {
+  grid-column: 2 / 3;
+  font-size: var(--text-lg);
+  line-height: 1.7;
+  color: var(--color-secondary);
+  margin: 0;
+  padding-left: var(--space-lg);
+  padding-bottom: var(--space-lg);
+  position: relative;
+}
+
+.intro::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: var(--space-lg);
+  width: 1px;
+  background-color: var(--color-border);
+}
+
+/* 1-3 layout: heading + description grouped in col 1, image spans cols 2-4 */
+.heroTextCol {
+  grid-column: 1 / 2;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding-bottom: var(--space-lg);
+}
+
+.heroTextCol .heading {
+  padding-bottom: 0;
+}
+
+.introInline {
+  font-size: var(--text-lg);
+  line-height: 1.7;
+  color: var(--color-secondary);
+  margin: 0;
+}
+
+.introInline p {
+  margin: 0;
+}
+
+.heroImageWide {
+  grid-column: 2 / -1;
+  padding-left: var(--space-lg);
+  padding-bottom: var(--space-lg);
+  position: relative;
+}
+
+.heroImageWide::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: var(--space-lg);
+  width: 1px;
+  background-color: var(--color-border);
+}
+
+.heroImage {
+  grid-column: 3 / -1;
+  padding-left: var(--space-lg);
+  padding-bottom: var(--space-lg);
+  position: relative;
+}
+
+.heroImage::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: var(--space-lg);
+  width: 1px;
+  background-color: var(--color-border);
+}
+
+.heroImg {
+  width: 100%;
+  height: auto;
+  display: block;
+  aspect-ratio: 21 / 9;
+  object-fit: cover;
+}
+
+@media (max-width: 1200px) {
+  .heroImg {
+    aspect-ratio: unset;
+    height: 100% !important;
+  }
+}
+
+/* Each card spans 2 columns: image + text side by side */
+.card {
+  grid-column: span 2;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  gap: 0 var(--space-lg);
+  grid-template-columns: subgrid;
   padding-block: var(--space-lg);
   position: relative;
 }
 
-.row::before {
+/* Top border on every card */
+.card::before {
   content: '';
   position: absolute;
   top: 0;
@@ -40,9 +134,9 @@
   background-color: var(--color-border);
 }
 
-/* Image takes 2 columns */
-.imageCol {
-  grid-column: 1 / 3;
+/* Extend border across the gap for left-side cards (odd) */
+.card:nth-child(odd of .card)::before {
+  right: calc(-1 * var(--space-lg));
 }
 
 .imageLink {
@@ -54,7 +148,7 @@
   width: 100%;
   height: auto;
   display: block;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 1 / 1.1;
   object-fit: cover;
   transition: transform 0.4s ease;
 }
@@ -63,9 +157,8 @@
   transform: scale(1.03);
 }
 
-/* Text takes 2 columns with left border */
+/* Text column with left border */
 .textCol {
-  grid-column: 3 / -1;
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
@@ -85,7 +178,7 @@
 
 .title {
   font-family: var(--font-heading);
-  font-size: var(--text-3xl);
+  font-size: var(--text-2xl);
   font-weight: var(--font-heading-weight);
   line-height: 1.2;
   margin: 0;
@@ -131,21 +224,65 @@
     font-size: var(--text-5xl);
   }
 
-  .row {
-    grid-template-columns: 1fr;
+  .intro {
+    grid-column: 1 / -1;
+    padding-left: 0;
+  }
+
+  .intro::before {
+    display: none;
+  }
+
+  .heroTextCol {
+    grid-column: 1 / -1;
+  }
+
+  .heroImageWide {
+    grid-column: 1 / -1;
+    padding-left: 0;
+  }
+
+  .heroImageWide::before {
+    display: none;
+  }
+
+  .heroImage {
+    grid-column: 1 / -1;
+    padding-left: 0;
+  }
+
+  .heroImage::before {
+    display: none;
+  }
+
+  .card {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: var(--space-md);
   }
 
-  .imageCol {
-    grid-column: 1 / -1;
+  .card:nth-child(odd of .card)::before {
+    right: 0;
   }
 
   .textCol {
-    grid-column: 1 / -1;
     padding-left: 0;
   }
 
   .textCol::before {
     display: none;
+  }
+}
+
+@media (max-width: 450px) {
+
+  .image {
+    aspect-ratio: unset;
+    height: 100% !important;
+  }
+
+  .card {
+    grid-template-columns: 0.6fr 1fr;
   }
 }

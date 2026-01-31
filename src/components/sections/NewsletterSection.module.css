@@ -44,7 +44,69 @@
 /* Form */
 .newsletterForm {
   display: flex;
+  flex-direction: column;
   gap: var(--space-sm);
+}
+
+.newsletterInputRow {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.newsletterConsent {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--color-secondary);
+  cursor: pointer;
+}
+
+.newsletterConsent input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 0.1em;
+  border: 1px solid var(--color-border);
+  background-color: transparent;
+  cursor: pointer;
+  position: relative;
+  top: 2px;
+  transition: background-color var(--transition-base), border-color var(--transition-base);
+}
+
+.newsletterConsent input[type="checkbox"]:checked {
+  background-color: var(--color-foreground);
+  border-color: var(--color-foreground);
+}
+
+.newsletterConsent input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 5px;
+  height: 10px;
+  border: solid var(--color-background);
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg);
+}
+
+.newsletterConsent input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.newsletterConsent a {
+  color: var(--color-foreground);
+  text-decoration: none;
+}
+
+.newsletterConsent a:hover {
+  text-decoration: underline;
 }
 
 .newsletterInput {
@@ -106,7 +168,7 @@
 
 /* Mobile */
 @media (max-width: 480px) {
-  .newsletterForm {
+  .newsletterInputRow {
     flex-direction: column;
   }
 

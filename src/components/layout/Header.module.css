@@ -292,6 +292,7 @@
   padding: var(--space-xs) 0;
   transition: opacity var(--transition-fast), font-weight 0.45s ease;
   position: relative;
+  padding: 5px 30px 5px 0;
 }
 
 .menuLink:hover,

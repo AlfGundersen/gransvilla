@@ -55,7 +55,7 @@ export default function Header({ navigation, socialLinks }: HeaderProps) {
     }
   }, [isMenuOpen])
 
-  const closeMenu = () => setIsMenuOpen(false)
+  const closeMenu = useCallback(() => setIsMenuOpen(false), [])
 
   // Focus management: move focus into menu when opened, restore when closed
   const wasOpenRef = useRef(false)
@@ -92,7 +92,7 @@ export default function Header({ navigation, socialLinks }: HeaderProps) {
       e.preventDefault()
       first.focus()
     }
-  }, [])
+  }, [closeMenu])
 
   // Menu content to be portaled
   const menuContent = (
@@ -148,7 +148,13 @@ export default function Header({ navigation, socialLinks }: HeaderProps) {
               className={styles.menuItem}
               style={{ transitionDelay: isMenuOpen ? `${index * 40}ms` : '0ms' }}
             >
-              <Link href={item.href} className={styles.menuLink} onClick={closeMenu}>
+              <Link
+                href={item.href}
+                className={styles.menuLink}
+                onClick={(e) => {
+                  if (!e.metaKey && !e.ctrlKey && !e.shiftKey) closeMenu()
+                }}
+              >
                 {item.label}
               </Link>
             </li>

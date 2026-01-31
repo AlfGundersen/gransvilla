@@ -230,12 +230,12 @@ button {
    Menu Open - Page Shift & Blur
    -------------------------------------- */
 
-body>div {
+[data-site] {
   transition: transform 0.7s ease,
     filter 0.7s ease;
 }
 
-body.menu-open>div {
+body.menu-open [data-site] {
   transform: translateX(var(--menu-width));
   filter: blur(8px);
 }
@@ -256,7 +256,7 @@ html.inverted body {
   transition: background-color 0.5s ease, color 0.5s ease;
 }
 
-html.inverted img[alt="GransVilla"] {
+html.inverted img[src*="logo"] {
   filter: invert(92%) sepia(8%) saturate(365%) hue-rotate(10deg) brightness(103%) contrast(89%);
 }
 

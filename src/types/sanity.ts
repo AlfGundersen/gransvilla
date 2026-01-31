@@ -267,6 +267,20 @@ export interface SiteSettings {
   socialLinks?: SocialLink[]
 }
 
+// Personvernerklæring
+export interface Personvernerklaering {
+  innhold?: BlockContent
+  opprettet?: string
+  oppdatert?: string
+}
+
+// Arrangementer Settings
+export interface ArrangementerSettings {
+  heroLayout?: '1-1-2' | '1-3'
+  beskrivelse?: BlockContent
+  heroBilde?: SanityImage
+}
+
 // Shop Category (synced from Shopify)
 export interface ShopCategory {
   _id: string

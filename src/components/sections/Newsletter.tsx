@@ -5,6 +5,7 @@ import styles from './Newsletter.module.css'
 
 export default function Newsletter() {
   const [email, setEmail] = useState('')
+  const [consent, setConsent] = useState(false)
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -34,18 +35,30 @@ export default function Newsletter() {
           </p>
 
           <form className={styles.form} onSubmit={handleSubmit}>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Din e-postadresse"
-              className={styles.input}
-              required
-              disabled={status === 'loading'}
-            />
-            <button type="submit" className={styles.button} disabled={status === 'loading'}>
-              {status === 'loading' ? 'Sender...' : 'Meld på'}
-            </button>
+            <div className={styles.inputRow}>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Din e-postadresse"
+                className={styles.input}
+                required
+                disabled={status === 'loading'}
+              />
+              <button type="submit" className={styles.button} disabled={status === 'loading' || !consent}>
+                {status === 'loading' ? 'Sender...' : 'Meld på'}
+              </button>
+            </div>
+            <label className={styles.consent}>
+              <input
+                id="newsletter-consent"
+                name="newsletter-consent"
+                type="checkbox"
+                checked={consent}
+                onChange={(e) => setConsent(e.target.checked)}
+              />
+              <span>Jeg samtykker til <a href="/personvern" target="_blank" rel="noopener noreferrer">personvern</a> og lagring av e-post for nyhetsbrev.</span>
+            </label>
           </form>
 
           {status === 'success' && <p className={styles.successMessage}>Takk for påmeldingen!</p>}

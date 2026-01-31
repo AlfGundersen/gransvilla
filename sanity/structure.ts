@@ -10,34 +10,65 @@ export const structure: StructureResolver = (S) =>
         .id('frontpage')
         .child(S.document().schemaType('frontpage').documentId('frontpage')),
 
-      S.divider(),
-
       // ── Sider ──
       S.listItem()
         .title('Sider')
         .schemaType('page')
         .child(S.documentTypeList('page').title('Sider')),
 
-      S.listItem()
-        .title('Arrangementsider')
-        .schemaType('event')
-        .child(S.documentTypeList('event').title('Arrangementsider')),
-
       S.divider(),
 
-      // ── Butikk ──
+      // ── Arrangementer ──
       S.listItem()
-        .title('Butikk-kategorier')
-        .schemaType('shopCategory')
+        .title('Arrangementer')
+        .id('arrangementer')
         .child(
-          S.documentList()
-            .title('Butikk-kategorier')
-            .schemaType('shopCategory')
-            .filter('_type == "shopCategory"')
-            .initialValueTemplates([]),
+          S.list()
+            .title('Arrangementer')
+            .items([
+              S.listItem()
+                .title('Innstillinger')
+                .id('arrangementerSettings')
+                .child(S.document().schemaType('arrangementerSettings').documentId('arrangementerSettings')),
+              S.listItem()
+                .title('Arrangementsider')
+                .schemaType('event')
+                .child(S.documentTypeList('event').title('Arrangementsider')),
+            ]),
+        ),
+
+      // ── Nettbutikk ──
+      S.listItem()
+        .title('Nettbutikk')
+        .id('nettbutikk')
+        .child(
+          S.list()
+            .title('Nettbutikk')
+            .items([
+              S.listItem()
+                .title('Innstillinger')
+                .id('nettbutikkSettings')
+                .child(S.document().schemaType('nettbutikkSettings').documentId('nettbutikkSettings')),
+              S.listItem()
+                .title('Kategorier')
+                .schemaType('shopCategory')
+                .child(
+                  S.documentList()
+                    .title('Kategorier')
+                    .schemaType('shopCategory')
+                    .filter('_type == "shopCategory"')
+                    .initialValueTemplates([]),
+                ),
+            ]),
         ),
 
       S.divider(),
+
+      // ── Personvern ──
+      S.listItem()
+        .title('Personvernerklæring')
+        .id('personvernerklaering')
+        .child(S.document().schemaType('personvernerklaering').documentId('personvernerklaering')),
 
       // ── Innstillinger ──
       S.listItem()

@@ -20,11 +20,14 @@ interface FooterProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     partners?: any[]
   }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  siteDescription?: any[]
   faviconUrl?: string
 }
 
-export default function Footer({ navigation, socialLinks, contactInfo, faviconUrl }: FooterProps) {
+export default function Footer({ navigation, socialLinks, contactInfo, siteDescription, faviconUrl }: FooterProps) {
   const [email, setEmail] = useState('')
+  const [consent, setConsent] = useState(false)
   const { openSettings } = useCookieConsent()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -58,7 +61,17 @@ export default function Footer({ navigation, socialLinks, contactInfo, faviconUr
                 className={styles.input}
                 required
               />
-              <button type="submit" className={styles.button}>
+              <label className={styles.consent}>
+                <input
+                  id="footer-newsletter-consent"
+                  name="footer-newsletter-consent"
+                  type="checkbox"
+                  checked={consent}
+                  onChange={(e) => setConsent(e.target.checked)}
+                />
+                <span>Jeg samtykker til <a href="/personvern" target="_blank" rel="noopener noreferrer">personvern</a> og lagring av e-post for nyhetsbrev.</span>
+              </label>
+              <button type="submit" className={styles.button} disabled={!consent}>
                 Send nå
               </button>
             </form>
@@ -117,10 +130,11 @@ export default function Footer({ navigation, socialLinks, contactInfo, faviconUr
                 </li>
               ))}
             </ul>
-            <p className={styles.socialDescription}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-              incididunt ut labore et dolore magna aliqua.
-            </p>
+            {siteDescription && (
+              <div className={styles.socialDescription}>
+                <PortableText value={siteDescription} />
+              </div>
+            )}
             <button
               type="button"
               className={styles.circleDecoration}

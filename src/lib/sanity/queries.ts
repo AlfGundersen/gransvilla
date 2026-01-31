@@ -256,6 +256,17 @@ export const siteSettingsQuery = groq`
   }
 `
 
+// Arrangementer settings query
+export const arrangementerSettingsQuery = groq`
+  *[_type == "arrangementerSettings"][0] {
+    heroLayout,
+    "beskrivelse": beskrivelse[defined(_type)],
+    heroBilde {
+      ${imageFragment}
+    }
+  }
+`
+
 // Events query
 export const eventsQuery = groq`
   *[_type == "event"] | order(_createdAt desc) {
@@ -348,6 +359,15 @@ export const pageQuery = groq`
         asset
       }
     }
+  }
+`
+
+// Personvernerklæring query
+export const personvernQuery = groq`
+  *[_type == "personvernerklaering"][0] {
+    "innhold": innhold[defined(_type)],
+    opprettet,
+    oppdatert
   }
 `
 

@@ -4,6 +4,9 @@ import frontpage from './documents/frontpage'
 import page from './documents/page'
 import shopCategory from './documents/shopCategory'
 import siteSettings from './documents/siteSettings'
+import arrangementerSettings from './documents/arrangementerSettings'
+import nettbutikkSettings from './documents/nettbutikkSettings'
+import personvernerklaering from './documents/personvernerklaering'
 
 // Object types
 import blockContent from './objects/blockContent'
@@ -32,6 +35,9 @@ export const schemaTypes = [
   siteSettings,
   event,
   shopCategory,
+  arrangementerSettings,
+  nettbutikkSettings,
+  personvernerklaering,
 
   // Objects
   blockContent,

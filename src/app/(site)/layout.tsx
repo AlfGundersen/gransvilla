@@ -39,6 +39,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
             navigation={footerMenu}
             socialLinks={socialLinks}
             contactInfo={settings?.contactInfo}
+            siteDescription={settings?.siteDescription}
             faviconUrl={faviconUrl}
           />
         </div>

@@ -4,8 +4,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { urlFor } from '@/lib/sanity/image'
 import { sanityFetch } from '@/lib/sanity/live'
-import { eventsQuery } from '@/lib/sanity/queries'
-import type { Event } from '@/types/sanity'
+import { arrangementerSettingsQuery, eventsQuery } from '@/lib/sanity/queries'
+import type { ArrangementerSettings, Event } from '@/types/sanity'
 import styles from './page.module.css'
 
 export const metadata: Metadata = {
@@ -14,28 +14,71 @@ export const metadata: Metadata = {
 }
 
 export default async function ArrangementerPage() {
-  const { data: events } = await sanityFetch({ query: eventsQuery }) as { data: Event[] }
+  const [{ data: events }, { data: settings }] = await Promise.all([
+    sanityFetch({ query: eventsQuery }) as Promise<{ data: Event[] }>,
+    sanityFetch({ query: arrangementerSettingsQuery }) as Promise<{ data: ArrangementerSettings | null }>,
+  ])
+
+  const heroLayout = settings?.heroLayout ?? '1-1-2'
+  const heroImage = settings?.heroBilde ?? events[0]?.featuredImage
+  const isWideImage = heroLayout === '1-3'
 
   return (
     <div className={styles.page}>
       <div className={styles.grid}>
-        <h1 className={styles.heading}>Arrangementer</h1>
+        {isWideImage ? (
+          <div className={styles.heroTextCol}>
+            <h1 className={styles.heading}>Arrangementer</h1>
+            {settings?.beskrivelse ? (
+              <div className={styles.introInline}>
+                <PortableText value={settings.beskrivelse} />
+              </div>
+            ) : (
+              <p className={styles.introInline}>
+                Gransvilla er rammen for uforglemmelige opplevelser. Enten det er bryllup, selskap, konserter eller søndagsfrokost — vi skaper arrangementer med sjel, god mat og vakre omgivelser.
+              </p>
+            )}
+          </div>
+        ) : (
+          <>
+            <h1 className={styles.heading}>Arrangementer</h1>
+            {settings?.beskrivelse ? (
+              <div className={styles.intro}>
+                <PortableText value={settings.beskrivelse} />
+              </div>
+            ) : (
+              <p className={styles.intro}>
+                Gransvilla er rammen for uforglemmelige opplevelser. Enten det er bryllup, selskap, konserter eller søndagsfrokost — vi skaper arrangementer med sjel, god mat og vakre omgivelser.
+              </p>
+            )}
+          </>
+        )}
+        {heroImage?.asset && (
+          <div className={isWideImage ? styles.heroImageWide : styles.heroImage}>
+            <Image
+              src={urlFor(heroImage).width(1600).height(686).quality(80).fit('crop').url()}
+              alt={heroImage.alt || heroImage.assetAltText || 'Arrangementer'}
+              width={1600}
+              height={686}
+              priority
+              className={styles.heroImg}
+            />
+          </div>
+        )}
 
         {events.length > 0 ? (
           events.map((event) => (
-            <div key={event._id} className={styles.row}>
+            <div key={event._id} className={styles.card}>
               {event.featuredImage?.asset && (
-                <div className={styles.imageCol}>
-                  <Link href={`/${event.slug.current}`} className={styles.imageLink}>
-                    <Image
-                      src={urlFor(event.featuredImage).width(1200).height(900).quality(80).fit('crop').url()}
-                      alt={event.featuredImage.alt || event.featuredImage.assetAltText || event.title}
-                      width={1200}
-                      height={900}
-                      className={styles.image}
-                    />
-                  </Link>
-                </div>
+                <Link href={`/${event.slug.current}`} className={styles.imageLink}>
+                  <Image
+                    src={urlFor(event.featuredImage).width(800).height(600).quality(80).fit('crop').url()}
+                    alt={event.featuredImage.alt || event.featuredImage.assetAltText || event.title}
+                    width={800}
+                    height={600}
+                    className={styles.image}
+                  />
+                </Link>
               )}
               <div className={styles.textCol}>
                 <h2 className={styles.title}>{event.title}</h2>

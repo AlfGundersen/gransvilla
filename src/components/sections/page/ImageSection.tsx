@@ -13,9 +13,10 @@ const RATIO_MAP: Record<string, number> = {
 interface ImageSectionProps {
   data: BildeSeksjon
   dataSanity?: string
+  eager?: boolean
 }
 
-export function ImageSection({ data, dataSanity }: ImageSectionProps) {
+export function ImageSection({ data, dataSanity, eager = false }: ImageSectionProps) {
   if (!data.bilde) return null
 
   const ratio = data.bildeforhold || '3/2'
@@ -29,7 +30,7 @@ export function ImageSection({ data, dataSanity }: ImageSectionProps) {
         alt={data.bilde.alt || data.bilde.assetAltText || ''}
         width={width}
         height={height}
-        loading="eager"
+        loading={eager ? 'eager' : 'lazy'}
         className={styles.imageSectionImage}
       />
     </div>
