@@ -117,11 +117,12 @@
 
 /* --------------------------------------
    Image Blur Placeholders
+   Next.js applies filter:blur(20px) inline and removes it on load.
+   We reduce the blur and add a smooth transition for the swap.
    -------------------------------------- */
 
-img[style*="filter:blur"] {
-  filter: blur(8px) !important;
-  transition: filter 0.6s ease-out;
+[data-site] img {
+  transition: filter 0.7s ease-out, opacity 0.7s ease-out;
 }
 
 /* --------------------------------------
