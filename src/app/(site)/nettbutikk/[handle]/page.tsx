@@ -1,6 +1,7 @@
 import { getProductByHandle, getProducts } from '@/lib/shopify'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { JsonLd } from '@/components/seo/JsonLd'
 import { ProductGallery } from './ProductGallery'
 import { ProductInfo } from './ProductInfo'
 import styles from './page.module.css'
@@ -23,6 +24,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: product.title,
     description: product.description,
+    openGraph: {
+      title: product.title,
+      description: product.description,
+      type: 'website',
+      ...(product.images[0] && {
+        images: [{ url: product.images[0].url, alt: product.images[0].altText || product.title }],
+      }),
+    },
   }
 }
 
@@ -43,6 +52,23 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <div className={styles.productPage}>
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'Product',
+          name: product.title,
+          description: product.description,
+          ...(product.images[0] && { image: product.images[0].url }),
+          offers: {
+            '@type': 'Offer',
+            price: product.price,
+            priceCurrency: product.currencyCode,
+            availability: product.variants.some((v) => v.availableForSale)
+              ? 'https://schema.org/InStock'
+              : 'https://schema.org/OutOfStock',
+          },
+        }}
+      />
       <div className={styles.productContainer}>
         <ProductGallery images={product.images} title={product.title} />
         <ProductInfo product={product} />

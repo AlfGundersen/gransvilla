@@ -2,7 +2,7 @@ import type { NextConfig } from 'next'
 
 const csp = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com",
+  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://ssl.google-analytics.com",
   "style-src 'self' 'unsafe-inline' https://use.typekit.net https://p.typekit.net",
   "font-src 'self' https://use.typekit.net https://p.typekit.net",
   "img-src 'self' data: blob: https://cdn.sanity.io https://cdn.shopify.com",
@@ -35,6 +35,14 @@ const securityHeaders = [
   {
     key: 'Permissions-Policy',
     value: 'camera=(), microphone=(), geolocation=()',
+  },
+  {
+    key: 'X-Frame-Options',
+    value: 'SAMEORIGIN',
+  },
+  {
+    key: 'Strict-Transport-Security',
+    value: 'max-age=31536000; includeSubDomains',
   },
 ]
 

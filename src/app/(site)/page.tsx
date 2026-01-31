@@ -6,6 +6,7 @@ import { HeroSectionComponent } from '@/components/sections/HeroSection'
 import { TimelineSectionComponent } from '@/components/sections/TimelineSection'
 import { sanityFetch } from '@/lib/sanity/live'
 import { frontpageQuery } from '@/lib/sanity/queries'
+import { JsonLd } from '@/components/seo/JsonLd'
 import type { Frontpage } from '@/types/sanity'
 import styles from './page.module.css'
 
@@ -25,6 +26,17 @@ export default async function HomePage() {
 
   return (
     <div className={styles.page}>
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'LocalBusiness',
+          '@id': 'https://gransvilla.no/#localbusiness',
+          name: 'Gransvilla',
+          url: 'https://gransvilla.no',
+          description: 'Restaurant, kantine og arrangementer',
+        }}
+      />
+      <h1 className="visually-hidden">Gransvilla — Restaurant, kantine og arrangementer</h1>
       {frontpage.hero && (
         <div data-sanity={createDataAttribute({ id: frontpage._id, type: frontpage._type, path: 'hero' }).toString()}>
           <HeroSectionComponent

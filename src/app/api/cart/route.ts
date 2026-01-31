@@ -1,23 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server'
-import {
-  createCart,
-  addToCart,
-  getCart,
-  updateCartLine,
-  removeFromCart,
-} from '@/lib/shopify'
+import { type NextRequest, NextResponse } from 'next/server'
+import { rateLimit } from '@/lib/rate-limit'
+import { addToCart, createCart, getCart, removeFromCart, updateCartLine } from '@/lib/shopify'
 
 function isNonEmptyString(value: unknown): value is string {
   return typeof value === 'string' && value.length > 0 && value.length < 500
 }
 
 function isValidQuantity(value: unknown): value is number {
-  return (
-    typeof value === 'number' &&
-    Number.isInteger(value) &&
-    value >= 0 &&
-    value <= 99
-  )
+  return typeof value === 'number' && Number.isInteger(value) && value >= 0 && value <= 99
 }
 
 // GET - Fetch cart
@@ -40,14 +30,15 @@ export async function GET(request: NextRequest) {
 
 // POST - Add to cart (create if needed)
 export async function POST(request: NextRequest) {
+  const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
+  const limited = rateLimit(`cart:${ip}`, { limit: 30, windowMs: 60_000 })
+  if (limited) return limited
+
   try {
     const { cartId, variantId, quantity = 1 } = await request.json()
 
     if (!isNonEmptyString(variantId)) {
-      return NextResponse.json(
-        { error: 'Valid variantId is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ error: 'Valid variantId is required' }, { status: 400 })
     }
 
     if (!isValidQuantity(quantity)) {
@@ -75,10 +66,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ cart })
   } catch (error) {
     console.error('Failed to add to cart:', error)
-    return NextResponse.json(
-      { error: 'Failed to add to cart' },
-      { status: 500 },
-    )
+    return NextResponse.json({ error: 'Failed to add to cart' }, { status: 500 })
   }
 }
 
@@ -88,10 +76,7 @@ export async function PATCH(request: NextRequest) {
     const { cartId, lineId, quantity } = await request.json()
 
     if (!isNonEmptyString(cartId) || !isNonEmptyString(lineId)) {
-      return NextResponse.json(
-        { error: 'Valid cartId and lineId are required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ error: 'Valid cartId and lineId are required' }, { status: 400 })
     }
 
     if (!isValidQuantity(quantity)) {
@@ -105,10 +90,7 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ cart })
   } catch (error) {
     console.error('Failed to update cart:', error)
-    return NextResponse.json(
-      { error: 'Failed to update cart' },
-      { status: 500 },
-    )
+    return NextResponse.json({ error: 'Failed to update cart' }, { status: 500 })
   }
 }
 
@@ -118,19 +100,13 @@ export async function DELETE(request: NextRequest) {
     const { cartId, lineId } = await request.json()
 
     if (!isNonEmptyString(cartId) || !isNonEmptyString(lineId)) {
-      return NextResponse.json(
-        { error: 'Valid cartId and lineId are required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ error: 'Valid cartId and lineId are required' }, { status: 400 })
     }
 
     const cart = await removeFromCart(cartId, lineId)
     return NextResponse.json({ cart })
   } catch (error) {
     console.error('Failed to remove from cart:', error)
-    return NextResponse.json(
-      { error: 'Failed to remove from cart' },
-      { status: 500 },
-    )
+    return NextResponse.json({ error: 'Failed to remove from cart' }, { status: 500 })
   }
 }

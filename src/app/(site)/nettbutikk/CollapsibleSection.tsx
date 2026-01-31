@@ -2,12 +2,12 @@
 
 import { Children, useCallback, useEffect, useRef, useState } from 'react'
 import { PortableText } from '@portabletext/react'
+import type { PortableTextBlock } from '@portabletext/types'
 import styles from './page.module.css'
 
 interface CollapsibleSectionProps {
   title: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  description?: any[] | string | null
+  description?: PortableTextBlock[] | string | null
   children: React.ReactNode
 }
 

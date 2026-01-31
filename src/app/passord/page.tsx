@@ -1,14 +1,15 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Suspense, useState } from 'react'
 import styles from './page.module.css'
 
-export default function PasswordPage() {
+function PasswordForm() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -23,7 +24,8 @@ export default function PasswordPage() {
       })
 
       if (response.ok) {
-        router.push('/')
+        const redirectTo = searchParams.get('from') || '/'
+        router.push(redirectTo)
         router.refresh()
       } else {
         setError('Feil passord')
@@ -36,31 +38,35 @@ export default function PasswordPage() {
   }
 
   return (
+    <form onSubmit={handleSubmit} className={styles.form}>
+      <input
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Passord"
+        className={styles.input}
+        autoFocus
+      />
+
+      {error && <p className={styles.error}>{error}</p>}
+
+      <button type="submit" className={styles.button} disabled={isLoading}>
+        {isLoading ? 'Logger inn...' : 'Logg inn'}
+      </button>
+    </form>
+  )
+}
+
+export default function PasswordPage() {
+  return (
     <div className={styles.page}>
       <div className={styles.container}>
         <h1 className={styles.title}>Gransvilla</h1>
         <p className={styles.subtitle}>Skriv inn passord for å fortsette</p>
 
-        <form onSubmit={handleSubmit} className={styles.form}>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Passord"
-            className={styles.input}
-            autoFocus
-          />
-
-          {error && <p className={styles.error}>{error}</p>}
-
-          <button
-            type="submit"
-            className={styles.button}
-            disabled={isLoading}
-          >
-            {isLoading ? 'Logger inn...' : 'Logg inn'}
-          </button>
-        </form>
+        <Suspense>
+          <PasswordForm />
+        </Suspense>
       </div>
     </div>
   )

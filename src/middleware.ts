@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
 import { COOKIE_NAME, getSessionToken } from '@/lib/auth'
 
 // Paths that don't require authentication
@@ -34,9 +34,13 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // Redirect to password page
+  // Redirect to password page, preserving the intended destination
   const url = request.nextUrl.clone()
+  const intendedPath = pathname + request.nextUrl.search
   url.pathname = '/passord'
+  if (intendedPath !== '/') {
+    url.searchParams.set('from', intendedPath)
+  }
   return NextResponse.redirect(url)
 }
 

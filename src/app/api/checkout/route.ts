@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
+import { rateLimit } from '@/lib/rate-limit'
 import { getCart } from '@/lib/shopify'
 
 function isValidShopifyCheckoutUrl(url: string): boolean {
@@ -6,8 +7,7 @@ function isValidShopifyCheckoutUrl(url: string): boolean {
     const parsed = new URL(url)
     return (
       parsed.protocol === 'https:' &&
-      (parsed.hostname.endsWith('.myshopify.com') ||
-        parsed.hostname.endsWith('.shopify.com'))
+      (parsed.hostname.endsWith('.myshopify.com') || parsed.hostname.endsWith('.shopify.com'))
     )
   } catch {
     return false
@@ -16,14 +16,15 @@ function isValidShopifyCheckoutUrl(url: string): boolean {
 
 // POST - Get checkout URL
 export async function POST(request: NextRequest) {
+  const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
+  const limited = rateLimit(`checkout:${ip}`, { limit: 10, windowMs: 60_000 })
+  if (limited) return limited
+
   try {
     const { cartId } = await request.json()
 
     if (!cartId || typeof cartId !== 'string') {
-      return NextResponse.json(
-        { error: 'Cart ID is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ error: 'Cart ID is required' }, { status: 400 })
     }
 
     // Verify cart exists
@@ -35,10 +36,7 @@ export async function POST(request: NextRequest) {
     // Validate checkout URL points to Shopify
     if (!cart.checkoutUrl || !isValidShopifyCheckoutUrl(cart.checkoutUrl)) {
       console.error('Invalid checkout URL received:', cart.checkoutUrl)
-      return NextResponse.json(
-        { error: 'Invalid checkout URL' },
-        { status: 500 },
-      )
+      return NextResponse.json({ error: 'Invalid checkout URL' }, { status: 500 })
     }
 
     return NextResponse.json({
@@ -47,9 +45,6 @@ export async function POST(request: NextRequest) {
     })
   } catch (error) {
     console.error('Checkout error:', error)
-    return NextResponse.json(
-      { error: 'Failed to process checkout' },
-      { status: 500 },
-    )
+    return NextResponse.json({ error: 'Failed to process checkout' }, { status: 500 })
   }
 }

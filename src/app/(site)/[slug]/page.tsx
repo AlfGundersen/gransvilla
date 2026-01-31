@@ -50,9 +50,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const seo = 'seo' in content ? content.seo : undefined
+  const ogImage = seo?.ogImage?.asset
+    ? urlFor(seo.ogImage).width(1200).height(630).url()
+    : content.featuredImage?.asset
+      ? urlFor(content.featuredImage).width(1200).height(630).url()
+      : undefined
   return {
     title: seo?.metaTitle || content.title,
     description: seo?.metaDescription || undefined,
+    openGraph: {
+      title: seo?.metaTitle || content.title,
+      description: seo?.metaDescription || undefined,
+      ...(ogImage && { images: [{ url: ogImage, width: 1200, height: 630 }] }),
+    },
   }
 }
 
@@ -75,7 +85,7 @@ export default async function SlugPage({ params }: Props) {
         {content.featuredImage?.asset && (
           <div className={styles.featuredImage}>
             <Image
-              src={urlFor(content.featuredImage).width(2400).quality(100).url()}
+              src={urlFor(content.featuredImage).width(2400).quality(82).url()}
               alt={content.featuredImage.alt || content.featuredImage.assetAltText || content.title}
               width={1200}
               height={675}

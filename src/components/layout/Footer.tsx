@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { PortableText } from '@portabletext/react'
+import type { PortableTextBlock } from '@portabletext/types'
 import { useState } from 'react'
 import type { NavLink, SocialLink } from '@/types/sanity'
 import { socialPlatformLabels } from '@/types/sanity'
@@ -15,13 +16,10 @@ interface FooterProps {
   contactInfo?: {
     email?: string
     phone?: string
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    address?: any[]
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    partners?: any[]
+    address?: PortableTextBlock[]
+    partners?: PortableTextBlock[]
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  siteDescription?: any[]
+  siteDescription?: PortableTextBlock[]
   faviconUrl?: string
 }
 

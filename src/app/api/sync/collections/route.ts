@@ -1,11 +1,18 @@
-import { NextRequest, NextResponse } from 'next/server'
+import crypto from 'crypto'
+import { type NextRequest, NextResponse } from 'next/server'
 import { syncAllCollections } from '@/lib/sanity/sync'
 
 const SYNC_API_SECRET = process.env.SYNC_API_SECRET
 
 export async function POST(request: NextRequest) {
   const auth = request.headers.get('authorization')
-  if (!SYNC_API_SECRET || auth !== `Bearer ${SYNC_API_SECRET}`) {
+  const provided = auth?.startsWith('Bearer ') ? auth.slice(7) : ''
+
+  if (
+    !SYNC_API_SECRET ||
+    !provided ||
+    !crypto.timingSafeEqual(Buffer.from(provided), Buffer.from(SYNC_API_SECRET))
+  ) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
@@ -19,9 +26,6 @@ export async function POST(request: NextRequest) {
     })
   } catch (error) {
     console.error('Collection sync failed:', error)
-    return NextResponse.json(
-      { error: 'Sync failed', message: String(error) },
-      { status: 500 },
-    )
+    return NextResponse.json({ error: 'Sync failed', message: String(error) }, { status: 500 })
   }
 }

@@ -41,11 +41,16 @@ export default function Newsletter() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Din e-postadresse"
+                aria-label="E-postadresse"
                 className={styles.input}
                 required
                 disabled={status === 'loading'}
               />
-              <button type="submit" className={styles.button} disabled={status === 'loading' || !consent}>
+              <button
+                type="submit"
+                className={styles.button}
+                disabled={status === 'loading' || !consent}
+              >
                 {status === 'loading' ? 'Sender...' : 'Meld på'}
               </button>
             </div>
@@ -57,7 +62,13 @@ export default function Newsletter() {
                 checked={consent}
                 onChange={(e) => setConsent(e.target.checked)}
               />
-              <span>Jeg samtykker til <a href="/personvern" target="_blank" rel="noopener noreferrer">personvern</a> og lagring av e-post for nyhetsbrev.</span>
+              <span>
+                Jeg samtykker til{' '}
+                <a href="/personvern" target="_blank" rel="noopener noreferrer">
+                  personvern
+                </a>{' '}
+                og lagring av e-post for nyhetsbrev.
+              </span>
             </label>
           </form>
 
