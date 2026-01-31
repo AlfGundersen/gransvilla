@@ -12,7 +12,7 @@ export const client = createClient({
   useCdn: false,
   stega: {
     studioUrl: '/studio',
-    enabled: false,
+    enabled: 'respect-cookie',
   },
 })
 

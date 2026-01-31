@@ -35,6 +35,7 @@ export function ImageSection({ data, dataSanity, eager = false, blurDataURL }: I
         placeholder={blurDataURL ? 'blur' : 'empty'}
         blurDataURL={blurDataURL}
         className={styles.imageSectionImage}
+        data-sanity={dataSanity}
       />
     </div>
   )

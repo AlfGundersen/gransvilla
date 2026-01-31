@@ -27,7 +27,7 @@ export function ImageTextSection({ data, dataSanity, eager = false, blurDataURL 
   return (
     <div className={`${styles.imageTextSection} ${bildeForst ? '' : styles.imageTextReversed}`} data-sanity={dataSanity}>
       {data.bilde && (
-        <div className={styles.imageTextImageWrap}>
+        <div className={styles.imageTextImageWrap} data-sanity={dataSanity}>
           <Image
             src={urlFor(data.bilde).width(width).height(height).quality(100).fit('crop').url()}
             alt={data.bilde.alt || data.bilde.assetAltText || ''}
@@ -37,10 +37,11 @@ export function ImageTextSection({ data, dataSanity, eager = false, blurDataURL 
             placeholder={blurDataURL ? 'blur' : 'empty'}
             blurDataURL={blurDataURL}
             className={styles.imageTextImage}
+            data-sanity={dataSanity}
           />
         </div>
       )}
-      <div className={styles.imageTextContent}>
+      <div className={styles.imageTextContent} data-sanity={dataSanity}>
         {data.visOverskrift && data.overskrift && (
           <h2 className={styles.imageTextHeading}>{data.overskrift}</h2>
         )}
