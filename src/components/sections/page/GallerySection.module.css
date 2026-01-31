@@ -118,7 +118,7 @@
 }
 
 .galleryTrack .galleryImageWrap {
-  flex: 0 0 calc((100% - 2 * var(--space-md) - 100px) / 3);
+  flex: 0 0 calc((100% - (var(--gallery-columns, 3) - 1) * var(--space-md) - 60px) / var(--gallery-columns, 3));
 }
 
 .galleryImage {
@@ -162,7 +162,7 @@
   }
 
   .galleryTrack .galleryImageWrap {
-    flex: 0 0 75%;
+    flex: 0 0 80%;
   }
 
   .galleryGrid {

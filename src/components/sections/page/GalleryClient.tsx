@@ -143,7 +143,7 @@ export function GalleryClient({ images, columns, hasContent }: GalleryClientProp
         aria-label="Bildegalleri"
         tabIndex={0}
         {...(isCarousel ? { onMouseDown } : {})}
-        style={!isCarousel ? { ['--gallery-columns' as string]: columns } : undefined}
+        style={{ ['--gallery-columns' as string]: columns }}
       >
         <div className={isCarousel ? styles.galleryTrack : styles.galleryGrid}>
           {images.map((image, index) => (
