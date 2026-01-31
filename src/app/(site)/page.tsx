@@ -55,6 +55,8 @@ export default async function HomePage() {
         <div data-sanity={createDataAttribute({ id: frontpage._id, type: frontpage._type, path: 'timeline' }).toString()}>
           <TimelineSectionComponent
             data={{ ...frontpage.timeline, _type: 'timelineSection', _key: 'timeline' }}
+            documentId={frontpage._id}
+            documentType={frontpage._type}
           />
         </div>
       )}
