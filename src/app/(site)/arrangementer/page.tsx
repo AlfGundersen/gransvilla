@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { urlFor } from '@/lib/sanity/image'
+import { getBlurDataURL } from '@/lib/sanity/blur'
 import { sanityFetch } from '@/lib/sanity/live'
 import { arrangementerSettingsQuery, eventsQuery } from '@/lib/sanity/queries'
 import type { ArrangementerSettings, Event } from '@/types/sanity'
@@ -22,6 +23,11 @@ export default async function ArrangementerPage() {
   const heroLayout = settings?.heroLayout ?? '1-1-2'
   const heroImage = settings?.heroBilde ?? events[0]?.featuredImage
   const isWideImage = heroLayout === '1-3'
+
+  const [heroBlur, ...cardBlurs] = await Promise.all([
+    heroImage?.asset ? getBlurDataURL(heroImage) : undefined,
+    ...events.map((e) => e.featuredImage?.asset ? getBlurDataURL(e.featuredImage) : undefined),
+  ])
 
   return (
     <div className={styles.page}>
@@ -61,13 +67,15 @@ export default async function ArrangementerPage() {
               width={1600}
               height={686}
               priority
+              placeholder={heroBlur ? 'blur' : 'empty'}
+              blurDataURL={heroBlur}
               className={styles.heroImg}
             />
           </div>
         )}
 
         {events.length > 0 ? (
-          events.map((event) => (
+          events.map((event, i) => (
             <div key={event._id} className={styles.card}>
               {event.featuredImage?.asset && (
                 <Link href={`/${event.slug.current}`} className={styles.imageLink}>
@@ -76,6 +84,8 @@ export default async function ArrangementerPage() {
                     alt={event.featuredImage.alt || event.featuredImage.assetAltText || event.title}
                     width={800}
                     height={600}
+                    placeholder={cardBlurs[i] ? 'blur' : 'empty'}
+                    blurDataURL={cardBlurs[i]}
                     className={styles.image}
                   />
                 </Link>

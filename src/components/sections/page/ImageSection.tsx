@@ -14,9 +14,10 @@ interface ImageSectionProps {
   data: BildeSeksjon
   dataSanity?: string
   eager?: boolean
+  blurDataURL?: string
 }
 
-export function ImageSection({ data, dataSanity, eager = false }: ImageSectionProps) {
+export function ImageSection({ data, dataSanity, eager = false, blurDataURL }: ImageSectionProps) {
   if (!data.bilde) return null
 
   const ratio = data.bildeforhold || '3/2'
@@ -31,6 +32,8 @@ export function ImageSection({ data, dataSanity, eager = false }: ImageSectionPr
         width={width}
         height={height}
         loading={eager ? 'eager' : 'lazy'}
+        placeholder={blurDataURL ? 'blur' : 'empty'}
+        blurDataURL={blurDataURL}
         className={styles.imageSectionImage}
       />
     </div>

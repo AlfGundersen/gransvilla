@@ -15,9 +15,10 @@ interface ImageTextSectionProps {
   data: BildeTekstSeksjon
   dataSanity?: string
   eager?: boolean
+  blurDataURL?: string
 }
 
-export function ImageTextSection({ data, dataSanity, eager = false }: ImageTextSectionProps) {
+export function ImageTextSection({ data, dataSanity, eager = false, blurDataURL }: ImageTextSectionProps) {
   const bildeForst = data.bildeForst !== false
   const ratio = data.bildeforhold || '3/2'
   const width = 1400
@@ -33,6 +34,8 @@ export function ImageTextSection({ data, dataSanity, eager = false }: ImageTextS
             width={width}
             height={height}
             loading={eager ? 'eager' : 'lazy'}
+            placeholder={blurDataURL ? 'blur' : 'empty'}
+            blurDataURL={blurDataURL}
             className={styles.imageTextImage}
           />
         </div>

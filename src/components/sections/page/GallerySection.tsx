@@ -1,5 +1,6 @@
 import { PortableText } from '@portabletext/react'
 import { urlFor } from '@/lib/sanity/image'
+import { getBlurDataURL } from '@/lib/sanity/blur'
 import type { BildegalleriSeksjon } from '@/types/sanity'
 import { GalleryClient } from './GalleryClient'
 import styles from './GallerySection.module.css'
@@ -18,19 +19,25 @@ interface GallerySectionProps {
   dataSanity?: string
 }
 
-export function GallerySection({ data, dataSanity }: GallerySectionProps) {
+export async function GallerySection({ data, dataSanity }: GallerySectionProps) {
   const ratio = data.bildeforhold || '3/4'
   const ratioMultiplier = RATIO_MAP[ratio] || 2 / 3
   const thumbWidth = 600
   const thumbHeight = Math.round(thumbWidth * ratioMultiplier)
 
-  const images = (data.bilder || []).map((bilde) => ({
+  const bilder = data.bilder || []
+  const blurResults = await Promise.all(
+    bilder.map((bilde) => bilde.asset ? getBlurDataURL(bilde) : undefined),
+  )
+
+  const images = bilder.map((bilde, i) => ({
     src: urlFor(bilde).width(thumbWidth).height(thumbHeight).quality(80).fit('crop').url(),
     fullSrcBase: urlFor(bilde).quality(85).fit('crop').url(),
     alt: bilde.alt || bilde.assetAltText || '',
     width: thumbWidth,
     height: thumbHeight,
     ratio: ratioMultiplier,
+    blurDataURL: blurResults[i],
   }))
 
   return (

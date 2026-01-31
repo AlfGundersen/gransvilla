@@ -13,6 +13,7 @@ export interface GalleryImageData {
   width: number
   height: number
   ratio: number
+  blurDataURL?: string
 }
 
 export interface OriginRect {
@@ -160,6 +161,8 @@ export function GalleryClient({ images, columns, hasContent }: GalleryClientProp
                 width={image.width}
                 height={image.height}
                 loading={index < columns ? 'eager' : 'lazy'}
+                placeholder={image.blurDataURL ? 'blur' : 'empty'}
+                blurDataURL={image.blurDataURL}
                 className={styles.galleryImage}
               />
             </button>

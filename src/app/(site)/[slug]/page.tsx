@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { client } from '@/lib/sanity/client'
 import { sanityFetch } from '@/lib/sanity/live'
 import { urlFor } from '@/lib/sanity/image'
+import { getBlurDataURL } from '@/lib/sanity/blur'
 import { eventQuery, eventsQuery, pageQuery } from '@/lib/sanity/queries'
 import { PageSectionRenderer } from '@/components/sections/page/PageSectionRenderer'
 import type { Event, Page } from '@/types/sanity'
@@ -63,6 +64,10 @@ export default async function SlugPage({ params }: Props) {
     notFound()
   }
 
+  const blurDataURL = content.featuredImage?.asset
+    ? await getBlurDataURL(content.featuredImage)
+    : undefined
+
   return (
     <div className={styles.eventPage}>
       <div className={styles.eventGrid}>
@@ -76,6 +81,8 @@ export default async function SlugPage({ params }: Props) {
               height={675}
               className={styles.featuredImageImg}
               priority
+              placeholder={blurDataURL ? 'blur' : 'empty'}
+              blurDataURL={blurDataURL}
             />
           </div>
         )}

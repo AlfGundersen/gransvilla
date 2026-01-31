@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useCallback, useMemo } from 'react'
+import { useEffect, useRef, useCallback, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { motion } from 'framer-motion'
 import type { GalleryImageData, OriginRect } from './GalleryClient'
@@ -35,6 +35,12 @@ export function GalleryLightbox({
   const isFirst = activeIndex === 0
   const isLast = activeIndex === images.length - 1
   const current = images[activeIndex]
+  const [fullLoaded, setFullLoaded] = useState(false)
+
+  // Reset loaded state when active image changes
+  useEffect(() => {
+    setFullLoaded(false)
+  }, [activeIndex])
 
   // Compute initial position from the thumbnail origin
   const initialImageStyle = useMemo(() => {
@@ -183,10 +189,22 @@ export function GalleryLightbox({
         exit={initialImageStyle}
         transition={{ type: 'spring', stiffness: 200, damping: 28, mass: 0.8 }}
       >
+        {/* Thumbnail as blurred placeholder */}
+        {!fullLoaded && (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img
+            src={current.src}
+            alt=""
+            aria-hidden="true"
+            className={styles.placeholderImage}
+          />
+        )}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={fullSrcs[activeIndex]}
           alt={current.alt}
+          onLoad={() => setFullLoaded(true)}
+          style={{ opacity: fullLoaded ? 1 : 0 }}
         />
       </motion.div>
 

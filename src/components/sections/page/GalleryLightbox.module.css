@@ -51,6 +51,13 @@
   pointer-events: none;
   user-select: none;
   -webkit-user-drag: none;
+  transition: opacity 0.3s ease;
+}
+
+.placeholderImage {
+  position: absolute;
+  filter: blur(20px);
+  transform: scale(1.05);
 }
 
 .navButton {
