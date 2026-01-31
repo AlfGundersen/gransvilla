@@ -2,6 +2,7 @@ import { getProductByHandle } from '@/lib/shopify'
 import type { FeaturedProductSection } from '@/types/sanity'
 import Image from 'next/image'
 import Link from 'next/link'
+import { FeaturedProductAddToCart } from './FeaturedProductAddToCart'
 import styles from './FeaturedProductSection.module.css'
 
 interface FeaturedProductSectionProps {
@@ -29,15 +30,15 @@ export async function FeaturedProductSectionComponent({ data }: FeaturedProductS
     <section className={styles.featProductSection} aria-label={`Fokusprodukt: ${product.title}`}>
       <div className={styles.featProductContainer}>
         <div className={styles.featProductContent}>
-          <span className={styles.featProductLabel}>Fokusprodukt</span>
           <h2 className={styles.featProductTitle}>{product.title}</h2>
           {product.description && <p className={styles.featProductDescription}>{product.description}</p>}
 
           <div className={styles.featProductButtons}>
             <div className={styles.featProductButtonRow}>
-              <button type="button" className={styles.featProductBtnPrimary}>
-                Legg i handlevogn
-              </button>
+              <FeaturedProductAddToCart
+                variantId={product.variants[0].id}
+                available={product.variants[0].availableForSale}
+              />
               <Link href={productUrl} className={styles.featProductBtnSecondary}>
                 Les mer
               </Link>
