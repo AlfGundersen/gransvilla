@@ -31,7 +31,6 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     description: 'Gransvilla - Restaurant, kantine og arrangementer',
     manifest: '/manifest.webmanifest',
-    themeColor: '#000000',
     appleWebApp: {
       capable: true,
       statusBarStyle: 'default',
@@ -51,6 +50,8 @@ export default async function RootLayout({
   return (
     <html lang="no" className={inter.variable}>
       <head>
+        <meta name="theme-color" content="#000000" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         <link rel="preconnect" href="https://use.typekit.net" />
         <link rel="preconnect" href="https://p.typekit.net" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://cdn.sanity.io" />

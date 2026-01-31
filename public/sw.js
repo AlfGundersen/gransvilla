@@ -1,10 +1,9 @@
-const CACHE_NAME = 'gransvilla-v1'
-
-const PRECACHE_ASSETS = []
+const CACHE_NAME = 'gransvilla-v2'
+const OFFLINE_URL = '/offline.html'
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(PRECACHE_ASSETS))
+    caches.open(CACHE_NAME).then((cache) => cache.add(OFFLINE_URL))
   )
   self.skipWaiting()
 })
@@ -29,7 +28,7 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET') return
   if (url.origin !== self.location.origin) return
 
-  // HTML pages: network-first
+  // HTML pages: network-first with offline fallback
   if (request.headers.get('accept')?.includes('text/html')) {
     event.respondWith(
       fetch(request)
@@ -38,7 +37,11 @@ self.addEventListener('fetch', (event) => {
           caches.open(CACHE_NAME).then((cache) => cache.put(request, clone))
           return response
         })
-        .catch(() => caches.match(request))
+        .catch(() =>
+          caches.match(request).then((cached) =>
+            cached || caches.match(OFFLINE_URL)
+          )
+        )
     )
     return
   }
