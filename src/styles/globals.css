@@ -122,7 +122,11 @@
    -------------------------------------- */
 
 [data-site] img {
-  transition: filter 0.7s ease-out, opacity 0.7s ease-out;
+  transition: filter 0.7s ease-out, opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+
+[data-site] img[style*="filter:blur"] {
+  transform: scale(1.03);
 }
 
 /* --------------------------------------
