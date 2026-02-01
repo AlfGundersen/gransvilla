@@ -12,6 +12,7 @@ export const revalidate = 60
 export const metadata: Metadata = {
   title: 'Nettbutikk',
   description: 'Handle mat og produkter fra Gransvilla',
+  alternates: { canonical: '/nettbutikk' },
 }
 
 export default async function NettbutikkPage() {

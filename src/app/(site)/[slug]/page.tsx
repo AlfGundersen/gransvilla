@@ -59,6 +59,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: seo?.metaTitle || content.title,
     description: seo?.metaDescription || undefined,
+    alternates: {
+      canonical: `/${slug}`,
+    },
     openGraph: {
       title: seo?.metaTitle || content.title,
       description: seo?.metaDescription || undefined,

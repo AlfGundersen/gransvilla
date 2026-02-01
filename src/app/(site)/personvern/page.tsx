@@ -9,6 +9,7 @@ import styles from './page.module.css'
 export const metadata: Metadata = {
   title: 'Personvernerklæring',
   description: 'Personvernerklæring for Gransvilla',
+  alternates: { canonical: '/personvern' },
 }
 
 function formatDate(dateString: string) {

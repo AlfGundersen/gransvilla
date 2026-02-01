@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useEffect, useRef, useMemo } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { AnimatePresence } from 'framer-motion'
 import { GalleryLightbox } from './GalleryLightbox'
@@ -50,11 +50,11 @@ export function GalleryClient({ images, columns, hasContent }: GalleryClientProp
   const buttonRefs = useRef<(HTMLButtonElement | null)[]>([])
   const preloadedSet = useRef(new Set<string>())
 
-  // Build viewport-aware full URLs (recomputed once on mount)
-  const fullSrcs = useMemo(() => {
-    if (typeof window === 'undefined') return images.map((img) => img.fullSrcBase)
-    return images.map((img) => buildFullSrc(img.fullSrcBase, img.ratio))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // Build viewport-aware full URLs after mount (avoids hydration mismatch)
+  const [fullSrcs, setFullSrcs] = useState(() => images.map((img) => img.fullSrcBase))
+
+  useEffect(() => {
+    setFullSrcs(images.map((img) => buildFullSrc(img.fullSrcBase, img.ratio)))
   }, [images])
 
   // Preload adjacent images when lightbox index changes

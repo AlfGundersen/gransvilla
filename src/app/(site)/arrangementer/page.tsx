@@ -12,6 +12,7 @@ import styles from './page.module.css'
 export const metadata: Metadata = {
   title: 'Arrangementer',
   description: 'Se kommende arrangementer hos Gransvilla',
+  alternates: { canonical: '/arrangementer' },
 }
 
 export default async function ArrangementerPage() {
