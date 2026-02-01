@@ -204,6 +204,7 @@
   background-color: transparent;
   transition: background-color var(--transition-base), color var(--transition-base);
   align-self: flex-start;
+  margin-top: auto;
 }
 
 .cta:hover,
