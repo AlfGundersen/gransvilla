@@ -45,7 +45,8 @@ export const frontpageQuery = groq`
         event-> {
           _id,
           title,
-          slug
+          slug,
+          description
         },
         image1 {
           ${imageFragment},
@@ -130,7 +131,8 @@ const eventsSectionFragment = groq`
       event-> {
         _id,
         title,
-        slug
+        slug,
+        description
       },
       image1 {
         ${imageFragment},
@@ -335,7 +337,8 @@ export const eventQuery = groq`
       ${imageFragment},
       alt
     },
-    ${eventSectionsFragment}
+    ${eventSectionsFragment},
+    "products": products[].productHandle
   }
 `
 

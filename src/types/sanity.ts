@@ -33,6 +33,7 @@ export interface EventReference {
   slug: {
     current: string
   }
+  description?: BlockContent
 }
 
 // Event item with images for EventsSection
@@ -181,6 +182,7 @@ export interface Event {
   description?: BlockContent
   featuredImage?: SanityImage & { alt?: string }
   sections?: EventPageSection[]
+  products?: string[]
 }
 
 // Union of all section types

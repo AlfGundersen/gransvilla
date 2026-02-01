@@ -1,5 +1,6 @@
 import { defineField, defineType } from 'sanity'
 import { AltTextInput } from '../../components/AltTextInput'
+import { ShopifyProductInput } from '../../components/ShopifyProductInput'
 
 export default defineType({
   name: 'event',
@@ -68,6 +69,33 @@ export default defineType({
         { type: 'bildeTekstSeksjon' },
         { type: 'bildegalleriSeksjon' },
       ],
+    }),
+    defineField({
+      name: 'products',
+      title: 'Tilknyttede produkter',
+      type: 'array',
+      description: 'Produkter fra nettbutikken som er knyttet til dette arrangementet',
+      of: [{
+        type: 'object',
+        fields: [
+          defineField({
+            name: 'productHandle',
+            title: 'Velg produkt fra Shopify',
+            type: 'string',
+            components: { input: ShopifyProductInput },
+          }),
+        ],
+        preview: {
+          select: {
+            productHandle: 'productHandle',
+          },
+          prepare({ productHandle }) {
+            return {
+              title: productHandle || 'Velg et produkt',
+            }
+          },
+        },
+      }],
     }),
   ],
   preview: {

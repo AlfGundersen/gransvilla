@@ -7,6 +7,7 @@ import { urlFor } from '@/lib/sanity/image'
 import { getBlurDataURL } from '@/lib/sanity/blur'
 import { eventQuery, eventsQuery, pageQuery } from '@/lib/sanity/queries'
 import { PageSectionRenderer } from '@/components/sections/page/PageSectionRenderer'
+import { EventProductsSection } from '@/components/sections/EventProductsSection'
 import type { Event, Page } from '@/types/sanity'
 import styles from './page.module.css'
 
@@ -104,6 +105,9 @@ export default async function SlugPage({ params }: Props) {
           />
         )}
       </div>
+      {content._type === 'event' && content.products && content.products.length > 0 && (
+        <EventProductsSection products={content.products} />
+      )}
     </div>
   )
 }

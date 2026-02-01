@@ -1,0 +1,119 @@
+.eventProductsSection {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding-inline: var(--container-padding);
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-xl);
+  border-top: 1px solid var(--color-border);
+}
+
+.eventProductsHeading {
+  font-family: var(--font-heading);
+  font-size: var(--text-3xl);
+  margin: 0 0 var(--space-lg) 0;
+}
+
+.eventProductsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+}
+
+/* Card */
+
+.eventProductCard {
+  display: flex;
+  flex-direction: column;
+}
+
+.eventProductImageWrapper {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--color-border);
+  margin-bottom: var(--space-md);
+}
+
+.eventProductImage {
+  object-fit: cover;
+}
+
+.eventProductTitle {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  margin: 0 0 var(--space-xs) 0;
+  line-height: 1.3;
+}
+
+.eventProductPrice {
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  margin: 0 0 var(--space-sm) 0;
+}
+
+.eventProductDescription {
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--color-secondary);
+  margin: 0 0 var(--space-md) 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.eventProductButton {
+  display: block;
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  text-align: center;
+  cursor: pointer;
+  color: var(--color-background);
+  border: 1px solid var(--color-foreground);
+  background-color: var(--color-foreground);
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+  margin-top: auto;
+}
+
+.eventProductButton:hover,
+.eventProductButton:focus-visible {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.eventProductButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ===========================================
+   Tablet: 2 columns
+   =========================================== */
+
+@media (max-width: 1024px) {
+  .eventProductsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ===========================================
+   Mobile: 2 columns
+   =========================================== */
+
+@media (max-width: 767px) {
+  .eventProductsSection {
+    padding-top: var(--space-lg);
+    padding-bottom: var(--space-lg);
+  }
+
+  .eventProductsHeading {
+    font-size: var(--text-2xl);
+  }
+
+  .eventProductsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+  }
+}

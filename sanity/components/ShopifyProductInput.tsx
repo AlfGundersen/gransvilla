@@ -26,9 +26,6 @@ interface ShopifyProductInputProps {
   onChange: (event: ReturnType<typeof set> | ReturnType<typeof unset>) => void
 }
 
-const SHOPIFY_DOMAIN = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN || process.env.SANITY_STUDIO_SHOPIFY_STORE_DOMAIN
-const SHOPIFY_TOKEN = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN || process.env.SANITY_STUDIO_SHOPIFY_STOREFRONT_TOKEN
-
 export function ShopifyProductInput({ value, onChange }: ShopifyProductInputProps) {
   const [products, setProducts] = useState<ShopifyProduct[]>([])
   const [loading, setLoading] = useState(true)
@@ -36,59 +33,15 @@ export function ShopifyProductInput({ value, onChange }: ShopifyProductInputProp
 
   useEffect(() => {
     async function fetchProducts() {
-      if (!SHOPIFY_DOMAIN || !SHOPIFY_TOKEN) {
-        setError('Shopify-konfigurasjon mangler. Sjekk environment-variabler.')
-        setLoading(false)
-        return
-      }
-
       try {
-        const response = await fetch(
-          `https://${SHOPIFY_DOMAIN}/api/2025-10/graphql.json`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-Shopify-Storefront-Access-Token': SHOPIFY_TOKEN,
-            },
-            body: JSON.stringify({
-              query: `
-                query Products {
-                  products(first: 50) {
-                    edges {
-                      node {
-                        id
-                        title
-                        handle
-                        priceRange {
-                          minVariantPrice {
-                            amount
-                            currencyCode
-                          }
-                        }
-                        images(first: 1) {
-                          edges {
-                            node {
-                              url
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              `,
-            }),
-          }
-        )
+        const response = await fetch('/api/shopify/products')
 
-        const json = await response.json()
-
-        if (json.errors) {
-          throw new Error(json.errors[0]?.message || 'Failed to fetch products')
+        if (!response.ok) {
+          throw new Error('Kunne ikke hente produkter')
         }
 
-        setProducts(json.data.products.edges.map((edge: { node: ShopifyProduct }) => edge.node))
+        const data: ShopifyProduct[] = await response.json()
+        setProducts(data)
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Kunne ikke hente produkter')
       } finally {
