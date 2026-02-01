@@ -238,6 +238,11 @@ button {
   li {
     line-height: 1;
   }
+
+  header li,
+  footer li {
+    line-height: 1.5;
+  }
 }
 
 /* --------------------------------------
