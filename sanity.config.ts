@@ -4,6 +4,7 @@ import { defineLocations, presentationTool } from 'sanity/presentation'
 import { visionTool } from '@sanity/vision'
 import { media, mediaAssetSource } from 'sanity-plugin-media'
 import { unsplashAssetSource } from 'sanity-plugin-asset-source-unsplash'
+import { dashboardTool } from '@sanity/dashboard'
 import { plausibleWidget } from 'sanity-plugin-plausible-analytics'
 import { schemaTypes } from './sanity/schemas'
 import { structure } from './sanity/structure'
@@ -31,10 +32,14 @@ export default defineConfig({
   basePath: '/studio',
 
   plugins: [
-    structureTool({ structure }),
-    plausibleWidget({
-      url: 'https://plausible.io/share/gransvilla.no?auth=RQZIwBYFAumnMGbyMqNzb',
+    dashboardTool({
+      widgets: [
+        plausibleWidget({
+          url: 'https://plausible.io/share/gransvilla.no?auth=RQZIwBYFAumnMGbyMqNzb',
+        }),
+      ],
     }),
+    structureTool({ structure }),
     presentationTool({
       previewUrl: {
         previewMode: {
