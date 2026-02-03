@@ -1,25 +1,7 @@
 import type { NextConfig } from 'next'
 
-const csp = [
-  "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://ssl.google-analytics.com",
-  "style-src 'self' 'unsafe-inline' https://use.typekit.net https://p.typekit.net",
-  "font-src 'self' https://use.typekit.net https://p.typekit.net",
-  "img-src 'self' data: blob: https://cdn.sanity.io https://cdn.shopify.com",
-  "connect-src 'self' https://*.sanity.io https://www.googletagmanager.com https://www.google-analytics.com",
-  "media-src 'self' https://cdn.sanity.io",
-  "object-src 'none'",
-  "frame-ancestors 'self' https://*.sanity.build",
-  "base-uri 'self'",
-  "form-action 'self'",
-  "worker-src 'self'",
-].join('; ')
-
+// CSP is now set dynamically in middleware with nonce support
 const securityHeaders = [
-  {
-    key: 'Content-Security-Policy',
-    value: csp,
-  },
   {
     key: 'X-Content-Type-Options',
     value: 'nosniff',
@@ -42,7 +24,7 @@ const securityHeaders = [
   },
   {
     key: 'Strict-Transport-Security',
-    value: 'max-age=31536000; includeSubDomains',
+    value: 'max-age=31536000; includeSubDomains; preload',
   },
 ]
 

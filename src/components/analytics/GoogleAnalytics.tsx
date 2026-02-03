@@ -5,7 +5,11 @@ import { useCookieConsent } from '@/context/CookieConsentContext'
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID
 
-export default function GoogleAnalytics() {
+interface GoogleAnalyticsProps {
+  nonce?: string
+}
+
+export default function GoogleAnalytics({ nonce }: GoogleAnalyticsProps) {
   const { consent } = useCookieConsent()
 
   if (!GA_ID || !consent.statistics) return null
@@ -15,8 +19,9 @@ export default function GoogleAnalytics() {
       <Script
         src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
         strategy="lazyOnload"
+        nonce={nonce}
       />
-      <Script id="google-analytics" strategy="lazyOnload">
+      <Script id="google-analytics" strategy="lazyOnload" nonce={nonce}>
         {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
