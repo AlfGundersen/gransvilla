@@ -2,7 +2,7 @@ import type { NextConfig } from 'next'
 
 const csp = [
   "default-src 'self'",
-  "script-src 'self' https://plausible.io",
+  "script-src 'self' 'unsafe-inline' https://plausible.io",
   "style-src 'self' 'unsafe-inline' https://use.typekit.net https://p.typekit.net",
   "font-src 'self' https://use.typekit.net https://p.typekit.net",
   "img-src 'self' data: blob: https://cdn.sanity.io https://cdn.shopify.com",
