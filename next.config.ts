@@ -6,7 +6,7 @@ const csp = [
   "style-src 'self' 'unsafe-inline' https://use.typekit.net https://p.typekit.net",
   "font-src 'self' https://use.typekit.net https://p.typekit.net",
   "img-src 'self' data: blob: https://cdn.sanity.io https://cdn.shopify.com",
-  "connect-src 'self' https://*.sanity.io https://plausible.io",
+  "connect-src 'self' https://*.sanity.io wss://*.sanity.io https://plausible.io",
   "media-src 'self' https://cdn.sanity.io",
   "object-src 'none'",
   "frame-ancestors 'self' https://*.sanity.build",
