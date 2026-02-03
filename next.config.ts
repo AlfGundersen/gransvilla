@@ -1,6 +1,6 @@
 import type { NextConfig } from 'next'
 
-const csp = [
+const publicCsp = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline' https://plausible.io",
   "style-src 'self' 'unsafe-inline' https://use.typekit.net https://p.typekit.net",
@@ -9,17 +9,30 @@ const csp = [
   "connect-src 'self' https://*.sanity.io wss://*.sanity.io https://plausible.io",
   "media-src 'self' https://cdn.sanity.io",
   "object-src 'none'",
-  "frame-ancestors 'self' https://*.sanity.build",
+  "frame-ancestors 'self'",
   "base-uri 'self'",
   "form-action 'self'",
   "worker-src 'self'",
 ].join('; ')
 
-const securityHeaders = [
-  {
-    key: 'Content-Security-Policy',
-    value: csp,
-  },
+// Studio needs relaxed CSP for Sanity's CDN and Plausible iframe
+const studioCsp = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.sanity.io https://*.sanity-cdn.com",
+  "style-src 'self' 'unsafe-inline'",
+  "font-src 'self' data: https://*.sanity-cdn.com",
+  "img-src 'self' data: blob: https://cdn.sanity.io https://*.sanity-cdn.com",
+  "connect-src 'self' https://*.sanity.io wss://*.sanity.io https://*.sanity-cdn.com",
+  "media-src 'self' https://cdn.sanity.io",
+  "frame-src https://plausible.io",
+  "frame-ancestors 'self' https://*.sanity.build",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "worker-src 'self' blob:",
+].join('; ')
+
+const baseSecurityHeaders = [
   {
     key: 'X-Content-Type-Options',
     value: 'nosniff',
@@ -64,8 +77,18 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        source: '/(.*)',
-        headers: securityHeaders,
+        source: '/studio/:path*',
+        headers: [
+          { key: 'Content-Security-Policy', value: studioCsp },
+          ...baseSecurityHeaders,
+        ],
+      },
+      {
+        source: '/((?!studio).*)',
+        headers: [
+          { key: 'Content-Security-Policy', value: publicCsp },
+          ...baseSecurityHeaders,
+        ],
       },
       {
         source: '/_next/static/:path*',

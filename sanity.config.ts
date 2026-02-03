@@ -32,13 +32,6 @@ export default defineConfig({
   basePath: '/studio',
 
   plugins: [
-    dashboardTool({
-      widgets: [
-        plausibleWidget({
-          url: 'https://plausible.io/share/gransvilla.no?auth=RQZIwBYFAumnMGbyMqNzb',
-        }),
-      ],
-    }),
     structureTool({ structure }),
     presentationTool({
       previewUrl: {
@@ -71,6 +64,13 @@ export default defineConfig({
     }),
     visionTool(),
     media(),
+    dashboardTool({
+      widgets: [
+        plausibleWidget({
+          url: 'https://plausible.io/share/gransvilla.no?auth=RQZIwBYFAumnMGbyMqNzb',
+        }),
+      ],
+    }),
   ],
 
   schema: {
