@@ -1,24 +1,16 @@
 /* Make Plausible dashboard fill available height */
-[data-tool="statistikk"] {
+[data-ui="Card"][data-width="full"] {
   height: 100%;
 }
 
-[data-tool="statistikk"] > div {
+[data-ui="Card"][data-width="full"] > [data-ui="Card"] {
   height: 100%;
 }
 
-[data-tool="statistikk"] [data-ui="Grid"] {
+[data-ui="Card"][data-width="full"] [data-ui="Box"] {
   height: 100%;
 }
 
-[data-tool="statistikk"] [data-ui="Card"] {
-  height: 100%;
-}
-
-[data-tool="statistikk"] [data-ui="Box"] {
-  height: 100%;
-}
-
-[data-tool="statistikk"] iframe {
-  min-height: calc(100vh - 100px);
+[data-ui="Card"][data-width="full"] iframe {
+  min-height: calc(100vh - 120px);
 }
