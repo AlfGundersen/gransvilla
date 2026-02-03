@@ -1,0 +1,24 @@
+/* Make Plausible dashboard fill available height */
+[data-tool="statistikk"] {
+  height: 100%;
+}
+
+[data-tool="statistikk"] > div {
+  height: 100%;
+}
+
+[data-tool="statistikk"] [data-ui="Grid"] {
+  height: 100%;
+}
+
+[data-tool="statistikk"] [data-ui="Card"] {
+  height: 100%;
+}
+
+[data-tool="statistikk"] [data-ui="Box"] {
+  height: 100%;
+}
+
+[data-tool="statistikk"] iframe {
+  min-height: calc(100vh - 100px);
+}

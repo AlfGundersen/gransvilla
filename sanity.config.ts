@@ -1,4 +1,5 @@
 import { defineConfig, type DocumentActionsResolver } from 'sanity'
+import './sanity/studio.css'
 import { structureTool } from 'sanity/structure'
 import { defineLocations, presentationTool } from 'sanity/presentation'
 import { visionTool } from '@sanity/vision'
@@ -72,7 +73,6 @@ export default defineConfig({
       widgets: [
         plausibleWidget({
           url: 'https://plausible.io/share/gransvilla.no?auth=RQZIwBYFAumnMGbyMqNzb',
-          height: '100%',
         }),
       ],
     }),
