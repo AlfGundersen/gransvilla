@@ -17,7 +17,6 @@ interface FooterProps {
     email?: string
     phone?: string
     address?: PortableTextBlock[]
-    partners?: PortableTextBlock[]
   }
   siteDescription?: PortableTextBlock[]
   faviconUrl?: string
@@ -26,13 +25,30 @@ interface FooterProps {
 export default function Footer({ navigation, socialLinks, contactInfo, siteDescription, faviconUrl }: FooterProps) {
   const [email, setEmail] = useState('')
   const [consent, setConsent] = useState(false)
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const { openSettings } = useCookieConsent()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // TODO: Integrate with Mailjet
-    console.log('Newsletter signup:', email)
-    setEmail('')
+    setStatus('loading')
+
+    try {
+      const response = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Subscription failed')
+      }
+
+      setStatus('success')
+      setEmail('')
+      setConsent(false)
+    } catch {
+      setStatus('error')
+    }
   }
 
   const handleColorFlip = () => {
@@ -48,31 +64,39 @@ export default function Footer({ navigation, socialLinks, contactInfo, siteDescr
             <p className={styles.newsletterText}>
               Holde deg oppdatert og meld deg på nyhetsbrevet
             </p>
-            <form className={styles.form} onSubmit={handleSubmit} aria-label="Nyhetsbrev">
-              <label htmlFor="footer-email" className="visually-hidden">E-postadresse</label>
-              <input
-                id="footer-email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Din e-postadresse"
-                className={styles.input}
-                required
-              />
-              <label className={styles.consent}>
+            {status === 'success' ? (
+              <p className={styles.successMessage}>Takk for påmeldingen!</p>
+            ) : (
+              <form className={styles.form} onSubmit={handleSubmit} aria-label="Nyhetsbrev">
+                <label htmlFor="footer-email" className="visually-hidden">E-postadresse</label>
                 <input
-                  id="footer-newsletter-consent"
-                  name="footer-newsletter-consent"
-                  type="checkbox"
-                  checked={consent}
-                  onChange={(e) => setConsent(e.target.checked)}
+                  id="footer-email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Din e-postadresse"
+                  className={styles.input}
+                  required
+                  disabled={status === 'loading'}
                 />
-                <span>Jeg samtykker til <a href="/personvern" target="_blank" rel="noopener noreferrer">personvern</a> og lagring av e-post for nyhetsbrev.</span>
-              </label>
-              <button type="submit" className={`${styles.button} site-button`} disabled={!consent}>
-                Send nå
-              </button>
-            </form>
+                <label className={styles.consent}>
+                  <input
+                    id="footer-newsletter-consent"
+                    name="footer-newsletter-consent"
+                    type="checkbox"
+                    checked={consent}
+                    onChange={(e) => setConsent(e.target.checked)}
+                  />
+                  <span>Jeg samtykker til <a href="/personvern" target="_blank" rel="noopener noreferrer">personvern</a> og lagring av e-post for nyhetsbrev.</span>
+                </label>
+                <button type="submit" className={`${styles.button} site-button`} disabled={!consent || status === 'loading'}>
+                  {status === 'loading' ? 'Sender...' : 'Send nå'}
+                </button>
+                {status === 'error' && (
+                  <p className={styles.errorMessage}>Noe gikk galt. Vennligst prøv igjen.</p>
+                )}
+              </form>
+            )}
           </div>
 
           {/* Menu Links */}
@@ -87,27 +111,15 @@ export default function Footer({ navigation, socialLinks, contactInfo, siteDescr
             </ul>
           </nav>
 
-          {/* Location & Partners */}
-          {(contactInfo?.address || contactInfo?.partners) && (
+          {/* Location */}
+          {contactInfo?.address && (
             <div className={styles.column}>
-              {contactInfo.address && (
-                <>
-                  <h3 className={styles.heading}>STED</h3>
-                  <div className={styles.locations}>
-                    <address className={styles.address}>
-                      <PortableText value={contactInfo.address} />
-                    </address>
-                  </div>
-                </>
-              )}
-              {contactInfo.partners && (
-                <div className={styles.partners}>
-                  <h3 className={styles.heading}>PARTNERE</h3>
-                  <div className={styles.partnerLinks}>
-                    <PortableText value={contactInfo.partners} />
-                  </div>
-                </div>
-              )}
+              <h3 className={styles.heading}>STED</h3>
+              <div className={styles.locations}>
+                <address className={styles.address}>
+                  <PortableText value={contactInfo.address} />
+                </address>
+              </div>
             </div>
           )}
 

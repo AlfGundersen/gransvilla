@@ -244,8 +244,7 @@ export const siteSettingsQuery = groq`
     contactInfo {
       email,
       phone,
-      "address": address[defined(_type)],
-      "partners": partners[defined(_type)]
+      "address": address[defined(_type)]
     },
     openingHours[] {
       days,

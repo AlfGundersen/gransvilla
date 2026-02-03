@@ -47,10 +47,12 @@ export async function POST(request: NextRequest) {
       }),
     })
 
+    const contactData = await contactResponse.json().catch(() => ({}))
+    console.log('Mailjet contact response:', contactResponse.status, JSON.stringify(contactData))
+
     // If contact already exists, that's fine (status 400 with specific error)
     if (!contactResponse.ok && contactResponse.status !== 400) {
-      const errorData = await contactResponse.json().catch(() => ({}))
-      console.error('Mailjet contact creation error:', errorData)
+      console.error('Mailjet contact creation error:', contactData)
       return NextResponse.json(
         { error: 'Kunne ikke legge til e-post' },
         { status: 500 }
@@ -59,6 +61,7 @@ export async function POST(request: NextRequest) {
 
     // If a list ID is configured, add contact to the list
     if (MAILJET_LIST_ID) {
+      console.log('Adding to list:', MAILJET_LIST_ID)
       const listResponse = await fetch(
         `https://api.mailjet.com/v3/REST/contactslist/${MAILJET_LIST_ID}/managecontact`,
         {
@@ -69,17 +72,23 @@ export async function POST(request: NextRequest) {
           },
           body: JSON.stringify({
             Email: email,
-            Action: 'addnoforce',
+            Action: 'addforce',
           }),
         }
       )
 
+      const listData = await listResponse.json().catch(() => ({}))
+      console.log('Mailjet list response:', listResponse.status, JSON.stringify(listData))
+
       if (!listResponse.ok) {
-        const errorData = await listResponse.json().catch(() => ({}))
-        console.error('Mailjet list subscription error:', errorData)
-        // Don't fail the whole request if list subscription fails
-        // Contact was still created
+        console.error('Mailjet list subscription error:', listData)
+        return NextResponse.json(
+          { error: 'Kunne ikke legge til på nyhetsbrevlisten' },
+          { status: 500 }
+        )
       }
+    } else {
+      console.log('No MAILJET_LIST_ID configured, contact created but not added to list')
     }
 
     return NextResponse.json({ success: true })
