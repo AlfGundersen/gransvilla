@@ -32,8 +32,10 @@ export default defineConfig({
   basePath: '/studio',
 
   plugins: [
-    structureTool({ structure }),
+    structureTool({ name: 'struktur', title: 'Struktur', structure }),
     presentationTool({
+      name: 'live-redigering',
+      title: 'Live redigering',
       previewUrl: {
         previewMode: {
           enable: '/api/draft-mode/enable',
@@ -65,9 +67,12 @@ export default defineConfig({
     visionTool(),
     media(),
     dashboardTool({
+      name: 'statistikk',
+      title: 'Statistikk',
       widgets: [
         plausibleWidget({
           url: 'https://plausible.io/share/gransvilla.no?auth=RQZIwBYFAumnMGbyMqNzb',
+          height: '100%',
         }),
       ],
     }),
