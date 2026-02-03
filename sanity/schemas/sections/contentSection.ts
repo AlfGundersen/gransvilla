@@ -56,7 +56,7 @@ export default defineType({
     defineField({
       name: 'ctaHref',
       title: 'Knappelenke',
-      type: 'string',
+      type: 'url',
       description: 'URL som knappen lenker til',
       hidden: ({ parent }) => !parent?.ctaText,
     }),
