@@ -68,6 +68,7 @@ export default async function RootLayout({
   return (
     <html lang="no" className={inter.variable}>
       <head>
+        <meta charSet="utf-8" />
         <meta name="theme-color" content="#000000" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         <link rel="preconnect" href="https://use.typekit.net" />

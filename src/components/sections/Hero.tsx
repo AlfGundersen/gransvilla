@@ -11,7 +11,7 @@ export default function Hero() {
   return (
     <section className={styles.hero}>
       <div className={styles.imageWrapper}>
-        <Image src={heroImage.src} alt={heroImage.alt} fill sizes="100vw" priority />
+        <Image src={heroImage.src} alt={heroImage.alt} fill sizes="100vw" priority fetchPriority="high" />
       </div>
     </section>
   )

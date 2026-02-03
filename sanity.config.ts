@@ -4,6 +4,7 @@ import { defineLocations, presentationTool } from 'sanity/presentation'
 import { visionTool } from '@sanity/vision'
 import { media, mediaAssetSource } from 'sanity-plugin-media'
 import { unsplashAssetSource } from 'sanity-plugin-asset-source-unsplash'
+import { plausibleWidget } from 'sanity-plugin-plausible-analytics'
 import { schemaTypes } from './sanity/schemas'
 import { structure } from './sanity/structure'
 import { SetOppdatertOnPublish } from './sanity/actions/setOppdatertOnPublish'
@@ -31,6 +32,9 @@ export default defineConfig({
 
   plugins: [
     structureTool({ structure }),
+    plausibleWidget({
+      url: 'https://plausible.io/share/gransvilla.no?auth=RQZIwBYFAumnMGbyMqNzb',
+    }),
     presentationTool({
       previewUrl: {
         previewMode: {

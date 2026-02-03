@@ -22,6 +22,7 @@ export function HeroSectionComponent({ data }: HeroSectionComponentProps) {
               fill
               sizes="100vw"
               priority
+              fetchPriority="high"
               style={
                 image.hotspot
                   ? {
