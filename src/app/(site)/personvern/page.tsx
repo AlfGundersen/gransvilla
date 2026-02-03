@@ -36,6 +36,23 @@ export default async function PersonvernPage() {
           )}
         </div>
       )}
+
+      {/* Behandlingsansvarlig section */}
+      {data?.firmanavn && (
+        <div className={styles.content}>
+          <h2 className={styles.cookieHeading}>Behandlingsansvarlig</h2>
+          <address className={styles.dataController}>
+            <strong>{data.firmanavn}</strong>
+            {data.orgnummer && <br />}
+            {data.orgnummer && <>Org.nr: {data.orgnummer}</>}
+            {data.adresse && <br />}
+            {data.adresse && <span className={styles.addressText}>{data.adresse}</span>}
+            {data.epost && <br />}
+            {data.epost && <>E-post: <a href={`mailto:${data.epost}`}>{data.epost}</a></>}
+          </address>
+        </div>
+      )}
+
       {data?.innhold ? (
         <div className={styles.content}>
           <PortableText value={data.innhold} />

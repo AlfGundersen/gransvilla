@@ -271,6 +271,10 @@ export interface SiteSettings {
 
 // Personvernerklæring
 export interface Personvernerklaering {
+  firmanavn?: string
+  orgnummer?: string
+  adresse?: string
+  epost?: string
   innhold?: BlockContent
   opprettet?: string
   oppdatert?: string

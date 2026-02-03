@@ -367,6 +367,10 @@ export const pageQuery = groq`
 // Personvernerklæring query
 export const personvernQuery = groq`
   *[_type == "personvernerklaering"][0] {
+    firmanavn,
+    orgnummer,
+    adresse,
+    epost,
     "innhold": innhold[defined(_type)],
     opprettet,
     oppdatert

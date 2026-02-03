@@ -78,6 +78,19 @@
   margin: var(--space-xl) 0 var(--space-md) 0;
 }
 
+.dataController {
+  font-style: normal;
+  line-height: 1.8;
+}
+
+.dataController strong {
+  font-weight: var(--font-weight-medium);
+}
+
+.addressText {
+  white-space: pre-line;
+}
+
 .tableWrapper {
   overflow-x: auto;
   margin: var(--space-md) 0 var(--space-lg) 0;
