@@ -5,7 +5,7 @@ import { CartProvider } from '@/context/CartContext'
 import { CookieConsentProvider } from '@/context/CookieConsentContext'
 import { CartDrawer } from '@/components/cart/CartDrawer'
 import CookieBanner from '@/components/cookie/CookieBanner'
-import GoogleAnalytics from '@/components/analytics/GoogleAnalytics'
+import PlausibleAnalytics from '@/components/analytics/Plausible'
 import { sanityFetch } from '@/lib/sanity/live'
 import { stegaClean } from 'next-sanity'
 import { siteSettingsQuery } from '@/lib/sanity/queries'
@@ -46,7 +46,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         </div>
         <CartDrawer />
         <CookieBanner />
-        <GoogleAnalytics />
+        <PlausibleAnalytics />
       </CartProvider>
     </CookieConsentProvider>
   )

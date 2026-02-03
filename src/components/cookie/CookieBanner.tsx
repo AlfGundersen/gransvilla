@@ -17,7 +17,6 @@ export default function CookieBanner() {
     closeSettings,
   } = useCookieConsent()
 
-  const [statistics, setStatistics] = useState(false)
   const [marketing, setMarketing] = useState(false)
   const settingsRef = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
@@ -25,10 +24,9 @@ export default function CookieBanner() {
   // Sync local toggle state when settings panel opens
   useEffect(() => {
     if (isSettingsOpen) {
-      setStatistics(consent.statistics)
       setMarketing(consent.marketing)
     }
-  }, [isSettingsOpen, consent.statistics, consent.marketing])
+  }, [isSettingsOpen, consent.marketing])
 
   // Focus trap + Escape close
   useEffect(() => {
@@ -80,8 +78,8 @@ export default function CookieBanner() {
   }, [isSettingsOpen])
 
   const handleSave = useCallback(() => {
-    savePreferences({ statistics, marketing })
-  }, [savePreferences, statistics, marketing])
+    savePreferences({ marketing })
+  }, [savePreferences, marketing])
 
   const showBanner = !hasConsented && !isSettingsOpen
 
@@ -91,7 +89,7 @@ export default function CookieBanner() {
         <div className={styles.banner} role="region" aria-label="Informasjonskapsler">
           <div className={styles.bannerInner}>
             <p className={styles.bannerText}>
-              Vi bruker informasjonskapsler for å sikre at nettsiden fungerer som den skal, og for å samle anonym statistikk som hjelper oss å forbedre opplevelsen din. Du velger selv hvilke kategorier du vil godta.
+              Vi bruker informasjonskapsler for å sikre at nettsiden fungerer som den skal. Du velger selv hvilke kategorier du vil godta.
             </p>
             <div className={styles.bannerButtons}>
               <button type="button" className={styles.acceptAll} onClick={acceptAll}>
@@ -150,21 +148,6 @@ export default function CookieBanner() {
                 </div>
                 <label className={styles.toggle}>
                   <input type="checkbox" checked disabled />
-                  <span className={styles.slider} />
-                </label>
-              </div>
-
-              <div className={styles.category}>
-                <div className={styles.categoryInfo}>
-                  <span className={styles.categoryName}>Statistikk</span>
-                  <span className={styles.categoryDesc}>Anonym bruksstatistikk (Google Analytics)</span>
-                </div>
-                <label className={styles.toggle}>
-                  <input
-                    type="checkbox"
-                    checked={statistics}
-                    onChange={(e) => setStatistics(e.target.checked)}
-                  />
                   <span className={styles.slider} />
                 </label>
               </div>

@@ -4,7 +4,6 @@ import { createContext, useContext, useState, useEffect, useCallback, type React
 
 interface ConsentState {
   necessary: true
-  statistics: boolean
   marketing: boolean
 }
 
@@ -14,7 +13,7 @@ interface CookieConsentContextValue {
   acceptAll: () => void
   acceptNecessary: () => void
   declineAll: () => void
-  savePreferences: (prefs: { statistics: boolean; marketing: boolean }) => void
+  savePreferences: (prefs: { marketing: boolean }) => void
   openSettings: () => void
   closeSettings: () => void
   isSettingsOpen: boolean
@@ -23,7 +22,7 @@ interface CookieConsentContextValue {
 const COOKIE_NAME = 'gransvilla-consent'
 const MAX_AGE = 365 * 24 * 60 * 60
 
-const defaultConsent: ConsentState = { necessary: true, statistics: false, marketing: false }
+const defaultConsent: ConsentState = { necessary: true, marketing: false }
 
 function readCookie(): { consent: ConsentState; found: boolean } {
   if (typeof document === 'undefined') return { consent: defaultConsent, found: false }
@@ -34,7 +33,6 @@ function readCookie(): { consent: ConsentState; found: boolean } {
     return {
       consent: {
         necessary: true,
-        statistics: !!parsed.statistics,
         marketing: !!parsed.marketing,
       },
       found: true,
@@ -73,22 +71,22 @@ export function CookieConsentProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const acceptAll = useCallback(() => {
-    save({ necessary: true, statistics: true, marketing: true })
+    save({ necessary: true, marketing: true })
     setIsSettingsOpen(false)
   }, [save])
 
   const acceptNecessary = useCallback(() => {
-    save({ necessary: true, statistics: false, marketing: false })
+    save({ necessary: true, marketing: false })
     setIsSettingsOpen(false)
   }, [save])
 
   const declineAll = useCallback(() => {
-    save({ necessary: true, statistics: false, marketing: false })
+    save({ necessary: true, marketing: false })
     setIsSettingsOpen(false)
   }, [save])
 
   const savePreferences = useCallback(
-    (prefs: { statistics: boolean; marketing: boolean }) => {
+    (prefs: { marketing: boolean }) => {
       save({ necessary: true, ...prefs })
       setIsSettingsOpen(false)
     },
