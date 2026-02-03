@@ -18,11 +18,11 @@ const publicCsp = [
 // Studio needs relaxed CSP for Sanity's CDN and Plausible iframe
 const studioCsp = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.sanity.io https://*.sanity-cdn.com",
-  "style-src 'self' 'unsafe-inline'",
-  "font-src 'self' data: https://*.sanity-cdn.com",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.sanity.io https://*.sanity-cdn.com https://plausible.io",
+  "style-src 'self' 'unsafe-inline' https://use.typekit.net",
+  "font-src 'self' data: https://*.sanity-cdn.com https://use.typekit.net",
   "img-src 'self' data: blob: https://cdn.sanity.io https://*.sanity-cdn.com",
-  "connect-src 'self' https://*.sanity.io wss://*.sanity.io https://*.sanity-cdn.com",
+  "connect-src 'self' https://*.sanity.io wss://*.sanity.io https://sanity-cdn.com https://*.sanity-cdn.com",
   "media-src 'self' https://cdn.sanity.io",
   "frame-src https://plausible.io",
   "frame-ancestors 'self' https://*.sanity.build",
