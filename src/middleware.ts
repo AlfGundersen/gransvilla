@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 import { COOKIE_NAME, getSessionToken } from '@/lib/auth'
 
 // Paths that don't require authentication
-const PUBLIC_PATHS = ['/passord', '/api/', '/studio']
+const PUBLIC_PATHS = ['/passord', '/api/', '/studio', '/personvern']
 
 // Only allow known static file extensions through without auth
 const STATIC_EXT =
