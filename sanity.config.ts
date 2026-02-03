@@ -65,7 +65,7 @@ export default defineConfig({
       },
     }),
     visionTool(),
-    media({ name: 'mediebibliotek', title: 'Mediebibliotek' }),
+    media(),
     dashboardTool({
       name: 'statistikk',
       title: 'Statistikk',
