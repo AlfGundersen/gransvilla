@@ -19,11 +19,20 @@ export function NewsletterSectionComponent({ data }: NewsletterSectionComponentP
     e.preventDefault()
     setStatus('loading')
 
-    // TODO: Integrate with Mailjet API
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      const response = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Subscription failed')
+      }
+
       setStatus('success')
       setEmail('')
+      setConsent(false)
     } catch {
       setStatus('error')
     }

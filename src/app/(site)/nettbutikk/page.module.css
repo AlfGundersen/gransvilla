@@ -236,7 +236,35 @@
 
 .shopImage {
   object-fit: cover;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+.shopImageSoldOut {
+  filter: grayscale(70%);
+}
+
+/* Sold out badge - positioned like the add to cart button */
+.shopSoldOutBadge {
+  position: absolute;
+  /* Match overlay: padding + Les mer button + gap = 36 + 44 + 12 = 92px */
+  bottom: calc(var(--space-lg) + 44px + var(--space-sm));
+  left: var(--space-lg);
+  right: var(--space-lg);
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--color-background);
+  border: 1px solid var(--color-foreground);
+  font-size: var(--text-sm);
+  font-family: var(--font-heading);
+  text-align: center;
+  z-index: 1;
+  pointer-events: none;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.shopProduct:hover .shopSoldOutBadge,
+.shopProduct:focus-within .shopSoldOutBadge {
+  opacity: 0;
+  visibility: hidden;
 }
 
 /* Product overlay - shown on hover */

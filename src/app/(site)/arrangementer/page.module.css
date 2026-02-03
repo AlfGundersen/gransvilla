@@ -55,7 +55,7 @@
 }
 
 .introInline {
-  font-size: var(--text-lg);
+  font-size: var(--text-base);
   line-height: 1.7;
   color: var(--color-secondary);
   margin: 0;
@@ -114,72 +114,107 @@
   }
 }
 
-/* Each card spans 2 columns: image + text side by side */
-.card {
-  grid-column: span 2;
+/* ===========================================
+   Cards Grid - similar to nettbutikk
+   =========================================== */
+
+.cardsWrapper {
+  grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: subgrid;
-  padding-block: var(--space-lg);
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--color-border);
+}
+
+/* Each card is a cell with padding and lines */
+.card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+  padding-left: 0;
   position: relative;
 }
 
-/* Top border on every card */
-.card::before {
+/* Right-side cards need left padding for the divider line */
+.card:nth-child(2n) {
+  padding-left: var(--space-lg);
+}
+
+/* Vertical line on left of right-side cards only */
+.card:nth-child(2n)::before {
   content: '';
   position: absolute;
-  top: 0;
   left: 0;
-  right: 0;
+  top: var(--space-lg);
+  bottom: var(--space-lg);
+  width: 1px;
+  background-color: var(--color-border);
+}
+
+/* Horizontal line below each card */
+.card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: var(--space-lg);
   height: 1px;
   background-color: var(--color-border);
 }
 
-/* Extend border across the gap for left-side cards (odd) */
-.card:nth-child(odd of .card)::before {
-  right: calc(-1 * var(--space-lg));
+/* Right cards - adjust bottom line */
+.card:nth-child(2n)::after {
+  left: var(--space-lg);
+  right: 0;
 }
 
-.imageLink {
-  display: block;
-  overflow: hidden;
+@media (max-width: 768px) {
+  .card:nth-child(2n)::after {
+    left: 0;
+  }
 }
 
-.image {
-  width: 100%;
-  height: 100% !important;
-  display: block;
-  aspect-ratio: 1 / 1.1;
-  object-fit: cover;
-  transition: transform 0.4s ease;
+/* Last row - no bottom lines */
+.card:last-child::after,
+.card:nth-last-child(2):nth-child(2n+1)::after {
+  display: none;
 }
 
-.imageLink:hover .image {
-  transform: scale(1.03);
-}
-
-/* Text column with left border */
-.textCol {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-  padding-left: var(--space-lg);
-  position: relative;
-}
-
-.textCol::before {
+/* Lone card on last row - add right line */
+.card:last-child:nth-child(2n+1) .textCol::after {
   content: '';
   position: absolute;
-  left: 0;
+  right: calc(-1 * var(--space-lg));
   top: 0;
   bottom: 0;
   width: 1px;
   background-color: var(--color-border);
 }
 
+.imageWrapper {
+  display: block;
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+  height: 90%;
+  display: block;
+  object-fit: cover;
+}
+
+/* Text column */
+.textCol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  position: relative;
+}
+
 .title {
   font-family: var(--font-heading);
   font-size: var(--text-2xl);
-  font-weight: var(--font-heading-weight);
+  font-weight: 300;
   line-height: 1.2;
   margin: 0;
 }
@@ -214,7 +249,10 @@
   text-decoration: none;
 }
 
-/* Mobile */
+/* ===========================================
+   Mobile
+   =========================================== */
+
 @media (max-width: 767px) {
   .grid {
     grid-template-columns: 1fr;
@@ -256,34 +294,69 @@
     display: none;
   }
 
+  .cardsWrapper {
+    grid-template-columns: 1fr;
+  }
+
+  /* Stack image and text vertically on mobile */
   .card {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: column;
     gap: var(--space-md);
+    padding: var(--space-lg) 0;
   }
 
-  .card:nth-child(odd of .card)::before {
-    right: 0;
-  }
-
-  .textCol {
+  .card:nth-child(2n) {
     padding-left: 0;
   }
 
-  .textCol::before {
+  .card:nth-child(2n)::before {
     display: none;
   }
-}
 
-@media (max-width: 450px) {
-
-  .image {
-    aspect-ratio: unset;
-    height: 100% !important;
+  .card::after {
+    left: 0;
+    right: 0;
   }
 
-  .card {
-    grid-template-columns: 0.6fr 1fr;
+  .card:last-child::after {
+    display: block;
+  }
+
+  @media (max-width: 768px) {
+    .card:last-child::after {
+      display: none;
+    }
+  }
+
+  .card:nth-child(2n) .textCol::after,
+  .card:last-child:nth-child(2n+1) .textCol::after {
+    display: none;
+  }
+
+  .imageWrapper {
+    width: 100%;
+  }
+
+  .image {
+    height: auto;
+    aspect-ratio: 3 / 2;
+  }
+
+  .textCol {
+    gap: var(--space-sm);
+  }
+
+  .title {
+    font-size: var(--text-xl);
+  }
+
+  .description {
+    font-size: var(--text-sm);
+    line-height: 1.6;
+  }
+
+  .cta {
+    margin-top: var(--space-sm);
   }
 }

@@ -76,34 +76,36 @@ export default async function ArrangementerPage() {
         )}
 
         {events.length > 0 ? (
-          events.map((event, i) => (
-            <div key={event._id} className={styles.card}>
-              {event.featuredImage?.asset && (
-                <Link href={`/${event.slug.current}`} className={styles.imageLink}>
-                  <Image
-                    src={urlFor(event.featuredImage).width(800).height(600).quality(92).fit('crop').url()}
-                    alt={event.featuredImage.alt || event.featuredImage.assetAltText || event.title}
-                    width={800}
-                    height={600}
-                    placeholder={cardBlurs[i] ? 'blur' : 'empty'}
-                    blurDataURL={cardBlurs[i]}
-                    className={styles.image}
-                  />
-                </Link>
-              )}
-              <div className={styles.textCol}>
-                <h2 className={styles.title}>{event.title}</h2>
-                {event.description && (
-                  <div className={styles.description}>
-                    <PortableText value={event.description} />
+          <div className={styles.cardsWrapper}>
+            {events.map((event, i) => (
+              <div key={event._id} className={styles.card}>
+                {event.featuredImage?.asset && (
+                  <div className={styles.imageWrapper}>
+                    <Image
+                      src={urlFor(event.featuredImage).width(400).height(600).quality(92).fit('crop').url()}
+                      alt={event.featuredImage.alt || event.featuredImage.assetAltText || event.title}
+                      width={400}
+                      height={600}
+                      placeholder={cardBlurs[i] ? 'blur' : 'empty'}
+                      blurDataURL={cardBlurs[i]}
+                      className={styles.image}
+                    />
                   </div>
                 )}
-                <Link href={`/${event.slug.current}`} className={`${styles.cta} site-button`}>
-                  Les mer
-                </Link>
+                <div className={styles.textCol}>
+                  <h2 className={styles.title}>{event.title}</h2>
+                  {event.description && (
+                    <div className={styles.description}>
+                      <PortableText value={event.description} />
+                    </div>
+                  )}
+                  <Link href={`/${event.slug.current}`} className={`${styles.cta} site-button`}>
+                    Les mer
+                  </Link>
+                </div>
               </div>
-            </div>
-          ))
+            ))}
+          </div>
         ) : (
           <p>Ingen arrangementer for øyeblikket.</p>
         )}

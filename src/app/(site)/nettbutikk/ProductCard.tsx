@@ -23,6 +23,8 @@ export default function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useCart()
   const [isAdding, setIsAdding] = useState(false)
 
+  const isSoldOut = !product.variants.some((v) => v.availableForSale)
+
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
@@ -54,9 +56,14 @@ export default function ProductCard({ product }: ProductCardProps) {
             src={product.images[0].url}
             alt={product.images[0].altText || product.title}
             fill
-            className={styles.shopImage}
+            className={`${styles.shopImage} ${isSoldOut ? styles.shopImageSoldOut : ''}`}
             sizes="(max-width: 767px) 100vw, 33vw"
           />
+        )}
+
+        {/* Sold out badge */}
+        {isSoldOut && (
+          <div className={styles.shopSoldOutBadge}>Utsolgt</div>
         )}
 
         {/* Hover overlay with description and buttons (desktop) */}
@@ -67,9 +74,9 @@ export default function ProductCard({ product }: ProductCardProps) {
               type="button"
               className={`${styles.shopAddToCartButton} site-button`}
               onClick={handleAddToCart}
-              disabled={isAdding}
+              disabled={isAdding || isSoldOut}
             >
-              {isAdding ? 'Legger til...' : 'Legg i handlekurv'}
+              {isSoldOut ? 'Utsolgt' : isAdding ? 'Legger til...' : 'Legg i handlekurv'}
             </button>
             <Link
               href={`/nettbutikk/${product.handle}`}
@@ -95,9 +102,9 @@ export default function ProductCard({ product }: ProductCardProps) {
             type="button"
             className={`${styles.shopAddToCartButton} site-button`}
             onClick={handleAddToCart}
-            disabled={isAdding}
+            disabled={isAdding || isSoldOut}
           >
-            {isAdding ? 'Legger til...' : 'Legg i handlekurv'}
+            {isSoldOut ? 'Utsolgt' : isAdding ? 'Legger til...' : 'Legg i handlekurv'}
           </button>
           <Link
             href={`/nettbutikk/${product.handle}`}

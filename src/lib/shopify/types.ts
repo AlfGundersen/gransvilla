@@ -14,6 +14,7 @@ export interface ShopifyProductVariant {
   id: string
   title: string
   availableForSale: boolean
+  quantityAvailable?: number | null
   price: ShopifyPrice
   selectedOptions?: {
     name: string

@@ -141,6 +141,12 @@
   padding: var(--space-sm) 0;
 }
 
+.productInfoStockWarning {
+  font-size: var(--text-sm);
+  color: var(--color-secondary);
+  margin: var(--space-xs) 0 0 0;
+}
+
 /* ===========================================
    Accordion
    =========================================== */

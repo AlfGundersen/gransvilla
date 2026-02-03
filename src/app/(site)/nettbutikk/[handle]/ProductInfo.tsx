@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import Link from 'next/link'
 import type { Product } from '@/lib/shopify/types'
 import { AddToCartButton } from './AddToCartButton'
@@ -56,12 +56,24 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
     }))
   }
 
+  // Get max quantity available for selected variant
+  const maxQuantity = selectedVariant?.quantityAvailable ?? null
+
+  // Cap quantity when variant changes and has less stock
+  useEffect(() => {
+    if (maxQuantity !== null && quantity > maxQuantity) {
+      setQuantity(Math.max(1, maxQuantity))
+    }
+  }, [maxQuantity, quantity])
+
   const decreaseQuantity = () => {
     if (quantity > 1) setQuantity(quantity - 1)
   }
 
   const increaseQuantity = () => {
-    setQuantity(quantity + 1)
+    if (maxQuantity === null || quantity < maxQuantity) {
+      setQuantity(quantity + 1)
+    }
   }
 
   const variantPrice = selectedVariant
@@ -128,11 +140,17 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
             type="button"
             className={styles.productInfoQuantityButton}
             onClick={increaseQuantity}
+            disabled={maxQuantity !== null && quantity >= maxQuantity}
             aria-label="Øk antall"
           >
             +
           </button>
         </div>
+        {maxQuantity !== null && maxQuantity <= 10 && maxQuantity > 0 && (
+          <p className={styles.productInfoStockWarning}>
+            Kun {maxQuantity} igjen på lager
+          </p>
+        )}
       </div>
 
       {/* Add to Cart */}
