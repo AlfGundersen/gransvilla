@@ -1,4 +1,3 @@
-import { headers } from 'next/headers'
 import Footer from '@/components/layout/Footer'
 import Header from '@/components/layout/Header'
 import ScrollToTop from '@/components/layout/ScrollToTop'
@@ -16,7 +15,6 @@ import type { SiteSettings } from '@/types/sanity'
 import styles from './layout.module.css'
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
-  const nonce = (await headers()).get('x-nonce') ?? undefined
   const { data: settings } = await sanityFetch({ query: siteSettingsQuery }).catch(() => ({ data: null }))
 
   const mainMenu = resolveMenu(settings?.mainMenu)
@@ -48,7 +46,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         </div>
         <CartDrawer />
         <CookieBanner />
-        <GoogleAnalytics nonce={nonce} />
+        <GoogleAnalytics />
       </CartProvider>
     </CookieConsentProvider>
   )
