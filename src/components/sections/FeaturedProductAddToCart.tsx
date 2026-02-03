@@ -33,7 +33,7 @@ export function FeaturedProductAddToCart({ variantId, available }: FeaturedProdu
 
   if (!available) {
     return (
-      <button type="button" className={styles.featProductBtnPrimary} disabled>
+      <button type="button" className={`${styles.featProductBtnPrimary} site-button`} disabled>
         Utsolgt
       </button>
     )
@@ -42,7 +42,7 @@ export function FeaturedProductAddToCart({ variantId, available }: FeaturedProdu
   return (
     <button
       type="button"
-      className={styles.featProductBtnPrimary}
+      className={`${styles.featProductBtnPrimary} site-button`}
       onClick={handleAddToCart}
       disabled={isLoading}
       aria-busy={isAdding}

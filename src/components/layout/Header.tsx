@@ -235,7 +235,7 @@ export default function Header({ navigation, socialLinks }: HeaderProps) {
               {cartCount > 0 && (
                 <span className={styles.cartBadge}>{cartCount}</span>
               )}
-              <span className={styles.cartText}>Handlevogn ({cartCount})</span>
+              <span className={styles.cartText}>Handlekurv ({cartCount})</span>
             </button>
           </div>
         </div>

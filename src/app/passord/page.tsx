@@ -50,7 +50,7 @@ function PasswordForm() {
 
       {error && <p className={styles.error}>{error}</p>}
 
-      <button type="submit" className={styles.button} disabled={isLoading}>
+      <button type="submit" className={`${styles.button} site-button`} disabled={isLoading}>
         {isLoading ? 'Logger inn...' : 'Logg inn'}
       </button>
     </form>

@@ -184,13 +184,13 @@ export function CartDrawer() {
               </div>
               <Link
                 href="/nettbutikk/checkout"
-                className={styles.checkoutButton}
+                className={`${styles.checkoutButton} site-button`}
                 onClick={closeCart}
               >
                 Gå til kassen
               </Link>
               <button
-                className={styles.continueButton}
+                className={`${styles.continueButton} site-button`}
                 onClick={closeCart}
               >
                 Fortsett å handle

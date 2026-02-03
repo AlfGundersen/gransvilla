@@ -146,7 +146,7 @@
 
 .image {
   width: 100%;
-  height: auto;
+  height: 100% !important;
   display: block;
   aspect-ratio: 1 / 1.1;
   object-fit: cover;

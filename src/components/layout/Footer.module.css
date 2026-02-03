@@ -11,7 +11,7 @@
   margin-inline: auto;
   padding-inline: var(--container-padding);
   padding-top: var(--space-xl);
-  padding-bottom: calc(var(--space-xl) + clamp(60px, 8vw, 100px));
+  padding-bottom: calc(var(--space-sm) + clamp(60px, 8vw, 100px));
   position: relative;
 }
 
@@ -299,7 +299,6 @@
   justify-content: space-between;
   align-items: center;
   margin-top: var(--space-xl);
-  margin-bottom: var(--space-xl);
   padding-top: var(--space-lg);
   padding-bottom: var(--space-lg);
   border-top: 1px solid var(--color-border);

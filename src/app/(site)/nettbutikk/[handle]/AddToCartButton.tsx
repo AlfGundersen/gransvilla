@@ -35,7 +35,7 @@ export function AddToCartButton({ variantId, available, quantity = 1 }: AddToCar
 
   if (!available) {
     return (
-      <button className={styles.button} disabled>
+      <button className={`${styles.button} site-button`} disabled>
         Utsolgt
       </button>
     )
@@ -43,7 +43,7 @@ export function AddToCartButton({ variantId, available, quantity = 1 }: AddToCar
 
   return (
     <button
-      className={styles.button}
+      className={`${styles.button} site-button`}
       onClick={handleAddToCart}
       disabled={isLoading}
       aria-busy={isAdding}

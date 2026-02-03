@@ -98,7 +98,7 @@ export default async function ArrangementerPage() {
                     <PortableText value={event.description} />
                   </div>
                 )}
-                <Link href={`/${event.slug.current}`} className={styles.cta}>
+                <Link href={`/${event.slug.current}`} className={`${styles.cta} site-button`}>
                   Les mer
                 </Link>
               </div>

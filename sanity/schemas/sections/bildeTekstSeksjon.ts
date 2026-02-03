@@ -7,6 +7,13 @@ export default defineType({
   type: 'object',
   fields: [
     defineField({
+      name: 'bildeForst',
+      title: 'Bilde først',
+      type: 'boolean',
+      initialValue: true,
+      description: 'Av = tekst først, på = bilde først',
+    }),
+    defineField({
       name: 'bilde',
       title: 'Bilde',
       type: 'image',
@@ -41,12 +48,6 @@ export default defineType({
       initialValue: '3/2',
     }),
     defineField({
-      name: 'tekst',
-      title: 'Tekstinnhold',
-      type: 'blockContent',
-      description: 'Brødtekst som vises ved siden av bildet',
-    }),
-    defineField({
       name: 'visOverskrift',
       title: 'Vis overskrift',
       type: 'boolean',
@@ -61,11 +62,10 @@ export default defineType({
       hidden: ({ parent }) => !parent?.visOverskrift,
     }),
     defineField({
-      name: 'bildeForst',
-      title: 'Bilde først',
-      type: 'boolean',
-      initialValue: true,
-      description: 'Av = tekst først, på = bilde først',
+      name: 'tekst',
+      title: 'Tekstinnhold',
+      type: 'blockContent',
+      description: 'Brødtekst som vises ved siden av bildet',
     }),
   ],
   preview: {

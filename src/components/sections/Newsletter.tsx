@@ -48,7 +48,7 @@ export default function Newsletter() {
               />
               <button
                 type="submit"
-                className={styles.button}
+                className={`${styles.button} site-button`}
                 disabled={status === 'loading' || !consent}
               >
                 {status === 'loading' ? 'Sender...' : 'Meld på'}

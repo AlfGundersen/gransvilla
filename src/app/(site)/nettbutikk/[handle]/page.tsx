@@ -1,10 +1,18 @@
 import { getProductByHandle, getProducts } from '@/lib/shopify'
+import { sanityFetch } from '@/lib/sanity/live'
+import { eventsByProductHandleQuery } from '@/lib/sanity/queries'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { ProductGallery } from './ProductGallery'
 import { ProductInfo } from './ProductInfo'
 import styles from './page.module.css'
+
+interface RelatedEvent {
+  _id: string
+  title: string
+  slug: { current: string }
+}
 
 export const revalidate = 60
 export const dynamicParams = true
@@ -47,7 +55,13 @@ export async function generateStaticParams() {
 
 export default async function ProductPage({ params }: Props) {
   const { handle } = await params
-  const product = await getProductByHandle(handle)
+  const [product, { data: relatedEvents }] = await Promise.all([
+    getProductByHandle(handle),
+    sanityFetch({
+      query: eventsByProductHandleQuery,
+      params: { handle },
+    }) as Promise<{ data: RelatedEvent[] }>,
+  ])
 
   if (!product) {
     notFound()
@@ -74,7 +88,7 @@ export default async function ProductPage({ params }: Props) {
       />
       <div className={styles.productContainer}>
         <ProductGallery images={product.images} title={product.title} />
-        <ProductInfo product={product} />
+        <ProductInfo product={product} relatedEvents={relatedEvents} />
       </div>
     </div>
   )

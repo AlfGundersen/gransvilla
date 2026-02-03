@@ -121,7 +121,7 @@ export function EventProductCard({ product }: EventProductCardProps) {
         {available && (
           <button
             type="button"
-            className={styles.eventProductButton}
+            className={`${styles.eventProductButton} site-button`}
             onClick={handleAddToCart}
             disabled={isLoading}
           >
@@ -132,7 +132,7 @@ export function EventProductCard({ product }: EventProductCardProps) {
                 : 'Legg i handlekurv'}
           </button>
         )}
-        <Link href={`/nettbutikk/${product.handle}`} className={styles.eventProductLinkButton}>
+        <Link href={`/nettbutikk/${product.handle}`} className={`${styles.eventProductLinkButton} site-button`}>
           Les mer
         </Link>
       </div>
@@ -243,7 +243,7 @@ export function EventProductSingle({ product }: EventProductSingleProps) {
         {available && (
           <button
             type="button"
-            className={styles.singleProductPrimaryBtn}
+            className={`${styles.singleProductPrimaryBtn} site-button`}
             onClick={handleAddToCart}
             disabled={isLoading}
             aria-busy={isAdding}
@@ -252,7 +252,7 @@ export function EventProductSingle({ product }: EventProductSingleProps) {
             {isAdding ? 'Legger til...' : added ? 'Lagt til!' : 'Legg i handlekurv'}
           </button>
         )}
-        <Link href={`/nettbutikk/${product.handle}`} className={styles.singleProductSecondaryBtn}>
+        <Link href={`/nettbutikk/${product.handle}`} className={`${styles.singleProductSecondaryBtn} site-button`}>
           Les mer
         </Link>
       </div>

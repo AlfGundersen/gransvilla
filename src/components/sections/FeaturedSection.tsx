@@ -39,7 +39,7 @@ export function FeaturedSectionComponent({ data, documentId, documentType }: Fea
                 {column.link?.slug?.current && (
                   <Link
                     href={`/${column.link.slug.current}`}
-                    className={styles.featuredCta}
+                    className={`${styles.featuredCta} site-button`}
                     aria-label={column.heading ? `Vis mer om ${column.heading}` : 'Vis mer'}
                   >
                     Vis mer

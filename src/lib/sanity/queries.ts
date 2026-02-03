@@ -385,3 +385,12 @@ export const shopCategoriesQuery = groq`
     order
   }
 `
+
+// Events by product handle query - find events that reference a specific product
+export const eventsByProductHandleQuery = groq`
+  *[_type == "event" && $handle in products[].productHandle] {
+    _id,
+    title,
+    slug
+  }
+`

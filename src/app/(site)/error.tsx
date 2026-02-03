@@ -14,7 +14,7 @@ export default function Error({
       <p className={styles.text}>
         Vi beklager, men noe uventet skjedde. Prøv å laste siden på nytt.
       </p>
-      <button className={styles.button} onClick={reset}>
+      <button className={`${styles.button} site-button`} onClick={reset}>
         Prøv igjen
       </button>
     </div>

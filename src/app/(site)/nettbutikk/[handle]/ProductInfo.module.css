@@ -203,6 +203,53 @@
 }
 
 /* ===========================================
+   Related Events
+   =========================================== */
+
+.relatedEvents {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.relatedEventBanner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  background-color: transparent;
+  border: 1px solid var(--color-border);
+  text-decoration: none;
+  color: var(--color-foreground);
+  transition: background-color var(--transition-fast);
+}
+
+.relatedEventBanner:hover,
+.relatedEventBanner:focus-visible {
+  background-color: rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+}
+
+.relatedEventText {
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+
+.relatedEventText strong {
+  font-weight: var(--font-weight-medium);
+}
+
+.relatedEventArrow {
+  font-size: var(--text-lg);
+  transition: transform var(--transition-fast);
+}
+
+.relatedEventBanner:hover .relatedEventArrow {
+  transform: translateX(4px);
+}
+
+/* ===========================================
    Mobile
    =========================================== */
 

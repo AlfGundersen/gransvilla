@@ -1,15 +1,23 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import Link from 'next/link'
 import type { Product } from '@/lib/shopify/types'
 import { AddToCartButton } from './AddToCartButton'
 import styles from './ProductInfo.module.css'
 
-interface ProductInfoProps {
-  product: Product
+interface RelatedEvent {
+  _id: string
+  title: string
+  slug: { current: string }
 }
 
-export function ProductInfo({ product }: ProductInfoProps) {
+interface ProductInfoProps {
+  product: Product
+  relatedEvents?: RelatedEvent[]
+}
+
+export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
   const [quantity, setQuantity] = useState(1)
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>(() => {
     // Initialize with first available option for each
@@ -136,6 +144,25 @@ export function ProductInfo({ product }: ProductInfoProps) {
         />
       )}
 
+      {/* Related Events */}
+      {relatedEvents && relatedEvents.length > 0 && (
+        <div className={styles.relatedEvents}>
+          {relatedEvents.map((event) => (
+            <Link
+              key={event._id}
+              href={`/${event.slug.current}`}
+              className={styles.relatedEventBanner}
+            >
+              <span className={styles.relatedEventText}>
+                Dette produktet er knyttet til et arrangement. Klikk her for å lese mer.
+              </span>
+              <span className={styles.relatedEventArrow} aria-hidden="true">
+                →
+              </span>
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

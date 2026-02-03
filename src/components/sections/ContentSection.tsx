@@ -38,7 +38,7 @@ export default function ContentSection({
           <h2 className={styles.title}>{title}</h2>
           <p className={styles.description}>{description}</p>
           {ctaText && ctaHref && (
-            <Link href={ctaHref} className={styles.cta}>
+            <Link href={ctaHref} className={`${styles.cta} site-button`}>
               {ctaText}
             </Link>
           )}

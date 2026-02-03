@@ -69,7 +69,7 @@ export default function Footer({ navigation, socialLinks, contactInfo, siteDescr
                 />
                 <span>Jeg samtykker til <a href="/personvern" target="_blank" rel="noopener noreferrer">personvern</a> og lagring av e-post for nyhetsbrev.</span>
               </label>
-              <button type="submit" className={styles.button} disabled={!consent}>
+              <button type="submit" className={`${styles.button} site-button`} disabled={!consent}>
                 Send nå
               </button>
             </form>

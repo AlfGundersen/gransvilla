@@ -121,7 +121,7 @@ export default function CheckoutPage() {
 
         <button
           type="button"
-          className={styles.checkoutButton}
+          className={`${styles.checkoutButton} site-button`}
           onClick={handleCheckout}
           disabled={isSubmitting}
         >

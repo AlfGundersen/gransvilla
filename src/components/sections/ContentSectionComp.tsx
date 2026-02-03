@@ -34,7 +34,7 @@ export function ContentSectionComponent({ data }: ContentSectionComponentProps) 
             </div>
           )}
           {ctaText && ctaHref && (
-            <Link href={ctaHref} className={styles.contentCta}>
+            <Link href={ctaHref} className={`${styles.contentCta} site-button`}>
               {ctaText}
             </Link>
           )}

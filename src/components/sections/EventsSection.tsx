@@ -61,7 +61,7 @@ export function EventsSectionComponent({ data }: EventsSectionComponentProps) {
                 </ul>
                 <Link
                   href={`/${activeItem.event.slug.current}`}
-                  className={styles.eventsMobileButton}
+                  className={`${styles.eventsMobileButton} site-button`}
                 >
                   Om {activeItem.event.title}
                 </Link>

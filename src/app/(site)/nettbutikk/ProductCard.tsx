@@ -65,7 +65,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           <div className={styles.shopProductActions}>
             <button
               type="button"
-              className={styles.shopAddToCartButton}
+              className={`${styles.shopAddToCartButton} site-button`}
               onClick={handleAddToCart}
               disabled={isAdding}
             >
@@ -73,7 +73,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             </button>
             <Link
               href={`/nettbutikk/${product.handle}`}
-              className={styles.shopReadMoreButton}
+              className={`${styles.shopReadMoreButton} site-button`}
             >
               Les mer
             </Link>
@@ -93,7 +93,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <div className={styles.shopMobileActions}>
           <button
             type="button"
-            className={styles.shopAddToCartButton}
+            className={`${styles.shopAddToCartButton} site-button`}
             onClick={handleAddToCart}
             disabled={isAdding}
           >
@@ -101,7 +101,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           </button>
           <Link
             href={`/nettbutikk/${product.handle}`}
-            className={styles.shopReadMoreButton}
+            className={`${styles.shopReadMoreButton} site-button`}
           >
             Les mer
           </Link>

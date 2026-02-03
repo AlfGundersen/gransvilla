@@ -53,7 +53,7 @@ export function NewsletterSectionComponent({ data }: NewsletterSectionComponentP
                 required
                 disabled={status === 'loading'}
               />
-              <button type="submit" className={styles.newsletterButton} disabled={status === 'loading' || !consent}>
+              <button type="submit" className={`${styles.newsletterButton} site-button`} disabled={status === 'loading' || !consent}>
                 {status === 'loading' ? 'Sender...' : 'Meld på'}
               </button>
             </div>

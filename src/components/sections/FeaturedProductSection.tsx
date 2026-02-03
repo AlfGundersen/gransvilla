@@ -1,4 +1,4 @@
-import { getProductByHandle } from '@/lib/shopify'
+import { getProducts } from '@/lib/shopify'
 import type { FeaturedProductSection } from '@/types/sanity'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -12,16 +12,20 @@ interface FeaturedProductSectionProps {
 export async function FeaturedProductSectionComponent({ data }: FeaturedProductSectionProps) {
   const { productHandle } = data
 
-  if (!productHandle) {
+  // Fetch all listed products from Shopify
+  const products = await getProducts(20)
+
+  if (products.length === 0) {
     return null
   }
 
-  // Fetch product data from Shopify
-  const product = await getProductByHandle(productHandle)
+  // Check if the selected product is in the listed products (not unlisted/unpublished)
+  const selectedProduct = productHandle
+    ? products.find((p) => p.handle === productHandle)
+    : null
 
-  if (!product) {
-    return null
-  }
+  // Use selected product if listed, otherwise fall back to first listed product
+  const product = selectedProduct ?? products[0]
 
   const productUrl = `/nettbutikk/${product.handle}`
   const productImage = product.images[0]
@@ -39,11 +43,11 @@ export async function FeaturedProductSectionComponent({ data }: FeaturedProductS
                 variantId={product.variants[0].id}
                 available={product.variants[0].availableForSale}
               />
-              <Link href={productUrl} className={styles.featProductBtnSecondary}>
+              <Link href={productUrl} className={`${styles.featProductBtnSecondary} site-button`}>
                 Les mer
               </Link>
             </div>
-            <Link href="/nettbutikk" className={styles.featProductBtnSecondary}>
+            <Link href="/nettbutikk" className={`${styles.featProductBtnSecondary} site-button`}>
               Se alle produkter
             </Link>
           </div>
