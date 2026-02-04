@@ -47,9 +47,11 @@ export default function ProductCard({ product }: ProductCardProps) {
     <div className={styles.shopProduct}>
       <div className={styles.shopProductInfo}>
         <h3 className={styles.shopProductTitle}>{product.title}</h3>
-        <p className={styles.shopPrice}>
-          {product.price.toLocaleString('nb-NO')} {product.currencyCode}
-        </p>
+        {!isComingSoon && (
+          <p className={styles.shopPrice}>
+            {product.price.toLocaleString('nb-NO')} {product.currencyCode}
+          </p>
+        )}
       </div>
 
       <div className={styles.shopImageWrapper}>
@@ -93,9 +95,11 @@ export default function ProductCard({ product }: ProductCardProps) {
       <div className={styles.shopMobileDetails}>
         <div className={styles.shopMobileHeader}>
           <h3 className={styles.shopProductTitle}>{product.title}</h3>
-          <p className={styles.shopPrice}>
-            {product.price.toLocaleString('nb-NO')} {product.currencyCode}
-          </p>
+          {!isComingSoon && (
+            <p className={styles.shopPrice}>
+              {product.price.toLocaleString('nb-NO')} {product.currencyCode}
+            </p>
+          )}
         </div>
         <p className={styles.shopMobileDescription}>{product.description}</p>
         <div className={styles.shopMobileActions}>

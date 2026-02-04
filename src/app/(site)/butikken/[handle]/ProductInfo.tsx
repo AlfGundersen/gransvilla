@@ -85,9 +85,11 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
     <div className={styles.productInfoSection}>
       <div className={styles.productInfoHeader}>
         <h1 className={styles.productInfoTitle}>{product.title}</h1>
-        <p className={styles.productInfoPrice}>
-          {variantPrice.toLocaleString('nb-NO')} {product.currencyCode}
-        </p>
+        {!product.comingSoon && (
+          <p className={styles.productInfoPrice}>
+            {variantPrice.toLocaleString('nb-NO')} {product.currencyCode}
+          </p>
+        )}
       </div>
 
       {product.descriptionHtml && (
