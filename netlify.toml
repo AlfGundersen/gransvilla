@@ -2,3 +2,7 @@
   for = "/*"
   [headers.values]
     Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+
+[[edge_functions]]
+  path = "/*"
+  function = "hsts"
