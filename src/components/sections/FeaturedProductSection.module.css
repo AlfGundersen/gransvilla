@@ -131,6 +131,65 @@
   top: 80px;
 }
 
+/* Add to cart section with options */
+.featProductAddToCart {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.featProductOptions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.featProductOptionGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.featProductOptionLabel {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-foreground);
+}
+
+.featProductOptionValues {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.featProductOptionButton {
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--color-border);
+  background-color: transparent;
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: background-color var(--transition-base), border-color var(--transition-base);
+}
+
+.featProductOptionButton:hover {
+  border-color: var(--color-foreground);
+}
+
+.featProductOptionButtonActive {
+  background-color: var(--color-foreground);
+  border-color: var(--color-foreground);
+  color: var(--color-background);
+}
+
+.featProductSelectPrompt {
+  font-size: var(--text-base);
+  color: var(--color-secondary);
+  margin: 0;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  text-align: center;
+}
+
 /* ===========================================
    Mobile
    =========================================== */

@@ -43,18 +43,19 @@ export async function FeaturedProductSectionComponent({ data }: FeaturedProductS
           )}
 
           <div className={styles.featProductButtons}>
+            <FeaturedProductAddToCart
+              variants={product.variants}
+              options={product.options}
+              available={product.variants.some((v) => v.availableForSale)}
+            />
             <div className={styles.featProductButtonRow}>
-              <FeaturedProductAddToCart
-                variantId={product.variants[0].id}
-                available={product.variants[0].availableForSale}
-              />
               <Link href={productUrl} className={`${styles.featProductBtnSecondary} site-button`}>
                 Les mer
               </Link>
+              <Link href="/butikken" className={`${styles.featProductBtnSecondary} site-button`}>
+                Se alle produkter
+              </Link>
             </div>
-            <Link href="/butikken" className={`${styles.featProductBtnSecondary} site-button`}>
-              Se alle produkter
-            </Link>
           </div>
         </div>
 

@@ -147,6 +147,15 @@
   margin: var(--space-xs) 0 0 0;
 }
 
+.selectOptionPrompt {
+  font-size: var(--text-base);
+  color: var(--color-secondary);
+  margin: var(--space-md) 0 0 0;
+  padding: var(--space-md);
+  border: 1px solid var(--color-border);
+  text-align: center;
+}
+
 .comingSoonBanner {
   display: flex;
   align-items: center;

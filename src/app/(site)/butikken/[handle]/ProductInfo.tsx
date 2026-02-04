@@ -23,16 +23,20 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
   const [email, setEmail] = useState('')
   const [consent, setConsent] = useState(false)
   const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
-  const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>(() => {
-    // Initialize with first available option for each
-    const initial: Record<string, string> = {}
-    product.options?.forEach((option) => {
-      if (option.values.length > 0) {
-        initial[option.name] = option.values[0]
-      }
-    })
-    return initial
-  })
+  // Don't pre-select options - user must choose explicitly
+  const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({})
+
+  const hasOptions =
+    product.options &&
+    product.options.length > 0 &&
+    !(product.options.length === 1 && product.options[0].name === 'Title')
+
+  // Check if all required options have been selected
+  const allOptionsSelected = useMemo(() => {
+    if (!hasOptions) return true
+    const requiredOptions = product.options?.filter((opt) => opt.name !== 'Title') || []
+    return requiredOptions.every((opt) => selectedOptions[opt.name])
+  }, [hasOptions, product.options, selectedOptions])
 
   // Find the selected variant based on selected options
   const selectedVariant = useMemo(() => {
@@ -41,19 +45,17 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
     // If only one variant (no options), return it
     if (product.variants.length === 1) return product.variants[0]
 
+    // If not all options selected, return null
+    if (!allOptionsSelected) return null
+
     // Find variant matching all selected options
     return (
       product.variants.find((variant) => {
         if (!variant.selectedOptions) return false
         return variant.selectedOptions.every((opt) => selectedOptions[opt.name] === opt.value)
-      }) || product.variants[0]
+      }) || null
     )
-  }, [product.variants, selectedOptions])
-
-  const hasOptions =
-    product.options &&
-    product.options.length > 0 &&
-    !(product.options.length === 1 && product.options[0].name === 'Title')
+  }, [product.variants, selectedOptions, allOptionsSelected])
 
   const handleOptionChange = (optionName: string, value: string) => {
     setSelectedOptions((prev) => ({
@@ -113,7 +115,9 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
         <h1 className={styles.productInfoTitle}>{product.title}</h1>
         {!product.comingSoon && (
           <p className={styles.productInfoPrice}>
-            {variantPrice.toLocaleString('nb-NO')} {product.currencyCode}
+            {hasOptions && !allOptionsSelected
+              ? `Fra ${product.price.toLocaleString('nb-NO')} ${product.currencyCode}`
+              : `${variantPrice.toLocaleString('nb-NO')} ${product.currencyCode}`}
           </p>
         )}
       </div>
@@ -243,6 +247,8 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
             )}
           </div>
         </>
+      ) : hasOptions && !allOptionsSelected ? (
+        <p className={styles.selectOptionPrompt}>Velg et alternativ for å legge i handlekurv</p>
       ) : (
         selectedVariant && (
           <AddToCartButton
