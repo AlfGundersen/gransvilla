@@ -2,6 +2,7 @@
 
 import parse from 'html-react-parser'
 import Link from 'next/link'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import type { Product } from '@/lib/shopify/types'
 import { AddToCartButton } from './AddToCartButton'
@@ -19,12 +20,28 @@ interface ProductInfoProps {
 }
 
 export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
   const [quantity, setQuantity] = useState(1)
   const [email, setEmail] = useState('')
   const [consent, setConsent] = useState(false)
   const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
-  // Don't pre-select options - user must choose explicitly
-  const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({})
+
+  // Initialize from URL params if present
+  const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>(() => {
+    const initial: Record<string, string> = {}
+    product.options?.forEach((option) => {
+      if (option.name !== 'Title') {
+        const paramValue = searchParams.get(option.name)
+        if (paramValue && option.values.includes(paramValue)) {
+          initial[option.name] = paramValue
+        }
+      }
+    })
+    return initial
+  })
 
   const hasOptions =
     product.options &&
@@ -58,10 +75,18 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
   }, [product.variants, selectedOptions, allOptionsSelected])
 
   const handleOptionChange = (optionName: string, value: string) => {
-    setSelectedOptions((prev) => ({
-      ...prev,
-      [optionName]: value,
-    }))
+    setSelectedOptions((prev) => {
+      const newOptions = { ...prev, [optionName]: value }
+
+      // Update URL with new options
+      const params = new URLSearchParams(searchParams.toString())
+      Object.entries(newOptions).forEach(([key, val]) => {
+        params.set(key, val)
+      })
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false })
+
+      return newOptions
+    })
   }
 
   // Get max quantity available for selected variant
