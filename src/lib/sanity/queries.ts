@@ -8,6 +8,25 @@ const imageFragment = groq`
   crop
 `
 
+// SEO fragment — all SEO fields for schema.org and meta tags
+const seoFragment = groq`
+  metaTitle,
+  metaDescription,
+  keywords,
+  ogImage { asset },
+  ogTitle,
+  ogDescription,
+  schemaType,
+  articleAuthor,
+  faqItems[] { question, answer },
+  eventLocation,
+  eventPrice,
+  serviceType,
+  serviceArea,
+  noIndex,
+  noFollow
+`
+
 // Frontpage query - singleton document
 export const frontpageQuery = groq`
   *[_type == "frontpage"][0] {
@@ -81,11 +100,7 @@ export const frontpageQuery = groq`
       successMessage
     },
     seo {
-      metaTitle,
-      metaDescription,
-      ogImage {
-        asset
-      }
+      ${seoFragment}
     }
   }
 `
@@ -337,7 +352,10 @@ export const eventQuery = groq`
       alt
     },
     ${eventSectionsFragment},
-    "products": products[].productHandle
+    "products": products[].productHandle,
+    seo {
+      ${seoFragment}
+    }
   }
 `
 
@@ -355,11 +373,7 @@ export const pageQuery = groq`
     },
     ${eventSectionsFragment},
     seo {
-      metaTitle,
-      metaDescription,
-      ogImage {
-        asset
-      }
+      ${seoFragment}
     }
   }
 `

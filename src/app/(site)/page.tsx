@@ -6,6 +6,7 @@ import { FeaturedSectionComponent } from '@/components/sections/FeaturedSection'
 import { HeroSectionComponent } from '@/components/sections/HeroSection'
 import { TimelineSectionComponent } from '@/components/sections/TimelineSection'
 import { JsonLd } from '@/components/seo/JsonLd'
+import { SchemaGenerator } from '@/components/seo/SchemaGenerator'
 import { urlFor } from '@/lib/sanity/image'
 import { sanityFetch } from '@/lib/sanity/live'
 import { frontpageQuery } from '@/lib/sanity/queries'
@@ -50,10 +51,21 @@ export default async function HomePage() {
           '@context': 'https://schema.org',
           '@type': 'LocalBusiness',
           '@id': 'https://gransvilla.no/#localbusiness',
-          name: 'Gransvilla',
+          name: 'Grans Villa',
           url: 'https://gransvilla.no',
-          description: 'Restaurant, kantine og arrangementer',
+          description: frontpage.seo?.metaDescription || 'Restaurant, kantine og arrangementer',
+          address: {
+            '@type': 'PostalAddress',
+            streetAddress: 'Jahnebakken 6',
+            addressLocality: 'Bergen',
+            postalCode: '5007',
+            addressCountry: 'NO',
+          },
         }}
+      />
+      <SchemaGenerator
+        seo={frontpage.seo}
+        document={{ ...frontpage, title: 'Grans Villa' }}
       />
       <h1 className="visually-hidden">Gransvilla — Restaurant, kantine og arrangementer</h1>
       {frontpage.hero && (

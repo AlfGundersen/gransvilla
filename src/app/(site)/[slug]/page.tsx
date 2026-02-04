@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { EventProductsSection } from '@/components/sections/EventProductsSection'
 import { PageSectionRenderer } from '@/components/sections/page/PageSectionRenderer'
+import { SchemaGenerator } from '@/components/seo/SchemaGenerator'
 import { getBlurDataURL } from '@/lib/sanity/blur'
 import { client } from '@/lib/sanity/client'
 import { urlFor } from '@/lib/sanity/image'
@@ -82,6 +83,7 @@ export default async function SlugPage({ params }: Props) {
 
   return (
     <div className={styles.eventPage}>
+      <SchemaGenerator seo={content.seo} document={content} />
       <div className={styles.eventGrid}>
         <h1 className={styles.eventTitle}>{content.title}</h1>
         {content.featuredImage?.asset && (
