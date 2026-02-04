@@ -56,6 +56,7 @@ export const structure: StructureResolver = (S) =>
                   S.documentList()
                     .title('Kategorier')
                     .schemaType('shopCategory')
+                    .apiVersion('2024-01-01')
                     .filter('_type == "shopCategory"')
                     .initialValueTemplates([]),
                 ),

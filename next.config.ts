@@ -21,7 +21,7 @@ const studioCsp = [
   "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.sanity.io https://*.sanity-cdn.com https://plausible.io",
   "style-src 'self' 'unsafe-inline' https://use.typekit.net https://p.typekit.net",
   "font-src 'self' data: https://*.sanity-cdn.com https://use.typekit.net https://p.typekit.net",
-  "img-src 'self' data: blob: https://cdn.sanity.io https://*.sanity-cdn.com",
+  "img-src 'self' data: blob: https://cdn.sanity.io https://*.sanity-cdn.com https://cdn.shopify.com",
   "connect-src 'self' https://*.sanity.io wss://*.sanity.io https://sanity-cdn.com https://*.sanity-cdn.com",
   "media-src 'self' https://cdn.sanity.io",
   "frame-src 'self' https://plausible.io",
