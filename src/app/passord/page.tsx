@@ -76,12 +76,12 @@ function PageContent() {
       <Image
         src="/logo.svg"
         alt="Gransvilla"
-        width={200}
-        height={200}
+        width={300}
+        height={300}
         className={styles.logo}
         priority
       />
-      <p className={styles.splashText}>Lansering på gang</p>
+      <p className={styles.splashText}>Lansering på gang...</p>
       <button
         type="button"
         onClick={() => setShowPassword(true)}
