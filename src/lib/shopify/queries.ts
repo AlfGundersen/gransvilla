@@ -32,7 +32,7 @@ export const COLLECTIONS_QUERY = `
                     }
                   }
                 }
-                variants(first: 10) {
+                variants(first: 50) {
                   edges {
                     node {
                       id
@@ -42,8 +42,16 @@ export const COLLECTIONS_QUERY = `
                         amount
                         currencyCode
                       }
+                      selectedOptions {
+                        name
+                        value
+                      }
                     }
                   }
+                }
+                options {
+                  name
+                  values
                 }
                 comingSoon: metafield(namespace: "custom", key: "coming_soon") {
                   value
@@ -84,7 +92,7 @@ export const PRODUCTS_QUERY = `
               }
             }
           }
-          variants(first: 10) {
+          variants(first: 50) {
             edges {
               node {
                 id
@@ -94,8 +102,16 @@ export const PRODUCTS_QUERY = `
                   amount
                   currencyCode
                 }
+                selectedOptions {
+                  name
+                  value
+                }
               }
             }
+          }
+          options {
+            name
+            values
           }
           comingSoon: metafield(namespace: "custom", key: "coming_soon") {
             value
