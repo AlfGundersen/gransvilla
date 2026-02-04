@@ -69,6 +69,7 @@ export async function getProducts(first = 20): Promise<Product[]> {
   }>({
     query: PRODUCTS_QUERY,
     variables: { first },
+    fallback: { products: { edges: [] } },
   })
 
   return data.products.edges.map((edge) => transformProduct(edge.node))
@@ -91,6 +92,7 @@ export async function getCollections(first = 20): Promise<Collection[]> {
   }>({
     query: COLLECTIONS_QUERY,
     variables: { first },
+    fallback: { collections: { edges: [] } },
   })
 
   return data.collections.edges.map((edge) => ({

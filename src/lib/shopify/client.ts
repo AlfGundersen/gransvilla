@@ -13,27 +13,35 @@ export async function shopifyFetch<T>({
   variables = {},
   revalidate = 60,
   tags = ['shopify-products'],
+  fallback,
 }: {
   query: string
   variables?: Record<string, unknown>
   revalidate?: number | false
   tags?: string[]
+  fallback?: T
 }): Promise<T> {
-  const response = await fetch(endpoint, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Shopify-Storefront-Access-Token': storefrontToken,
-    },
-    body: JSON.stringify({ query, variables }),
-    next: { revalidate, tags },
-  })
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Shopify-Storefront-Access-Token': storefrontToken,
+      },
+      body: JSON.stringify({ query, variables }),
+      next: { revalidate, tags },
+    })
 
-  const json: ShopifyResponse<T> = await response.json()
+    const json: ShopifyResponse<T> = await response.json()
 
-  if (json.errors) {
-    throw new Error(json.errors.map((e) => e.message).join('\n'))
+    if (json.errors) {
+      if (fallback !== undefined) return fallback
+      throw new Error(json.errors.map((e) => e.message).join('\n'))
+    }
+
+    return json.data
+  } catch (error) {
+    if (fallback !== undefined) return fallback
+    throw error
   }
-
-  return json.data
 }
