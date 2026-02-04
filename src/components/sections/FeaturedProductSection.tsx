@@ -13,7 +13,12 @@ export async function FeaturedProductSectionComponent({ data }: FeaturedProductS
   const { productHandle } = data
 
   // Fetch all listed products from Shopify
-  const products = await getProducts(20)
+  let products: Awaited<ReturnType<typeof getProducts>> = []
+  try {
+    products = await getProducts(20)
+  } catch {
+    // Store unavailable
+  }
 
   if (products.length === 0) {
     return null
