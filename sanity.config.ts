@@ -12,6 +12,7 @@ import { structure } from './sanity/structure'
 import { SetOppdatertOnPublish } from './sanity/actions/setOppdatertOnPublish'
 import { UnpublishAction } from './sanity/actions/unpublishAction'
 import { PublishActionNO, DuplicateActionNO, DeleteActionNO } from './sanity/actions/norwegianActions'
+import { StudioNavbar } from './sanity/components/StudioNavbar'
 
 const resolveDocumentActions: DocumentActionsResolver = (prev, context) => {
   // Filter out the default actions we want to replace
@@ -100,6 +101,12 @@ export default defineConfig({
   form: {
     image: {
       assetSources: () => [mediaAssetSource, unsplashAssetSource],
+    },
+  },
+
+  studio: {
+    components: {
+      navbar: StudioNavbar,
     },
   },
 })
