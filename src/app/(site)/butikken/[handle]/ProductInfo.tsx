@@ -1,5 +1,6 @@
 'use client'
 
+import parse from 'html-react-parser'
 import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
 import type { Product } from '@/lib/shopify/types'
@@ -89,9 +90,9 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
         </p>
       </div>
 
-      {product.description && (
+      {product.descriptionHtml && (
         <div className={styles.productInfoDescription}>
-          <p>{product.description}</p>
+          {parse(product.descriptionHtml)}
         </div>
       )}
 
