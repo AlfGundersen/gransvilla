@@ -196,6 +196,10 @@
   overflow: hidden;
 }
 
+.imageWrapper img {
+  height: 100% !important;
+}
+
 .image {
   width: 100%;
   height: 90%;
