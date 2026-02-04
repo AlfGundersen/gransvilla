@@ -136,6 +136,7 @@ export default function Footer({
                   <PortableText value={contactInfo.address} />
                 </address>
               </div>
+              <p className={styles.companyInfo}>Bergen Smak AS<br />Org.nr. 986 881 824</p>
             </div>
           )}
 
