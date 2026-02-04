@@ -133,7 +133,9 @@
    Site Button Hook
    -------------------------------------- */
 
-.site-button {}
+.site-button:hover {
+  text-decoration: none;
+}
 
 /* --------------------------------------
    Base Styles

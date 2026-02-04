@@ -2,7 +2,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { getProducts } from '@/lib/shopify'
 import type { FeaturedProductSection } from '@/types/sanity'
-import { FeaturedProductAddToCart } from './FeaturedProductAddToCart'
 import styles from './FeaturedProductSection.module.css'
 
 interface FeaturedProductSectionProps {
@@ -43,19 +42,12 @@ export async function FeaturedProductSectionComponent({ data }: FeaturedProductS
           )}
 
           <div className={styles.featProductButtons}>
-            <FeaturedProductAddToCart
-              variants={product.variants}
-              options={product.options}
-              available={product.variants.some((v) => v.availableForSale)}
-            />
-            <div className={styles.featProductButtonRow}>
-              <Link href={productUrl} className={`${styles.featProductBtnSecondary} site-button`}>
-                Les mer
-              </Link>
-              <Link href="/butikken" className={`${styles.featProductBtnSecondary} site-button`}>
-                Se alle produkter
-              </Link>
-            </div>
+            <Link href={productUrl} className={`${styles.featProductBtnPrimary} site-button`}>
+              Les mer
+            </Link>
+            <Link href="/butikken" className={`${styles.featProductBtnSecondary} site-button`}>
+              Se alle produkter
+            </Link>
           </div>
         </div>
 

@@ -273,7 +273,9 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
           </div>
         </>
       ) : hasOptions && !allOptionsSelected ? (
-        <p className={styles.selectOptionPrompt}>Velg et alternativ for å legge i handlekurv</p>
+        <button className={styles.addToCartDisabled} disabled>
+          Velg en dato
+        </button>
       ) : (
         selectedVariant && (
           <AddToCartButton
