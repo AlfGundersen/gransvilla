@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState, useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { urlFor } from '@/lib/sanity/image'
 import type { EventsSection } from '@/types/sanity'
 import styles from './EventsSection.module.css'
@@ -38,7 +38,9 @@ export function EventsSectionComponent({ data }: EventsSectionComponentProps) {
   return (
     <section className={styles.eventsSection} aria-label="Arrangementer">
       <div className={styles.eventsContainer}>
-        <div className={`${styles.eventsGrid} ${!hasAnySecondImage || singleImage ? styles.eventsGrid2col : styles.eventsGrid3col}`}>
+        <div
+          className={`${styles.eventsGrid} ${!hasAnySecondImage || singleImage ? styles.eventsGrid2col : styles.eventsGrid3col}`}
+        >
           {/* Navigation column */}
           <div className={styles.eventsNav}>
             <h2 className={styles.eventsHeading}>Arrangementer</h2>
@@ -68,7 +70,9 @@ export function EventsSectionComponent({ data }: EventsSectionComponentProps) {
               </div>
               {carouselImages.length > 0 && (
                 <div className={styles.eventsMobileImages}>
-                  <div className={`${styles.eventsMobileCarousel} ${carouselImages.length === 1 ? styles.eventsMobileCarouselSingle : ''}`}>
+                  <div
+                    className={`${styles.eventsMobileCarousel} ${carouselImages.length === 1 ? styles.eventsMobileCarouselSingle : ''}`}
+                  >
                     {carouselImages.map((img, i) => (
                       <div key={i} className={styles.eventsMobileCarouselItem}>
                         <Image
@@ -88,37 +92,41 @@ export function EventsSectionComponent({ data }: EventsSectionComponentProps) {
           {/* Image column 1 - all images stacked, crossfade via opacity */}
           <div className={styles.eventsImageCol}>
             <div className={styles.eventsImageWrap}>
-              {items.map((item, index) => (
-                item.image1?.asset && (
-                  <Image
-                    key={`img1-${item._key}`}
-                    src={urlFor(item.image1).url()}
-                    alt={item.image1.alt || item.image1.assetAltText || ''}
-                    fill
-                    sizes="50vw"
-                    className={`${styles.eventsImage} ${index === activeIndex ? styles.eventsImageActive : ''}`}
-                  />
-                )
-              ))}
+              {items.map(
+                (item, index) =>
+                  item.image1?.asset && (
+                    <Image
+                      key={`img1-${item._key}`}
+                      src={urlFor(item.image1).url()}
+                      alt={item.image1.alt || item.image1.assetAltText || ''}
+                      fill
+                      sizes="50vw"
+                      className={`${styles.eventsImage} ${index === activeIndex ? styles.eventsImageActive : ''}`}
+                    />
+                  ),
+              )}
             </div>
           </div>
 
           {/* Image column 2 - stays in DOM, collapses via CSS */}
           {hasAnySecondImage && (
-            <div className={`${styles.eventsImageCol} ${singleImage ? styles.eventsImageColHidden : ''}`}>
+            <div
+              className={`${styles.eventsImageCol} ${singleImage ? styles.eventsImageColHidden : ''}`}
+            >
               <div className={styles.eventsImageWrap}>
-                {items.map((item, index) => (
-                  item.image2?.asset && (
-                    <Image
-                      key={`img2-${item._key}`}
-                      src={urlFor(item.image2).url()}
-                      alt={item.image2.alt || item.image2.assetAltText || ''}
-                      fill
-                      sizes="33vw"
-                      className={`${styles.eventsImage} ${index === activeIndex ? styles.eventsImageActive : ''}`}
-                    />
-                  )
-                ))}
+                {items.map(
+                  (item, index) =>
+                    item.image2?.asset && (
+                      <Image
+                        key={`img2-${item._key}`}
+                        src={urlFor(item.image2).url()}
+                        alt={item.image2.alt || item.image2.assetAltText || ''}
+                        fill
+                        sizes="33vw"
+                        className={`${styles.eventsImage} ${index === activeIndex ? styles.eventsImageActive : ''}`}
+                      />
+                    ),
+                )}
               </div>
             </div>
           )}

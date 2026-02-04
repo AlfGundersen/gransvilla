@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useState } from 'react'
 import { useCart } from '@/context/CartContext'
 import styles from './page.module.css'
 
@@ -40,7 +40,6 @@ export default function ProductCard({ product }: ProductCardProps) {
     }
   }
 
-
   return (
     <div className={styles.shopProduct}>
       <div className={styles.shopProductInfo}>
@@ -62,9 +61,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         )}
 
         {/* Sold out badge */}
-        {isSoldOut && (
-          <div className={styles.shopSoldOutBadge}>Utsolgt</div>
-        )}
+        {isSoldOut && <div className={styles.shopSoldOutBadge}>Utsolgt</div>}
 
         {/* Hover overlay with description and buttons (desktop) */}
         <div className={styles.shopProductOverlay}>

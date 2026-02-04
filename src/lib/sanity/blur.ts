@@ -5,9 +5,7 @@ import { urlFor } from './image'
  * Fetches a tiny version of a Sanity image and returns a base64 data URI
  * suitable for use as `blurDataURL` on Next.js Image components.
  */
-export async function getBlurDataURL(
-  image: SanityImageSource,
-): Promise<string | undefined> {
+export async function getBlurDataURL(image: SanityImageSource): Promise<string | undefined> {
   try {
     const url = urlFor(image).width(200).quality(70).url()
     const res = await fetch(url)

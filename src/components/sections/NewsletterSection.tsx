@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
 import { PortableText } from '@portabletext/react'
+import { useState } from 'react'
 import type { NewsletterSection } from '@/types/sanity'
 import styles from './NewsletterSection.module.css'
 
@@ -45,13 +45,19 @@ export function NewsletterSectionComponent({ data }: NewsletterSectionComponentP
           <h2 className={styles.newsletterHeading}>{heading}</h2>
           {description && (
             <div className={styles.newsletterDescription}>
-              {Array.isArray(description) ? <PortableText value={description} /> : <p>{description}</p>}
+              {Array.isArray(description) ? (
+                <PortableText value={description} />
+              ) : (
+                <p>{description}</p>
+              )}
             </div>
           )}
 
           <form className={styles.newsletterForm} onSubmit={handleSubmit}>
             <div className={styles.newsletterInputRow}>
-              <label htmlFor="newsletter-email" className="visually-hidden">E-postadresse</label>
+              <label htmlFor="newsletter-email" className="visually-hidden">
+                E-postadresse
+              </label>
               <input
                 id="newsletter-email"
                 type="email"
@@ -62,7 +68,11 @@ export function NewsletterSectionComponent({ data }: NewsletterSectionComponentP
                 required
                 disabled={status === 'loading'}
               />
-              <button type="submit" className={`${styles.newsletterButton} site-button`} disabled={status === 'loading' || !consent}>
+              <button
+                type="submit"
+                className={`${styles.newsletterButton} site-button`}
+                disabled={status === 'loading' || !consent}
+              >
                 {status === 'loading' ? 'Sender...' : 'Meld på'}
               </button>
             </div>
@@ -74,12 +84,20 @@ export function NewsletterSectionComponent({ data }: NewsletterSectionComponentP
                 checked={consent}
                 onChange={(e) => setConsent(e.target.checked)}
               />
-              <span>Jeg samtykker til <a href="/personvern" target="_blank" rel="noopener noreferrer">personvern</a> og lagring av e-post for nyhetsbrev.</span>
+              <span>
+                Jeg samtykker til{' '}
+                <a href="/personvern" target="_blank" rel="noopener noreferrer">
+                  personvern
+                </a>{' '}
+                og lagring av e-post for nyhetsbrev.
+              </span>
             </label>
           </form>
 
           <div aria-live="polite" aria-atomic="true">
-            {status === 'success' && <p className={styles.newsletterSuccess}>Takk for påmeldingen!</p>}
+            {status === 'success' && (
+              <p className={styles.newsletterSuccess}>Takk for påmeldingen!</p>
+            )}
             {status === 'error' && (
               <p className={styles.newsletterError}>Noe gikk galt. Vennligst prøv igjen.</p>
             )}

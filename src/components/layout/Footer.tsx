@@ -1,13 +1,13 @@
 'use client'
 
-import Link from 'next/link'
-import Image from 'next/image'
 import { PortableText } from '@portabletext/react'
 import type { PortableTextBlock } from '@portabletext/types'
+import Image from 'next/image'
+import Link from 'next/link'
 import { useState } from 'react'
+import { useCookieConsent } from '@/context/CookieConsentContext'
 import type { NavLink, SocialLink } from '@/types/sanity'
 import { socialPlatformLabels } from '@/types/sanity'
-import { useCookieConsent } from '@/context/CookieConsentContext'
 import styles from './Footer.module.css'
 
 interface FooterProps {
@@ -22,7 +22,13 @@ interface FooterProps {
   faviconUrl?: string
 }
 
-export default function Footer({ navigation, socialLinks, contactInfo, siteDescription, faviconUrl }: FooterProps) {
+export default function Footer({
+  navigation,
+  socialLinks,
+  contactInfo,
+  siteDescription,
+  faviconUrl,
+}: FooterProps) {
   const [email, setEmail] = useState('')
   const [consent, setConsent] = useState(false)
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
@@ -61,14 +67,14 @@ export default function Footer({ navigation, socialLinks, contactInfo, siteDescr
         <div className={styles.grid}>
           {/* Newsletter Section */}
           <div className={styles.newsletter}>
-            <p className={styles.newsletterText}>
-              Holde deg oppdatert og meld deg på nyhetsbrevet
-            </p>
+            <p className={styles.newsletterText}>Holde deg oppdatert og meld deg på nyhetsbrevet</p>
             {status === 'success' ? (
               <p className={styles.successMessage}>Takk for påmeldingen!</p>
             ) : (
               <form className={styles.form} onSubmit={handleSubmit} aria-label="Nyhetsbrev">
-                <label htmlFor="footer-email" className="visually-hidden">E-postadresse</label>
+                <label htmlFor="footer-email" className="visually-hidden">
+                  E-postadresse
+                </label>
                 <input
                   id="footer-email"
                   type="email"
@@ -87,9 +93,19 @@ export default function Footer({ navigation, socialLinks, contactInfo, siteDescr
                     checked={consent}
                     onChange={(e) => setConsent(e.target.checked)}
                   />
-                  <span>Jeg samtykker til <a href="/personvern" target="_blank" rel="noopener noreferrer">personvern</a> og lagring av e-post for nyhetsbrev.</span>
+                  <span>
+                    Jeg samtykker til{' '}
+                    <a href="/personvern" target="_blank" rel="noopener noreferrer">
+                      personvern
+                    </a>{' '}
+                    og lagring av e-post for nyhetsbrev.
+                  </span>
                 </label>
-                <button type="submit" className={`${styles.button} site-button`} disabled={!consent || status === 'loading'}>
+                <button
+                  type="submit"
+                  className={`${styles.button} site-button`}
+                  disabled={!consent || status === 'loading'}
+                >
                   {status === 'loading' ? 'Sender...' : 'Send nå'}
                 </button>
                 {status === 'error' && (

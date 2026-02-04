@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next'
-import { client } from '@/lib/sanity/client'
 import { groq } from 'next-sanity'
+import { client } from '@/lib/sanity/client'
 import { getProducts } from '@/lib/shopify'
 
 const BASE_URL = `https://${process.env.NEXT_PUBLIC_SITE_URL || 'gransvilla.no'}`
@@ -20,10 +20,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Dynamic Sanity pages and events
   const [pages, events] = await Promise.all([
     client.fetch<{ slug: string; _updatedAt: string }[]>(
-      groq`*[_type == "page" && defined(slug.current)]{ "slug": slug.current, _updatedAt }`
+      groq`*[_type == "page" && defined(slug.current)]{ "slug": slug.current, _updatedAt }`,
     ),
     client.fetch<{ slug: string; _updatedAt: string }[]>(
-      groq`*[_type == "event" && defined(slug.current)]{ "slug": slug.current, _updatedAt }`
+      groq`*[_type == "event" && defined(slug.current)]{ "slug": slug.current, _updatedAt }`,
     ),
   ])
 

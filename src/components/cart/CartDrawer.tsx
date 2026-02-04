@@ -1,21 +1,14 @@
 'use client'
 
-import { useEffect, useRef, useCallback } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useCallback, useEffect, useRef } from 'react'
 import { useCart } from '@/context/CartContext'
 import styles from './CartDrawer.module.css'
 
 export function CartDrawer() {
-  const {
-    cart,
-    isOpen,
-    isLoading,
-    stockNotice,
-    closeCart,
-    updateQuantity,
-    removeFromCart,
-  } = useCart()
+  const { cart, isOpen, isLoading, stockNotice, closeCart, updateQuantity, removeFromCart } =
+    useCart()
 
   const closeButtonRef = useRef<HTMLButtonElement>(null)
   const drawerRef = useRef<HTMLDivElement>(null)
@@ -52,7 +45,7 @@ export function CartDrawer() {
     if (e.key !== 'Tab' || !drawerRef.current) return
 
     const focusable = drawerRef.current.querySelectorAll<HTMLElement>(
-      'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])',
     )
     if (focusable.length === 0) return
 
@@ -87,14 +80,23 @@ export function CartDrawer() {
         onKeyDown={handleKeyDown}
       >
         <div className={styles.header}>
-          <h2 id="cart-drawer-title" className={styles.title}>Handlekurv</h2>
+          <h2 id="cart-drawer-title" className={styles.title}>
+            Handlekurv
+          </h2>
           <button
             ref={closeButtonRef}
             className={styles.closeButton}
             onClick={closeCart}
             aria-label="Lukk handlekurv"
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            >
               <path d="M18 6L6 18M6 6l12 12" />
             </svg>
           </button>
@@ -189,10 +191,7 @@ export function CartDrawer() {
               >
                 Gå til kassen
               </Link>
-              <button
-                className={`${styles.continueButton} site-button`}
-                onClick={closeCart}
-              >
+              <button className={`${styles.continueButton} site-button`} onClick={closeCart}>
                 Fortsett å handle
               </button>
             </div>

@@ -2,12 +2,12 @@
 
 import {
   createContext,
-  useContext,
-  useState,
-  useEffect,
-  useCallback,
-  useRef,
   type ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
 } from 'react'
 import type { Cart, CartItem } from '@/lib/shopify/types'
 
@@ -74,9 +74,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
       const cartId = localStorage.getItem(CART_ID_KEY)
 
       // Track the quantity of this variant before adding
-      const previousQuantity = cartRef.current?.items
-        .filter((item) => item.variantId === variantId)
-        .reduce((sum, item) => sum + item.quantity, 0) ?? 0
+      const previousQuantity =
+        cartRef.current?.items
+          .filter((item) => item.variantId === variantId)
+          .reduce((sum, item) => sum + item.quantity, 0) ?? 0
 
       const response = await fetch('/api/cart', {
         method: 'POST',
@@ -94,7 +95,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
       // Check how many were actually added by comparing cart quantities
       const cartItems = (data.cart as Cart).items
       const variantItems = cartItems.filter((item: CartItem) => item.variantId === variantId)
-      const newQuantity = variantItems.reduce((sum: number, item: CartItem) => sum + item.quantity, 0)
+      const newQuantity = variantItems.reduce(
+        (sum: number, item: CartItem) => sum + item.quantity,
+        0,
+      )
       const actualAdded = newQuantity - previousQuantity
       const productTitle = variantItems[0]?.title ?? 'produktet'
 
@@ -103,7 +107,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
           setStockNotice(`${productTitle} er ikke lenger på lager`)
         } else {
           setStockNotice(
-            `Kun ${actualAdded} av ${quantity} ${productTitle} ble lagt til grunnet begrenset lagerbeholdning`
+            `Kun ${actualAdded} av ${quantity} ${productTitle} ble lagt til grunnet begrenset lagerbeholdning`,
           )
         }
         setTimeout(() => setStockNotice(null), 10000)
@@ -138,9 +142,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       const updatedItem = (data.cart as Cart).items.find((item: CartItem) => item.id === lineId)
       if (updatedItem && updatedItem.quantity < quantity) {
         const productTitle = updatedItem.title
-        setStockNotice(
-          `${productTitle} har kun ${updatedItem.quantity} stk. på lager`
-        )
+        setStockNotice(`${productTitle} har kun ${updatedItem.quantity} stk. på lager`)
         setTimeout(() => setStockNotice(null), 10000)
       }
     } catch (error) {
@@ -204,11 +206,11 @@ export function useCart() {
       isOpen: false,
       isLoading: true,
       stockNotice: null,
-      openCart: () => { },
-      closeCart: () => { },
-      addToCart: async () => { },
-      updateQuantity: async () => { },
-      removeFromCart: async () => { },
+      openCart: () => {},
+      closeCart: () => {},
+      addToCart: async () => {},
+      updateQuantity: async () => {},
+      removeFromCart: async () => {},
       cartCount: 0,
     } as CartContextType
   }

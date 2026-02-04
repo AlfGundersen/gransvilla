@@ -1,6 +1,6 @@
+import { PortableText } from '@portabletext/react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { PortableText } from '@portabletext/react'
 import { urlFor } from '@/lib/sanity/image'
 import type { ContentSection } from '@/types/sanity'
 import styles from './ContentSection.module.css'
@@ -20,7 +20,12 @@ export function ContentSectionComponent({ data }: ContentSectionComponentProps) 
         {/* Image */}
         <div className={styles.contentImageWrap}>
           {image?.asset && (
-            <Image src={urlFor(image).width(800).height(600).quality(92).fit('crop').url()} alt={image.alt || image.assetAltText || heading || ''} fill sizes="50vw" />
+            <Image
+              src={urlFor(image).width(800).height(600).quality(92).fit('crop').url()}
+              alt={image.alt || image.assetAltText || heading || ''}
+              fill
+              sizes="50vw"
+            />
           )}
         </div>
 

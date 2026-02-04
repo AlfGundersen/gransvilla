@@ -1,5 +1,5 @@
-import Link from 'next/link'
 import Image from 'next/image'
+import Link from 'next/link'
 import { getProductByHandle } from '@/lib/shopify'
 import type { Product } from '@/lib/shopify/types'
 import { EventProductCard, EventProductSingle } from './EventProductCard'
@@ -10,9 +10,7 @@ interface EventProductsSectionProps {
 }
 
 export async function EventProductsSection({ products }: EventProductsSectionProps) {
-  const fetchedProducts = await Promise.all(
-    products.map((handle) => getProductByHandle(handle))
-  )
+  const fetchedProducts = await Promise.all(products.map((handle) => getProductByHandle(handle)))
 
   const validProducts = fetchedProducts.filter((p): p is Product => p !== null)
 
@@ -26,9 +24,7 @@ export async function EventProductsSection({ products }: EventProductsSectionPro
     <section className={styles.eventProductsSection} aria-label="Produkter">
       <div className={styles.eventProductsHeader}>
         <h2 className={styles.eventProductsHeading}>Fra nettbutikken</h2>
-        <p className={styles.eventProductsSubtext}>
-          Produkter knyttet til dette arrangementet
-        </p>
+        <p className={styles.eventProductsSubtext}>Produkter knyttet til dette arrangementet</p>
         <Link href="/nettbutikk" className={styles.eventProductsLink}>
           Se alle produkter
         </Link>

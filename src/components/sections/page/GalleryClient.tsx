@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useCallback, useEffect, useRef } from 'react'
-import Image from 'next/image'
 import { AnimatePresence } from 'framer-motion'
+import Image from 'next/image'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { GalleryLightbox } from './GalleryLightbox'
 import styles from './GallerySection.module.css'
 
@@ -102,18 +102,21 @@ export function GalleryClient({ images, columns, hasContent }: GalleryClientProp
     document.addEventListener('mouseup', onMouseUp)
   }, [])
 
-  const handleClick = useCallback((e: React.MouseEvent, index: number) => {
-    if (dragState.current.dragged) {
-      dragState.current.dragged = false
-      return
-    }
-    const button = e.currentTarget as HTMLElement
-    const rect = button.getBoundingClientRect()
-    setOriginRect({ x: rect.x, y: rect.y, width: rect.width, height: rect.height })
-    // Preload clicked image immediately
-    preloadImage(fullSrcs[index])
-    setLightboxIndex(index)
-  }, [fullSrcs, preloadImage])
+  const handleClick = useCallback(
+    (e: React.MouseEvent, index: number) => {
+      if (dragState.current.dragged) {
+        dragState.current.dragged = false
+        return
+      }
+      const button = e.currentTarget as HTMLElement
+      const rect = button.getBoundingClientRect()
+      setOriginRect({ x: rect.x, y: rect.y, width: rect.width, height: rect.height })
+      // Preload clicked image immediately
+      preloadImage(fullSrcs[index])
+      setLightboxIndex(index)
+    },
+    [fullSrcs, preloadImage],
+  )
 
   const closeLightbox = useCallback(() => {
     // Update origin rect to current thumbnail position before closing
@@ -129,9 +132,7 @@ export function GalleryClient({ images, columns, hasContent }: GalleryClientProp
   }, [])
 
   const goNext = useCallback(() => {
-    setLightboxIndex((i) =>
-      i !== null && i < images.length - 1 ? i + 1 : i
-    )
+    setLightboxIndex((i) => (i !== null && i < images.length - 1 ? i + 1 : i))
   }, [images.length])
 
   return (
@@ -149,7 +150,9 @@ export function GalleryClient({ images, columns, hasContent }: GalleryClientProp
           {images.map((image, index) => (
             <button
               key={index}
-              ref={(el) => { buttonRefs.current[index] = el }}
+              ref={(el) => {
+                buttonRefs.current[index] = el
+              }}
               type="button"
               className={styles.galleryImageWrap}
               onClick={(e) => handleClick(e, index)}

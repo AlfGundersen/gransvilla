@@ -1,13 +1,13 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
-import { client } from '@/lib/sanity/client'
-import { sanityFetch } from '@/lib/sanity/live'
-import { urlFor } from '@/lib/sanity/image'
-import { getBlurDataURL } from '@/lib/sanity/blur'
-import { eventQuery, eventsQuery, pageQuery } from '@/lib/sanity/queries'
-import { PageSectionRenderer } from '@/components/sections/page/PageSectionRenderer'
 import { EventProductsSection } from '@/components/sections/EventProductsSection'
+import { PageSectionRenderer } from '@/components/sections/page/PageSectionRenderer'
+import { getBlurDataURL } from '@/lib/sanity/blur'
+import { client } from '@/lib/sanity/client'
+import { urlFor } from '@/lib/sanity/image'
+import { sanityFetch } from '@/lib/sanity/live'
+import { eventQuery, eventsQuery, pageQuery } from '@/lib/sanity/queries'
 import type { Event, Page } from '@/types/sanity'
 import styles from './page.module.css'
 
@@ -20,9 +20,7 @@ interface Props {
 export async function generateStaticParams() {
   const [events, pages] = await Promise.all([
     client.fetch(eventsQuery),
-    client.fetch<{ slug: { current: string } }[]>(
-      `*[_type == "page"]{ slug }`
-    ),
+    client.fetch<{ slug: { current: string } }[]>(`*[_type == "page"]{ slug }`),
   ])
   return [
     ...events.map((event: { slug: { current: string } }) => ({

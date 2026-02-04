@@ -1,5 +1,5 @@
-import s from "../skeleton.module.css";
-import p from "./page.module.css";
+import s from '../skeleton.module.css'
+import p from './page.module.css'
 
 export default function PageLoading() {
   return (
@@ -7,7 +7,7 @@ export default function PageLoading() {
       <div className={p.eventGrid}>
         {/* Title */}
         <div className={p.eventTitle}>
-          <div className={`${s.bone} ${s.h1}`} style={{ maxWidth: "100%" }} />
+          <div className={`${s.bone} ${s.h1}`} style={{ maxWidth: '100%' }} />
         </div>
 
         {/* Featured image */}
@@ -16,18 +16,12 @@ export default function PageLoading() {
         </div>
 
         {/* Text block placeholders */}
-        <div style={{ gridColumn: "1 / -1", paddingTop: "var(--space-lg)" }}>
+        <div style={{ gridColumn: '1 / -1', paddingTop: 'var(--space-lg)' }}>
           <div className={`${s.bone} ${s.text}`} />
-          <div
-            className={`${s.bone} ${s.text}`}
-            style={{ marginTop: "var(--space-sm)" }}
-          />
-          <div
-            className={`${s.bone} ${s.textShort}`}
-            style={{ marginTop: "var(--space-sm)" }}
-          />
+          <div className={`${s.bone} ${s.text}`} style={{ marginTop: 'var(--space-sm)' }} />
+          <div className={`${s.bone} ${s.textShort}`} style={{ marginTop: 'var(--space-sm)' }} />
         </div>
       </div>
     </div>
-  );
+  )
 }

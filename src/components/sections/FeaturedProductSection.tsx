@@ -1,7 +1,7 @@
-import { getProducts } from '@/lib/shopify'
-import type { FeaturedProductSection } from '@/types/sanity'
 import Image from 'next/image'
 import Link from 'next/link'
+import { getProducts } from '@/lib/shopify'
+import type { FeaturedProductSection } from '@/types/sanity'
 import { FeaturedProductAddToCart } from './FeaturedProductAddToCart'
 import styles from './FeaturedProductSection.module.css'
 
@@ -20,9 +20,7 @@ export async function FeaturedProductSectionComponent({ data }: FeaturedProductS
   }
 
   // Check if the selected product is in the listed products (not unlisted/unpublished)
-  const selectedProduct = productHandle
-    ? products.find((p) => p.handle === productHandle)
-    : null
+  const selectedProduct = productHandle ? products.find((p) => p.handle === productHandle) : null
 
   // Use selected product if listed, otherwise fall back to first listed product
   const product = selectedProduct ?? products[0]
@@ -35,7 +33,9 @@ export async function FeaturedProductSectionComponent({ data }: FeaturedProductS
       <div className={styles.featProductContainer}>
         <div className={styles.featProductContent}>
           <h2 className={styles.featProductTitle}>{product.title}</h2>
-          {product.description && <p className={styles.featProductDescription}>{product.description}</p>}
+          {product.description && (
+            <p className={styles.featProductDescription}>{product.description}</p>
+          )}
 
           <div className={styles.featProductButtons}>
             <div className={styles.featProductButtonRow}>

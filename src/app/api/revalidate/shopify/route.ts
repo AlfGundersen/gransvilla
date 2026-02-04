@@ -1,7 +1,7 @@
 import crypto from 'crypto'
 import { revalidatePath, revalidateTag } from 'next/cache'
-import { NextRequest, NextResponse } from 'next/server'
-import { syncCollection, removeCollection } from '@/lib/sanity/sync'
+import { type NextRequest, NextResponse } from 'next/server'
+import { removeCollection, syncCollection } from '@/lib/sanity/sync'
 
 const SHOPIFY_WEBHOOK_SECRET = process.env.SHOPIFY_WEBHOOK_SECRET
 

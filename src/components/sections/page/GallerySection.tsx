@@ -1,6 +1,6 @@
 import { PortableText } from '@portabletext/react'
-import { urlFor } from '@/lib/sanity/image'
 import { getBlurDataURL } from '@/lib/sanity/blur'
+import { urlFor } from '@/lib/sanity/image'
 import type { BildegalleriSeksjon } from '@/types/sanity'
 import { GalleryClient } from './GalleryClient'
 import styles from './GallerySection.module.css'
@@ -27,7 +27,7 @@ export async function GallerySection({ data, dataSanity }: GallerySectionProps) 
 
   const bilder = data.bilder || []
   const blurResults = await Promise.all(
-    bilder.map((bilde) => bilde.asset ? getBlurDataURL(bilde) : undefined),
+    bilder.map((bilde) => (bilde.asset ? getBlurDataURL(bilde) : undefined)),
   )
 
   const images = bilder.map((bilde, i) => ({
@@ -44,9 +44,7 @@ export async function GallerySection({ data, dataSanity }: GallerySectionProps) 
     <div className={styles.gallerySection} data-fullwidth data-sanity={dataSanity}>
       {data.visInnhold && (data.overskrift || data.tekst) && (
         <div className={styles.galleryContent}>
-          {data.overskrift && (
-            <h2 className={styles.galleryHeading}>{data.overskrift}</h2>
-          )}
+          {data.overskrift && <h2 className={styles.galleryHeading}>{data.overskrift}</h2>}
           {data.tekst && (
             <div className={styles.galleryBody}>
               <PortableText value={data.tekst} />

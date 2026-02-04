@@ -1,9 +1,9 @@
 'use client'
 
-import Image from 'next/image'
-import { useState } from 'react'
 import { PortableText } from '@portabletext/react'
+import Image from 'next/image'
 import { createDataAttribute } from 'next-sanity'
+import { useState } from 'react'
 import { urlFor } from '@/lib/sanity/image'
 import type { TimelineSection } from '@/types/sanity'
 import styles from './TimelineSection.module.css'
@@ -14,7 +14,11 @@ interface TimelineSectionComponentProps {
   documentType?: string
 }
 
-export function TimelineSectionComponent({ data, documentId, documentType }: TimelineSectionComponentProps) {
+export function TimelineSectionComponent({
+  data,
+  documentId,
+  documentType,
+}: TimelineSectionComponentProps) {
   const { entries = [], image, heading } = data
 
   // Sort entries by year, newest first
@@ -60,7 +64,15 @@ export function TimelineSectionComponent({ data, documentId, documentType }: Tim
                 onFocus={() => setActiveIndex(index)}
                 aria-expanded={index === activeIndex}
                 aria-label={`${entry.year}`}
-                data-sanity={documentId && documentType ? createDataAttribute({ id: documentId, type: documentType, path: `timeline.entries[_key=="${entry._key}"]` }).toString() : undefined}
+                data-sanity={
+                  documentId && documentType
+                    ? createDataAttribute({
+                        id: documentId,
+                        type: documentType,
+                        path: `timeline.entries[_key=="${entry._key}"]`,
+                      }).toString()
+                    : undefined
+                }
               >
                 <span className={styles.timelineYear}>{entry.year}</span>
                 {index === activeIndex && entry.description && (

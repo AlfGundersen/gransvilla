@@ -10,14 +10,17 @@ import { plausibleWidget } from 'sanity-plugin-plausible-analytics'
 import { schemaTypes } from './sanity/schemas'
 import { structure } from './sanity/structure'
 import { SetOppdatertOnPublish } from './sanity/actions/setOppdatertOnPublish'
+import { UnpublishAction } from './sanity/actions/unpublishAction'
 
 const resolveDocumentActions: DocumentActionsResolver = (prev, context) => {
+  let actions = [...prev, UnpublishAction]
+
   if (context.schemaType === 'personvernerklaering') {
-    return prev.map((action) =>
+    actions = actions.map((action) =>
       action.action === 'publish' ? SetOppdatertOnPublish : action,
     )
   }
-  return prev
+  return actions
 }
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!

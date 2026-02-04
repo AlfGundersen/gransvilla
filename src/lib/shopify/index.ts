@@ -1,22 +1,16 @@
 import { shopifyFetch } from './client'
 import {
-  COLLECTIONS_QUERY,
-  PRODUCTS_QUERY,
-  PRODUCT_BY_HANDLE_QUERY,
-  CREATE_CART_MUTATION,
   ADD_TO_CART_MUTATION,
+  COLLECTIONS_QUERY,
+  CREATE_CART_MUTATION,
   GET_CART_QUERY,
-  UPDATE_CART_MUTATION,
+  PRODUCT_BY_HANDLE_QUERY,
+  PRODUCTS_QUERY,
   REMOVE_FROM_CART_MUTATION,
   UPDATE_CART_BUYER_MUTATION,
+  UPDATE_CART_MUTATION,
 } from './queries'
-import type {
-  ShopifyProduct,
-  ShopifyCart,
-  Product,
-  Cart,
-  CartItem,
-} from './types'
+import type { Cart, CartItem, Product, ShopifyCart, ShopifyProduct } from './types'
 
 // Collection type
 export type Collection = {
@@ -104,9 +98,7 @@ export async function getCollections(first = 20): Promise<Collection[]> {
     title: edge.node.title,
     handle: edge.node.handle,
     description: edge.node.description,
-    products: edge.node.products.edges.map((productEdge) =>
-      transformProduct(productEdge.node)
-    ),
+    products: edge.node.products.edges.map((productEdge) => transformProduct(productEdge.node)),
   }))
 }
 
@@ -128,9 +120,7 @@ export async function getProductByHandle(handle: string): Promise<Product | null
 
 // Create a new cart
 export async function createCart(variantId?: string, quantity = 1): Promise<Cart> {
-  const input = variantId
-    ? { lines: [{ merchandiseId: variantId, quantity }] }
-    : {}
+  const input = variantId ? { lines: [{ merchandiseId: variantId, quantity }] } : {}
 
   const data = await shopifyFetch<{
     cartCreate: { cart: ShopifyCart }
@@ -143,11 +133,7 @@ export async function createCart(variantId?: string, quantity = 1): Promise<Cart
 }
 
 // Add item to cart
-export async function addToCart(
-  cartId: string,
-  variantId: string,
-  quantity = 1
-): Promise<Cart> {
+export async function addToCart(cartId: string, variantId: string, quantity = 1): Promise<Cart> {
   const data = await shopifyFetch<{
     cartLinesAdd: { cart: ShopifyCart }
   }>({
@@ -181,7 +167,7 @@ export async function getCart(cartId: string): Promise<Cart | null> {
 export async function updateCartLine(
   cartId: string,
   lineId: string,
-  quantity: number
+  quantity: number,
 ): Promise<Cart> {
   const data = await shopifyFetch<{
     cartLinesUpdate: { cart: ShopifyCart }
@@ -197,10 +183,7 @@ export async function updateCartLine(
 }
 
 // Remove item from cart
-export async function removeFromCart(
-  cartId: string,
-  lineId: string
-): Promise<Cart> {
+export async function removeFromCart(cartId: string, lineId: string): Promise<Cart> {
   const data = await shopifyFetch<{
     cartLinesRemove: { cart: ShopifyCart }
   }>({
@@ -236,8 +219,12 @@ export interface BuyerIdentityInput {
 // Update cart with buyer identity (for checkout)
 export async function updateCartBuyerIdentity(
   cartId: string,
-  buyerIdentity: BuyerIdentityInput
-): Promise<{ cart: Cart; checkoutUrl: string; errors: Array<{ field: string[]; message: string }> }> {
+  buyerIdentity: BuyerIdentityInput,
+): Promise<{
+  cart: Cart
+  checkoutUrl: string
+  errors: Array<{ field: string[]; message: string }>
+}> {
   const data = await shopifyFetch<{
     cartBuyerIdentityUpdate: {
       cart: ShopifyCart
@@ -259,4 +246,4 @@ export async function updateCartBuyerIdentity(
 }
 
 // Export types
-export type { Product, Cart, CartItem } from './types'
+export type { Cart, CartItem, Product } from './types'

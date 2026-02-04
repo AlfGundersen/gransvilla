@@ -1,8 +1,8 @@
 'use client'
 
-import { useEffect, useRef, useCallback, useMemo, useState } from 'react'
-import { createPortal } from 'react-dom'
 import { motion } from 'framer-motion'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import type { GalleryImageData, OriginRect } from './GalleryClient'
 import styles from './GalleryLightbox.module.css'
 
@@ -94,25 +94,20 @@ export function GalleryLightbox({
   }, [onClose, onPrev, onNext, isFirst, isLast])
 
   // Focus trap
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key !== 'Tab' || !overlayRef.current) return
-      const focusable = overlayRef.current.querySelectorAll<HTMLElement>(
-        'button:not([disabled])'
-      )
-      if (focusable.length === 0) return
-      const first = focusable[0]
-      const last = focusable[focusable.length - 1]
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault()
-        last.focus()
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault()
-        first.focus()
-      }
-    },
-    []
-  )
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key !== 'Tab' || !overlayRef.current) return
+    const focusable = overlayRef.current.querySelectorAll<HTMLElement>('button:not([disabled])')
+    if (focusable.length === 0) return
+    const first = focusable[0]
+    const last = focusable[focusable.length - 1]
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault()
+      last.focus()
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault()
+      first.focus()
+    }
+  }, [])
 
   // Close when clicking outside the image and buttons
   const handleOverlayClick = useCallback(
@@ -121,7 +116,7 @@ export function GalleryLightbox({
       if (target.closest('button') || target.tagName === 'IMG') return
       onClose()
     },
-    [onClose]
+    [onClose],
   )
 
   const lightbox = (
@@ -145,7 +140,15 @@ export function GalleryLightbox({
         onClick={onClose}
         aria-label="Lukk"
       >
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+        <svg
+          width="28"
+          height="28"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          aria-hidden="true"
+        >
           <path d="M18 6L6 18M6 6l12 12" />
         </svg>
       </button>
@@ -157,7 +160,15 @@ export function GalleryLightbox({
           onClick={onPrev}
           aria-label="Forrige bilde"
         >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            aria-hidden="true"
+          >
             <path d="M15 18l-6-6 6-6" />
           </svg>
         </button>
@@ -172,15 +183,9 @@ export function GalleryLightbox({
         dragElastic={isFirst || isLast ? 0.2 : 0.5}
         onDragEnd={(_e, info) => {
           const { offset, velocity } = info
-          if (
-            (offset.x < -SWIPE_THRESHOLD || velocity.x < -SWIPE_VELOCITY) &&
-            !isLast
-          ) {
+          if ((offset.x < -SWIPE_THRESHOLD || velocity.x < -SWIPE_VELOCITY) && !isLast) {
             onNext()
-          } else if (
-            (offset.x > SWIPE_THRESHOLD || velocity.x > SWIPE_VELOCITY) &&
-            !isFirst
-          ) {
+          } else if ((offset.x > SWIPE_THRESHOLD || velocity.x > SWIPE_VELOCITY) && !isFirst) {
             onPrev()
           }
         }}
@@ -192,12 +197,7 @@ export function GalleryLightbox({
         {/* Thumbnail as blurred placeholder */}
         {!fullLoaded && (
           /* eslint-disable-next-line @next/next/no-img-element */
-          <img
-            src={current.src}
-            alt=""
-            aria-hidden="true"
-            className={styles.placeholderImage}
-          />
+          <img src={current.src} alt="" aria-hidden="true" className={styles.placeholderImage} />
         )}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -215,7 +215,15 @@ export function GalleryLightbox({
           onClick={onNext}
           aria-label="Neste bilde"
         >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            aria-hidden="true"
+          >
             <path d="M9 18l6-6-6-6" />
           </svg>
         </button>

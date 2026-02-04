@@ -1,5 +1,5 @@
-import { writeClient, client } from './client'
 import { getCollections } from '@/lib/shopify'
+import { client, writeClient } from './client'
 
 /** Extract the numeric ID from a Shopify GID (e.g. gid://shopify/Collection/123 → 123) */
 function numericId(gid: string): string {

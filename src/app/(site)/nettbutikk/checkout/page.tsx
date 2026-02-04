@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import { useCart } from '@/context/CartContext'
 import styles from './page.module.css'
 
@@ -111,13 +111,13 @@ export default function CheckoutPage() {
         <div className={styles.checkoutTotals}>
           <div className={`${styles.checkoutTotalRow} ${styles.checkoutTotalRowFinal}`}>
             <span>Totalt</span>
-            <span>{cart.totalAmount.toLocaleString('nb-NO')} {cart.currencyCode}</span>
+            <span>
+              {cart.totalAmount.toLocaleString('nb-NO')} {cart.currencyCode}
+            </span>
           </div>
         </div>
 
-        {error && (
-          <div className={styles.checkoutError}>{error}</div>
-        )}
+        {error && <div className={styles.checkoutError}>{error}</div>}
 
         <button
           type="button"
@@ -128,9 +128,7 @@ export default function CheckoutPage() {
           {isSubmitting ? 'Behandler...' : 'Gå til betaling'}
         </button>
 
-        <p className={styles.checkoutSecureNote}>
-          Du blir sendt til en sikker betalingsside
-        </p>
+        <p className={styles.checkoutSecureNote}>Du blir sendt til en sikker betalingsside</p>
       </div>
     </div>
   )

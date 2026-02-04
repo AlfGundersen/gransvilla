@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react'
 import Link from 'next/link'
+import { useEffect, useMemo, useState } from 'react'
 import type { Product } from '@/lib/shopify/types'
 import { AddToCartButton } from './AddToCartButton'
 import styles from './ProductInfo.module.css'
@@ -38,15 +38,17 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
     if (product.variants.length === 1) return product.variants[0]
 
     // Find variant matching all selected options
-    return product.variants.find((variant) => {
-      if (!variant.selectedOptions) return false
-      return variant.selectedOptions.every(
-        (opt) => selectedOptions[opt.name] === opt.value
-      )
-    }) || product.variants[0]
+    return (
+      product.variants.find((variant) => {
+        if (!variant.selectedOptions) return false
+        return variant.selectedOptions.every((opt) => selectedOptions[opt.name] === opt.value)
+      }) || product.variants[0]
+    )
   }, [product.variants, selectedOptions])
 
-  const hasOptions = product.options && product.options.length > 0 &&
+  const hasOptions =
+    product.options &&
+    product.options.length > 0 &&
     !(product.options.length === 1 && product.options[0].name === 'Title')
 
   const handleOptionChange = (optionName: string, value: string) => {
@@ -76,9 +78,7 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
     }
   }
 
-  const variantPrice = selectedVariant
-    ? parseFloat(selectedVariant.price.amount)
-    : product.price
+  const variantPrice = selectedVariant ? parseFloat(selectedVariant.price.amount) : product.price
 
   return (
     <div className={styles.productInfoSection}>
@@ -98,27 +98,35 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
       {/* Variant Options */}
       {hasOptions && (
         <div className={styles.productInfoOptions}>
-          {product.options?.filter(opt => opt.name !== 'Title').map((option) => (
-            <fieldset key={option.name} className={styles.productInfoOptionGroup}>
-              <legend className={styles.productInfoOptionLabel}>{option.name}</legend>
-              <div className={styles.productInfoOptionValues} role="radiogroup" aria-label={option.name}>
-                {option.values.map((value) => (
-                  <button
-                    key={value}
-                    type="button"
-                    role="radio"
-                    aria-checked={selectedOptions[option.name] === value}
-                    className={`${styles.productInfoOptionButton} ${
-                      selectedOptions[option.name] === value ? styles.productInfoOptionButtonActive : ''
-                    }`}
-                    onClick={() => handleOptionChange(option.name, value)}
-                  >
-                    {value}
-                  </button>
-                ))}
-              </div>
-            </fieldset>
-          ))}
+          {product.options
+            ?.filter((opt) => opt.name !== 'Title')
+            .map((option) => (
+              <fieldset key={option.name} className={styles.productInfoOptionGroup}>
+                <legend className={styles.productInfoOptionLabel}>{option.name}</legend>
+                <div
+                  className={styles.productInfoOptionValues}
+                  role="radiogroup"
+                  aria-label={option.name}
+                >
+                  {option.values.map((value) => (
+                    <button
+                      key={value}
+                      type="button"
+                      role="radio"
+                      aria-checked={selectedOptions[option.name] === value}
+                      className={`${styles.productInfoOptionButton} ${
+                        selectedOptions[option.name] === value
+                          ? styles.productInfoOptionButtonActive
+                          : ''
+                      }`}
+                      onClick={() => handleOptionChange(option.name, value)}
+                    >
+                      {value}
+                    </button>
+                  ))}
+                </div>
+              </fieldset>
+            ))}
         </div>
       )}
 
@@ -147,9 +155,7 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
           </button>
         </div>
         {maxQuantity !== null && maxQuantity <= 10 && maxQuantity > 0 && (
-          <p className={styles.productInfoStockWarning}>
-            Kun {maxQuantity} igjen på lager
-          </p>
+          <p className={styles.productInfoStockWarning}>Kun {maxQuantity} igjen på lager</p>
         )}
       </div>
 

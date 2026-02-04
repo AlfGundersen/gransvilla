@@ -1,6 +1,6 @@
+import { PortableText } from '@portabletext/react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { PortableText } from '@portabletext/react'
 import { createDataAttribute } from 'next-sanity'
 import { urlFor } from '@/lib/sanity/image'
 import type { FeaturedSection } from '@/types/sanity'
@@ -12,7 +12,11 @@ interface FeaturedSectionComponentProps {
   documentType?: string
 }
 
-export function FeaturedSectionComponent({ data, documentId, documentType }: FeaturedSectionComponentProps) {
+export function FeaturedSectionComponent({
+  data,
+  documentId,
+  documentType,
+}: FeaturedSectionComponentProps) {
   const columns = data.columns ?? []
 
   if (columns.length === 0) {
@@ -27,13 +31,25 @@ export function FeaturedSectionComponent({ data, documentId, documentType }: Fea
             <div
               key={column._key}
               className={styles.featuredColumn}
-              data-sanity={documentId && documentType ? createDataAttribute({ id: documentId, type: documentType, path: `featured.columns[_key=="${column._key}"]` }).toString() : undefined}
+              data-sanity={
+                documentId && documentType
+                  ? createDataAttribute({
+                      id: documentId,
+                      type: documentType,
+                      path: `featured.columns[_key=="${column._key}"]`,
+                    }).toString()
+                  : undefined
+              }
             >
               <div className={styles.featuredContent}>
                 {column.heading && <h2 className={styles.featuredHeading}>{column.heading}</h2>}
                 {column.description && (
                   <div className={styles.featuredDescription}>
-                    {Array.isArray(column.description) ? <PortableText value={column.description} /> : <p>{column.description}</p>}
+                    {Array.isArray(column.description) ? (
+                      <PortableText value={column.description} />
+                    ) : (
+                      <p>{column.description}</p>
+                    )}
                   </div>
                 )}
                 {column.link?.slug?.current && (

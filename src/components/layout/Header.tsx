@@ -70,29 +70,32 @@ export default function Header({ navigation, socialLinks }: HeaderProps) {
   }, [isMenuOpen])
 
   // Focus trap within menu
-  const handleMenuKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      closeMenu()
-      return
-    }
-    if (e.key !== 'Tab' || !menuRef.current) return
+  const handleMenuKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        closeMenu()
+        return
+      }
+      if (e.key !== 'Tab' || !menuRef.current) return
 
-    const focusable = menuRef.current.querySelectorAll<HTMLElement>(
-      'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
-    )
-    if (focusable.length === 0) return
+      const focusable = menuRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      )
+      if (focusable.length === 0) return
 
-    const first = focusable[0]
-    const last = focusable[focusable.length - 1]
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
 
-    if (e.shiftKey && document.activeElement === first) {
-      e.preventDefault()
-      last.focus()
-    } else if (!e.shiftKey && document.activeElement === last) {
-      e.preventDefault()
-      first.focus()
-    }
-  }, [closeMenu])
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault()
+        last.focus()
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault()
+        first.focus()
+      }
+    },
+    [closeMenu],
+  )
 
   // Menu content to be portaled
   const menuContent = (
@@ -232,9 +235,7 @@ export default function Header({ navigation, socialLinks }: HeaderProps) {
                 <line x1="3" y1="6" x2="21" y2="6" />
                 <path d="M16 10a4 4 0 01-8 0" />
               </svg>
-              {cartCount > 0 && (
-                <span className={styles.cartBadge}>{cartCount}</span>
-              )}
+              {cartCount > 0 && <span className={styles.cartBadge}>{cartCount}</span>}
               <span className={styles.cartText}>Handlekurv ({cartCount})</span>
             </button>
           </div>

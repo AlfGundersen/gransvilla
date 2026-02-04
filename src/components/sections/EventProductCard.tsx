@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useMemo, useCallback } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useCallback, useMemo, useState } from 'react'
 import { useCart } from '@/context/CartContext'
 import type { Product } from '@/lib/shopify/types'
 import styles from './EventProductsSection.module.css'
@@ -12,7 +12,9 @@ interface EventProductCardProps {
 }
 
 function hasRealOptions(product: Product) {
-  return product.options && product.options.some((opt) => opt.name !== 'Title' && opt.values.length > 1)
+  return (
+    product.options && product.options.some((opt) => opt.name !== 'Title' && opt.values.length > 1)
+  )
 }
 
 export function EventProductCard({ product }: EventProductCardProps) {
@@ -33,12 +35,12 @@ export function EventProductCard({ product }: EventProductCardProps) {
   const selectedVariant = useMemo(() => {
     if (!product.variants || product.variants.length === 0) return null
     if (product.variants.length === 1) return product.variants[0]
-    return product.variants.find((variant) => {
-      if (!variant.selectedOptions) return false
-      return variant.selectedOptions.every(
-        (opt) => selectedOptions[opt.name] === opt.value
-      )
-    }) || product.variants[0]
+    return (
+      product.variants.find((variant) => {
+        if (!variant.selectedOptions) return false
+        return variant.selectedOptions.every((opt) => selectedOptions[opt.name] === opt.value)
+      }) || product.variants[0]
+    )
   }, [product.variants, selectedOptions])
 
   const available = selectedVariant?.availableForSale ?? false
@@ -46,11 +48,11 @@ export function EventProductCard({ product }: EventProductCardProps) {
   const isLoading = isAdding || cartLoading
   const showOptions = hasRealOptions(product)
 
-  const variantPrice = selectedVariant
-    ? parseFloat(selectedVariant.price.amount)
-    : product.price
+  const variantPrice = selectedVariant ? parseFloat(selectedVariant.price.amount) : product.price
   const currencyCode = selectedVariant
-    ? (selectedVariant.price.currencyCode === 'NOK' ? 'kr' : selectedVariant.price.currencyCode)
+    ? selectedVariant.price.currencyCode === 'NOK'
+      ? 'kr'
+      : selectedVariant.price.currencyCode
     : product.currencyCode
 
   const handleOptionChange = useCallback((name: string, value: string) => {
@@ -94,27 +96,31 @@ export function EventProductCard({ product }: EventProductCardProps) {
       )}
       {showOptions && (
         <div className={styles.eventProductOptions}>
-          {product.options?.filter((opt) => opt.name !== 'Title').map((option) => (
-            <fieldset key={option.name} className={styles.eventProductOptionGroup}>
-              <legend className={styles.eventProductOptionLabel}>{option.name}</legend>
-              <div className={styles.eventProductOptionValues}>
-                {option.values.map((value) => (
-                  <button
-                    key={value}
-                    type="button"
-                    role="radio"
-                    aria-checked={selectedOptions[option.name] === value}
-                    className={`${styles.eventProductOptionBtn} ${
-                      selectedOptions[option.name] === value ? styles.eventProductOptionBtnActive : ''
-                    }`}
-                    onClick={() => handleOptionChange(option.name, value)}
-                  >
-                    {value}
-                  </button>
-                ))}
-              </div>
-            </fieldset>
-          ))}
+          {product.options
+            ?.filter((opt) => opt.name !== 'Title')
+            .map((option) => (
+              <fieldset key={option.name} className={styles.eventProductOptionGroup}>
+                <legend className={styles.eventProductOptionLabel}>{option.name}</legend>
+                <div className={styles.eventProductOptionValues}>
+                  {option.values.map((value) => (
+                    <button
+                      key={value}
+                      type="button"
+                      role="radio"
+                      aria-checked={selectedOptions[option.name] === value}
+                      className={`${styles.eventProductOptionBtn} ${
+                        selectedOptions[option.name] === value
+                          ? styles.eventProductOptionBtnActive
+                          : ''
+                      }`}
+                      onClick={() => handleOptionChange(option.name, value)}
+                    >
+                      {value}
+                    </button>
+                  ))}
+                </div>
+              </fieldset>
+            ))}
         </div>
       )}
       <div className={styles.eventProductCardButtons}>
@@ -125,14 +131,13 @@ export function EventProductCard({ product }: EventProductCardProps) {
             onClick={handleAddToCart}
             disabled={isLoading}
           >
-            {isAdding
-              ? 'Legger til...'
-              : added
-                ? 'Lagt til!'
-                : 'Legg i handlekurv'}
+            {isAdding ? 'Legger til...' : added ? 'Lagt til!' : 'Legg i handlekurv'}
           </button>
         )}
-        <Link href={`/nettbutikk/${product.handle}`} className={`${styles.eventProductLinkButton} site-button`}>
+        <Link
+          href={`/nettbutikk/${product.handle}`}
+          className={`${styles.eventProductLinkButton} site-button`}
+        >
           Les mer
         </Link>
       </div>
@@ -163,23 +168,23 @@ export function EventProductSingle({ product }: EventProductSingleProps) {
   const selectedVariant = useMemo(() => {
     if (!product.variants || product.variants.length === 0) return null
     if (product.variants.length === 1) return product.variants[0]
-    return product.variants.find((variant) => {
-      if (!variant.selectedOptions) return false
-      return variant.selectedOptions.every(
-        (opt) => selectedOptions[opt.name] === opt.value
-      )
-    }) || product.variants[0]
+    return (
+      product.variants.find((variant) => {
+        if (!variant.selectedOptions) return false
+        return variant.selectedOptions.every((opt) => selectedOptions[opt.name] === opt.value)
+      }) || product.variants[0]
+    )
   }, [product.variants, selectedOptions])
 
   const available = selectedVariant?.availableForSale ?? false
   const isLoading = isAdding || cartLoading
   const showOptions = hasRealOptions(product)
 
-  const variantPrice = selectedVariant
-    ? parseFloat(selectedVariant.price.amount)
-    : product.price
+  const variantPrice = selectedVariant ? parseFloat(selectedVariant.price.amount) : product.price
   const currencyCode = selectedVariant
-    ? (selectedVariant.price.currencyCode === 'NOK' ? 'kr' : selectedVariant.price.currencyCode)
+    ? selectedVariant.price.currencyCode === 'NOK'
+      ? 'kr'
+      : selectedVariant.price.currencyCode
     : product.currencyCode
 
   const handleOptionChange = useCallback((name: string, value: string) => {
@@ -215,27 +220,31 @@ export function EventProductSingle({ product }: EventProductSingleProps) {
         </div>
         {showOptions && (
           <div className={styles.singleProductOptions}>
-            {product.options?.filter((opt) => opt.name !== 'Title').map((option) => (
-              <fieldset key={option.name} className={styles.eventProductOptionGroup}>
-                <legend className={styles.eventProductOptionLabel}>{option.name}</legend>
-                <div className={styles.eventProductOptionValues}>
-                  {option.values.map((value) => (
-                    <button
-                      key={value}
-                      type="button"
-                      role="radio"
-                      aria-checked={selectedOptions[option.name] === value}
-                      className={`${styles.eventProductOptionBtn} ${
-                        selectedOptions[option.name] === value ? styles.eventProductOptionBtnActive : ''
-                      }`}
-                      onClick={() => handleOptionChange(option.name, value)}
-                    >
-                      {value}
-                    </button>
-                  ))}
-                </div>
-              </fieldset>
-            ))}
+            {product.options
+              ?.filter((opt) => opt.name !== 'Title')
+              .map((option) => (
+                <fieldset key={option.name} className={styles.eventProductOptionGroup}>
+                  <legend className={styles.eventProductOptionLabel}>{option.name}</legend>
+                  <div className={styles.eventProductOptionValues}>
+                    {option.values.map((value) => (
+                      <button
+                        key={value}
+                        type="button"
+                        role="radio"
+                        aria-checked={selectedOptions[option.name] === value}
+                        className={`${styles.eventProductOptionBtn} ${
+                          selectedOptions[option.name] === value
+                            ? styles.eventProductOptionBtnActive
+                            : ''
+                        }`}
+                        onClick={() => handleOptionChange(option.name, value)}
+                      >
+                        {value}
+                      </button>
+                    ))}
+                  </div>
+                </fieldset>
+              ))}
           </div>
         )}
       </div>
@@ -252,7 +261,10 @@ export function EventProductSingle({ product }: EventProductSingleProps) {
             {isAdding ? 'Legger til...' : added ? 'Lagt til!' : 'Legg i handlekurv'}
           </button>
         )}
-        <Link href={`/nettbutikk/${product.handle}`} className={`${styles.singleProductSecondaryBtn} site-button`}>
+        <Link
+          href={`/nettbutikk/${product.handle}`}
+          className={`${styles.singleProductSecondaryBtn} site-button`}
+        >
           Les mer
         </Link>
       </div>

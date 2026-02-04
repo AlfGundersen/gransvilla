@@ -1,8 +1,8 @@
 'use client'
 
-import { Children, useCallback, useEffect, useRef, useState } from 'react'
 import { PortableText } from '@portabletext/react'
 import type { PortableTextBlock } from '@portabletext/types'
+import { Children, useCallback, useEffect, useRef, useState } from 'react'
 import styles from './page.module.css'
 
 interface CollapsibleSectionProps {
@@ -46,11 +46,7 @@ export default function CollapsibleSection({
   return (
     <section className={styles.shopSection} data-open={isOpen}>
       {/* Mobile-only: tappable header */}
-      <button
-        className={styles.shopCategoryToggle}
-        onClick={toggle}
-        aria-expanded={isOpen}
-      >
+      <button className={styles.shopCategoryToggle} onClick={toggle} aria-expanded={isOpen}>
         <div className={styles.shopToggleHeader}>
           <h2 className={styles.shopCategoryTitle}>{title}</h2>
           <svg
@@ -66,14 +62,22 @@ export default function CollapsibleSection({
             <line
               className={styles.shopToggleIconVertical}
               data-open={isOpen}
-              x1="10" y1="0" x2="10" y2="20"
-              stroke="currentColor" strokeWidth="1.5"
+              x1="10"
+              y1="0"
+              x2="10"
+              y2="20"
+              stroke="currentColor"
+              strokeWidth="1.5"
             />
           </svg>
         </div>
         {description && (
           <div className={styles.shopCategoryDescription}>
-            {Array.isArray(description) ? <PortableText value={description} /> : <p>{description}</p>}
+            {Array.isArray(description) ? (
+              <PortableText value={description} />
+            ) : (
+              <p>{description}</p>
+            )}
           </div>
         )}
       </button>
@@ -84,7 +88,11 @@ export default function CollapsibleSection({
           <h2 className={styles.shopCategoryTitle}>{title}</h2>
           {description && (
             <div className={styles.shopCategoryDescription}>
-              {Array.isArray(description) ? <PortableText value={description} /> : <p>{description}</p>}
+              {Array.isArray(description) ? (
+                <PortableText value={description} />
+              ) : (
+                <p>{description}</p>
+              )}
             </div>
           )}
         </div>

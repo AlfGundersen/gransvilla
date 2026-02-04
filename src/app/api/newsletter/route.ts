@@ -53,10 +53,7 @@ export async function POST(request: NextRequest) {
     // If contact already exists, that's fine (status 400 with specific error)
     if (!contactResponse.ok && contactResponse.status !== 400) {
       console.error('Mailjet contact creation error:', contactData)
-      return NextResponse.json(
-        { error: 'Kunne ikke legge til e-post' },
-        { status: 500 }
-      )
+      return NextResponse.json({ error: 'Kunne ikke legge til e-post' }, { status: 500 })
     }
 
     // If a list ID is configured, add contact to the list
@@ -74,7 +71,7 @@ export async function POST(request: NextRequest) {
             Email: email,
             Action: 'addforce',
           }),
-        }
+        },
       )
 
       const listData = await listResponse.json().catch(() => ({}))
@@ -84,7 +81,7 @@ export async function POST(request: NextRequest) {
         console.error('Mailjet list subscription error:', listData)
         return NextResponse.json(
           { error: 'Kunne ikke legge til på nyhetsbrevlisten' },
-          { status: 500 }
+          { status: 500 },
         )
       }
     } else {
@@ -94,9 +91,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Newsletter subscription error:', error)
-    return NextResponse.json(
-      { error: 'Noe gikk galt. Vennligst prøv igjen.' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Noe gikk galt. Vennligst prøv igjen.' }, { status: 500 })
   }
 }

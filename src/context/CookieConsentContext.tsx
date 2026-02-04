@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react'
+import { createContext, type ReactNode, useCallback, useContext, useEffect, useState } from 'react'
 
 interface ConsentState {
   necessary: true
@@ -98,7 +98,17 @@ export function CookieConsentProvider({ children }: { children: ReactNode }) {
 
   return (
     <CookieConsentContext.Provider
-      value={{ consent, hasConsented, acceptAll, acceptNecessary, declineAll, savePreferences, openSettings, closeSettings, isSettingsOpen }}
+      value={{
+        consent,
+        hasConsented,
+        acceptAll,
+        acceptNecessary,
+        declineAll,
+        savePreferences,
+        openSettings,
+        closeSettings,
+        isSettingsOpen,
+      }}
     >
       {children}
     </CookieConsentContext.Provider>

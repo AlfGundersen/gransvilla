@@ -76,8 +76,8 @@ function PageContent() {
       <Image
         src="/logo.svg"
         alt="Gransvilla"
-        width={300}
-        height={300}
+        width={500}
+        height={500}
         className={styles.logo}
         priority
       />

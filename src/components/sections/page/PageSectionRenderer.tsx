@@ -1,10 +1,10 @@
 import { createDataAttribute } from 'next-sanity'
-import type { EventPageSection } from '@/types/sanity'
 import { getBlurDataURL } from '@/lib/sanity/blur'
-import { TextSection } from './TextSection'
+import type { EventPageSection } from '@/types/sanity'
+import { GallerySection } from './GallerySection'
 import { ImageSection } from './ImageSection'
 import { ImageTextSection } from './ImageTextSection'
-import { GallerySection } from './GallerySection'
+import { TextSection } from './TextSection'
 
 interface PageSectionRendererProps {
   sections: EventPageSection[]
@@ -12,12 +12,17 @@ interface PageSectionRendererProps {
   documentType?: string
 }
 
-export async function PageSectionRenderer({ sections, documentId, documentType }: PageSectionRendererProps) {
+export async function PageSectionRenderer({
+  sections,
+  documentId,
+  documentType,
+}: PageSectionRendererProps) {
   const blurMap = new Map<string, string | undefined>()
 
   const imageSections = sections.filter(
-    (s) => (s._type === 'bildeSeksjon' && s.bilde?.asset) ||
-           (s._type === 'bildeTekstSeksjon' && s.bilde?.asset),
+    (s) =>
+      (s._type === 'bildeSeksjon' && s.bilde?.asset) ||
+      (s._type === 'bildeTekstSeksjon' && s.bilde?.asset),
   )
 
   const blurResults = await Promise.all(
@@ -34,13 +39,14 @@ export async function PageSectionRenderer({ sections, documentId, documentType }
   return (
     <>
       {sections.map((section, index) => {
-        const dataSanity = documentId && documentType
-          ? createDataAttribute({
-              id: documentId,
-              type: documentType,
-              path: `sections[_key=="${section._key}"]`,
-            }).toString()
-          : undefined
+        const dataSanity =
+          documentId && documentType
+            ? createDataAttribute({
+                id: documentId,
+                type: documentType,
+                path: `sections[_key=="${section._key}"]`,
+              }).toString()
+            : undefined
 
         const isFirst = index === 0
 
@@ -48,9 +54,25 @@ export async function PageSectionRenderer({ sections, documentId, documentType }
           case 'tekstSeksjon':
             return <TextSection key={section._key} data={section} dataSanity={dataSanity} />
           case 'bildeSeksjon':
-            return <ImageSection key={section._key} data={section} dataSanity={dataSanity} eager={isFirst} blurDataURL={blurMap.get(section._key)} />
+            return (
+              <ImageSection
+                key={section._key}
+                data={section}
+                dataSanity={dataSanity}
+                eager={isFirst}
+                blurDataURL={blurMap.get(section._key)}
+              />
+            )
           case 'bildeTekstSeksjon':
-            return <ImageTextSection key={section._key} data={section} dataSanity={dataSanity} eager={isFirst} blurDataURL={blurMap.get(section._key)} />
+            return (
+              <ImageTextSection
+                key={section._key}
+                data={section}
+                dataSanity={dataSanity}
+                eager={isFirst}
+                blurDataURL={blurMap.get(section._key)}
+              />
+            )
           case 'bildegalleriSeksjon':
             return <GallerySection key={section._key} data={section} dataSanity={dataSanity} />
           default:

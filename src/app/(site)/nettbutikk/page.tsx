@@ -1,11 +1,11 @@
-import { getCollections } from '@/lib/shopify'
+import type { Metadata } from 'next'
 import { client } from '@/lib/sanity/client'
 import { shopCategoriesQuery } from '@/lib/sanity/queries'
+import { getCollections } from '@/lib/shopify'
 import type { ShopCategory } from '@/types/sanity'
-import type { Metadata } from 'next'
-import styles from './page.module.css'
-import ProductCard from './ProductCard'
 import CollapsibleSection from './CollapsibleSection'
+import ProductCard from './ProductCard'
+import styles from './page.module.css'
 
 export const revalidate = 60
 
@@ -26,9 +26,7 @@ export default async function NettbutikkPage() {
     .filter((c) => c.products.length > 0)
     .map((collection) => {
       // Find matching Sanity category by Shopify collection ID
-      const sanityCategory = shopCategories.find(
-        (cat) => cat.shopifyCollectionId === collection.id
-      )
+      const sanityCategory = shopCategories.find((cat) => cat.shopifyCollectionId === collection.id)
       return {
         ...collection,
         description: sanityCategory?.description || collection.description,

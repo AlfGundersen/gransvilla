@@ -2,8 +2,8 @@ import { PortableText } from '@portabletext/react'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { urlFor } from '@/lib/sanity/image'
 import { getBlurDataURL } from '@/lib/sanity/blur'
+import { urlFor } from '@/lib/sanity/image'
 import { sanityFetch } from '@/lib/sanity/live'
 import { arrangementerSettingsQuery, eventsQuery } from '@/lib/sanity/queries'
 import type { ArrangementerSettings, Event } from '@/types/sanity'
@@ -18,7 +18,9 @@ export const metadata: Metadata = {
 export default async function ArrangementerPage() {
   const [{ data: events }, { data: settings }] = await Promise.all([
     sanityFetch({ query: eventsQuery }) as Promise<{ data: Event[] }>,
-    sanityFetch({ query: arrangementerSettingsQuery }) as Promise<{ data: ArrangementerSettings | null }>,
+    sanityFetch({ query: arrangementerSettingsQuery }) as Promise<{
+      data: ArrangementerSettings | null
+    }>,
   ])
 
   const heroLayout = settings?.heroLayout ?? '1-1-2'
@@ -27,7 +29,7 @@ export default async function ArrangementerPage() {
 
   const [heroBlur, ...cardBlurs] = await Promise.all([
     heroImage?.asset ? getBlurDataURL(heroImage) : undefined,
-    ...events.map((e) => e.featuredImage?.asset ? getBlurDataURL(e.featuredImage) : undefined),
+    ...events.map((e) => (e.featuredImage?.asset ? getBlurDataURL(e.featuredImage) : undefined)),
   ])
 
   return (
@@ -42,7 +44,9 @@ export default async function ArrangementerPage() {
               </div>
             ) : (
               <p className={styles.introInline}>
-                Gransvilla er rammen for uforglemmelige opplevelser. Enten det er bryllup, selskap, konserter eller søndagsfrokost — vi skaper arrangementer med sjel, god mat og vakre omgivelser.
+                Gransvilla er rammen for uforglemmelige opplevelser. Enten det er bryllup, selskap,
+                konserter eller søndagsfrokost — vi skaper arrangementer med sjel, god mat og vakre
+                omgivelser.
               </p>
             )}
           </div>
@@ -55,7 +59,9 @@ export default async function ArrangementerPage() {
               </div>
             ) : (
               <p className={styles.intro}>
-                Gransvilla er rammen for uforglemmelige opplevelser. Enten det er bryllup, selskap, konserter eller søndagsfrokost — vi skaper arrangementer med sjel, god mat og vakre omgivelser.
+                Gransvilla er rammen for uforglemmelige opplevelser. Enten det er bryllup, selskap,
+                konserter eller søndagsfrokost — vi skaper arrangementer med sjel, god mat og vakre
+                omgivelser.
               </p>
             )}
           </>
@@ -82,8 +88,15 @@ export default async function ArrangementerPage() {
                 {event.featuredImage?.asset && (
                   <div className={styles.imageWrapper}>
                     <Image
-                      src={urlFor(event.featuredImage).width(400).height(600).quality(92).fit('crop').url()}
-                      alt={event.featuredImage.alt || event.featuredImage.assetAltText || event.title}
+                      src={urlFor(event.featuredImage)
+                        .width(400)
+                        .height(600)
+                        .quality(92)
+                        .fit('crop')
+                        .url()}
+                      alt={
+                        event.featuredImage.alt || event.featuredImage.assetAltText || event.title
+                      }
                       width={400}
                       height={600}
                       placeholder={cardBlurs[i] ? 'blur' : 'empty'}

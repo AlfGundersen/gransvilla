@@ -1,8 +1,8 @@
 import { PortableText } from '@portabletext/react'
 import type { Metadata } from 'next'
+import { categoryLabels, cookieInventory } from '@/lib/cookies'
 import { sanityFetch } from '@/lib/sanity/live'
 import { personvernQuery } from '@/lib/sanity/queries'
-import { cookieInventory, categoryLabels } from '@/lib/cookies'
 import type { Personvernerklaering } from '@/types/sanity'
 import styles from './page.module.css'
 
@@ -21,19 +21,17 @@ function formatDate(dateString: string) {
 }
 
 export default async function PersonvernPage() {
-  const { data } = await sanityFetch({ query: personvernQuery }) as { data: Personvernerklaering | null }
+  const { data } = (await sanityFetch({ query: personvernQuery })) as {
+    data: Personvernerklaering | null
+  }
 
   return (
     <div className={styles.page}>
       <h1 className={styles.heading}>Personvernerklæring</h1>
       {(data?.opprettet || data?.oppdatert) && (
         <div className={styles.dates}>
-          {data.opprettet && (
-            <span>Opprettet: {formatDate(data.opprettet)}</span>
-          )}
-          {data.oppdatert && (
-            <span>Sist oppdatert: {formatDate(data.oppdatert)}</span>
-          )}
+          {data.opprettet && <span>Opprettet: {formatDate(data.opprettet)}</span>}
+          {data.oppdatert && <span>Sist oppdatert: {formatDate(data.oppdatert)}</span>}
         </div>
       )}
 
@@ -48,7 +46,11 @@ export default async function PersonvernPage() {
             {data.adresse && <br />}
             {data.adresse && <span className={styles.addressText}>{data.adresse}</span>}
             {data.epost && <br />}
-            {data.epost && <>E-post: <a href={`mailto:${data.epost}`}>{data.epost}</a></>}
+            {data.epost && (
+              <>
+                E-post: <a href={`mailto:${data.epost}`}>{data.epost}</a>
+              </>
+            )}
           </address>
         </div>
       )}
@@ -63,7 +65,9 @@ export default async function PersonvernPage() {
 
       <div className={styles.content}>
         <h2 className={styles.cookieHeading}>Informasjonskapsler (cookies)</h2>
-        <p>Nedenfor finner du en oversikt over informasjonskapslene som brukes på dette nettstedet.</p>
+        <p>
+          Nedenfor finner du en oversikt over informasjonskapslene som brukes på dette nettstedet.
+        </p>
         <div className={styles.tableWrapper}>
           <table className={styles.cookieTable}>
             <thead>
@@ -78,7 +82,9 @@ export default async function PersonvernPage() {
             <tbody>
               {cookieInventory.map((cookie) => (
                 <tr key={cookie.name}>
-                  <td><code>{cookie.name}</code></td>
+                  <td>
+                    <code>{cookie.name}</code>
+                  </td>
                   <td>{cookie.provider}</td>
                   <td>{cookie.purpose}</td>
                   <td>{categoryLabels[cookie.category]}</td>
@@ -89,7 +95,11 @@ export default async function PersonvernPage() {
           </table>
         </div>
         <h3>Lokal lagring</h3>
-        <p>I tillegg bruker vi nettleserens lokale lagring (localStorage) for å lagre handlekurv-ID fra Shopify. Denne inneholder ingen personopplysninger, men gjør det mulig å bevare handlekurven mellom sidebesøk.</p>
+        <p>
+          I tillegg bruker vi nettleserens lokale lagring (localStorage) for å lagre handlekurv-ID
+          fra Shopify. Denne inneholder ingen personopplysninger, men gjør det mulig å bevare
+          handlekurven mellom sidebesøk.
+        </p>
       </div>
     </div>
   )

@@ -1,5 +1,5 @@
-import Image from 'next/image'
 import { PortableText } from '@portabletext/react'
+import Image from 'next/image'
 import { urlFor } from '@/lib/sanity/image'
 import type { BildeTekstSeksjon } from '@/types/sanity'
 import styles from './ImageTextSection.module.css'
@@ -18,14 +18,22 @@ interface ImageTextSectionProps {
   blurDataURL?: string
 }
 
-export function ImageTextSection({ data, dataSanity, eager = false, blurDataURL }: ImageTextSectionProps) {
+export function ImageTextSection({
+  data,
+  dataSanity,
+  eager = false,
+  blurDataURL,
+}: ImageTextSectionProps) {
   const bildeForst = data.bildeForst !== false
   const ratio = data.bildeforhold || '3/2'
   const width = 1400
   const height = Math.round(width * (RATIO_MAP[ratio] || 2 / 3))
 
   return (
-    <div className={`${styles.imageTextSection} ${bildeForst ? '' : styles.imageTextReversed}`} data-sanity={dataSanity}>
+    <div
+      className={`${styles.imageTextSection} ${bildeForst ? '' : styles.imageTextReversed}`}
+      data-sanity={dataSanity}
+    >
       {data.bilde && (
         <div className={styles.imageTextImageWrap} data-sanity={dataSanity}>
           <Image

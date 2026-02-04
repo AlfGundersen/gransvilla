@@ -165,11 +165,7 @@ export interface BildegalleriSeksjon {
   bilder?: (SanityImage & { alt?: string })[]
 }
 
-export type EventPageSection =
-  | TekstSeksjon
-  | BildeSeksjon
-  | BildeTekstSeksjon
-  | BildegalleriSeksjon
+export type EventPageSection = TekstSeksjon | BildeSeksjon | BildeTekstSeksjon | BildegalleriSeksjon
 
 // Event document
 export interface Event {

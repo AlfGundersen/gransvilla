@@ -1,8 +1,8 @@
 'use client'
 
 import Lenis from 'lenis'
-import { useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
+import { useEffect, useRef } from 'react'
 
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
   const lenisRef = useRef<Lenis | null>(null)
