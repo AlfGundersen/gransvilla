@@ -28,7 +28,7 @@ export const DuplicateActionNO: DocumentActionComponent = (props) => {
     label: 'Dupliser',
     icon: CopyIcon,
     onHandle: () => {
-      duplicate.execute(props.draft || props.published)
+      duplicate.execute(props.id)
       props.onComplete()
     },
   }
