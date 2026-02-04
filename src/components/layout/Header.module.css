@@ -167,7 +167,7 @@
   display: block;
   font-weight: 300;
   font-family: var(--font-heading);
-  font-size: var(--text-sm);
+  font-size: var(--text-base);
 }
 
 /* Mobile: show icon, hide text */

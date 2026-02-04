@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { createDataAttribute } from 'next-sanity'
 import { EventsSectionComponent } from '@/components/sections/EventsSection'
 import { FeaturedProductSectionComponent } from '@/components/sections/FeaturedProductSection'
@@ -5,10 +6,28 @@ import { FeaturedSectionComponent } from '@/components/sections/FeaturedSection'
 import { HeroSectionComponent } from '@/components/sections/HeroSection'
 import { TimelineSectionComponent } from '@/components/sections/TimelineSection'
 import { JsonLd } from '@/components/seo/JsonLd'
+import { urlFor } from '@/lib/sanity/image'
 import { sanityFetch } from '@/lib/sanity/live'
 import { frontpageQuery } from '@/lib/sanity/queries'
 import type { Frontpage } from '@/types/sanity'
 import styles from './page.module.css'
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { data: frontpage } = await sanityFetch({ query: frontpageQuery })
+
+  const seo = frontpage?.seo
+  const ogImage = seo?.ogImage?.asset ? urlFor(seo.ogImage).width(1200).height(630).url() : undefined
+
+  return {
+    title: seo?.metaTitle || 'Forside',
+    description: seo?.metaDescription || undefined,
+    openGraph: {
+      title: seo?.metaTitle || 'Forside',
+      description: seo?.metaDescription || undefined,
+      ...(ogImage && { images: [{ url: ogImage, width: 1200, height: 630 }] }),
+    },
+  }
+}
 
 export default async function HomePage() {
   const { data: frontpage } = await sanityFetch({ query: frontpageQuery })
