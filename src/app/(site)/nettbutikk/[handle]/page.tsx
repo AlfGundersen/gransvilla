@@ -47,10 +47,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export async function generateStaticParams() {
-  const products = await getProducts()
-  return products.map((product) => ({
-    handle: product.handle,
-  }))
+  try {
+    const products = await getProducts()
+    return products.map((product) => ({
+      handle: product.handle,
+    }))
+  } catch {
+    // Return empty array if store unavailable - pages will be generated on-demand
+    return []
+  }
 }
 
 export default async function ProductPage({ params }: Props) {

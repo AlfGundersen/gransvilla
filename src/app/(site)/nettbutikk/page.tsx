@@ -16,10 +16,13 @@ export const metadata: Metadata = {
 }
 
 export default async function NettbutikkPage() {
-  const [collections, shopCategories] = await Promise.all([
-    getCollections(),
-    client.fetch<ShopCategory[]>(shopCategoriesQuery),
-  ])
+  let collections: Awaited<ReturnType<typeof getCollections>> = []
+  try {
+    collections = await getCollections()
+  } catch {
+    // Store unavailable - show empty state
+  }
+  const shopCategories = await client.fetch<ShopCategory[]>(shopCategoriesQuery)
 
   // Filter out empty collections and merge with Sanity descriptions
   const activeCollections = collections
