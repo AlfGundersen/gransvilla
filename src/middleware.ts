@@ -9,6 +9,13 @@ const PUBLIC_PATHS = ['/passord', '/api/', '/studio', '/personvern']
 const STATIC_EXT =
   /\.(ico|png|jpg|jpeg|gif|svg|webp|avif|css|js|woff|woff2|ttf|eot|map|txt|xml|json|webmanifest)$/
 
+const HSTS_HEADER = 'max-age=31536000; includeSubDomains; preload'
+
+function addSecurityHeaders(response: NextResponse) {
+  response.headers.set('Strict-Transport-Security', HSTS_HEADER)
+  return response
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
@@ -18,7 +25,7 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith('/_next') ||
     STATIC_EXT.test(pathname)
   ) {
-    return NextResponse.next()
+    return addSecurityHeaders(NextResponse.next())
   }
 
   // Verify auth cookie against derived session token
@@ -27,11 +34,11 @@ export async function middleware(request: NextRequest) {
   try {
     const expectedToken = await getSessionToken()
     if (authCookie?.value === expectedToken) {
-      return NextResponse.next()
+      return addSecurityHeaders(NextResponse.next())
     }
   } catch {
     // SITE_PASSWORD not configured — no password gate needed (e.g. production)
-    return NextResponse.next()
+    return addSecurityHeaders(NextResponse.next())
   }
 
   // Redirect to password page, preserving the intended destination
@@ -41,7 +48,7 @@ export async function middleware(request: NextRequest) {
   if (intendedPath !== '/') {
     url.searchParams.set('from', intendedPath)
   }
-  return NextResponse.redirect(url)
+  return addSecurityHeaders(NextResponse.redirect(url))
 }
 
 export const config = {
