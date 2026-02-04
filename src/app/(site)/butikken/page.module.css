@@ -335,7 +335,8 @@
   overflow-wrap: break-word;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 6;
+  -webkit-line-clamp: 5;
+  text-overflow: ellipsis;
   word-break: break-word;
   text-overflow: ellipsis;
   display: -webkit-box;
