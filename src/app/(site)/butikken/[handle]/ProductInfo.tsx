@@ -160,13 +160,19 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
         )}
       </div>
 
-      {/* Add to Cart */}
-      {selectedVariant && (
-        <AddToCartButton
-          variantId={selectedVariant.id}
-          available={selectedVariant.availableForSale}
-          quantity={quantity}
-        />
+      {/* Add to Cart or Coming Soon */}
+      {product.comingSoon ? (
+        <div className={styles.comingSoonBanner}>
+          <span>Kommer snart</span>
+        </div>
+      ) : (
+        selectedVariant && (
+          <AddToCartButton
+            variantId={selectedVariant.id}
+            available={selectedVariant.availableForSale}
+            quantity={quantity}
+          />
+        )
       )}
 
       {/* Related Events */}

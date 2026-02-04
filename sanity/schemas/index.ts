@@ -7,6 +7,7 @@ import siteSettings from './documents/siteSettings'
 import arrangementerSettings from './documents/arrangementerSettings'
 import butikkenSettings from './documents/butikkenSettings'
 import personvernerklaering from './documents/personvernerklaering'
+import salgsvilkar from './documents/salgsvilkar'
 
 // Object types
 import blockContent from './objects/blockContent'
@@ -38,6 +39,7 @@ export const schemaTypes = [
   arrangementerSettings,
   butikkenSettings,
   personvernerklaering,
+  salgsvilkar,
 
   // Objects
   blockContent,

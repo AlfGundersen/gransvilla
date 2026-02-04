@@ -276,6 +276,11 @@ export interface Personvernerklaering {
   oppdatert?: string
 }
 
+// Salgsvilkår
+export interface Salgsvilkar {
+  innhold?: BlockContent
+}
+
 // Arrangementer Settings
 export interface ArrangementerSettings {
   heroLayout?: '1-1-2' | '1-3'

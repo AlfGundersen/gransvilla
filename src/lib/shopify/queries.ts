@@ -45,6 +45,9 @@ export const COLLECTIONS_QUERY = `
                     }
                   }
                 }
+                comingSoon: metafield(namespace: "custom", key: "coming_soon") {
+                  value
+                }
               }
             }
           }
@@ -93,6 +96,9 @@ export const PRODUCTS_QUERY = `
                 }
               }
             }
+          }
+          comingSoon: metafield(namespace: "custom", key: "coming_soon") {
+            value
           }
         }
       }
@@ -146,6 +152,9 @@ export const PRODUCT_BY_HANDLE_QUERY = `
       options {
         name
         values
+      }
+      comingSoon: metafield(namespace: "custom", key: "coming_soon") {
+        value
       }
     }
   }

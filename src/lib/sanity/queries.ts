@@ -391,6 +391,13 @@ export const personvernQuery = groq`
   }
 `
 
+// Salgsvilkår query
+export const salgsvilkarQuery = groq`
+  *[_type == "salgsvilkar"][0] {
+    "innhold": innhold[defined(_type)]
+  }
+`
+
 // Shop categories query
 export const shopCategoriesQuery = groq`
   *[_type == "shopCategory"] | order(order asc) {

@@ -45,6 +45,9 @@ export interface ShopifyProduct {
     name: string
     values: string[]
   }[]
+  comingSoon?: {
+    value: string
+  } | null
 }
 
 export interface ShopifyCartLine {
@@ -97,6 +100,7 @@ export interface Product {
     name: string
     values: string[]
   }[]
+  comingSoon: boolean
 }
 
 export interface CartItem {

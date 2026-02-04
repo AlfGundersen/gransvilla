@@ -16,6 +16,7 @@ type ProductCardProps = {
     currencyCode: string
     images: { url: string; altText: string | null }[]
     variants: { id: string; title: string; availableForSale: boolean }[]
+    comingSoon?: boolean
   }
 }
 
@@ -24,6 +25,8 @@ export default function ProductCard({ product }: ProductCardProps) {
   const [isAdding, setIsAdding] = useState(false)
 
   const isSoldOut = !product.variants.some((v) => v.availableForSale)
+  const isComingSoon = product.comingSoon ?? false
+  const isUnavailable = isSoldOut || isComingSoon
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault()
@@ -55,13 +58,14 @@ export default function ProductCard({ product }: ProductCardProps) {
             src={product.images[0].url}
             alt={product.images[0].altText || product.title}
             fill
-            className={`${styles.shopImage} ${isSoldOut ? styles.shopImageSoldOut : ''}`}
+            className={`${styles.shopImage} ${isUnavailable ? styles.shopImageSoldOut : ''}`}
             sizes="(max-width: 767px) 100vw, 33vw"
           />
         )}
 
-        {/* Sold out badge */}
-        {isSoldOut && <div className={styles.shopSoldOutBadge}>Utsolgt</div>}
+        {/* Status badge */}
+        {isComingSoon && <div className={styles.shopComingSoonBadge}>Kommer snart</div>}
+        {isSoldOut && !isComingSoon && <div className={styles.shopSoldOutBadge}>Utsolgt</div>}
 
         {/* Hover overlay with description and buttons (desktop) */}
         <div className={styles.shopProductOverlay}>
@@ -71,9 +75,9 @@ export default function ProductCard({ product }: ProductCardProps) {
               type="button"
               className={`${styles.shopAddToCartButton} site-button`}
               onClick={handleAddToCart}
-              disabled={isAdding || isSoldOut}
+              disabled={isAdding || isUnavailable}
             >
-              {isSoldOut ? 'Utsolgt' : isAdding ? 'Legger til...' : 'Legg i handlekurv'}
+              {isComingSoon ? 'Kommer snart' : isSoldOut ? 'Utsolgt' : isAdding ? 'Legger til...' : 'Legg i handlekurv'}
             </button>
             <Link
               href={`/butikken/${product.handle}`}
@@ -99,9 +103,9 @@ export default function ProductCard({ product }: ProductCardProps) {
             type="button"
             className={`${styles.shopAddToCartButton} site-button`}
             onClick={handleAddToCart}
-            disabled={isAdding || isSoldOut}
+            disabled={isAdding || isUnavailable}
           >
-            {isSoldOut ? 'Utsolgt' : isAdding ? 'Legger til...' : 'Legg i handlekurv'}
+            {isComingSoon ? 'Kommer snart' : isSoldOut ? 'Utsolgt' : isAdding ? 'Legger til...' : 'Legg i handlekurv'}
           </button>
           <Link
             href={`/butikken/${product.handle}`}

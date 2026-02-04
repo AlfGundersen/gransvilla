@@ -266,6 +266,30 @@
   visibility: hidden;
 }
 
+/* Coming soon badge */
+.shopComingSoonBadge {
+  position: absolute;
+  bottom: calc(var(--space-lg) + 44px + var(--space-sm));
+  left: var(--space-lg);
+  right: var(--space-lg);
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--color-accent);
+  border: 1px solid var(--color-accent);
+  color: var(--color-foreground);
+  font-size: var(--text-sm);
+  font-family: var(--font-heading);
+  text-align: center;
+  z-index: 1;
+  pointer-events: none;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.shopProduct:hover .shopComingSoonBadge,
+.shopProduct:focus-within .shopComingSoonBadge {
+  opacity: 0;
+  visibility: hidden;
+}
+
 /* Product overlay - shown on hover */
 .shopProductOverlay {
   position: absolute;

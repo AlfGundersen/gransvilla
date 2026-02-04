@@ -38,6 +38,7 @@ function transformProduct(product: ShopifyProduct): Product {
     images: product.images.edges.map((edge) => edge.node),
     variants: product.variants.edges.map((edge) => edge.node),
     options: product.options,
+    comingSoon: product.comingSoon?.value === 'true',
   }
 }
 

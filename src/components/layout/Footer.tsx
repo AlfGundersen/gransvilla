@@ -187,6 +187,9 @@ export default function Footer({
           <Link href="/personvern" className={styles.legalLink}>
             Personvernerklæring
           </Link>
+          <Link href="/salgsvilkar" className={styles.legalLink}>
+            Salgsvilkår
+          </Link>
           <button type="button" className={styles.legalLink} onClick={openSettings}>
             Cookies
           </button>
