@@ -105,7 +105,7 @@ export function CartDrawer() {
         {!cart || cart.items.length === 0 ? (
           <div className={styles.empty}>
             <p>Handlekurven er tom</p>
-            <Link href="/nettbutikk" className={styles.continueLink} onClick={closeCart}>
+            <Link href="/butikken" className={styles.continueLink} onClick={closeCart}>
               Fortsett å handle
             </Link>
           </div>
@@ -131,7 +131,7 @@ export function CartDrawer() {
                   </div>
                   <div className={styles.itemInfo}>
                     <Link
-                      href={`/nettbutikk/${item.handle}`}
+                      href={`/butikken/${item.handle}`}
                       className={styles.itemTitle}
                       onClick={closeCart}
                     >
@@ -185,7 +185,7 @@ export function CartDrawer() {
                 </span>
               </div>
               <Link
-                href="/nettbutikk/checkout"
+                href="/butikken/checkout"
                 className={`${styles.checkoutButton} site-button`}
                 onClick={closeCart}
               >

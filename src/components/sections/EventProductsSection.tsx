@@ -25,7 +25,7 @@ export async function EventProductsSection({ products }: EventProductsSectionPro
       <div className={styles.eventProductsHeader}>
         <h2 className={styles.eventProductsHeading}>Fra nettbutikken</h2>
         <p className={styles.eventProductsSubtext}>Produkter knyttet til dette arrangementet</p>
-        <Link href="/nettbutikk" className={styles.eventProductsLink}>
+        <Link href="/butikken" className={styles.eventProductsLink}>
           Se alle produkter
         </Link>
       </div>

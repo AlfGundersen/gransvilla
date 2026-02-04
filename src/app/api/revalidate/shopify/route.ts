@@ -39,13 +39,13 @@ export async function POST(request: NextRequest) {
       case 'products/delete':
         await revalidateTag('shopify-products', { expire: 0 })
         await revalidatePath('/', 'layout')
-        await revalidatePath('/nettbutikk', 'layout')
+        await revalidatePath('/butikken', 'layout')
         break
 
       case 'inventory_levels/update':
         await revalidateTag('shopify-products', { expire: 0 })
         await revalidatePath('/', 'layout')
-        await revalidatePath('/nettbutikk', 'layout')
+        await revalidatePath('/butikken', 'layout')
         break
 
       case 'collections/create':
@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
           handle: payload.handle,
         })
         await revalidateTag('shopify-products', { expire: 0 })
-        await revalidatePath('/nettbutikk', 'layout')
+        await revalidatePath('/butikken', 'layout')
         break
       }
 
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
         const payload = JSON.parse(body)
         await removeCollection(payload.id)
         await revalidateTag('shopify-products', { expire: 0 })
-        await revalidatePath('/nettbutikk', 'layout')
+        await revalidatePath('/butikken', 'layout')
         break
       }
 

@@ -34,7 +34,7 @@ export default async function ThankYouPage({ searchParams }: Props) {
         </p>
 
         <div className={styles.thankYouActions}>
-          <Link href="/nettbutikk" className={`${styles.thankYouButtonPrimary} site-button`}>
+          <Link href="/butikken" className={`${styles.thankYouButtonPrimary} site-button`}>
             Fortsett å handle
           </Link>
           <Link href="/" className={`${styles.thankYouButtonSecondary} site-button`}>

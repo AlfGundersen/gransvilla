@@ -5,7 +5,7 @@ import page from './documents/page'
 import shopCategory from './documents/shopCategory'
 import siteSettings from './documents/siteSettings'
 import arrangementerSettings from './documents/arrangementerSettings'
-import nettbutikkSettings from './documents/nettbutikkSettings'
+import butikkenSettings from './documents/butikkenSettings'
 import personvernerklaering from './documents/personvernerklaering'
 
 // Object types
@@ -36,7 +36,7 @@ export const schemaTypes = [
   event,
   shopCategory,
   arrangementerSettings,
-  nettbutikkSettings,
+  butikkenSettings,
   personvernerklaering,
 
   // Objects

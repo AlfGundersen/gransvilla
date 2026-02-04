@@ -10,12 +10,12 @@ import styles from './page.module.css'
 export const revalidate = 60
 
 export const metadata: Metadata = {
-  title: 'Nettbutikk',
+  title: 'Butikken',
   description: 'Handle mat og produkter fra Gransvilla',
-  alternates: { canonical: '/nettbutikk' },
+  alternates: { canonical: '/butikken' },
 }
 
-export default async function NettbutikkPage() {
+export default async function ButikkenPage() {
   let collections: Awaited<ReturnType<typeof getCollections>> = []
   try {
     collections = await getCollections()
@@ -41,7 +41,7 @@ export default async function NettbutikkPage() {
   return (
     <div className={styles.shopPage}>
       <header className={styles.shopHeader}>
-        <h1 className={styles.shopTitle}>Nettbutikk</h1>
+        <h1 className={styles.shopTitle}>Butikken</h1>
       </header>
 
       {activeCollections.length === 0 ? (

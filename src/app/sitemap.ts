@@ -9,7 +9,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Static routes
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: BASE_URL, changeFrequency: 'weekly', priority: 1 },
-    { url: `${BASE_URL}/nettbutikk`, changeFrequency: 'daily', priority: 0.9 },
+    { url: `${BASE_URL}/butikken`, changeFrequency: 'daily', priority: 0.9 },
     { url: `${BASE_URL}/arrangementer`, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${BASE_URL}/om-oss`, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/kantine`, changeFrequency: 'monthly', priority: 0.6 },
@@ -39,7 +39,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const products = await getProducts(100)
     productRoutes = products.map((product) => ({
-      url: `${BASE_URL}/nettbutikk/${product.handle}`,
+      url: `${BASE_URL}/butikken/${product.handle}`,
       changeFrequency: 'weekly' as const,
       priority: 0.8,
     }))

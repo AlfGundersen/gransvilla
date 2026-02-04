@@ -2,14 +2,14 @@ import { defineField, defineType } from 'sanity'
 
 export default defineType({
   name: 'nettbutikkSettings',
-  title: 'Nettbutikk',
+  title: 'Butikken',
   type: 'document',
   fields: [
     defineField({
       name: 'title',
       title: 'Tittel',
       type: 'string',
-      initialValue: 'Nettbutikk',
+      initialValue: 'Butikken',
       readOnly: true,
       hidden: true,
     }),
@@ -17,7 +17,7 @@ export default defineType({
   preview: {
     prepare() {
       return {
-        title: 'Nettbutikk',
+        title: 'Butikken',
       }
     },
   },

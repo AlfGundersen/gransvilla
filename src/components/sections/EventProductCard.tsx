@@ -135,7 +135,7 @@ export function EventProductCard({ product }: EventProductCardProps) {
           </button>
         )}
         <Link
-          href={`/nettbutikk/${product.handle}`}
+          href={`/butikken/${product.handle}`}
           className={`${styles.eventProductLinkButton} site-button`}
         >
           Les mer
@@ -262,7 +262,7 @@ export function EventProductSingle({ product }: EventProductSingleProps) {
           </button>
         )}
         <Link
-          href={`/nettbutikk/${product.handle}`}
+          href={`/butikken/${product.handle}`}
           className={`${styles.singleProductSecondaryBtn} site-button`}
         >
           Les mer

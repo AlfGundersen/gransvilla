@@ -30,7 +30,7 @@ export async function FeaturedProductSectionComponent({ data }: FeaturedProductS
   // Use selected product if listed, otherwise fall back to first listed product
   const product = selectedProduct ?? products[0]
 
-  const productUrl = `/nettbutikk/${product.handle}`
+  const productUrl = `/butikken/${product.handle}`
   const productImage = product.images[0]
 
   return (
@@ -52,7 +52,7 @@ export async function FeaturedProductSectionComponent({ data }: FeaturedProductS
                 Les mer
               </Link>
             </div>
-            <Link href="/nettbutikk" className={`${styles.featProductBtnSecondary} site-button`}>
+            <Link href="/butikken" className={`${styles.featProductBtnSecondary} site-button`}>
               Se alle produkter
             </Link>
           </div>

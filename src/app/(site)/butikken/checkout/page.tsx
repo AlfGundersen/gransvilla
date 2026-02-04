@@ -15,7 +15,7 @@ export default function CheckoutPage() {
   // Redirect if cart is empty
   useEffect(() => {
     if (!cartLoading && (!cart || cart.items.length === 0)) {
-      router.push('/nettbutikk')
+      router.push('/butikken')
     }
   }, [cart, cartLoading, router])
 

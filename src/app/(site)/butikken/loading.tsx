@@ -38,7 +38,7 @@ export default function ShopLoading() {
   return (
     <div className={p.shopPage}>
       <div className={p.shopHeader}>
-        <h1 className={p.shopTitle}>Nettbutikk</h1>
+        <h1 className={p.shopTitle}>Butikken</h1>
       </div>
       <div className={p.shopSections}>
         {[0, 1, 2].map((i) => (

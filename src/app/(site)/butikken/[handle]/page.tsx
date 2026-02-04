@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: product.title,
     description: product.description,
     alternates: {
-      canonical: `/nettbutikk/${handle}`,
+      canonical: `/butikken/${handle}`,
     },
     openGraph: {
       title: product.title,

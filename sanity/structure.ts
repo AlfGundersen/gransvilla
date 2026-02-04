@@ -37,13 +37,13 @@ export const structure: StructureResolver = (S) =>
             ]),
         ),
 
-      // ── Nettbutikk ──
+      // ── Butikken ──
       S.listItem()
-        .title('Nettbutikk')
+        .title('Butikken')
         .id('nettbutikk')
         .child(
           S.list()
-            .title('Nettbutikk')
+            .title('Butikken')
             .items([
               S.listItem()
                 .title('Innstillinger')

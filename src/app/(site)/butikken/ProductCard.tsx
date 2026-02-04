@@ -76,7 +76,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               {isSoldOut ? 'Utsolgt' : isAdding ? 'Legger til...' : 'Legg i handlekurv'}
             </button>
             <Link
-              href={`/nettbutikk/${product.handle}`}
+              href={`/butikken/${product.handle}`}
               className={`${styles.shopReadMoreButton} site-button`}
             >
               Les mer
@@ -104,7 +104,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             {isSoldOut ? 'Utsolgt' : isAdding ? 'Legger til...' : 'Legg i handlekurv'}
           </button>
           <Link
-            href={`/nettbutikk/${product.handle}`}
+            href={`/butikken/${product.handle}`}
             className={`${styles.shopReadMoreButton} site-button`}
           >
             Les mer

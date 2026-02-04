@@ -28,7 +28,7 @@ const menuItem = {
       name: 'href',
       title: 'URL',
       type: 'string',
-      description: 'F.eks. / eller /nettbutikk',
+      description: 'F.eks. / eller /butikken',
       hidden: ({ parent }) => !parent?.customLink,
       validation: (Rule) =>
         Rule.custom((value, context) => {
