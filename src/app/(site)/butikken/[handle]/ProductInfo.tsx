@@ -20,6 +20,9 @@ interface ProductInfoProps {
 
 export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
   const [quantity, setQuantity] = useState(1)
+  const [email, setEmail] = useState('')
+  const [consent, setConsent] = useState(false)
+  const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>(() => {
     // Initialize with first available option for each
     const initial: Record<string, string> = {}
@@ -81,6 +84,29 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
 
   const variantPrice = selectedVariant ? parseFloat(selectedVariant.price.amount) : product.price
 
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setNewsletterStatus('loading')
+
+    try {
+      const response = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Subscription failed')
+      }
+
+      setNewsletterStatus('success')
+      setEmail('')
+      setConsent(false)
+    } catch {
+      setNewsletterStatus('error')
+    }
+  }
+
   return (
     <div className={styles.productInfoSection}>
       <div className={styles.productInfoHeader}>
@@ -133,40 +159,90 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
         </div>
       )}
 
-      {/* Quantity Selector */}
-      <div className={styles.productInfoQuantitySection}>
-        <label className={styles.productInfoQuantityLabel}>Antall</label>
-        <div className={styles.productInfoQuantity}>
-          <button
-            type="button"
-            className={styles.productInfoQuantityButton}
-            onClick={decreaseQuantity}
-            disabled={quantity <= 1}
-            aria-label="Reduser antall"
-          >
-            -
-          </button>
-          <span className={styles.productInfoQuantityValue}>{quantity}</span>
-          <button
-            type="button"
-            className={styles.productInfoQuantityButton}
-            onClick={increaseQuantity}
-            disabled={maxQuantity !== null && quantity >= maxQuantity}
-            aria-label="Øk antall"
-          >
-            +
-          </button>
+      {/* Quantity Selector - hidden for coming soon */}
+      {!product.comingSoon && (
+        <div className={styles.productInfoQuantitySection}>
+          <label className={styles.productInfoQuantityLabel}>Antall</label>
+          <div className={styles.productInfoQuantity}>
+            <button
+              type="button"
+              className={styles.productInfoQuantityButton}
+              onClick={decreaseQuantity}
+              disabled={quantity <= 1}
+              aria-label="Reduser antall"
+            >
+              -
+            </button>
+            <span className={styles.productInfoQuantityValue}>{quantity}</span>
+            <button
+              type="button"
+              className={styles.productInfoQuantityButton}
+              onClick={increaseQuantity}
+              disabled={maxQuantity !== null && quantity >= maxQuantity}
+              aria-label="Øk antall"
+            >
+              +
+            </button>
+          </div>
+          {maxQuantity !== null && maxQuantity <= 10 && maxQuantity > 0 && (
+            <p className={styles.productInfoStockWarning}>Kun {maxQuantity} igjen på lager</p>
+          )}
         </div>
-        {maxQuantity !== null && maxQuantity <= 10 && maxQuantity > 0 && (
-          <p className={styles.productInfoStockWarning}>Kun {maxQuantity} igjen på lager</p>
-        )}
-      </div>
+      )}
 
       {/* Add to Cart or Coming Soon */}
       {product.comingSoon ? (
-        <div className={styles.comingSoonBanner}>
-          <span>Kommer snart</span>
-        </div>
+        <>
+          <div className={styles.comingSoonBanner}>
+            <span>Kommer snart</span>
+          </div>
+
+          {/* Newsletter signup for coming soon products */}
+          <div className={styles.comingSoonNewsletter}>
+            <p className={styles.comingSoonNewsletterText}>
+              Meld deg på nyhetsbrevet for å få beskjed når dette blir tilgjengelig.
+            </p>
+            {newsletterStatus === 'success' ? (
+              <p className={styles.comingSoonNewsletterSuccess}>Takk for påmeldingen!</p>
+            ) : (
+              <form className={styles.comingSoonNewsletterForm} onSubmit={handleNewsletterSubmit}>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Din e-postadresse"
+                  aria-label="E-postadresse"
+                  className={styles.comingSoonNewsletterInput}
+                  required
+                  disabled={newsletterStatus === 'loading'}
+                />
+                <label className={styles.comingSoonNewsletterConsent}>
+                  <input
+                    type="checkbox"
+                    checked={consent}
+                    onChange={(e) => setConsent(e.target.checked)}
+                  />
+                  <span>
+                    Jeg samtykker til{' '}
+                    <a href="/personvern" target="_blank" rel="noopener noreferrer">
+                      personvern
+                    </a>
+                  </span>
+                </label>
+                <button
+                  type="submit"
+                  className={styles.comingSoonNewsletterButton}
+                  disabled={newsletterStatus === 'loading' || !consent}
+                >
+                  {newsletterStatus === 'loading' ? 'Sender...' : 'Meld på'}
+                </button>
+                {newsletterStatus === 'error' && (
+                  <p className={styles.comingSoonNewsletterError}>Noe gikk galt. Prøv igjen.</p>
+                )}
+              </form>
+            )}
+          </div>
+        </>
       ) : (
         selectedVariant && (
           <AddToCartButton

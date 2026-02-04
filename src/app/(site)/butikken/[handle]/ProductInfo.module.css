@@ -161,6 +161,120 @@
   margin-top: var(--space-md);
 }
 
+.comingSoonNewsletter {
+  margin-top: var(--space-lg);
+  padding: var(--space-lg);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-background);
+}
+
+.comingSoonNewsletterText {
+  font-size: var(--text-base);
+  margin: 0 0 var(--space-md) 0;
+  color: var(--color-foreground);
+}
+
+.comingSoonNewsletterForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.comingSoonNewsletterInput {
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  background-color: transparent;
+  font-size: var(--text-base);
+  color: var(--color-foreground);
+  width: 100%;
+}
+
+.comingSoonNewsletterInput:focus-visible {
+  outline: 1px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.comingSoonNewsletterConsent {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--color-secondary);
+  cursor: pointer;
+}
+
+.comingSoonNewsletterConsent input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 0.1em;
+  border: 1px solid var(--color-border);
+  background-color: transparent;
+  cursor: pointer;
+  position: relative;
+}
+
+.comingSoonNewsletterConsent input[type="checkbox"]:checked {
+  background-color: var(--color-foreground);
+  border-color: var(--color-foreground);
+}
+
+.comingSoonNewsletterConsent input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 5px;
+  height: 10px;
+  border: solid var(--color-background);
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg);
+}
+
+.comingSoonNewsletterConsent a {
+  color: var(--color-foreground);
+  text-decoration: underline;
+}
+
+.comingSoonNewsletterButton {
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-foreground);
+  background-color: var(--color-foreground);
+  color: var(--color-background);
+  font-size: var(--text-base);
+  cursor: pointer;
+  transition: background-color var(--transition-base), border-color var(--transition-base);
+}
+
+.comingSoonNewsletterButton:hover:not(:disabled),
+.comingSoonNewsletterButton:focus-visible:not(:disabled) {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.comingSoonNewsletterButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.comingSoonNewsletterSuccess {
+  font-size: var(--text-base);
+  color: var(--color-foreground);
+  padding: var(--space-md);
+  border: 1px solid var(--color-foreground);
+  background-color: transparent;
+  margin: 0;
+}
+
+.comingSoonNewsletterError {
+  font-size: var(--text-sm);
+  color: var(--color-error, #c00);
+  margin: var(--space-xs) 0 0 0;
+}
+
 /* ===========================================
    Accordion
    =========================================== */
