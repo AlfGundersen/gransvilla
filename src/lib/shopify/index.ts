@@ -111,6 +111,7 @@ export async function getProductByHandle(handle: string): Promise<Product | null
   }>({
     query: PRODUCT_BY_HANDLE_QUERY,
     variables: { handle },
+    fallback: { productByHandle: null },
   })
 
   if (!data.productByHandle) {
