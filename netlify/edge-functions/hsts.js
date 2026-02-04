@@ -1,6 +1,4 @@
-import type { Context } from '@netlify/edge-functions'
-
-export default async function handler(request: Request, context: Context) {
+export default async function handler(request, context) {
   const response = await context.next()
 
   response.headers.set(
@@ -9,8 +7,4 @@ export default async function handler(request: Request, context: Context) {
   )
 
   return response
-}
-
-export const config = {
-  path: '/*',
 }
