@@ -1,4 +1,4 @@
-import { TrashIcon } from '@sanity/icons'
+import { EditIcon } from '@sanity/icons'
 import { useDocumentOperation } from 'sanity'
 import type { DocumentActionComponent } from 'sanity'
 
@@ -10,9 +10,9 @@ export const UnpublishAction: DocumentActionComponent = (props) => {
   }
 
   return {
-    label: 'Avpubliser',
-    icon: TrashIcon,
-    tone: 'critical',
+    label: 'Gjør til utkast',
+    icon: EditIcon,
+    tone: 'caution',
     onHandle: () => {
       unpublish.execute()
       props.onComplete()

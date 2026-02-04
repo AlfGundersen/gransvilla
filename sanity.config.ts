@@ -11,15 +11,23 @@ import { schemaTypes } from './sanity/schemas'
 import { structure } from './sanity/structure'
 import { SetOppdatertOnPublish } from './sanity/actions/setOppdatertOnPublish'
 import { UnpublishAction } from './sanity/actions/unpublishAction'
+import { PublishActionNO, DuplicateActionNO, DeleteActionNO } from './sanity/actions/norwegianActions'
 
 const resolveDocumentActions: DocumentActionsResolver = (prev, context) => {
-  let actions = [...prev, UnpublishAction]
+  // Filter out the default actions we want to replace
+  const filtered = prev.filter(
+    (action) => !['publish', 'duplicate', 'delete'].includes(action.action ?? '')
+  )
 
-  if (context.schemaType === 'personvernerklaering') {
-    actions = actions.map((action) =>
-      action.action === 'publish' ? SetOppdatertOnPublish : action,
-    )
-  }
+  // Add Norwegian actions
+  let actions = [
+    context.schemaType === 'personvernerklaering' ? SetOppdatertOnPublish : PublishActionNO,
+    ...filtered,
+    UnpublishAction,
+    DuplicateActionNO,
+    DeleteActionNO,
+  ]
+
   return actions
 }
 
