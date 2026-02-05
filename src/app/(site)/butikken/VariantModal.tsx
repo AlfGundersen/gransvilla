@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useCart } from '@/context/CartContext'
 import styles from './VariantModal.module.css'
 
@@ -74,7 +75,7 @@ export function VariantModal({
 
   const selectedVariant = variants.find((v) => v.id === selectedVariantId)
 
-  return (
+  const modalContent = (
     <div className={styles.modalBackdrop} onClick={handleBackdropClick}>
       <div className={styles.modal} ref={modalRef} role="dialog" aria-modal="true">
         <button
@@ -132,4 +133,8 @@ export function VariantModal({
       </div>
     </div>
   )
+
+  // Use portal to render at body level, avoiding transform context issues
+  if (typeof document === 'undefined') return null
+  return createPortal(modalContent, document.body)
 }
