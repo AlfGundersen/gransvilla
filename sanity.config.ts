@@ -1,7 +1,7 @@
 import { defineConfig, type DocumentActionsResolver } from 'sanity'
 import './sanity/studio.css'
 import { structureTool } from 'sanity/structure'
-import { defineLocations, presentationTool } from 'sanity/presentation'
+// import { defineLocations, presentationTool } from 'sanity/presentation'
 import { visionTool } from '@sanity/vision'
 import { media, mediaAssetSource } from 'sanity-plugin-media'
 import { unsplashAssetSource } from 'sanity-plugin-asset-source-unsplash'
@@ -46,37 +46,38 @@ export default defineConfig({
 
   plugins: [
     structureTool({ name: 'struktur', title: 'Struktur', structure }),
-    presentationTool({
-      name: 'live-redigering',
-      title: 'Live redigering',
-      previewUrl: {
-        previewMode: {
-          enable: '/api/draft-mode/enable',
-        },
-      },
-      resolve: {
-        locations: {
-          frontpage: defineLocations({
-            locations: [{ title: 'Forside', href: '/' }],
-          }),
-          event: defineLocations({
-            select: { slug: 'slug.current' },
-            resolve: (doc) => doc?.slug
-              ? { locations: [{ title: doc.slug, href: `/${doc.slug}` }] }
-              : null,
-          }),
-          page: defineLocations({
-            select: { slug: 'slug.current' },
-            resolve: (doc) => doc?.slug
-              ? { locations: [{ title: doc.slug, href: `/${doc.slug}` }] }
-              : null,
-          }),
-          siteSettings: defineLocations({
-            locations: [{ title: 'Forside', href: '/' }],
-          }),
-        },
-      },
-    }),
+    // Temporarily disabled for debugging reload issues
+    // presentationTool({
+    //   name: 'live-redigering',
+    //   title: 'Live redigering',
+    //   previewUrl: {
+    //     previewMode: {
+    //       enable: '/api/draft-mode/enable',
+    //     },
+    //   },
+    //   resolve: {
+    //     locations: {
+    //       frontpage: defineLocations({
+    //         locations: [{ title: 'Forside', href: '/' }],
+    //       }),
+    //       event: defineLocations({
+    //         select: { slug: 'slug.current' },
+    //         resolve: (doc) => doc?.slug
+    //           ? { locations: [{ title: doc.slug, href: `/${doc.slug}` }] }
+    //           : null,
+    //       }),
+    //       page: defineLocations({
+    //         select: { slug: 'slug.current' },
+    //         resolve: (doc) => doc?.slug
+    //           ? { locations: [{ title: doc.slug, href: `/${doc.slug}` }] }
+    //           : null,
+    //       }),
+    //       siteSettings: defineLocations({
+    //         locations: [{ title: 'Forside', href: '/' }],
+    //       }),
+    //     },
+    //   },
+    // }),
     visionTool(),
     media(),
     dashboardTool({
