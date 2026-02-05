@@ -137,7 +137,6 @@ export default function Footer({
                 </address>
               </div>
               <div className={styles.infoSection}>
-                <h4 className={styles.subHeading}>INFORMASJON</h4>
                 <p className={styles.companyInfo}>
                   Bergen Smak AS
                   <br />

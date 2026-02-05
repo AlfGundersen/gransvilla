@@ -166,11 +166,11 @@
   position: relative;
 }
 
-/* Vertical separator - at grid line, matching page content */
+/* Vertical separator - centered in the gap between columns */
 .column::before {
   content: '';
   position: absolute;
-  left: 0;
+  left: calc(var(--space-lg) / -2);
   top: 0;
   bottom: 0;
   width: 1px;
