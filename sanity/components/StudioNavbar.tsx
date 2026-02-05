@@ -23,10 +23,16 @@ const SLUG_TYPES = ['page', 'event']
 function extractDocumentIdFromUrl(): string | null {
   const path = window.location.pathname
 
-  // Match patterns like /studio/struktur/page;documentId or /studio/struktur/event;documentId
-  const match = path.match(/;([a-zA-Z0-9-_.]+)(?:;|$)/)
-  if (match) {
-    return match[1]
+  // Find all semicolon-separated segments and get the LAST document ID
+  // URL patterns:
+  // - /studio/struktur/page;documentId
+  // - /studio/struktur/arrangementer,arrangementsider,event;documentId
+  // - /studio/struktur/nettbutikk,kategorier,shopCategory;documentId
+  const matches = path.match(/;([a-zA-Z0-9-_.]+)/g)
+  if (matches && matches.length > 0) {
+    // Get the last match and remove the semicolon
+    const lastMatch = matches[matches.length - 1]
+    return lastMatch.replace(';', '')
   }
 
   // Match singleton documents like /studio/struktur/frontpage
