@@ -21,7 +21,7 @@
 
 .timelineGrid {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1fr 1fr;
   min-height: 500px;
 }
 
@@ -37,7 +37,6 @@
 .timelineImageWrap {
   position: relative;
   aspect-ratio: 3 / 2;
-  max-width: 80%;
 }
 
 .timelineImage {
