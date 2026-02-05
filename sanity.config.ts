@@ -97,18 +97,19 @@ export default defineConfig({
 
   document: {
     actions: resolveDocumentActions,
-    // Hide singleton documents from the "+" create menu
+    // Hide singleton and synced documents from the "+" create menu
     newDocumentOptions: (prev, { creationContext }) => {
-      const singletons = [
+      const hidden = [
         'frontpage',
         'siteSettings',
         'personvernerklaering',
         'salgsvilkar',
         'arrangementerSettings',
         'nettbutikkSettings',
+        'shopCategory', // Synced from Shopify collections
         'media.tag', // Media tags are managed in the Media tab
       ]
-      return prev.filter((template) => !singletons.includes(template.templateId))
+      return prev.filter((template) => !hidden.includes(template.templateId))
     },
   },
 
