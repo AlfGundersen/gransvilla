@@ -80,6 +80,7 @@ export interface FeaturedColumn {
     slug: {
       current: string
     }
+    featuredImage?: SanityImage & { alt?: string }
   }
   image?: SanityImage & { alt?: string }
 }

@@ -127,7 +127,11 @@ const featuredSectionFragment = groq`
       link-> {
         _id,
         title,
-        slug
+        slug,
+        featuredImage {
+          ${imageFragment},
+          alt
+        }
       },
       image {
         ${imageFragment},

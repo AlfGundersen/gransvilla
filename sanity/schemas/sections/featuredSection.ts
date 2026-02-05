@@ -49,7 +49,7 @@ export default defineType({
 							options: {
 								hotspot: true,
 							},
-							description: "Tilhørende bilde for kolonnen",
+							description: "Valgfritt hvis du har valgt en side – da brukes sidens fremhevede bilde automatisk",
 							fields: [
 								defineField({
 									name: "alt",

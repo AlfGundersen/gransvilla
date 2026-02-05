@@ -62,16 +62,26 @@ export function FeaturedSectionComponent({
                   </Link>
                 )}
               </div>
-              {column.image?.asset && (
-                <div className={styles.featuredImageWrap}>
-                  <Image
-                    src={urlFor(column.image).width(700).height(1050).quality(92).fit('crop').url()}
-                    alt={column.image.alt || column.image.assetAltText || column.heading || ''}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 25vw"
-                  />
-                </div>
-              )}
+              {/* Use column image, or fallback to linked page's featured image */}
+              {(() => {
+                const displayImage = column.image?.asset ? column.image : column.link?.featuredImage
+                if (!displayImage?.asset) return null
+                return (
+                  <div className={styles.featuredImageWrap}>
+                    <Image
+                      src={urlFor(displayImage).width(700).height(1050).quality(92).fit('crop').url()}
+                      alt={
+                        displayImage.alt ||
+                        displayImage.assetAltText ||
+                        column.heading ||
+                        ''
+                      }
+                      fill
+                      sizes="(max-width: 768px) 100vw, 25vw"
+                    />
+                  </div>
+                )
+              })()}
             </div>
           ))}
         </div>
