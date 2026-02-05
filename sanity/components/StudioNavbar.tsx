@@ -10,7 +10,7 @@ export function StudioNavbar(props: NavbarProps) {
   return (
     <Flex align="center" style={{ width: '100%' }}>
       <Box flex={1}>{props.renderDefault(props)}</Box>
-      <Box paddingRight={3}>
+      <Box paddingX={3}>
         <Button
           icon={LaunchIcon}
           mode="bleed"
