@@ -15,22 +15,6 @@ const publicCsp = [
   "worker-src 'self'",
 ].join('; ')
 
-// Studio needs relaxed CSP for Sanity's CDN and Plausible iframe
-const studioCsp = [
-  "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.sanity.io https://*.sanity-cdn.com https://plausible.io",
-  "style-src 'self' 'unsafe-inline' https://use.typekit.net https://p.typekit.net",
-  "font-src 'self' data: https://*.sanity-cdn.com https://use.typekit.net https://p.typekit.net",
-  "img-src 'self' data: blob: https://cdn.sanity.io https://*.sanity-cdn.com https://cdn.shopify.com",
-  "connect-src 'self' https://*.sanity.io wss://*.sanity.io https://sanity-cdn.com https://*.sanity-cdn.com",
-  "media-src 'self' https://cdn.sanity.io",
-  "frame-src 'self' https://plausible.io",
-  "frame-ancestors 'self' https://*.sanity.build",
-  "object-src 'none'",
-  "base-uri 'self'",
-  "form-action 'self'",
-  "worker-src 'self' blob:",
-].join('; ')
 
 const baseSecurityHeaders = [
   {
@@ -77,13 +61,12 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        // Studio: no CSP (authenticated admin interface)
         source: '/studio/:path*',
-        headers: [
-          { key: 'Content-Security-Policy', value: studioCsp },
-          ...baseSecurityHeaders,
-        ],
+        headers: baseSecurityHeaders,
       },
       {
+        // Public pages: full CSP
         source: '/((?!studio).*)',
         headers: [
           { key: 'Content-Security-Policy', value: publicCsp },
