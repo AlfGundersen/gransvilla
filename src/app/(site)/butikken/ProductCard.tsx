@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 import { useCart } from '@/context/CartContext'
+import { shopifyImageUrl } from '@/lib/shopify/image'
 import { VariantModal } from './VariantModal'
 import styles from './page.module.css'
 
@@ -84,7 +85,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       <div className={styles.shopImageWrapper}>
         {product.images[0] && (
           <Image
-            src={product.images[0].url}
+            src={shopifyImageUrl(product.images[0].url, { width: 800, crop: 'center' })}
             alt={product.images[0].altText || product.title}
             fill
             className={`${styles.shopImage} ${isUnavailable ? styles.shopImageSoldOut : ''}`}

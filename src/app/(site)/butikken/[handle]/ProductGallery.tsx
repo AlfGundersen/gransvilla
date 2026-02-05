@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import { useState } from 'react'
+import { shopifyImageUrl } from '@/lib/shopify/image'
 import styles from './ProductGallery.module.css'
 
 interface ProductImage {
@@ -35,7 +36,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
     <div className={styles.productGallery}>
       <div className={styles.productGalleryMainImage}>
         <Image
-          src={selectedImage.url}
+          src={shopifyImageUrl(selectedImage.url, { width: 1200, crop: 'center' })}
           alt={selectedImage.altText || title}
           fill
           className={styles.productGalleryImage}
@@ -56,7 +57,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
               aria-current={idx === selectedIndex ? 'true' : undefined}
             >
               <Image
-                src={image.url}
+                src={shopifyImageUrl(image.url, { width: 160, crop: 'center' })}
                 alt={image.altText || `${title} ${idx + 1}`}
                 fill
                 className={styles.productGalleryImage}

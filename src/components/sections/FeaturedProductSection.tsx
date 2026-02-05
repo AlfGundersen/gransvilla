@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { getProducts } from '@/lib/shopify'
+import { shopifyImageUrl } from '@/lib/shopify/image'
 import type { FeaturedProductSection } from '@/types/sanity'
 import styles from './FeaturedProductSection.module.css'
 
@@ -54,7 +55,7 @@ export async function FeaturedProductSectionComponent({ data }: FeaturedProductS
         {productImage && (
           <div className={styles.featProductImageCol}>
             <Image
-              src={productImage.url}
+              src={shopifyImageUrl(productImage.url, { width: 800, crop: 'center' })}
               alt={productImage.altText || product.title}
               width={productImage.width || 800}
               height={productImage.height || 600}

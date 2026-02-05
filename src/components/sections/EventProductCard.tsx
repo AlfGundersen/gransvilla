@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useCallback, useMemo, useState } from 'react'
 import { useCart } from '@/context/CartContext'
+import { shopifyImageUrl } from '@/lib/shopify/image'
 import type { Product } from '@/lib/shopify/types'
 import styles from './EventProductsSection.module.css'
 
@@ -79,7 +80,7 @@ export function EventProductCard({ product }: EventProductCardProps) {
       {productImage && (
         <div className={styles.eventProductImageWrapper}>
           <Image
-            src={productImage.url}
+            src={shopifyImageUrl(productImage.url, { width: 800, crop: 'center' })}
             alt={productImage.altText || product.title}
             fill
             className={styles.eventProductImage}
