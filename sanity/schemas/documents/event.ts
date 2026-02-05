@@ -43,7 +43,7 @@ export default defineType({
     }),
     defineField({
       name: 'description',
-      title: 'Kort beskrivelse',
+      title: 'Tekst til oversiktsider',
       type: 'simpleBlockContent',
       description: 'Kort sammendrag som vises på arrangementer-oversikten',
       group: 'content',
