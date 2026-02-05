@@ -4,8 +4,7 @@ import { type NavbarProps } from 'sanity'
 
 export function StudioNavbar(props: NavbarProps) {
   const handleOpenSite = () => {
-    // Open site with draft mode disabled
-    window.open('https://gransvilla.no/api/draft-mode/disable?redirect=/', '_blank')
+    window.open('https://gransvilla.no', '_blank')
   }
 
   return (
