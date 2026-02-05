@@ -2,7 +2,7 @@ import { LaunchIcon } from '@sanity/icons'
 import { Box, Button, Flex } from '@sanity/ui'
 import { type NavbarProps, useClient } from 'sanity'
 import { useRouter } from 'sanity/router'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 
 const BASE_URL = 'https://gransvilla.no'
 
@@ -19,10 +19,23 @@ const STATIC_ROUTES: Record<string, string> = {
 // Document types that have dynamic slugs
 const SLUG_TYPES = ['page', 'event']
 
-interface RouterState {
-  panes?: Array<Array<{ id?: string }>>
-  type?: string
-  id?: string
+// Extract document ID from Sanity Studio URL
+function extractDocumentIdFromUrl(): string | null {
+  const path = window.location.pathname
+
+  // Match patterns like /studio/struktur/page;documentId or /studio/struktur/event;documentId
+  const match = path.match(/;([a-zA-Z0-9-_.]+)(?:;|$)/)
+  if (match) {
+    return match[1]
+  }
+
+  // Match singleton documents like /studio/struktur/frontpage
+  const singletonMatch = path.match(/\/studio\/struktur\/([a-zA-Z]+)$/)
+  if (singletonMatch) {
+    return singletonMatch[1]
+  }
+
+  return null
 }
 
 export function StudioNavbar(props: NavbarProps) {
@@ -30,31 +43,21 @@ export function StudioNavbar(props: NavbarProps) {
   const client = useClient({ apiVersion: '2024-01-01' })
   const [targetUrl, setTargetUrl] = useState(BASE_URL)
 
-  useEffect(() => {
-    const routerState = router.state as RouterState | undefined
-
-    // Try to extract document ID from panes structure (Sanity's internal routing)
-    let documentId: string | undefined
-
-    // Check panes array (structure tool navigation)
-    if (routerState?.panes) {
-      const lastPane = routerState.panes[routerState.panes.length - 1]
-      if (Array.isArray(lastPane) && lastPane[0]?.id) {
-        documentId = lastPane[0].id
-      }
-    }
-
-    // Fallback to direct id on state
-    if (!documentId && routerState?.id) {
-      documentId = routerState.id
-    }
+  const updateTargetUrl = useCallback(() => {
+    const documentId = extractDocumentIdFromUrl()
 
     if (!documentId) {
       setTargetUrl(BASE_URL)
       return
     }
 
-    // Fetch document type and slug
+    // Check if it's a known singleton (URL path matches static route key)
+    if (STATIC_ROUTES[documentId]) {
+      setTargetUrl(BASE_URL + STATIC_ROUTES[documentId])
+      return
+    }
+
+    // Fetch document type and slug from Sanity
     client
       .fetch<{ _type: string; slug?: { current: string } } | null>(
         `*[_id == $id || _id == "drafts." + $id][0]{ _type, slug }`,
@@ -84,7 +87,12 @@ export function StudioNavbar(props: NavbarProps) {
       .catch(() => {
         setTargetUrl(BASE_URL)
       })
-  }, [router.state, client])
+  }, [client])
+
+  // Update URL when router state changes
+  useEffect(() => {
+    updateTargetUrl()
+  }, [router.state, updateTargetUrl])
 
   const handleOpenSite = () => {
     window.open(targetUrl, '_blank')
