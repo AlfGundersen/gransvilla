@@ -100,7 +100,8 @@ export async function POST(request: NextRequest) {
     // Send email using Mailjet (reusing existing configuration)
     const mailjetApiKey = process.env.MAILJET_API_KEY
     const mailjetSecretKey = process.env.MAILJET_SECRET_KEY
-    const recipientEmail = process.env.CONTACT_FORM_EMAIL || 'mail@sondre.me'
+    const recipientEmail = process.env.CONTACT_FORM_EMAIL || 'janne@gransvilla.no'
+    const senderEmail = process.env.CONTACT_FORM_SENDER || 'kontakt@gransvilla.no'
 
     if (!mailjetApiKey || !mailjetSecretKey) {
       console.error('Mailjet credentials not configured')
@@ -114,7 +115,7 @@ export async function POST(request: NextRequest) {
       Messages: [
         {
           From: {
-            Email: 'noreply@gransvilla.no',
+            Email: senderEmail,
             Name: 'Grans Villa Kontaktskjema',
           },
           To: [
@@ -127,7 +128,7 @@ export async function POST(request: NextRequest) {
             Email: email,
             Name: `${firstName} ${lastName}`,
           },
-          Subject: `Kontaktskjema: ${firstName} ${lastName}`,
+          Subject: `Ny henvendelse fra kontaktskjemaet på Gransvilla.no`,
           TextPart: `
 Ny henvendelse fra kontaktskjemaet på gransvilla.no
 
