@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity'
+import { SearchIcon } from '@sanity/icons'
 import { AltTextInput } from '../../components/AltTextInput'
 import { ShopifyProductInput } from '../../components/ShopifyProductInput'
 
@@ -6,6 +7,10 @@ export default defineType({
   name: 'event',
   title: 'Arrangementside',
   type: 'document',
+  groups: [
+    { name: 'content', title: 'Innhold', default: true },
+    { name: 'seo', title: 'SEO', icon: SearchIcon },
+  ],
   fields: [
     defineField({
       name: 'title',
@@ -13,6 +18,7 @@ export default defineType({
       type: 'string',
       description: 'Hovedtittelen som vises øverst på siden',
       validation: (Rule) => Rule.required().error('Tittel er påkrevd'),
+      group: 'content',
     }),
     defineField({
       name: 'slug',
@@ -33,12 +39,14 @@ export default defineType({
       },
       description: 'Klikk "Generate" for å lage URL fra tittelen',
       validation: (Rule) => Rule.required().error('URL-slug er påkrevd'),
+      group: 'content',
     }),
     defineField({
       name: 'description',
       title: 'Kort beskrivelse',
       type: 'simpleBlockContent',
-      description: 'Kort sammendrag som vises i lister',
+      description: 'Kort sammendrag som vises på arrangementer-oversikten',
+      group: 'content',
     }),
     defineField({
       name: 'featuredImage',
@@ -57,6 +65,7 @@ export default defineType({
           components: { input: AltTextInput },
         }),
       ],
+      group: 'content',
     }),
     defineField({
       name: 'sections',
@@ -69,6 +78,7 @@ export default defineType({
         { type: 'bildeTekstSeksjon' },
         { type: 'bildegalleriSeksjon' },
       ],
+      group: 'content',
     }),
     defineField({
       name: 'products',
@@ -96,6 +106,13 @@ export default defineType({
           },
         },
       }],
+      group: 'content',
+    }),
+    defineField({
+      name: 'seo',
+      title: 'SEO',
+      type: 'seo',
+      group: 'seo',
     }),
   ],
   preview: {

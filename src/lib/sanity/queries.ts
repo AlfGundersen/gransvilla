@@ -168,10 +168,10 @@ const timelineSectionFragment = groq`
       ${imageFragment},
       alt
     },
-    heading,
     entries[] {
       _key,
-      year,
+      showTitle,
+      title,
       "description": description[defined(_type)]
     }
   }
@@ -366,7 +366,6 @@ export const pageQuery = groq`
     _type,
     title,
     slug,
-    description,
     featuredImage {
       ${imageFragment},
       alt
@@ -395,18 +394,6 @@ export const personvernQuery = groq`
 export const salgsvilkarQuery = groq`
   *[_type == "salgsvilkar"][0] {
     "innhold": innhold[defined(_type)]
-  }
-`
-
-// Shop categories query
-export const shopCategoriesQuery = groq`
-  *[_type == "shopCategory"] | order(order asc) {
-    _id,
-    title,
-    shopifyCollectionId,
-    shopifyHandle,
-    description,
-    order
   }
 `
 

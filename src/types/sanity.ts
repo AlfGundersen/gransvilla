@@ -55,10 +55,9 @@ export interface EventsSection {
 // Timeline Entry
 export interface TimelineEntry {
   _key: string
-  year: number
-  // title?: string  // Re-enable when per-year titles are needed
+  showTitle?: boolean
+  title?: string
   description?: BlockContent
-  // image?: SanityImage  // Re-enable when per-year images are needed
 }
 
 // Timeline Section
@@ -66,7 +65,6 @@ export interface TimelineSection {
   _type: 'timelineSection'
   _key: string
   image?: SanityImage & { alt?: string }
-  heading?: string
   entries?: TimelineEntry[]
 }
 
@@ -179,6 +177,11 @@ export interface Event {
   featuredImage?: SanityImage & { alt?: string }
   sections?: EventPageSection[]
   products?: string[]
+  seo?: {
+    metaTitle?: string
+    metaDescription?: string
+    ogImage?: SanityImage
+  }
 }
 
 // Union of all section types
@@ -288,16 +291,6 @@ export interface ArrangementerSettings {
   heroBilde?: SanityImage
 }
 
-// Shop Category (synced from Shopify)
-export interface ShopCategory {
-  _id: string
-  title: string
-  shopifyCollectionId: string
-  shopifyHandle: string
-  description: BlockContent | null
-  order: number
-}
-
 // Page document
 export interface Page {
   _id: string
@@ -306,7 +299,6 @@ export interface Page {
   slug: {
     current: string
   }
-  description?: BlockContent
   featuredImage?: SanityImage & { alt?: string }
   sections?: EventPageSection[]
   seo?: {

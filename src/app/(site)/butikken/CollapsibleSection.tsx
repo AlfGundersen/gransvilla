@@ -1,13 +1,11 @@
 'use client'
 
-import { PortableText } from '@portabletext/react'
-import type { PortableTextBlock } from '@portabletext/types'
 import { Children, useCallback, useEffect, useRef, useState } from 'react'
 import styles from './page.module.css'
 
 interface CollapsibleSectionProps {
   title: string
-  description?: PortableTextBlock[] | string | null
+  description?: string | null
   children: React.ReactNode
 }
 
@@ -73,11 +71,7 @@ export default function CollapsibleSection({
         </div>
         {description && (
           <div className={styles.shopCategoryDescription}>
-            {Array.isArray(description) ? (
-              <PortableText value={description} />
-            ) : (
-              <p>{description}</p>
-            )}
+            <p>{description}</p>
           </div>
         )}
       </button>
@@ -88,11 +82,7 @@ export default function CollapsibleSection({
           <h2 className={styles.shopCategoryTitle}>{title}</h2>
           {description && (
             <div className={styles.shopCategoryDescription}>
-              {Array.isArray(description) ? (
-                <PortableText value={description} />
-              ) : (
-                <p>{description}</p>
-              )}
+              <p>{description}</p>
             </div>
           )}
         </div>

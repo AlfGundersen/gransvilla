@@ -1,8 +1,5 @@
 import type { Metadata } from 'next'
-import { client } from '@/lib/sanity/client'
-import { shopCategoriesQuery } from '@/lib/sanity/queries'
 import { getCollections } from '@/lib/shopify'
-import type { ShopCategory } from '@/types/sanity'
 import CollapsibleSection from './CollapsibleSection'
 import ProductCard from './ProductCard'
 import styles from './page.module.css'
@@ -22,21 +19,9 @@ export default async function ButikkenPage() {
   } catch {
     // Store unavailable - show empty state
   }
-  const shopCategories = await client.fetch<ShopCategory[]>(shopCategoriesQuery)
 
-  // Filter out empty collections and merge with Sanity descriptions
-  const activeCollections = collections
-    .filter((c) => c.products.length > 0)
-    .map((collection) => {
-      // Find matching Sanity category by Shopify collection ID
-      const sanityCategory = shopCategories.find((cat) => cat.shopifyCollectionId === collection.id)
-      return {
-        ...collection,
-        description: sanityCategory?.description || collection.description,
-        order: sanityCategory?.order ?? 999,
-      }
-    })
-    .sort((a, b) => a.order - b.order)
+  // Filter out empty collections (Shopify controls order)
+  const activeCollections = collections.filter((c) => c.products.length > 0)
 
   return (
     <div className={styles.shopPage}>

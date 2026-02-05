@@ -2,10 +2,8 @@
 import event from './documents/event'
 import frontpage from './documents/frontpage'
 import page from './documents/page'
-import shopCategory from './documents/shopCategory'
 import siteSettings from './documents/siteSettings'
 import arrangementerSettings from './documents/arrangementerSettings'
-import butikkenSettings from './documents/butikkenSettings'
 import personvernerklaering from './documents/personvernerklaering'
 import salgsvilkar from './documents/salgsvilkar'
 
@@ -35,9 +33,7 @@ export const schemaTypes = [
   page,
   siteSettings,
   event,
-  shopCategory,
   arrangementerSettings,
-  butikkenSettings,
   personvernerklaering,
   salgsvilkar,
 

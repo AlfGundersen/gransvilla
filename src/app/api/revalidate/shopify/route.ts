@@ -1,7 +1,6 @@
 import crypto from 'crypto'
 import { revalidatePath, revalidateTag } from 'next/cache'
 import { type NextRequest, NextResponse } from 'next/server'
-import { removeCollection, syncCollection } from '@/lib/sanity/sync'
 
 const SHOPIFY_WEBHOOK_SECRET = process.env.SHOPIFY_WEBHOOK_SECRET
 
@@ -37,37 +36,14 @@ export async function POST(request: NextRequest) {
       case 'products/create':
       case 'products/update':
       case 'products/delete':
-        await revalidateTag('shopify-products', { expire: 0 })
-        await revalidatePath('/', 'layout')
-        await revalidatePath('/butikken', 'layout')
-        break
-
+      case 'collections/create':
+      case 'collections/update':
+      case 'collections/delete':
       case 'inventory_levels/update':
         await revalidateTag('shopify-products', { expire: 0 })
         await revalidatePath('/', 'layout')
         await revalidatePath('/butikken', 'layout')
         break
-
-      case 'collections/create':
-      case 'collections/update': {
-        const payload = JSON.parse(body)
-        await syncCollection({
-          id: payload.id,
-          title: payload.title,
-          handle: payload.handle,
-        })
-        await revalidateTag('shopify-products', { expire: 0 })
-        await revalidatePath('/butikken', 'layout')
-        break
-      }
-
-      case 'collections/delete': {
-        const payload = JSON.parse(body)
-        await removeCollection(payload.id)
-        await revalidateTag('shopify-products', { expire: 0 })
-        await revalidatePath('/butikken', 'layout')
-        break
-      }
 
       default:
         // Revalidate everything for unknown topics

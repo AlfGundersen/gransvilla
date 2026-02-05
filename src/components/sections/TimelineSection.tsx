@@ -19,28 +19,23 @@ export function TimelineSectionComponent({
   documentId,
   documentType,
 }: TimelineSectionComponentProps) {
-  const { entries = [], image, heading } = data
-
-  // Sort entries by year, newest first
-  const sortedEntries = [...entries].sort((a, b) => b.year - a.year)
+  const { entries, image } = data
+  const entryList = entries ?? []
 
   // Default to the first entry with a description, or just the first entry
-  const defaultIndex = sortedEntries.findIndex((e) => e.description) ?? 0
+  const defaultIndex = entryList.findIndex((e) => e.description)
   const [activeIndex, setActiveIndex] = useState(defaultIndex >= 0 ? defaultIndex : 0)
 
-  const activeEntry = sortedEntries[activeIndex]
-
-  if (sortedEntries.length === 0) {
+  if (entryList.length === 0) {
     return null
   }
 
   return (
-    <section className={styles.timelineSection} aria-label={heading || 'Tidslinje'}>
+    <section className={styles.timelineSection} aria-label="Tidslinje">
       <div className={styles.timelineContainer}>
         <div className={styles.timelineGrid}>
-          {/* Left: Image and heading */}
+          {/* Left: Image */}
           <div className={styles.timelineLeftCol}>
-            {heading && <h2 className={styles.timelineHeading}>{heading}</h2>}
             {image?.asset && (
               <div className={styles.timelineImageWrap}>
                 <Image
@@ -54,16 +49,16 @@ export function TimelineSectionComponent({
             )}
           </div>
 
-          {/* Right: Year list */}
+          {/* Right: Entry list */}
           <div className={styles.timelineYearList}>
-            {sortedEntries.map((entry, index) => (
+            {entryList.map((entry, index) => (
               <button
                 key={entry._key}
                 className={`${styles.timelineYearItem} ${index === activeIndex ? styles.timelineYearItemActive : ''}`}
                 onClick={() => setActiveIndex(index)}
                 onFocus={() => setActiveIndex(index)}
                 aria-expanded={index === activeIndex}
-                aria-label={`${entry.year}`}
+                aria-label={entry.title}
                 data-sanity={
                   documentId && documentType
                     ? createDataAttribute({
@@ -74,7 +69,9 @@ export function TimelineSectionComponent({
                     : undefined
                 }
               >
-                <span className={styles.timelineYear}>{entry.year}</span>
+                {entry.showTitle && entry.title && (
+                  <span className={styles.timelineYear}>{entry.title}</span>
+                )}
                 {index === activeIndex && entry.description && (
                   <div className={styles.timelineDescription}>
                     <PortableText value={entry.description} />

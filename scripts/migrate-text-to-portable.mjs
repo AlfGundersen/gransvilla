@@ -54,12 +54,6 @@ const migrations = [
 
   // event
   { type: 'event', path: '', field: 'description' },
-
-  // page
-  { type: 'page', path: '', field: 'description' },
-
-  // shopCategory
-  { type: 'shopCategory', path: '', field: 'description' },
 ]
 
 /**

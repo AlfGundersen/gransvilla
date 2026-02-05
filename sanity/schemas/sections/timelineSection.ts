@@ -26,12 +26,6 @@ export default defineType({
       ],
     }),
     defineField({
-      name: 'heading',
-      title: 'Overskrift',
-      type: 'string',
-      description: 'Vises over tidslinjen',
-    }),
-    defineField({
       name: 'entries',
       title: 'Tidslinje',
       description: 'Fortell historien til Gransvilla gjennom viktige årstall og milepæler',
@@ -43,18 +37,18 @@ export default defineType({
           title: 'Tidslinje-element',
           fields: [
             defineField({
-              name: 'year',
-              title: 'År',
-              type: 'number',
-              validation: (Rule) => Rule.required().min(1900).max(2100),
+              name: 'showTitle',
+              title: 'Vis tittel',
+              type: 'boolean',
+              initialValue: false,
             }),
-            // --- Commented out for now, can be re-enabled later ---
-            // defineField({
-            //   name: 'title',
-            //   title: 'Tittel',
-            //   type: 'string',
-            //   description: 'Overskrift som vises over bildet',
-            // }),
+            defineField({
+              name: 'title',
+              title: 'Tittel',
+              type: 'string',
+              description: 'F.eks. årstall eller annen overskrift',
+              hidden: ({ parent }) => !parent?.showTitle,
+            }),
             defineField({
               name: 'description',
               title: 'Beskrivelse',
@@ -73,15 +67,17 @@ export default defineType({
           ],
           preview: {
             select: {
-              year: 'year',
-              // title: 'title',
-              // media: 'image',
+              title: 'title',
+              description: 'description',
             },
-            prepare({ year /*, title, media */ }) {
+            prepare({ title, description }) {
+              const descText = Array.isArray(description)
+                ? description.map((block: { children?: { text?: string }[] }) =>
+                    block.children?.map((c) => c.text).join('') ?? ''
+                  ).join(' ')
+                : ''
               return {
-                title: `${year || 'Ukjent år'}`,
-                // subtitle: title || '',
-                // media,
+                title: title || descText?.substring(0, 30) || 'Tidslinje-element',
               }
             },
           },

@@ -21,7 +21,7 @@
 
 .timelineGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 2fr 1fr;
   min-height: 500px;
 }
 
@@ -37,20 +37,18 @@
 .timelineImageWrap {
   position: relative;
   aspect-ratio: 3 / 2;
+  background-color: var(--color-background);
+  isolation: isolate;
 }
 
 .timelineImage {
-  object-fit: cover;
-
+  object-fit: contain;
+  mix-blend-mode: multiply;
 }
 
-.timelineHeading {
-  font-family: var(--font-heading);
-  font-size: var(--text-5xl);
-  font-weight: 200;
-  line-height: 1.2;
-  margin: 0;
-  max-width: 7ch;
+/* Ensure the img inside Next.js Image wrapper blends correctly */
+.timelineImageWrap img {
+  mix-blend-mode: multiply;
 }
 
 .timelineActiveYear {

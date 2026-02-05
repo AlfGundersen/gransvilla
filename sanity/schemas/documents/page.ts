@@ -1,10 +1,15 @@
 import { defineField, defineType } from 'sanity'
+import { SearchIcon } from '@sanity/icons'
 import { AltTextInput } from '../../components/AltTextInput'
 
 export default defineType({
   name: 'page',
   title: 'Side',
   type: 'document',
+  groups: [
+    { name: 'content', title: 'Innhold', default: true },
+    { name: 'seo', title: 'SEO', icon: SearchIcon },
+  ],
   fields: [
     defineField({
       name: 'title',
@@ -12,6 +17,7 @@ export default defineType({
       type: 'string',
       description: 'Hovedtittelen som vises øverst på siden',
       validation: (Rule) => Rule.required().error('Tittel er påkrevd'),
+      group: 'content',
     }),
     defineField({
       name: 'slug',
@@ -32,12 +38,7 @@ export default defineType({
       },
       description: 'Klikk "Generate" for å lage URL fra tittelen',
       validation: (Rule) => Rule.required().error('URL-slug er påkrevd'),
-    }),
-    defineField({
-      name: 'description',
-      title: 'Kort beskrivelse',
-      type: 'simpleBlockContent',
-      description: 'Kort sammendrag som vises i lister',
+      group: 'content',
     }),
     defineField({
       name: 'featuredImage',
@@ -56,6 +57,7 @@ export default defineType({
           components: { input: AltTextInput },
         }),
       ],
+      group: 'content',
     }),
     defineField({
       name: 'sections',
@@ -68,27 +70,24 @@ export default defineType({
         { type: 'bildeTekstSeksjon' },
         { type: 'bildegalleriSeksjon' },
       ],
+      group: 'content',
     }),
     defineField({
       name: 'seo',
       title: 'SEO',
       type: 'seo',
+      group: 'seo',
     }),
   ],
   preview: {
     select: {
       title: 'title',
-      description: 'description',
+      slug: 'slug.current',
     },
-    prepare({ title, description }) {
-      const text = Array.isArray(description)
-        ? description.map((block: { children?: { text?: string }[] }) =>
-            block.children?.map((c) => c.text).join('') ?? ''
-          ).join(' ')
-        : description || ''
+    prepare({ title, slug }) {
       return {
         title,
-        subtitle: text ? text.substring(0, 50) + (text.length > 50 ? '...' : '') : '',
+        subtitle: slug ? `/${slug}` : '',
       }
     },
   },

@@ -32,6 +32,10 @@ export function HeroSectionComponent({ data }: HeroSectionComponentProps) {
               }
             />
           )}
+          {/* Temporary announcement - remove when ready */}
+          <div className={styles.heroAnnouncement}>
+            Åpner sommeren 2026...
+          </div>
         </div>
       </div>
     </section>

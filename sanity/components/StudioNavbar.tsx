@@ -11,8 +11,6 @@ const STATIC_ROUTES: Record<string, string> = {
   frontpage: '/',
   siteSettings: '/',
   arrangementerSettings: '/arrangementer',
-  nettbutikkSettings: '/butikken',
-  shopCategory: '/butikken',
   personvernerklaering: '/personvern',
   salgsvilkar: '/salgsvilkar',
 }
@@ -28,7 +26,6 @@ function extractDocumentIdFromUrl(): string | null {
   // URL patterns:
   // - /studio/struktur/page;documentId
   // - /studio/struktur/arrangementer,arrangementsider,event;documentId
-  // - /studio/struktur/nettbutikk,kategorier,shopCategory;documentId
   const matches = path.match(/;([a-zA-Z0-9-_.]+)/g)
   if (matches && matches.length > 0) {
     // Get the last match and remove the semicolon

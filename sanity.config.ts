@@ -105,8 +105,6 @@ export default defineConfig({
         'personvernerklaering',
         'salgsvilkar',
         'arrangementerSettings',
-        'nettbutikkSettings',
-        'shopCategory', // Synced from Shopify collections
         'media.tag', // Media tags are managed in the Media tab
       ]
       return prev.filter((template) => !hidden.includes(template.templateId))
