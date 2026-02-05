@@ -14,3 +14,57 @@
 [data-ui="Card"][data-width="full"] iframe {
   min-height: calc(100vh - 120px);
 }
+
+/* Compact mode for low resolution screens */
+@media (max-height: 800px), (max-width: 1200px) {
+  /* Reduce base font size */
+  [data-ui="Studio"] {
+    font-size: 13px;
+  }
+
+  /* Compact navbar */
+  [data-ui="Navbar"] {
+    padding-block: 0.25rem;
+  }
+
+  /* Reduce spacing in document panels */
+  [data-ui="DocumentPanel"] [data-ui="Box"],
+  [data-ui="DocumentPanel"] [data-ui="Stack"] {
+    --space-3: 0.5rem;
+    --space-4: 0.75rem;
+    --space-5: 1rem;
+  }
+
+  /* Smaller field labels */
+  [data-ui="Label"] {
+    font-size: 11px;
+  }
+
+  /* Compact form fields */
+  [data-ui="TextInput"],
+  [data-ui="TextArea"] {
+    padding: 0.5rem;
+    font-size: 13px;
+  }
+
+  /* Reduce preview card sizes */
+  [data-ui="PreviewCard"] {
+    padding: 0.5rem;
+  }
+
+  /* Compact list items in structure */
+  [data-ui="Tree"] [data-ui="Button"] {
+    padding-block: 0.25rem;
+  }
+}
+
+/* Extra compact for very small screens */
+@media (max-height: 700px) {
+  [data-ui="Studio"] {
+    font-size: 12px;
+  }
+
+  [data-ui="Navbar"] {
+    padding-block: 0.125rem;
+  }
+}
