@@ -6,36 +6,84 @@ import { useEffect, useState } from 'react'
 
 const BASE_URL = 'https://gransvilla.no'
 
+// Map document types to their public URLs
+const STATIC_ROUTES: Record<string, string> = {
+  frontpage: '/',
+  siteSettings: '/',
+  arrangementerSettings: '/arrangementer',
+  nettbutikkSettings: '/butikken',
+  shopCategory: '/butikken',
+  personvernerklaering: '/personvern',
+}
+
+// Document types that have dynamic slugs
+const SLUG_TYPES = ['page', 'event']
+
+interface RouterState {
+  panes?: Array<Array<{ id?: string }>>
+  type?: string
+  id?: string
+}
+
 export function StudioNavbar(props: NavbarProps) {
   const router = useRouter()
   const client = useClient({ apiVersion: '2024-01-01' })
   const [targetUrl, setTargetUrl] = useState(BASE_URL)
 
   useEffect(() => {
-    // Parse router state to get document info
-    const routerState = router.state as { type?: string; id?: string } | undefined
+    const routerState = router.state as RouterState | undefined
 
-    if (!routerState?.type || !routerState?.id) {
+    // Try to extract document ID from panes structure (Sanity's internal routing)
+    let documentId: string | undefined
+
+    // Check panes array (structure tool navigation)
+    if (routerState?.panes) {
+      const lastPane = routerState.panes[routerState.panes.length - 1]
+      if (Array.isArray(lastPane) && lastPane[0]?.id) {
+        documentId = lastPane[0].id
+      }
+    }
+
+    // Fallback to direct id on state
+    if (!documentId && routerState?.id) {
+      documentId = routerState.id
+    }
+
+    if (!documentId) {
       setTargetUrl(BASE_URL)
       return
     }
 
-    const { type, id } = routerState
-
-    // Only fetch slug for pages and events (arrangementer)
-    if (type === 'page' || type === 'event') {
-      client
-        .fetch<string | null>(`*[_id == $id][0].slug.current`, { id })
-        .then((slug) => {
-          setTargetUrl(slug ? `${BASE_URL}/${slug}` : BASE_URL)
-        })
-        .catch(() => {
+    // Fetch document type and slug
+    client
+      .fetch<{ _type: string; slug?: { current: string } } | null>(
+        `*[_id == $id || _id == "drafts." + $id][0]{ _type, slug }`,
+        { id: documentId.replace(/^drafts\./, '') }
+      )
+      .then((doc) => {
+        if (!doc) {
           setTargetUrl(BASE_URL)
-        })
-    } else {
-      // All other document types just go to homepage
-      setTargetUrl(BASE_URL)
-    }
+          return
+        }
+
+        // Check static routes first
+        if (STATIC_ROUTES[doc._type]) {
+          setTargetUrl(BASE_URL + STATIC_ROUTES[doc._type])
+          return
+        }
+
+        // For pages and events, use slug
+        if (SLUG_TYPES.includes(doc._type) && doc.slug?.current) {
+          setTargetUrl(`${BASE_URL}/${doc.slug.current}`)
+          return
+        }
+
+        // Default to homepage
+        setTargetUrl(BASE_URL)
+      })
+      .catch(() => {
+        setTargetUrl(BASE_URL)
+      })
   }, [router.state, client])
 
   const handleOpenSite = () => {
