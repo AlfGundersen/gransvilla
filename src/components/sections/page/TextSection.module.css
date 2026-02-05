@@ -5,7 +5,10 @@
   gap: var(--space-lg);
   position: relative;
   padding: var(--space-lg) 0 var(--space-lg) var(--space-lg);
-  ;
+}
+
+.textSection a {
+  text-decoration: underline;
 }
 
 .textSection::after {

@@ -14,6 +14,7 @@ const STATIC_ROUTES: Record<string, string> = {
   nettbutikkSettings: '/butikken',
   shopCategory: '/butikken',
   personvernerklaering: '/personvern',
+  salgsvilkar: '/salgsvilkar',
 }
 
 // Document types that have dynamic slugs

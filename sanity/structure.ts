@@ -71,6 +71,12 @@ export const structure: StructureResolver = (S) =>
         .id('personvernerklaering')
         .child(S.document().schemaType('personvernerklaering').documentId('personvernerklaering')),
 
+      // ── Salgsvilkår ──
+      S.listItem()
+        .title('Salgsvilkår')
+        .id('salgsvilkar')
+        .child(S.document().schemaType('salgsvilkar').documentId('salgsvilkar')),
+
       // ── Innstillinger ──
       S.listItem()
         .title('Innstillinger')

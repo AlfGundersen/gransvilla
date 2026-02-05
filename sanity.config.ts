@@ -1,4 +1,4 @@
-import { defineConfig, type DocumentActionsResolver } from 'sanity'
+import { defineConfig, type DocumentActionsResolver, type TemplateResolver } from 'sanity'
 import './sanity/studio.css'
 import { structureTool } from 'sanity/structure'
 // import { defineLocations, presentationTool } from 'sanity/presentation'
@@ -97,6 +97,19 @@ export default defineConfig({
 
   document: {
     actions: resolveDocumentActions,
+    // Hide singleton documents from the "+" create menu
+    newDocumentOptions: (prev, { creationContext }) => {
+      const singletons = [
+        'frontpage',
+        'siteSettings',
+        'personvernerklaering',
+        'salgsvilkar',
+        'arrangementerSettings',
+        'nettbutikkSettings',
+        'media.tag', // Media tags are managed in the Media tab
+      ]
+      return prev.filter((template) => !singletons.includes(template.templateId))
+    },
   },
 
   form: {
