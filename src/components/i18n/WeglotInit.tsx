@@ -36,9 +36,7 @@ export default function WeglotInit() {
             Weglot.initialize({
               api_key: '${apiKey}',
               cookie: true,
-              // TEMPORARY: hide_switcher disabled so Weglot's dashboard
-              // onboarding can detect the default widget. Re-enable
-              // \`hide_switcher: true\` after the dashboard setup step finishes.
+              hide_switcher: true,
               excluded_blocks: [{ value: '.language-switcher-button' }],
               excluded_paths: [
                 { value: '/studio', type: 'START_WITH' },
