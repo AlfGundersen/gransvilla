@@ -44,7 +44,9 @@ export default function WeglotInit() {
     script.onload = () => {
       window.Weglot?.initialize({
         api_key: apiKey,
-        switchers: [], // we render our own switcher in the header
+        // TODO: re-enable `hide_switcher: true` after the Weglot dashboard
+        // onboarding step is complete. Weglot's setup wizard requires the
+        // default switcher to be visible to verify the install.
       })
     }
     document.head.appendChild(script)
