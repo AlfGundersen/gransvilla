@@ -1,4 +1,5 @@
 import { PortableText } from '@portabletext/react'
+import { getWatermarkSrc } from '@/components/Watermark'
 import { getBlurDataURL } from '@/lib/sanity/blur'
 import { urlFor } from '@/lib/sanity/image'
 import type { BildegalleriSeksjon } from '@/types/sanity'
@@ -25,10 +26,12 @@ export async function GallerySection({ data, dataSanity }: GallerySectionProps) 
   const thumbWidth = 600
   const thumbHeight = Math.round(thumbWidth * ratioMultiplier)
 
-  const bilder = data.bilder || []
-  const blurResults = await Promise.all(
-    bilder.map((bilde) => (bilde.asset ? getBlurDataURL(bilde) : undefined)),
-  )
+  // Editors can leave empty slots in the gallery array; skip them so urlFor() doesn't crash.
+  const bilder = (data.bilder || []).filter((bilde) => bilde?.asset)
+  const [blurResults, watermarkSrc] = await Promise.all([
+    Promise.all(bilder.map((bilde) => getBlurDataURL(bilde))),
+    getWatermarkSrc(),
+  ])
 
   const images = bilder.map((bilde, i) => ({
     src: urlFor(bilde).width(thumbWidth).height(thumbHeight).quality(92).fit('crop').url(),
@@ -38,6 +41,8 @@ export async function GallerySection({ data, dataSanity }: GallerySectionProps) 
     height: thumbHeight,
     ratio: ratioMultiplier,
     blurDataURL: blurResults[i],
+    watermark: bilde.watermark,
+    watermarkPosition: bilde.watermarkPosition,
   }))
 
   return (
@@ -57,6 +62,7 @@ export async function GallerySection({ data, dataSanity }: GallerySectionProps) 
           images={images}
           columns={data.antallKolonner || 2}
           hasContent={!!(data.visInnhold && (data.overskrift || data.tekst))}
+          watermarkSrc={watermarkSrc}
         />
       )}
     </div>

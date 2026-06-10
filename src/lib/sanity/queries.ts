@@ -1,11 +1,14 @@
 import { groq } from 'next-sanity'
 
-// Image fragment — includes asset alt text from media library as fallback
+// Image fragment — includes asset alt text from media library as fallback,
+// plus the per-image watermark toggle + position.
 const imageFragment = groq`
   asset,
   "assetAltText": asset->altText,
   hotspot,
-  crop
+  crop,
+  watermark,
+  watermarkPosition
 `
 
 // SEO fragment — all SEO fields for schema.org and meta tags
@@ -38,7 +41,8 @@ export const frontpageQuery = groq`
       },
       heading,
       ctaText,
-      ctaHref
+      ctaHref,
+      announcement { text, href }
     },
     featured {
       columns[] {

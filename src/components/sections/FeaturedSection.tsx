@@ -2,6 +2,7 @@ import { PortableText } from '@portabletext/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { createDataAttribute } from 'next-sanity'
+import { MaybeWatermark } from '@/components/Watermark'
 import { urlFor } from '@/lib/sanity/image'
 import type { FeaturedSection } from '@/types/sanity'
 import styles from './FeaturedSection.module.css'
@@ -79,6 +80,7 @@ export function FeaturedSectionComponent({
                       fill
                       sizes="(max-width: 768px) 100vw, 25vw"
                     />
+                    <MaybeWatermark image={displayImage} />
                   </div>
                 )
               })()}

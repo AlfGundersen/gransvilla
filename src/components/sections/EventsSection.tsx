@@ -3,15 +3,17 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useCallback, useState } from 'react'
+import { WatermarkClient } from '@/components/WatermarkClient'
 import { urlFor } from '@/lib/sanity/image'
 import type { EventsSection } from '@/types/sanity'
 import styles from './EventsSection.module.css'
 
 interface EventsSectionComponentProps {
   data: EventsSection
+  watermarkSrc?: string
 }
 
-export function EventsSectionComponent({ data }: EventsSectionComponentProps) {
+export function EventsSectionComponent({ data, watermarkSrc }: EventsSectionComponentProps) {
   const items = data.items ?? []
   const [activeIndex, setActiveIndex] = useState(0)
 
@@ -81,6 +83,7 @@ export function EventsSectionComponent({ data }: EventsSectionComponentProps) {
                           fill
                           sizes="45vw"
                         />
+                        <WatermarkClient src={watermarkSrc} image={img!} />
                       </div>
                     ))}
                   </div>
@@ -95,14 +98,18 @@ export function EventsSectionComponent({ data }: EventsSectionComponentProps) {
               {items.map(
                 (item, index) =>
                   item.image1?.asset && (
-                    <Image
+                    <div
                       key={`img1-${item._key}`}
-                      src={urlFor(item.image1).url()}
-                      alt={item.image1.alt || item.image1.assetAltText || ''}
-                      fill
-                      sizes="50vw"
                       className={`${styles.eventsImage} ${index === activeIndex ? styles.eventsImageActive : ''}`}
-                    />
+                    >
+                      <Image
+                        src={urlFor(item.image1).url()}
+                        alt={item.image1.alt || item.image1.assetAltText || ''}
+                        fill
+                        sizes="50vw"
+                      />
+                      <WatermarkClient src={watermarkSrc} image={item.image1} />
+                    </div>
                   ),
               )}
             </div>
@@ -117,14 +124,18 @@ export function EventsSectionComponent({ data }: EventsSectionComponentProps) {
                 {items.map(
                   (item, index) =>
                     item.image2?.asset && (
-                      <Image
+                      <div
                         key={`img2-${item._key}`}
-                        src={urlFor(item.image2).url()}
-                        alt={item.image2.alt || item.image2.assetAltText || ''}
-                        fill
-                        sizes="33vw"
                         className={`${styles.eventsImage} ${index === activeIndex ? styles.eventsImageActive : ''}`}
-                      />
+                      >
+                        <Image
+                          src={urlFor(item.image2).url()}
+                          alt={item.image2.alt || item.image2.assetAltText || ''}
+                          fill
+                          sizes="33vw"
+                        />
+                        <WatermarkClient src={watermarkSrc} image={item.image2} />
+                      </div>
                     ),
                 )}
               </div>

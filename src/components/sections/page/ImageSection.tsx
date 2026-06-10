@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { MaybeWatermark } from '@/components/Watermark'
 import { urlFor } from '@/lib/sanity/image'
 import type { BildeSeksjon } from '@/types/sanity'
 import styles from './ImageSection.module.css'
@@ -29,6 +30,7 @@ export function ImageSection({ data, dataSanity, eager = false, blurDataURL }: I
       className={`${styles.imageSection} ${data.fullBredde ? styles.imageSectionFull : ''}`}
       {...(data.fullBredde ? { 'data-fullwidth': '' } : {})}
       data-sanity={dataSanity}
+      style={{ position: 'relative' }}
     >
       <Image
         src={urlFor(data.bilde).width(width).height(height).quality(92).fit('crop').url()}
@@ -41,6 +43,7 @@ export function ImageSection({ data, dataSanity, eager = false, blurDataURL }: I
         className={styles.imageSectionImage}
         data-sanity={dataSanity}
       />
+      <MaybeWatermark image={data.bilde} />
     </div>
   )
 }

@@ -1,5 +1,6 @@
 import { defineField, defineType } from 'sanity'
 import { AltTextInput } from '../../components/AltTextInput'
+import { watermarkFields } from '../objects/watermarkFields'
 
 export default defineType({
   name: 'bildeTekstSeksjon',
@@ -29,6 +30,7 @@ export default defineType({
           description: 'Beskrivelse av bildet for skjermlesere',
           components: { input: AltTextInput },
         }),
+        ...watermarkFields,
       ],
     }),
     defineField({

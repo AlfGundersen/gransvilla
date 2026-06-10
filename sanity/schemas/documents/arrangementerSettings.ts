@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity'
+import { watermarkFields } from '../objects/watermarkFields'
 
 export default defineType({
   name: 'arrangementerSettings',
@@ -33,6 +34,7 @@ export default defineType({
       options: {
         hotspot: true,
       },
+      fields: [...watermarkFields],
     }),
   ],
   preview: {

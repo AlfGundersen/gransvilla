@@ -1,6 +1,7 @@
 import { defineArrayMember, defineField, defineType } from 'sanity'
 import { AltTextInput } from '../../components/AltTextInput'
 import { ReferenceLinkless } from '../../components/ReferenceLinkless'
+import { watermarkFields } from '../objects/watermarkFields'
 
 /**
  * Arrangementer-seksjon - Fremhevede arrangementer med bilder
@@ -66,6 +67,7 @@ export default defineType({
                   description: 'Beskrivelse av bildet for skjermlesere',
                   components: { input: AltTextInput },
                 }),
+                ...watermarkFields,
               ],
               validation: (Rule) => Rule.required(),
             }),
@@ -85,6 +87,7 @@ export default defineType({
                   description: 'Beskrivelse av bildet for skjermlesere',
                   components: { input: AltTextInput },
                 }),
+                ...watermarkFields,
               ],
               hidden: ({ parent }) => parent?.imageLayout === '1',
             }),

@@ -21,20 +21,6 @@ export const cookieInventory: CookieInfo[] = [
     category: 'necessary',
     duration: '7 dager',
   },
-  {
-    name: '_ga',
-    provider: 'Google Analytics',
-    purpose: 'Skiller mellom brukere for anonym besøksstatistikk',
-    category: 'statistics',
-    duration: '2 år',
-  },
-  {
-    name: '_ga_*',
-    provider: 'Google Analytics',
-    purpose: 'Brukes til å opprettholde sesjonstilstand',
-    category: 'statistics',
-    duration: '2 år',
-  },
 ]
 
 export const categoryLabels: Record<CookieInfo['category'], string> = {

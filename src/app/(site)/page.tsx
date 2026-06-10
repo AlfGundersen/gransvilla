@@ -7,6 +7,7 @@ import { HeroSectionComponent } from '@/components/sections/HeroSection'
 import { TimelineSectionComponent } from '@/components/sections/TimelineSection'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { SchemaGenerator } from '@/components/seo/SchemaGenerator'
+import { getWatermarkSrc } from '@/components/Watermark'
 import { urlFor } from '@/lib/sanity/image'
 import { sanityFetch } from '@/lib/sanity/live'
 import { frontpageQuery } from '@/lib/sanity/queries'
@@ -31,7 +32,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const { data: frontpage } = await sanityFetch({ query: frontpageQuery })
+  const [{ data: frontpage }, watermarkSrc] = await Promise.all([
+    sanityFetch({ query: frontpageQuery }),
+    getWatermarkSrc(),
+  ])
 
   // If no frontpage data from Sanity yet, show placeholder
   if (!frontpage) {
@@ -106,6 +110,7 @@ export default async function HomePage() {
         >
           <EventsSectionComponent
             data={{ ...frontpage.events, _type: 'eventsSection', _key: 'events' }}
+            watermarkSrc={watermarkSrc}
           />
         </div>
       )}
@@ -122,6 +127,7 @@ export default async function HomePage() {
             data={{ ...frontpage.timeline, _type: 'timelineSection', _key: 'timeline' }}
             documentId={frontpage._id}
             documentType={frontpage._type}
+            watermarkSrc={watermarkSrc}
           />
         </div>
       )}

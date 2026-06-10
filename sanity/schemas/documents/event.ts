@@ -2,6 +2,7 @@ import { defineField, defineType } from 'sanity'
 import { SearchIcon } from '@sanity/icons'
 import { AltTextInput } from '../../components/AltTextInput'
 import { ShopifyProductInput } from '../../components/ShopifyProductInput'
+import { watermarkFields } from '../objects/watermarkFields'
 
 export default defineType({
   name: 'event',
@@ -64,6 +65,7 @@ export default defineType({
           description: 'Viktig for tilgjengelighet og SEO',
           components: { input: AltTextInput },
         }),
+        ...watermarkFields,
       ],
       group: 'content',
     }),

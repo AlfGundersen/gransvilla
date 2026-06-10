@@ -48,6 +48,38 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
     product.options.length > 0 &&
     !(product.options.length === 1 && product.options[0].name === 'Title')
 
+  // Build a set of option values that have no available variant.
+  // For multi-option products this checks "value is reachable given currently
+  // selected other options". For single-option products it just checks stock.
+  const soldOutValues = useMemo(() => {
+    const result = new Set<string>()
+    if (!product.options || !product.variants) return result
+
+    for (const option of product.options) {
+      if (option.name === 'Title') continue
+      for (const value of option.values) {
+        const matchingVariants = product.variants.filter((variant) => {
+          if (!variant.selectedOptions) return false
+          // Variant must match this value...
+          const matchesThisValue = variant.selectedOptions.some(
+            (opt) => opt.name === option.name && opt.value === value,
+          )
+          if (!matchesThisValue) return false
+          // ...and any other currently selected options.
+          return variant.selectedOptions.every((opt) => {
+            if (opt.name === option.name) return true
+            const selected = selectedOptions[opt.name]
+            return !selected || selected === opt.value
+          })
+        })
+        if (matchingVariants.length > 0 && !matchingVariants.some((v) => v.availableForSale)) {
+          result.add(`${option.name}::${value}`)
+        }
+      }
+    }
+    return result
+  }, [product.options, product.variants, selectedOptions])
+
   // Check if all required options have been selected
   const allOptionsSelected = useMemo(() => {
     if (!hasOptions) return true
@@ -166,22 +198,26 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
                   role="radiogroup"
                   aria-label={option.name}
                 >
-                  {option.values.map((value) => (
-                    <button
-                      key={value}
-                      type="button"
-                      role="radio"
-                      aria-checked={selectedOptions[option.name] === value}
-                      className={`${styles.productInfoOptionButton} ${
-                        selectedOptions[option.name] === value
-                          ? styles.productInfoOptionButtonActive
-                          : ''
-                      }`}
-                      onClick={() => handleOptionChange(option.name, value)}
-                    >
-                      {value}
-                    </button>
-                  ))}
+                  {option.values.map((value) => {
+                    const isSoldOut = soldOutValues.has(`${option.name}::${value}`)
+                    return (
+                      <button
+                        key={value}
+                        type="button"
+                        role="radio"
+                        aria-checked={selectedOptions[option.name] === value}
+                        aria-disabled={isSoldOut}
+                        className={`${styles.productInfoOptionButton} ${
+                          selectedOptions[option.name] === value
+                            ? styles.productInfoOptionButtonActive
+                            : ''
+                        } ${isSoldOut ? styles.productInfoOptionButtonSoldOut : ''}`}
+                        onClick={() => handleOptionChange(option.name, value)}
+                      >
+                        {value}
+                      </button>
+                    )
+                  })}
                 </div>
               </fieldset>
             ))}

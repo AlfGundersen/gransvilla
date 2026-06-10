@@ -1,5 +1,6 @@
 import { defineArrayMember, defineField, defineType } from 'sanity'
 import { AltTextInput } from '../../components/AltTextInput'
+import { watermarkFields } from '../objects/watermarkFields'
 
 /**
  * Historie-seksjon - Interaktiv tidslinje
@@ -23,6 +24,7 @@ export default defineType({
           type: 'string',
           components: { input: AltTextInput },
         }),
+        ...watermarkFields,
       ],
     }),
     defineField({

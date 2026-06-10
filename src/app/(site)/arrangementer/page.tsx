@@ -2,6 +2,7 @@ import { PortableText } from '@portabletext/react'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import { MaybeWatermark } from '@/components/Watermark'
 import { getBlurDataURL } from '@/lib/sanity/blur'
 import { urlFor } from '@/lib/sanity/image'
 import { sanityFetch } from '@/lib/sanity/live'
@@ -67,7 +68,10 @@ export default async function ArrangementerPage() {
           </>
         )}
         {heroImage?.asset && (
-          <div className={isWideImage ? styles.heroImageWide : styles.heroImage}>
+          <div
+            className={isWideImage ? styles.heroImageWide : styles.heroImage}
+            style={{ position: 'relative' }}
+          >
             <Image
               src={urlFor(heroImage).width(1600).height(686).quality(92).fit('crop').url()}
               alt={heroImage.alt || heroImage.assetAltText || 'Arrangementer'}
@@ -78,6 +82,7 @@ export default async function ArrangementerPage() {
               blurDataURL={heroBlur}
               className={styles.heroImg}
             />
+            <MaybeWatermark image={heroImage} />
           </div>
         )}
 
@@ -86,7 +91,7 @@ export default async function ArrangementerPage() {
             {events.map((event, i) => (
               <div key={event._id} className={styles.card}>
                 {event.featuredImage?.asset && (
-                  <div className={styles.imageWrapper}>
+                  <div className={styles.imageWrapper} style={{ position: 'relative' }}>
                     <Image
                       src={urlFor(event.featuredImage)
                         .width(400)
@@ -103,6 +108,7 @@ export default async function ArrangementerPage() {
                       blurDataURL={cardBlurs[i]}
                       className={styles.image}
                     />
+                    <MaybeWatermark image={event.featuredImage} />
                   </div>
                 )}
                 <div className={styles.textCol}>

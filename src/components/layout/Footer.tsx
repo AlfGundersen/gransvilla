@@ -66,7 +66,7 @@ export default function Footer({
       <div className={styles.container}>
         <div className={styles.grid}>
           {/* Newsletter Section */}
-          <div className={styles.newsletter}>
+          <div id="nyhetsbrev" className={styles.newsletter}>
             <p className={styles.newsletterText}>Holde deg oppdatert og meld deg på nyhetsbrevet</p>
             {status === 'success' ? (
               <p className={styles.successMessage}>Takk for påmeldingen!</p>
@@ -132,9 +132,17 @@ export default function Footer({
             <div className={styles.column}>
               <h3 className={styles.heading}>STED</h3>
               <div className={styles.locations}>
-                <address className={styles.address}>
-                  <PortableText value={contactInfo.address} />
-                </address>
+                <a
+                  href="https://www.google.com/maps/search/?api=1&query=Jahnebakken+6%2C+5007+Bergen"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.addressLink}
+                  aria-label="Vis adressen i Google Maps (åpnes i nytt vindu)"
+                >
+                  <address className={styles.address}>
+                    <PortableText value={contactInfo.address} />
+                  </address>
+                </a>
               </div>
               <div className={styles.infoSection}>
                 <p className={styles.companyInfo}>
@@ -190,6 +198,9 @@ export default function Footer({
 
         {/* Bottom bar */}
         <div className={styles.bottom}>
+          <Link href="/framdrift" className={styles.legalLink}>
+            Framdrift
+          </Link>
           <Link href="/personvern" className={styles.legalLink}>
             Personvernerklæring
           </Link>

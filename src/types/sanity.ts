@@ -3,6 +3,8 @@ type BlockContent = any[]
 
 // Sanity Types for Section System
 
+export type WatermarkPosition = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
+
 export interface SanityImage {
   _type: 'image'
   asset: {
@@ -17,6 +19,8 @@ export interface SanityImage {
   }
   alt?: string
   assetAltText?: string
+  watermark?: boolean
+  watermarkPosition?: WatermarkPosition
 }
 
 // Hero Section
@@ -24,6 +28,10 @@ export interface HeroSection {
   _type: 'heroSection'
   _key: string
   image?: SanityImage
+  announcement?: {
+    text?: string
+    href?: string
+  }
 }
 
 // Event reference for sections

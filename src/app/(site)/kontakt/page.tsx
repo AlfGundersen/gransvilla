@@ -51,9 +51,15 @@ export default async function KontaktPage() {
           {contactInfo?.address && (
             <div className={styles.infoBlock}>
               <h2 className={styles.infoHeading}>Besøk oss</h2>
-              <div className={styles.infoText}>
+              <a
+                href="https://www.google.com/maps/search/?api=1&query=Jahnebakken+6%2C+5007+Bergen"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.infoText}
+                aria-label="Vis adressen i Google Maps (åpnes i nytt vindu)"
+              >
                 <PortableText value={contactInfo.address} />
-              </div>
+              </a>
             </div>
           )}
         </div>

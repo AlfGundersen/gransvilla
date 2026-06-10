@@ -1,11 +1,14 @@
+/*
+ * NOTE: Animation uses opacity only — NOT transform.
+ * `transform` on this wrapper creates a containing block that breaks
+ * `position: sticky` on every descendant. Opacity-only is safe.
+ */
 @keyframes pageEnter {
   from {
     opacity: 0;
-    transform: translateY(20px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 

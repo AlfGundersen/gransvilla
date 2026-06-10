@@ -4,6 +4,7 @@ import { PortableText } from '@portabletext/react'
 import Image from 'next/image'
 import { createDataAttribute } from 'next-sanity'
 import { useState } from 'react'
+import { WatermarkClient } from '@/components/WatermarkClient'
 import { urlFor } from '@/lib/sanity/image'
 import type { TimelineSection } from '@/types/sanity'
 import styles from './TimelineSection.module.css'
@@ -12,12 +13,14 @@ interface TimelineSectionComponentProps {
   data: TimelineSection
   documentId?: string
   documentType?: string
+  watermarkSrc?: string
 }
 
 export function TimelineSectionComponent({
   data,
   documentId,
   documentType,
+  watermarkSrc,
 }: TimelineSectionComponentProps) {
   const { entries, image } = data
   const entryList = entries ?? []
@@ -45,6 +48,7 @@ export function TimelineSectionComponent({
                   sizes="50vw"
                   className={styles.timelineImage}
                 />
+                <WatermarkClient src={watermarkSrc} image={image} />
               </div>
             )}
           </div>

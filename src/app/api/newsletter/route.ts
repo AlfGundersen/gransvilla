@@ -48,7 +48,6 @@ export async function POST(request: NextRequest) {
     })
 
     const contactData = await contactResponse.json().catch(() => ({}))
-    console.log('Mailjet contact response:', contactResponse.status, JSON.stringify(contactData))
 
     // If contact already exists, that's fine (status 400 with specific error)
     if (!contactResponse.ok && contactResponse.status !== 400) {
@@ -58,7 +57,6 @@ export async function POST(request: NextRequest) {
 
     // If a list ID is configured, add contact to the list
     if (MAILJET_LIST_ID) {
-      console.log('Adding to list:', MAILJET_LIST_ID)
       const listResponse = await fetch(
         `https://api.mailjet.com/v3/REST/contactslist/${MAILJET_LIST_ID}/managecontact`,
         {
@@ -75,7 +73,6 @@ export async function POST(request: NextRequest) {
       )
 
       const listData = await listResponse.json().catch(() => ({}))
-      console.log('Mailjet list response:', listResponse.status, JSON.stringify(listData))
 
       if (!listResponse.ok) {
         console.error('Mailjet list subscription error:', listData)
@@ -84,8 +81,6 @@ export async function POST(request: NextRequest) {
           { status: 500 },
         )
       }
-    } else {
-      console.log('No MAILJET_LIST_ID configured, contact created but not added to list')
     }
 
     return NextResponse.json({ success: true })

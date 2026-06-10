@@ -1,4 +1,5 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
+import { watermarkFields } from "../objects/watermarkFields";
 
 /**
  * Fremhevet-seksjon - To kolonner med bilde, overskrift, beskrivelse og lenke
@@ -58,6 +59,7 @@ export default defineType({
 									description:
 										"Beskrivelse av bildet for skjermlesere og søkemotorer",
 								}),
+								...watermarkFields,
 							],
 						}),
 					],

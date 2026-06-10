@@ -1,6 +1,7 @@
 import { defineField, defineType } from 'sanity'
 import { SearchIcon } from '@sanity/icons'
 import { AltTextInput } from '../../components/AltTextInput'
+import { watermarkFields } from '../objects/watermarkFields'
 
 export default defineType({
   name: 'page',
@@ -41,6 +42,14 @@ export default defineType({
       group: 'content',
     }),
     defineField({
+      name: 'description',
+      title: 'Kort beskrivelse',
+      type: 'simpleBlockContent',
+      description:
+        'Valgfri kort tekst om siden. Vises ikke på selve sidevisningen ennå, men gjør innholdet redigerbart og forhindrer «ukjent felt»-varsel i Studio.',
+      group: 'content',
+    }),
+    defineField({
       name: 'featuredImage',
       title: 'Fremhevet bilde',
       type: 'image',
@@ -56,6 +65,7 @@ export default defineType({
           description: 'Viktig for tilgjengelighet og SEO',
           components: { input: AltTextInput },
         }),
+        ...watermarkFields,
       ],
       group: 'content',
     }),

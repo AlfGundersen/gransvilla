@@ -3,6 +3,8 @@
 import { AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { WatermarkClient } from '@/components/WatermarkClient'
+import type { WatermarkPosition } from '@/types/sanity'
 import { GalleryLightbox } from './GalleryLightbox'
 import styles from './GallerySection.module.css'
 
@@ -14,6 +16,8 @@ export interface GalleryImageData {
   height: number
   ratio: number
   blurDataURL?: string
+  watermark?: boolean
+  watermarkPosition?: WatermarkPosition
 }
 
 export interface OriginRect {
@@ -27,6 +31,7 @@ interface GalleryClientProps {
   images: GalleryImageData[]
   columns: number
   hasContent: boolean
+  watermarkSrc?: string
 }
 
 const DRAG_THRESHOLD = 5
@@ -41,7 +46,7 @@ function buildFullSrc(base: string, ratio: number): string {
   return `${base}${sep}w=${w}&h=${h}`
 }
 
-export function GalleryClient({ images, columns, hasContent }: GalleryClientProps) {
+export function GalleryClient({ images, columns, hasContent, watermarkSrc }: GalleryClientProps) {
   const isCarousel = images.length > columns
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const [originRect, setOriginRect] = useState<OriginRect | null>(null)
@@ -167,6 +172,11 @@ export function GalleryClient({ images, columns, hasContent }: GalleryClientProp
                 placeholder={image.blurDataURL ? 'blur' : 'empty'}
                 blurDataURL={image.blurDataURL}
                 className={styles.galleryImage}
+              />
+              <WatermarkClient
+                src={watermarkSrc}
+                position={image.watermarkPosition}
+                image={{ watermark: image.watermark, watermarkPosition: image.watermarkPosition }}
               />
             </button>
           ))}

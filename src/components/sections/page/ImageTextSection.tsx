@@ -1,5 +1,6 @@
 import { PortableText } from '@portabletext/react'
 import Image from 'next/image'
+import { MaybeWatermark } from '@/components/Watermark'
 import { urlFor } from '@/lib/sanity/image'
 import type { BildeTekstSeksjon } from '@/types/sanity'
 import styles from './ImageTextSection.module.css'
@@ -35,7 +36,11 @@ export function ImageTextSection({
       data-sanity={dataSanity}
     >
       {data.bilde && (
-        <div className={styles.imageTextImageWrap} data-sanity={dataSanity}>
+        <div
+          className={styles.imageTextImageWrap}
+          data-sanity={dataSanity}
+          style={{ position: 'relative' }}
+        >
           <Image
             src={urlFor(data.bilde).width(width).height(height).quality(92).fit('crop').url()}
             alt={data.bilde.alt || data.bilde.assetAltText || ''}
@@ -47,6 +52,7 @@ export function ImageTextSection({
             className={styles.imageTextImage}
             data-sanity={dataSanity}
           />
+          <MaybeWatermark image={data.bilde} />
         </div>
       )}
       <div className={styles.imageTextContent} data-sanity={dataSanity}>

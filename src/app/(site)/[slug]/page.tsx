@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { EventProductsSection } from '@/components/sections/EventProductsSection'
 import { PageSectionRenderer } from '@/components/sections/page/PageSectionRenderer'
 import { SchemaGenerator } from '@/components/seo/SchemaGenerator'
+import { MaybeWatermark } from '@/components/Watermark'
 import { getBlurDataURL } from '@/lib/sanity/blur'
 import { client } from '@/lib/sanity/client'
 import { urlFor } from '@/lib/sanity/image'
@@ -81,35 +82,85 @@ export default async function SlugPage({ params }: Props) {
     ? await getBlurDataURL(content.featuredImage)
     : undefined
 
+  const hasEventProducts =
+    content._type === 'event' && content.products && content.products.length > 0
+  const sections = content.sections ?? []
+
+  // Only split the grid into two when an EventProductsSection needs to be
+  // injected after the first section. Otherwise, keep a single grid so the
+  // existing section-divider borders work as before.
+  const titleBlock = (
+    <h1 className={styles.eventTitle}>
+      <span className="visually-hidden">{content.title}</span>
+      <Image
+        src="/logo.svg"
+        alt=""
+        width={128}
+        height={22}
+        className={styles.eventTitleLogo}
+        aria-hidden="true"
+        priority
+      />
+    </h1>
+  )
+
+  const featuredBlock = content.featuredImage?.asset && (
+    <div className={styles.featuredImage}>
+      <div style={{ position: 'relative' }}>
+        <Image
+          src={urlFor(content.featuredImage).width(1600).quality(92).url()}
+          alt={content.featuredImage.alt || content.featuredImage.assetAltText || content.title}
+          width={1200}
+          height={675}
+          className={styles.featuredImageImg}
+          priority
+          placeholder={blurDataURL ? 'blur' : 'empty'}
+          blurDataURL={blurDataURL}
+        />
+        <MaybeWatermark image={content.featuredImage} />
+      </div>
+    </div>
+  )
+
   return (
     <div className={styles.eventPage}>
       <SchemaGenerator seo={content.seo} document={content} />
-      <div className={styles.eventGrid}>
-        <h1 className={styles.eventTitle}>{content.title}</h1>
-        {content.featuredImage?.asset && (
-          <div className={styles.featuredImage}>
-            <Image
-              src={urlFor(content.featuredImage).width(1600).quality(92).url()}
-              alt={content.featuredImage.alt || content.featuredImage.assetAltText || content.title}
-              width={1200}
-              height={675}
-              className={styles.featuredImageImg}
-              priority
-              placeholder={blurDataURL ? 'blur' : 'empty'}
-              blurDataURL={blurDataURL}
-            />
+      {hasEventProducts ? (
+        <>
+          <div className={styles.eventGrid}>
+            {titleBlock}
+            {featuredBlock}
+            {sections[0] && (
+              <PageSectionRenderer
+                sections={[sections[0]]}
+                documentId={content._id}
+                documentType={content._type}
+              />
+            )}
           </div>
-        )}
-        {content.sections && content.sections.length > 0 && (
-          <PageSectionRenderer
-            sections={content.sections}
-            documentId={content._id}
-            documentType={content._type}
-          />
-        )}
-      </div>
-      {content._type === 'event' && content.products && content.products.length > 0 && (
-        <EventProductsSection products={content.products} />
+          <EventProductsSection products={content.products as string[]} />
+          {sections.length > 1 && (
+            <div className={styles.eventGrid}>
+              <PageSectionRenderer
+                sections={sections.slice(1)}
+                documentId={content._id}
+                documentType={content._type}
+              />
+            </div>
+          )}
+        </>
+      ) : (
+        <div className={styles.eventGrid}>
+          {titleBlock}
+          {featuredBlock}
+          {sections.length > 0 && (
+            <PageSectionRenderer
+              sections={sections}
+              documentId={content._id}
+              documentType={content._type}
+            />
+          )}
+        </div>
       )}
     </div>
   )

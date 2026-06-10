@@ -88,6 +88,34 @@
   color: var(--color-background);
 }
 
+.productInfoOptionButtonSoldOut {
+  opacity: 0.5;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Diagonal slash from top-right to bottom-left.
+   Note: a linear-gradient's color band is perpendicular to its direction,
+   so `to bottom right` produces a line going from top-right to bottom-left. */
+.productInfoOptionButtonSoldOut::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom right,
+    transparent calc(50% - 1px),
+    currentColor calc(50% - 1px),
+    currentColor calc(50% + 1px),
+    transparent calc(50% + 1px)
+  );
+  pointer-events: none;
+}
+
+.productInfoOptionButtonSoldOut:hover,
+.productInfoOptionButtonSoldOut:focus-visible {
+  border-color: var(--color-border);
+}
+
 /* ===========================================
    Quantity Selector
    =========================================== */

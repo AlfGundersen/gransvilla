@@ -83,11 +83,24 @@
 
 .eventTitle {
   grid-column: 1 / 2;
+  /* Span row 1 (featured image) AND row 2 (first section) so the sticky
+     containing block covers both — sticky releases after first section. */
+  grid-row: 1 / span 2;
   font-family: var(--font-heading);
   font-size: var(--text-4xl);
   font-weight: var(--font-heading-weight);
   line-height: 1.1;
   margin: 0;
+  position: sticky;
+  top: calc(var(--header-height) + var(--space-md));
+  align-self: start;
+}
+
+.eventTitleLogo {
+  width: 128px;
+  height: auto;
+  max-width: 100%;
+  display: block;
 }
 
 /* Mobile */
@@ -107,7 +120,13 @@
 
   .eventTitle {
     grid-column: 1 / -1;
+    grid-row: auto;
+    position: static;
     font-size: var(--text-5xl);
+  }
+
+  .eventTitleLogo {
+    display: none;
   }
 
   .featuredImage {

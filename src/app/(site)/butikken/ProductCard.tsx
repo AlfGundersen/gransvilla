@@ -88,7 +88,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             src={shopifyImageUrl(product.images[0].url, { width: 800, crop: 'center' })}
             alt={product.images[0].altText || product.title}
             fill
-            className={`${styles.shopImage} ${isUnavailable ? styles.shopImageSoldOut : ''}`}
+            className={styles.shopImage}
             sizes="(max-width: 767px) 100vw, 33vw"
           />
         )}
