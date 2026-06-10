@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import LanguageSwitcher from '@/components/i18n/LanguageSwitcher'
 import { useCart } from '@/context/CartContext'
 import type { NavLink, SocialLink } from '@/types/sanity'
 import { socialPlatformLabels } from '@/types/sanity'
@@ -191,7 +192,7 @@ export default function Header({ navigation, socialLinks }: HeaderProps) {
       {/* Header */}
       <header className={`${styles.header} ${isScrolled ? styles.headerScrolled : ''}`}>
         <div className={styles.container}>
-          {/* Left: Menu button */}
+          {/* Left: Menu button + Language switcher */}
           <div className={styles.headerLeft}>
             <button
               ref={menuButtonRef}
@@ -204,6 +205,7 @@ export default function Header({ navigation, socialLinks }: HeaderProps) {
             >
               <span className={styles.menuIcon} />
             </button>
+            <LanguageSwitcher />
           </div>
 
           {/* Center: Logo */}

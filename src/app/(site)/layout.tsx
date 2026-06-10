@@ -2,6 +2,7 @@ import { stegaClean } from 'next-sanity'
 import PlausibleAnalytics from '@/components/analytics/Plausible'
 import { CartDrawer } from '@/components/cart/CartDrawer'
 import CookieBanner from '@/components/cookie/CookieBanner'
+import WeglotInit from '@/components/i18n/WeglotInit'
 import Footer from '@/components/layout/Footer'
 import Header from '@/components/layout/Header'
 import ScrollToTop from '@/components/layout/ScrollToTop'
@@ -49,6 +50,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         <CartDrawer />
         <CookieBanner />
         <PlausibleAnalytics />
+        <WeglotInit />
       </CartProvider>
     </CookieConsentProvider>
   )
