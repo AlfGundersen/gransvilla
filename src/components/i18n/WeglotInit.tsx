@@ -36,12 +36,15 @@ export default function WeglotInit() {
             Weglot.initialize({
               api_key: '${apiKey}',
               cookie: true,
+              cache: true,
+              wait_transition: false,
               hide_switcher: true,
               excluded_blocks: [{ value: '.language-switcher-button' }],
               excluded_paths: [
                 { value: '/studio', type: 'START_WITH' },
                 { value: '/api', type: 'START_WITH' }
-              ]
+              ],
+              dynamics: [{ value: '#main-content' }]
             });
             Weglot.on('initialized', function() {
               window.dispatchEvent(new Event('weglot:ready'));

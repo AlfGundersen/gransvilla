@@ -15,11 +15,11 @@ export const cookieInventory: CookieInfo[] = [
     duration: '1 år',
   },
   {
-    name: 'gransvilla-auth',
-    provider: 'Gransvilla',
-    purpose: 'Autentisering for tilgangsbegrensede sider',
+    name: 'wglang',
+    provider: 'Weglot',
+    purpose: 'Husker valgt språk (norsk/engelsk) mellom sidevisninger',
     category: 'necessary',
-    duration: '7 dager',
+    duration: '6 måneder',
   },
 ]
 

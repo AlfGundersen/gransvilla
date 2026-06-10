@@ -38,7 +38,9 @@ export default function LanguageSwitcher() {
     }
   }, [])
 
-  const target = isEnglish ? 'no' : 'en'
+  // Weglot project's source language is "nb" (Bokmål), not "no" — using
+  // the wrong code makes `switchTo` a silent no-op.
+  const target = isEnglish ? 'nb' : 'en'
   const label = isEnglish ? 'NO' : 'EN'
   const ariaLabel = isEnglish ? 'Norsk versjon' : 'English version'
 
