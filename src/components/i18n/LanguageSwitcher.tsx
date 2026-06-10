@@ -3,59 +3,60 @@
 import { useEffect, useState } from 'react'
 import styles from './LanguageSwitcher.module.css'
 
-const LANGS = ['no', 'en'] as const
-type Lang = (typeof LANGS)[number]
-
 /**
- * Subtle two-state language toggle for the header. Requires WeglotInit to have
- * loaded `window.Weglot`. While Weglot is still loading (or absent — e.g. when
- * `NEXT_PUBLIC_WEGLOT_API_KEY` is unset), the switcher renders nothing.
+ * Subtle single-button language toggle for the header. Shows the language
+ * you can switch TO (so when on Norwegian it reads "EN"; on English, "NO").
+ *
+ * Wired to Weglot via the `weglot:ready` event dispatched in WeglotInit.
+ * Until Weglot loads, the button still renders (defaults to Norwegian);
+ * clicks are a no-op if `Weglot.switchTo` isn't available yet.
  */
 export default function LanguageSwitcher() {
-  const [lang, setLang] = useState<Lang>('no')
+  const [isEnglish, setIsEnglish] = useState(false)
 
-  // When Weglot finishes initializing, sync the current language and listen
-  // for changes. If Weglot never loads (no API key, CDN blocked, bad key),
-  // the button stays visible and defaults to NO; clicks are a no-op.
   useEffect(() => {
-    let cancelled = false
-
-    function attach() {
+    const sync = () => {
       const w = window.Weglot
-      if (!w || !w.initialized) return false
-      setLang((w.getCurrentLang() as Lang) ?? 'no')
-      w.on('languageChanged', (next) => {
-        if (typeof next === 'string') setLang(next as Lang)
-      })
-      return true
+      if (w?.getCurrentLang) setIsEnglish(w.getCurrentLang() === 'en')
     }
 
-    const interval = window.setInterval(() => {
-      if (cancelled) return
-      if (attach()) window.clearInterval(interval)
-    }, 150)
-    const timeout = window.setTimeout(() => window.clearInterval(interval), 10_000)
+    const onReady = () => {
+      sync()
+      window.Weglot?.on?.('languageChanged', sync)
+    }
+
+    // If Weglot already initialized before this component mounted
+    if (window.Weglot?.getCurrentLang) {
+      onReady()
+    } else {
+      window.addEventListener('weglot:ready', onReady)
+    }
 
     return () => {
-      cancelled = true
-      window.clearInterval(interval)
-      window.clearTimeout(timeout)
+      window.removeEventListener('weglot:ready', onReady)
+      window.Weglot?.off?.('languageChanged', sync)
     }
   }, [])
 
-  const other: Lang = lang === 'no' ? 'en' : 'no'
-  const label = other.toUpperCase()
-  const aria = other === 'en' ? 'Switch to English' : 'Bytt til norsk'
+  const target = isEnglish ? 'no' : 'en'
+  const label = isEnglish ? 'NO' : 'EN'
+  const ariaLabel = isEnglish ? 'Norsk versjon' : 'English version'
 
   return (
     <button
       type="button"
-      className={styles.button}
-      onClick={() => window.Weglot?.switchTo(other)}
-      translate="no"
-      data-weglot-skip
-      aria-label={aria}
-      title={aria}
+      className={`${styles.button} language-switcher-button`}
+      aria-label={ariaLabel}
+      onClick={() => {
+        const w = typeof window !== 'undefined' ? window.Weglot : undefined
+        if (!w || typeof w.switchTo !== 'function') return
+        try {
+          w.switchTo(target)
+          setIsEnglish(!isEnglish)
+        } catch {
+          /* don't flip label if switch failed */
+        }
+      }}
     >
       {label}
     </button>

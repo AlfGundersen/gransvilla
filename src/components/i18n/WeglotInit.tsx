@@ -1,56 +1,54 @@
-'use client'
-
-import { useEffect } from 'react'
-
-// Module-level guard so React Strict Mode's double-mount doesn't try to
-// initialize twice (Weglot would throw the second time).
-let initialized = false
+import Script from 'next/script'
 
 declare global {
   interface Window {
     Weglot?: {
-      initialize: (opts: Record<string, unknown>) => void
-      initialized?: boolean
       switchTo: (lang: string) => void
       getCurrentLang: () => string
-      on: (event: string, cb: (...args: unknown[]) => void) => void
+      on: (event: string, callback: (...args: unknown[]) => void) => void
+      off: (event: string, callback: (...args: unknown[]) => void) => boolean
     }
   }
 }
 
 /**
- * Loads the Weglot CDN script and initializes it with this project's API key.
- * The default in-page switcher is hidden (`switchers: []`); we render our own
- * `<LanguageSwitcher>` in the header.
+ * Loads Weglot via Next.js Script with `afterInteractive` strategy, then
+ * initializes it with this project's API key. The default switcher is hidden
+ * (`hide_switcher: true`) — we render our own `<LanguageSwitcher>` in the
+ * header. Studio + API routes are excluded from translation.
  *
- * Requires `NEXT_PUBLIC_WEGLOT_API_KEY` in env. If missing, the component is a
- * no-op so dev/preview environments without a key still build and render.
+ * Requires NEXT_PUBLIC_WEGLOT_API_KEY in env. If unset, no script loads.
  */
 export default function WeglotInit() {
-  useEffect(() => {
-    if (initialized) return
-    const apiKey = process.env.NEXT_PUBLIC_WEGLOT_API_KEY
-    if (!apiKey) return
+  const apiKey = process.env.NEXT_PUBLIC_WEGLOT_API_KEY
+  if (!apiKey) return null
 
-    initialized = true
-
-    const existing = document.querySelector('script[data-weglot]')
-    if (existing) return
-
-    const script = document.createElement('script')
-    script.src = 'https://cdn.weglot.com/weglot.min.js'
-    script.async = true
-    script.dataset.weglot = 'true'
-    script.onload = () => {
-      window.Weglot?.initialize({
-        api_key: apiKey,
-        // TODO: re-enable `hide_switcher: true` after the Weglot dashboard
-        // onboarding step is complete. Weglot's setup wizard requires the
-        // default switcher to be visible to verify the install.
-      })
-    }
-    document.head.appendChild(script)
-  }, [])
-
-  return null
+  return (
+    <>
+      <Script src="https://cdn.weglot.com/weglot.min.js" strategy="afterInteractive" />
+      <Script id="weglot-init" strategy="afterInteractive">
+        {`
+          (function initWeglot() {
+            if (typeof Weglot === 'undefined') {
+              setTimeout(initWeglot, 100);
+              return;
+            }
+            Weglot.initialize({
+              api_key: '${apiKey}',
+              cookie: true,
+              hide_switcher: true,
+              excluded_blocks: [{ value: '.language-switcher-button' }],
+              excluded_paths: [
+                { value: '/studio', type: 'START_WITH' },
+                { value: '/api', type: 'START_WITH' }
+              ]
+            });
+            Weglot.on('initialized', function() {
+              window.dispatchEvent(new Event('weglot:ready'));
+            });
+          })();
+        `}
+      </Script>
+    </>
+  )
 }
