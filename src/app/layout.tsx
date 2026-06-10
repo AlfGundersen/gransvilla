@@ -66,7 +66,7 @@ export default async function RootLayout({
   const { isEnabled: isDraftMode } = await draftMode()
 
   return (
-    <html lang="nb" className={inter.variable}>
+    <html lang="no" className={inter.variable}>
       <head>
         <meta charSet="utf-8" />
         <meta name="theme-color" content="#000000" />
