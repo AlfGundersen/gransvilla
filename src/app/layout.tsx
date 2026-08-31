@@ -64,12 +64,26 @@ export default async function RootLayout({
   children: React.ReactNode
 }>) {
   const { isEnabled: isDraftMode } = await draftMode()
+  const weglotKey = process.env.NEXT_PUBLIC_WEGLOT_API_KEY
 
   return (
-    <html lang="no" className={inter.variable}>
+    <html lang="nb" className={inter.variable}>
       <head>
         <meta charSet="utf-8" />
         <meta name="theme-color" content="#000000" />
+        <link rel="alternate" hrefLang="nb" href="https://gransvilla.no" />
+        <link rel="alternate" hrefLang="en" href="https://en.gransvilla.no" />
+        {weglotKey && (
+          <>
+            <script src="https://cdn.weglot.com/weglot.min.js" />
+            <script
+              // biome-ignore lint/security/noDangerouslySetInnerHtml: static init snippet, key is public by design
+              dangerouslySetInnerHTML={{
+                __html: `Weglot.initialize({api_key: '${weglotKey}'});`,
+              }}
+            />
+          </>
+        )}
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         <link rel="preconnect" href="https://use.typekit.net" />
         <link rel="preconnect" href="https://p.typekit.net" crossOrigin="anonymous" />

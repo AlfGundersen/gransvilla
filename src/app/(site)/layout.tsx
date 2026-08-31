@@ -2,7 +2,6 @@ import { stegaClean } from 'next-sanity'
 import PlausibleAnalytics from '@/components/analytics/Plausible'
 import { CartDrawer } from '@/components/cart/CartDrawer'
 import CookieBanner from '@/components/cookie/CookieBanner'
-import WeglotInit from '@/components/i18n/WeglotInit'
 import Footer from '@/components/layout/Footer'
 import Header from '@/components/layout/Header'
 import ScrollToTop from '@/components/layout/ScrollToTop'
@@ -12,7 +11,6 @@ import { urlFor } from '@/lib/sanity/image'
 import { sanityFetch } from '@/lib/sanity/live'
 import { siteSettingsQuery } from '@/lib/sanity/queries'
 import { resolveMenu } from '@/lib/sanity/resolveMenu'
-import type { SiteSettings } from '@/types/sanity'
 import styles from './layout.module.css'
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
@@ -50,7 +48,6 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         <CartDrawer />
         <CookieBanner />
         <PlausibleAnalytics />
-        <WeglotInit />
       </CartProvider>
     </CookieConsentProvider>
   )

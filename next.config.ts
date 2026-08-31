@@ -6,7 +6,7 @@ const publicCsp = [
   "style-src 'self' 'unsafe-inline' https://use.typekit.net https://p.typekit.net https://cdn.weglot.com",
   "font-src 'self' https://use.typekit.net https://p.typekit.net https://cdn.weglot.com",
   "img-src 'self' data: blob: https://cdn.sanity.io https://cdn.shopify.com https://cdn.weglot.com",
-  "connect-src 'self' https://*.sanity.io wss://*.sanity.io https://plausible.io https://*.weglot.com https://cdn-api-weglot.com",
+  "connect-src 'self' https://*.sanity.io wss://*.sanity.io https://plausible.io https://*.weglot.com https://cdn-api-weglot.com https://browser-intake-datadoghq.com",
   "media-src 'self' https://cdn.sanity.io",
   "object-src 'none'",
   "frame-ancestors 'self'",

@@ -3,13 +3,23 @@
 import { useEffect, useState } from 'react'
 import styles from './LanguageSwitcher.module.css'
 
+declare global {
+  interface Window {
+    Weglot?: {
+      switchTo: (lang: string) => void
+      getCurrentLang: () => string
+      on: (event: string, callback: (...args: unknown[]) => void) => void
+      off: (event: string, callback: (...args: unknown[]) => void) => boolean
+    }
+  }
+}
+
 /**
  * Subtle single-button language toggle for the header. Shows the language
  * you can switch TO (so when on Norwegian it reads "EN"; on English, "NO").
  *
- * Wired to Weglot via the `weglot:ready` event dispatched in WeglotInit.
- * Until Weglot loads, the button still renders (defaults to Norwegian);
- * clicks are a no-op if `Weglot.switchTo` isn't available yet.
+ * Weglot loads synchronously in the root layout <head>, so it is initialized
+ * before hydration. Clicks are a no-op if `Weglot.switchTo` isn't available.
  */
 export default function LanguageSwitcher() {
   const [isEnglish, setIsEnglish] = useState(false)
@@ -20,20 +30,10 @@ export default function LanguageSwitcher() {
       if (w?.getCurrentLang) setIsEnglish(w.getCurrentLang() === 'en')
     }
 
-    const onReady = () => {
-      sync()
-      window.Weglot?.on?.('languageChanged', sync)
-    }
-
-    // If Weglot already initialized before this component mounted
-    if (window.Weglot?.getCurrentLang) {
-      onReady()
-    } else {
-      window.addEventListener('weglot:ready', onReady)
-    }
+    sync()
+    window.Weglot?.on?.('languageChanged', sync)
 
     return () => {
-      window.removeEventListener('weglot:ready', onReady)
       window.Weglot?.off?.('languageChanged', sync)
     }
   }, [])
