@@ -89,6 +89,16 @@
   line-height: 1.7;
 }
 
+/* Preserve editors' soft line-breaks (shift+enter) and blank lines —
+   without this, Studio formatting collapses on the page */
+.textBody p {
+  white-space: pre-line;
+}
+
+.textBody p:empty::before {
+  content: '\00a0';
+}
+
 .textBody p {
   margin: 0 0 var(--space-md);
 }
