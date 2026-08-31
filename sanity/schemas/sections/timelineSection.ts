@@ -3,15 +3,21 @@ import { AltTextInput } from '../../components/AltTextInput'
 import { watermarkFields } from '../objects/watermarkFields'
 
 /**
- * Historie-seksjon - Interaktiv tidslinje
+ * Historie-seksjon
  *
- * Layout: Klikkbar årsliste med beskrivelse per år
+ * Layout: Tittel og bilde til venstre, overskrift og tekstavsnitt til høyre
  */
 export default defineType({
   name: 'timelineSection',
   title: 'Historie',
   type: 'object',
   fields: [
+    defineField({
+      name: 'imageTitle',
+      title: 'Tittel over bildet',
+      type: 'string',
+      description: 'Vises stort til venstre, f.eks. «Oppført i 1914»',
+    }),
     defineField({
       name: 'image',
       title: 'Bilde',
@@ -28,58 +34,43 @@ export default defineType({
       ],
     }),
     defineField({
+      name: 'heading',
+      title: 'Overskrift',
+      type: 'string',
+      description: 'Overskriften over teksten til høyre, f.eks. «Vår historie»',
+    }),
+    defineField({
       name: 'entries',
-      title: 'Tidslinje',
-      description: 'Fortell historien til Gransvilla gjennom viktige årstall og milepæler',
+      title: 'Tekstavsnitt',
+      description: 'Avsnittene som vises under overskriften til høyre for bildet',
       type: 'array',
       of: [
         defineArrayMember({
           type: 'object',
           name: 'timelineEntry',
-          title: 'Tidslinje-element',
+          title: 'Avsnitt',
           fields: [
             defineField({
-              name: 'showTitle',
-              title: 'Vis tittel',
-              type: 'boolean',
-              initialValue: false,
-            }),
-            defineField({
-              name: 'title',
-              title: 'Tittel',
-              type: 'string',
-              description: 'F.eks. årstall eller annen overskrift',
-              hidden: ({ parent }) => !parent?.showTitle,
-            }),
-            defineField({
               name: 'description',
-              title: 'Beskrivelse',
+              title: 'Tekst',
               type: 'simpleBlockContent',
-              description: 'Teksten som vises når dette årstallet er valgt',
             }),
-            // --- Commented out for now, can be re-enabled later ---
-            // defineField({
-            //   name: 'image',
-            //   title: 'Bilde',
-            //   type: 'image',
-            //   options: {
-            //     hotspot: true,
-            //   },
-            // }),
           ],
           preview: {
             select: {
-              title: 'title',
               description: 'description',
             },
-            prepare({ title, description }) {
+            prepare({ description }) {
               const descText = Array.isArray(description)
-                ? description.map((block: { children?: { text?: string }[] }) =>
-                    block.children?.map((c) => c.text).join('') ?? ''
-                  ).join(' ')
+                ? description
+                    .map(
+                      (block: { children?: { text?: string }[] }) =>
+                        block.children?.map((c) => c.text).join('') ?? '',
+                    )
+                    .join(' ')
                 : ''
               return {
-                title: title || descText?.substring(0, 30) || 'Tidslinje-element',
+                title: descText?.substring(0, 40) || 'Avsnitt',
               }
             },
           },
@@ -89,15 +80,15 @@ export default defineType({
   ],
   preview: {
     select: {
+      title: 'imageTitle',
+      heading: 'heading',
       entries: 'entries',
-      // media: 'entries.0.image',
     },
-    prepare({ entries /*, media */ }) {
+    prepare({ title, heading, entries }) {
       const count = entries?.length || 0
       return {
         title: 'Historie',
-        subtitle: `${count} element${count !== 1 ? 'er' : ''}`,
-        // media,
+        subtitle: [title || heading, `${count} avsnitt`].filter(Boolean).join(' — '),
       }
     },
   },

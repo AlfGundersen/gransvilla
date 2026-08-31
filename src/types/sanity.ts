@@ -63,8 +63,6 @@ export interface EventsSection {
 // Timeline Entry
 export interface TimelineEntry {
   _key: string
-  showTitle?: boolean
-  title?: string
   description?: BlockContent
 }
 
@@ -72,6 +70,8 @@ export interface TimelineEntry {
 export interface TimelineSection {
   _type: 'timelineSection'
   _key: string
+  imageTitle?: string
+  heading?: string
   image?: SanityImage & { alt?: string }
   entries?: TimelineEntry[]
 }

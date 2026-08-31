@@ -3,7 +3,6 @@
 import { PortableText } from '@portabletext/react'
 import Image from 'next/image'
 import { createDataAttribute } from 'next-sanity'
-import { useState } from 'react'
 import { WatermarkClient } from '@/components/WatermarkClient'
 import { urlFor } from '@/lib/sanity/image'
 import type { TimelineSection } from '@/types/sanity'
@@ -22,23 +21,20 @@ export function TimelineSectionComponent({
   documentType,
   watermarkSrc,
 }: TimelineSectionComponentProps) {
-  const { entries, image } = data
+  const { imageTitle, heading, entries, image } = data
   const entryList = entries ?? []
 
-  // Default to the first entry with a description, or just the first entry
-  const defaultIndex = entryList.findIndex((e) => e.description)
-  const [activeIndex, setActiveIndex] = useState(defaultIndex >= 0 ? defaultIndex : 0)
-
-  if (entryList.length === 0) {
+  if (entryList.length === 0 && !image?.asset) {
     return null
   }
 
   return (
-    <section className={styles.timelineSection} aria-label="Tidslinje">
+    <section className={styles.timelineSection} aria-label="Historie">
       <div className={styles.timelineContainer}>
         <div className={styles.timelineGrid}>
-          {/* Left: Image */}
+          {/* Left: Title and image */}
           <div className={styles.timelineLeftCol}>
+            {imageTitle && <p className={styles.timelineImageTitle}>{imageTitle}</p>}
             {image?.asset && (
               <div className={styles.timelineImageWrap}>
                 <Image
@@ -53,36 +49,28 @@ export function TimelineSectionComponent({
             )}
           </div>
 
-          {/* Right: Entry list */}
-          <div className={styles.timelineYearList}>
-            {entryList.map((entry, index) => (
-              <button
-                key={entry._key}
-                className={`${styles.timelineYearItem} ${index === activeIndex ? styles.timelineYearItemActive : ''}`}
-                onClick={() => setActiveIndex(index)}
-                onFocus={() => setActiveIndex(index)}
-                aria-expanded={index === activeIndex}
-                aria-label={entry.title}
-                data-sanity={
-                  documentId && documentType
-                    ? createDataAttribute({
-                        id: documentId,
-                        type: documentType,
-                        path: `timeline.entries[_key=="${entry._key}"]`,
-                      }).toString()
-                    : undefined
-                }
-              >
-                {entry.showTitle && entry.title && (
-                  <span className={styles.timelineYear}>{entry.title}</span>
-                )}
-                {index === activeIndex && entry.description && (
-                  <div className={styles.timelineDescription}>
-                    <PortableText value={entry.description} />
-                  </div>
-                )}
-              </button>
-            ))}
+          {/* Right: Heading and text paragraphs */}
+          <div className={styles.timelineTextCol}>
+            {heading && <h2 className={styles.timelineHeading}>{heading}</h2>}
+            {entryList.map((entry) =>
+              entry.description ? (
+                <div
+                  key={entry._key}
+                  className={styles.timelineDescription}
+                  data-sanity={
+                    documentId && documentType
+                      ? createDataAttribute({
+                          id: documentId,
+                          type: documentType,
+                          path: `timeline.entries[_key=="${entry._key}"]`,
+                        }).toString()
+                      : undefined
+                  }
+                >
+                  <PortableText value={entry.description} />
+                </div>
+              ) : null,
+            )}
           </div>
         </div>
       </div>

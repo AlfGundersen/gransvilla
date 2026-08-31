@@ -82,14 +82,14 @@ export const frontpageQuery = groq`
       }
     },
     timeline {
+      imageTitle,
+      heading,
       image {
         ${imageFragment},
         alt
       },
-      heading,
       entries[] {
         _key,
-        year,
         "description": description[defined(_type)]
       }
     },
