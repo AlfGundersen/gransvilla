@@ -6,6 +6,13 @@ export default defineType({
   type: 'object',
   fields: [
     defineField({
+      name: 'overskrift',
+      title: 'Overskrift',
+      type: 'string',
+      description:
+        'Valgfri overskrift som vises til venstre for teksten. Ikke gjenta sidetittelen — den vises allerede øverst på siden.',
+    }),
+    defineField({
       name: 'tekst',
       title: 'Tekstinnhold',
       type: 'blockContent',

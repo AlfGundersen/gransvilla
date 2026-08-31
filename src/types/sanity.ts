@@ -136,6 +136,7 @@ export interface NewsletterSection {
 export interface TekstSeksjon {
   _type: 'tekstSeksjon'
   _key: string
+  overskrift?: string
   tekst?: BlockContent
 }
 

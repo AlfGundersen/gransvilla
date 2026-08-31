@@ -16,8 +16,9 @@ export function TextSection({ data, dataSanity, cta }: TextSectionProps) {
 
   return (
     <div className={styles.textSection} data-sanity={dataSanity}>
-      {hasCta && (
+      {(data.overskrift || hasCta) && (
         <div className={styles.textCtaCol}>
+          {data.overskrift && <h2 className={styles.textHeading}>{data.overskrift}</h2>}
           {cta?.beskrivelse && (
             <div className={styles.textCtaText}>
               <PortableText value={cta.beskrivelse} />

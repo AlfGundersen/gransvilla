@@ -21,7 +21,15 @@
   background-color: var(--color-border);
 }
 
-/* Left column — page-level CTA text and/or button, in the old heading spot */
+.textHeading {
+  font-family: var(--font-heading);
+  font-size: var(--text-3xl);
+  font-weight: var(--font-heading-weight);
+  line-height: 1.2;
+  margin: 0;
+}
+
+/* Left column — optional heading + page-level CTA text/button */
 .textCtaCol {
   grid-column: 1 / 2;
   display: flex;

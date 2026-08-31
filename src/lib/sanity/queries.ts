@@ -311,6 +311,7 @@ const eventSectionsFragment = groq`
     _type,
     _key,
     _type == "tekstSeksjon" => {
+      overskrift,
       "tekst": tekst[defined(_type)]
     },
     _type == "bildeSeksjon" => {
