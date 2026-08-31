@@ -67,7 +67,8 @@ export default async function RootLayout({
   const weglotKey = process.env.NEXT_PUBLIC_WEGLOT_API_KEY
 
   return (
-    <html lang="nb" className={inter.variable}>
+    // translate="no" matches what weglot.min.js sets pre-hydration
+    <html lang="nb" translate="no" className={inter.variable}>
       <head>
         <meta charSet="utf-8" />
         <meta name="theme-color" content="#000000" />
@@ -79,7 +80,7 @@ export default async function RootLayout({
             <script
               // biome-ignore lint/security/noDangerouslySetInnerHtml: static init snippet, key is public by design
               dangerouslySetInnerHTML={{
-                __html: `Weglot.initialize({api_key: '${weglotKey}'});`,
+                __html: `Weglot.initialize({api_key: '${weglotKey}', excluded_paths: [{value: '/studio', type: 'START_WITH'}, {value: '/api', type: 'START_WITH'}]});`,
               }}
             />
           </>
