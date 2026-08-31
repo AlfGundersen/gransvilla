@@ -30,7 +30,8 @@ export default defineType({
       name: 'featured',
       title: 'Fremhevet-seksjon',
       type: 'featuredSection',
-      description: 'Fremhev to ting du vil trekke oppmerksomhet til, f.eks. søndagsfrokost og et arrangement',
+      description:
+        'Fremhev to ting du vil trekke oppmerksomhet til, f.eks. søndagsfrokost og et arrangement. Vises kun på desktop og nettbrett — seksjonen er skjult på mobil.',
       group: 'featured',
     }),
 

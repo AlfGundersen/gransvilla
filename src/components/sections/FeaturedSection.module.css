@@ -125,8 +125,12 @@
   }
 }
 
-/* Mobile */
+/* Mobile: section is hidden entirely — see description in
+   sanity/schemas/documents/frontpage.ts */
 @media (max-width: 768px) {
+  .featuredSection {
+    display: none;
+  }
 
   .featuredGrid::before {
     display: none;
