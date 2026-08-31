@@ -63,6 +63,11 @@
   margin-bottom: 0;
 }
 
+/* Button with no text above it aligns to the bottom of the section */
+.textCtaCol > .textCtaButton:first-child {
+  margin-top: auto;
+}
+
 /* Same look as the Fremhevet "Vis mer" button */
 .textCtaButton {
   display: inline-block;
