@@ -10,7 +10,6 @@ declare global {
       getCurrentLang: () => string
       on: (event: string, callback: (...args: unknown[]) => void) => void
       off: (event: string, callback: (...args: unknown[]) => void) => boolean
-      options?: { versions?: { translation?: number } }
     }
   }
 }
