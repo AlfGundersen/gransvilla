@@ -88,6 +88,7 @@ export default async function SlugPage({ params }: Props) {
   // Only split the grid into two when an EventProductsSection needs to be
   // injected after the first section. Otherwise, keep a single grid so the
   // existing section-divider borders work as before.
+  const knapp = content.knapp
   const titleBlock = <h1 className={styles.eventTitle}>{content.title}</h1>
 
   const featuredBlock = content.featuredImage?.asset && (
@@ -121,6 +122,7 @@ export default async function SlugPage({ params }: Props) {
                 sections={[sections[0]]}
                 documentId={content._id}
                 documentType={content._type}
+                cta={knapp}
               />
             )}
           </div>
@@ -144,6 +146,7 @@ export default async function SlugPage({ params }: Props) {
               sections={sections}
               documentId={content._id}
               documentType={content._type}
+              cta={knapp}
             />
           )}
         </div>

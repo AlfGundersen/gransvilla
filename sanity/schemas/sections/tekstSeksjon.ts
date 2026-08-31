@@ -6,23 +6,23 @@ export default defineType({
   type: 'object',
   fields: [
     defineField({
-      name: 'overskrift',
-      title: 'Overskrift',
-      type: 'string',
-      description: 'Vises til venstre i seksjonen',
-    }),
-    defineField({
       name: 'tekst',
       title: 'Tekstinnhold',
       type: 'blockContent',
-      description: 'Brødtekst som vises til høyre for overskriften',
+      description: 'Brødtekst som vises til høyre i seksjonen',
     }),
   ],
   preview: {
     select: {
-      title: 'overskrift',
+      tekst: 'tekst',
     },
-    prepare({ title }) {
+    prepare({ tekst }) {
+      const block = Array.isArray(tekst)
+        ? tekst.find((b: { _type?: string }) => b._type === 'block')
+        : undefined
+      const title = block?.children
+        ?.map((child: { text?: string }) => child.text || '')
+        .join('')
       return {
         title: title || 'Tekstseksjon',
         subtitle: 'Tekst',

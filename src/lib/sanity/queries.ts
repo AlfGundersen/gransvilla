@@ -311,7 +311,6 @@ const eventSectionsFragment = groq`
     _type,
     _key,
     _type == "tekstSeksjon" => {
-      overskrift,
       "tekst": tekst[defined(_type)]
     },
     _type == "bildeSeksjon" => {
@@ -359,6 +358,14 @@ export const eventQuery = groq`
       ${imageFragment},
       alt
     },
+    knapp {
+      "beskrivelse": beskrivelse[defined(_type)],
+      tekst,
+      lenke-> {
+        title,
+        slug
+      }
+    },
     ${eventSectionsFragment},
     "products": products[].productHandle,
     seo {
@@ -377,6 +384,14 @@ export const pageQuery = groq`
     featuredImage {
       ${imageFragment},
       alt
+    },
+    knapp {
+      "beskrivelse": beskrivelse[defined(_type)],
+      tekst,
+      lenke-> {
+        title,
+        slug
+      }
     },
     ${eventSectionsFragment},
     seo {

@@ -70,6 +70,13 @@ export default defineType({
       group: 'content',
     }),
     defineField({
+      name: 'knapp',
+      title: 'Knapp',
+      type: 'knapp',
+      description: 'Valgfri tekst og/eller knapp som vises til venstre i den første tekstseksjonen',
+      group: 'content',
+    }),
+    defineField({
       name: 'sections',
       title: 'Seksjoner',
       type: 'array',

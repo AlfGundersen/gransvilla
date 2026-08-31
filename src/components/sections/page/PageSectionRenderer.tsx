@@ -1,6 +1,6 @@
 import { createDataAttribute } from 'next-sanity'
 import { getBlurDataURL } from '@/lib/sanity/blur'
-import type { EventPageSection } from '@/types/sanity'
+import type { EventPageSection, Knapp } from '@/types/sanity'
 import { GallerySection } from './GallerySection'
 import { ImageSection } from './ImageSection'
 import { ImageTextSection } from './ImageTextSection'
@@ -10,12 +10,15 @@ interface PageSectionRendererProps {
   sections: EventPageSection[]
   documentId?: string
   documentType?: string
+  /** Page-level CTA — rendered in the first section if it's a tekstSeksjon */
+  cta?: Knapp
 }
 
 export async function PageSectionRenderer({
   sections,
   documentId,
   documentType,
+  cta,
 }: PageSectionRendererProps) {
   const blurMap = new Map<string, string | undefined>()
 
@@ -52,7 +55,14 @@ export async function PageSectionRenderer({
 
         switch (section._type) {
           case 'tekstSeksjon':
-            return <TextSection key={section._key} data={section} dataSanity={dataSanity} />
+            return (
+              <TextSection
+                key={section._key}
+                data={section}
+                dataSanity={dataSanity}
+                cta={isFirst ? cta : undefined}
+              />
+            )
           case 'bildeSeksjon':
             return (
               <ImageSection

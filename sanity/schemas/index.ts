@@ -9,6 +9,7 @@ import salgsvilkar from './documents/salgsvilkar'
 
 // Object types
 import blockContent from './objects/blockContent'
+import knapp from './objects/knapp'
 import simpleBlockContent from './objects/simpleBlockContent'
 import seo from './objects/seo'
 
@@ -39,6 +40,7 @@ export const schemaTypes = [
 
   // Objects
   blockContent,
+  knapp,
   simpleBlockContent,
   seo,
 

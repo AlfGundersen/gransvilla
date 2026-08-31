@@ -136,8 +136,18 @@ export interface NewsletterSection {
 export interface TekstSeksjon {
   _type: 'tekstSeksjon'
   _key: string
-  overskrift?: string
   tekst?: BlockContent
+}
+
+// Optional page-level CTA (event and page documents) — text and/or button,
+// rendered in the left column of the page's first text section
+export interface Knapp {
+  beskrivelse?: BlockContent
+  tekst?: string
+  lenke?: {
+    title?: string
+    slug?: { current: string }
+  }
 }
 
 export type AspectRatio = '16/9' | '3/2' | '4/3' | '1/1' | '3/4' | '2/3'
@@ -184,6 +194,7 @@ export interface Event {
   }
   description?: BlockContent
   featuredImage?: SanityImage & { alt?: string }
+  knapp?: Knapp
   sections?: EventPageSection[]
   products?: string[]
   seo?: {
@@ -309,6 +320,7 @@ export interface Page {
     current: string
   }
   featuredImage?: SanityImage & { alt?: string }
+  knapp?: Knapp
   sections?: EventPageSection[]
   seo?: {
     metaTitle?: string
