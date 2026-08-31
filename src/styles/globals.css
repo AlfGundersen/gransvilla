@@ -137,6 +137,14 @@
   text-decoration: none;
 }
 
+/* Hide Weglot's default floating switcher — we render our own in the
+   header. Belt-and-suspenders regardless of the dashboard setting. */
+.wg-default,
+.weglot-container,
+#weglot-switcher-1 {
+  display: none !important;
+}
+
 /* --------------------------------------
    Base Styles
    -------------------------------------- */

@@ -79,19 +79,39 @@ export default function TranslationFallback() {
     // Debounce so React's repaint storm results in one batched request.
     const schedule = () => {
       clearTimeout(timer)
-      timer = setTimeout(translate, 150)
+      timer = setTimeout(translate, 300)
     }
 
-    schedule()
-    // Our own textContent writes retrigger the observer, but the
-    // applied-map guard makes the follow-up collect() a no-op.
     const observer = new MutationObserver(schedule)
-    observer.observe(document.body, { childList: true, characterData: true, subtree: true })
+
+    // Mutating text nodes while React is still hydrating/recovering crashes
+    // the render (error boundary). Wait until the page has fully loaded and
+    // the browser is idle before touching the DOM.
+    const start = () => {
+      if (destroyed) return
+      schedule()
+      // Our own textContent writes retrigger the observer, but the
+      // applied-map guard makes the follow-up collect() a no-op.
+      observer.observe(document.body, { childList: true, characterData: true, subtree: true })
+    }
+    const onReady = () => {
+      if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(() => setTimeout(start, 200), { timeout: 2000 })
+      } else {
+        setTimeout(start, 700)
+      }
+    }
+    if (document.readyState === 'complete') {
+      onReady()
+    } else {
+      window.addEventListener('load', onReady, { once: true })
+    }
 
     return () => {
       destroyed = true
       clearTimeout(timer)
       observer.disconnect()
+      window.removeEventListener('load', onReady)
     }
   }, [])
 
