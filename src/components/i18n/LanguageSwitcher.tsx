@@ -1,5 +1,6 @@
 'use client'
 
+import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import styles from './LanguageSwitcher.module.css'
 
@@ -19,29 +20,18 @@ declare global {
  * Subtle single-button language toggle for the header. Shows the language
  * you can switch TO (so when on Norwegian it reads "EN"; on English, "NO").
  *
- * Weglot loads synchronously in the root layout <head>, so it is initialized
- * before hydration. Clicks are a no-op if `Weglot.switchTo` isn't available.
+ * Navigates directly to the same path on the other domain instead of
+ * Weglot.switchTo — Weglot captures the URL at initial page load, so after
+ * client-side navigation switchTo sends visitors to the wrong page.
  */
 export default function LanguageSwitcher() {
   const [isEnglish, setIsEnglish] = useState(false)
+  const pathname = usePathname()
 
   useEffect(() => {
-    const sync = () => {
-      const w = window.Weglot
-      if (w?.getCurrentLang) setIsEnglish(w.getCurrentLang() === 'en')
-    }
-
-    sync()
-    window.Weglot?.on?.('languageChanged', sync)
-
-    return () => {
-      window.Weglot?.off?.('languageChanged', sync)
-    }
+    setIsEnglish(window.location.hostname.startsWith('en.'))
   }, [])
 
-  // Weglot project's source language is "nb" (Bokmål), not "no" — using
-  // the wrong code makes `switchTo` a silent no-op.
-  const target = isEnglish ? 'nb' : 'en'
   const label = isEnglish ? 'NO' : 'EN'
   const ariaLabel = isEnglish ? 'Norsk versjon' : 'English version'
 
@@ -51,14 +41,9 @@ export default function LanguageSwitcher() {
       className={`${styles.button} language-switcher-button`}
       aria-label={ariaLabel}
       onClick={() => {
-        const w = typeof window !== 'undefined' ? window.Weglot : undefined
-        if (!w || typeof w.switchTo !== 'function') return
-        try {
-          w.switchTo(target)
-          setIsEnglish(!isEnglish)
-        } catch {
-          /* don't flip label if switch failed */
-        }
+        const targetHost = isEnglish ? 'gransvilla.no' : 'en.gransvilla.no'
+        const path = pathname || window.location.pathname
+        window.location.href = `https://${targetHost}${path}${window.location.search}${window.location.hash}`
       }}
     >
       {label}
