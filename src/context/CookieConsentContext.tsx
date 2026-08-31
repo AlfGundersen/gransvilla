@@ -48,7 +48,11 @@ function writeCookie(consent: ConsentState) {
     timestamp: new Date().toISOString(),
   })
   const secure = window.location.protocol === 'https:' ? '; Secure' : ''
-  document.cookie = `${COOKIE_NAME}=${encodeURIComponent(value)}; max-age=${MAX_AGE}; path=/; SameSite=Lax${secure}`
+  // Domain-wide so consent given on gransvilla.no also covers en.gransvilla.no
+  const domain = window.location.hostname.endsWith('gransvilla.no')
+    ? '; domain=.gransvilla.no'
+    : ''
+  document.cookie = `${COOKIE_NAME}=${encodeURIComponent(value)}; max-age=${MAX_AGE}; path=/; SameSite=Lax${domain}${secure}`
 }
 
 const CookieConsentContext = createContext<CookieConsentContextValue | null>(null)

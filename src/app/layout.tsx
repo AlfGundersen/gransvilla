@@ -80,10 +80,10 @@ export default async function RootLayout({
             <script
               // biome-ignore lint/security/noDangerouslySetInnerHtml: static init snippet, key is public by design
               dangerouslySetInnerHTML={{
-                // On translated subdomains (en.*) the Weglot proxy injects its own
-                // configured script — initializing ours too wins the race and breaks
-                // re-translation after React hydration recovery.
-                __html: `if (location.hostname.indexOf('en.') !== 0) { Weglot.initialize({api_key: '${weglotKey}', excluded_paths: [{value: '/studio', type: 'START_WITH'}, {value: '/api', type: 'START_WITH'}]}); }`,
+                // dynamics is load-bearing: on en.gransvilla.no React hydration
+                // recovery repaints the DOM with untranslated Norwegian from the
+                // RSC payload — Weglot must observe the DOM and re-translate.
+                __html: `Weglot.initialize({api_key: '${weglotKey}', cache: true, dynamics: [{value: 'body'}], excluded_blocks: [{value: '.language-switcher-button'}], excluded_paths: [{value: '/studio', type: 'START_WITH'}, {value: '/api', type: 'START_WITH'}]});`,
               }}
             />
           </>
