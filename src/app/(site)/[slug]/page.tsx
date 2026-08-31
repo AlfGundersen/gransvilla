@@ -10,7 +10,6 @@ import { client } from '@/lib/sanity/client'
 import { urlFor } from '@/lib/sanity/image'
 import { sanityFetch } from '@/lib/sanity/live'
 import { eventQuery, eventsQuery, pageQuery } from '@/lib/sanity/queries'
-import type { Event, Page } from '@/types/sanity'
 import styles from './page.module.css'
 
 export const dynamicParams = true
@@ -89,20 +88,7 @@ export default async function SlugPage({ params }: Props) {
   // Only split the grid into two when an EventProductsSection needs to be
   // injected after the first section. Otherwise, keep a single grid so the
   // existing section-divider borders work as before.
-  const titleBlock = (
-    <h1 className={styles.eventTitle}>
-      <span className="visually-hidden">{content.title}</span>
-      <Image
-        src="/logo.svg"
-        alt=""
-        width={128}
-        height={22}
-        className={styles.eventTitleLogo}
-        aria-hidden="true"
-        priority
-      />
-    </h1>
-  )
+  const titleBlock = <h1 className={styles.eventTitle}>{content.title}</h1>
 
   const featuredBlock = content.featuredImage?.asset && (
     <div className={styles.featuredImage}>

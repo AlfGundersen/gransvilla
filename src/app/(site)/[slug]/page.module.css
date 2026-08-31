@@ -96,13 +96,6 @@
   align-self: start;
 }
 
-.eventTitleLogo {
-  width: 128px;
-  height: auto;
-  max-width: 100%;
-  display: block;
-}
-
 /* Mobile */
 @media (max-width: 767px) {
   .eventGrid {
@@ -123,10 +116,6 @@
     grid-row: auto;
     position: static;
     font-size: var(--text-5xl);
-  }
-
-  .eventTitleLogo {
-    display: none;
   }
 
   .featuredImage {
