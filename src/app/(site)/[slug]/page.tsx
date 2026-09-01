@@ -6,6 +6,7 @@ import { PageSectionRenderer } from '@/components/sections/page/PageSectionRende
 import { SchemaGenerator } from '@/components/seo/SchemaGenerator'
 import { MaybeWatermark } from '@/components/Watermark'
 import { getBlurDataURL } from '@/lib/sanity/blur'
+import { getProductByHandle, type Product } from '@/lib/shopify'
 import { client } from '@/lib/sanity/client'
 import { urlFor } from '@/lib/sanity/image'
 import { sanityFetch } from '@/lib/sanity/live'
@@ -81,8 +82,13 @@ export default async function SlugPage({ params }: Props) {
     ? await getBlurDataURL(content.featuredImage)
     : undefined
 
-  const hasEventProducts =
-    content._type === 'event' && content.products && content.products.length > 0
+  // Fetch products here so the layout reflects what actually renders —
+  // stale Sanity handles must not split the grid around an empty section.
+  const productHandles: string[] = content._type === 'event' ? (content.products ?? []) : []
+  const eventProducts = (
+    await Promise.all(productHandles.map((handle) => getProductByHandle(handle)))
+  ).filter((p): p is Product => p !== null)
+  const hasEventProducts = eventProducts.length > 0
   const sections = content.sections ?? []
 
   // Only split the grid into two when an EventProductsSection needs to be
@@ -126,7 +132,7 @@ export default async function SlugPage({ params }: Props) {
               />
             )}
           </div>
-          <EventProductsSection products={content.products as string[]} />
+          <EventProductsSection products={eventProducts} />
           {sections.length > 1 && (
             <div className={styles.eventGrid}>
               <PageSectionRenderer

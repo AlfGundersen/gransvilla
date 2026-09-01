@@ -1,19 +1,14 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { getProductByHandle } from '@/lib/shopify'
 import type { Product } from '@/lib/shopify/types'
 import { EventProductCard, EventProductSingle } from './EventProductCard'
 import styles from './EventProductsSection.module.css'
 
 interface EventProductsSectionProps {
-  products: string[]
+  products: Product[]
 }
 
-export async function EventProductsSection({ products }: EventProductsSectionProps) {
-  const fetchedProducts = await Promise.all(products.map((handle) => getProductByHandle(handle)))
-
-  const validProducts = fetchedProducts.filter((p): p is Product => p !== null)
-
+export function EventProductsSection({ products: validProducts }: EventProductsSectionProps) {
   if (validProducts.length === 0) {
     return null
   }

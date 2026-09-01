@@ -1,3 +1,4 @@
+import { type PortableTextBlock, toPlainText } from '@portabletext/react'
 import { urlFor } from '@/lib/sanity/image'
 import { JsonLd } from './JsonLd'
 
@@ -19,7 +20,7 @@ interface DocumentData {
   _createdAt?: string
   _updatedAt?: string
   title: string
-  description?: string
+  description?: string | PortableTextBlock[]
   slug?: { current: string }
   featuredImage?: { asset?: { _ref: string } }
   date?: string
@@ -54,7 +55,15 @@ export function SchemaGenerator({ seo, document, baseUrl = 'https://gransvilla.n
   }
 
   const title = seo?.metaTitle || document.title
-  const description = seo?.metaDescription || document.description
+  // schema.org requires a plain string; event descriptions arrive as
+  // portable-text blocks from Sanity
+  const rawDescription = seo?.metaDescription || document.description
+  const description =
+    typeof rawDescription === 'string'
+      ? rawDescription
+      : rawDescription
+        ? toPlainText(rawDescription).trim() || undefined
+        : undefined
   const url = document.slug ? `${baseUrl}/${document.slug.current}` : baseUrl
   const image = seo?.ogImage?.asset
     ? urlFor(seo.ogImage).width(1200).height(630).url()
