@@ -145,6 +145,7 @@ export interface TekstSeksjon {
 export interface Knapp {
   beskrivelse?: BlockContent
   tekst?: string
+  internLenke?: string
   lenke?: {
     title?: string
     slug?: { current: string }

@@ -28,5 +28,17 @@ export default defineType({
       options: { disableNew: true },
       description: 'Velg hvilken side besøkende kommer til når de klikker på knappen',
     }),
+    defineField({
+      name: 'internLenke',
+      title: 'Eller lenke til fast side',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Kontakt', value: '/kontakt' },
+          { title: 'Butikken', value: '/butikken' },
+        ],
+      },
+      description: 'Faste sider som ikke finnes i listen over. Brukes bare hvis ingen side er valgt.',
+    }),
   ],
 })

@@ -12,7 +12,8 @@ interface TextSectionProps {
 
 export function TextSection({ data, dataSanity, cta }: TextSectionProps) {
   const ctaSlug = cta?.lenke?.slug?.current
-  const hasCta = Boolean(cta?.beskrivelse?.length || (cta?.tekst && ctaSlug))
+  const ctaHref = ctaSlug ? `/${ctaSlug}` : cta?.internLenke
+  const hasCta = Boolean(cta?.beskrivelse?.length || (cta?.tekst && ctaHref))
 
   return (
     <div className={styles.textSection} data-sanity={dataSanity}>
@@ -24,8 +25,8 @@ export function TextSection({ data, dataSanity, cta }: TextSectionProps) {
               <PortableText value={cta.beskrivelse} />
             </div>
           )}
-          {cta?.tekst && ctaSlug && (
-            <Link href={`/${ctaSlug}`} className={`${styles.textCtaButton} site-button`}>
+          {cta?.tekst && ctaHref && (
+            <Link href={ctaHref} className={`${styles.textCtaButton} site-button`}>
               {cta.tekst}
             </Link>
           )}
