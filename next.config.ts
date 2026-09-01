@@ -73,12 +73,19 @@ const nextConfig: NextConfig = {
           ...baseSecurityHeaders,
         ],
       },
-      {
-        source: '/_next/static/:path*',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
-        ],
-      },
+      // Immutable caching is only safe in production, where chunk filenames
+      // are content-hashed. In dev the names are stable, so this header made
+      // browsers keep stale chunks forever.
+      ...(process.env.NODE_ENV === 'production'
+        ? [
+            {
+              source: '/_next/static/:path*',
+              headers: [
+                { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+              ],
+            },
+          ]
+        : []),
     ]
   },
 }

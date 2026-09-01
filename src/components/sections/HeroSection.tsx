@@ -41,11 +41,16 @@ export function HeroSectionComponent({ data }: HeroSectionComponentProps) {
           )}
           {announcementText &&
             (announcementHref ? (
-              <Link href={announcementHref} className={styles.heroAnnouncement}>
+              <Link
+                href={announcementHref}
+                className={`${styles.heroAnnouncement} site-button`}
+              >
                 {announcementText}
               </Link>
             ) : (
-              <span className={styles.heroAnnouncement}>{announcementText}</span>
+              <span className={`${styles.heroAnnouncement} site-button`}>
+                {announcementText}
+              </span>
             ))}
         </div>
       </div>
