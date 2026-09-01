@@ -1,8 +1,8 @@
 import Image from 'next/image'
-import Link from 'next/link'
 import { MaybeWatermark } from '@/components/Watermark'
 import { urlFor } from '@/lib/sanity/image'
 import type { HeroSection } from '@/types/sanity'
+import { HeroAnnouncement } from './HeroAnnouncement'
 import styles from './HeroSection.module.css'
 
 interface HeroSectionComponentProps {
@@ -39,19 +39,7 @@ export function HeroSectionComponent({ data }: HeroSectionComponentProps) {
               <MaybeWatermark image={image} />
             </>
           )}
-          {announcementText &&
-            (announcementHref ? (
-              <Link
-                href={announcementHref}
-                className={`${styles.heroAnnouncement} site-button`}
-              >
-                {announcementText}
-              </Link>
-            ) : (
-              <span className={`${styles.heroAnnouncement} site-button`}>
-                {announcementText}
-              </span>
-            ))}
+          {announcementText && <HeroAnnouncement text={announcementText} href={announcementHref} />}
         </div>
       </div>
     </section>

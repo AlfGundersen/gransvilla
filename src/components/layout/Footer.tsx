@@ -4,7 +4,7 @@ import { PortableText } from '@portabletext/react'
 import type { PortableTextBlock } from '@portabletext/types'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState } from 'react'
+import { NewsletterForm } from '@/components/newsletter/NewsletterForm'
 import { useCookieConsent } from '@/context/CookieConsentContext'
 import type { NavLink, SocialLink } from '@/types/sanity'
 import { socialPlatformLabels } from '@/types/sanity'
@@ -29,33 +29,7 @@ export default function Footer({
   siteDescription,
   faviconUrl,
 }: FooterProps) {
-  const [email, setEmail] = useState('')
-  const [consent, setConsent] = useState(false)
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const { openSettings } = useCookieConsent()
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setStatus('loading')
-
-    try {
-      const response = await fetch('/api/newsletter', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      })
-
-      if (!response.ok) {
-        throw new Error('Subscription failed')
-      }
-
-      setStatus('success')
-      setEmail('')
-      setConsent(false)
-    } catch {
-      setStatus('error')
-    }
-  }
 
   const handleColorFlip = () => {
     document.documentElement.classList.toggle('inverted')
@@ -68,51 +42,7 @@ export default function Footer({
           {/* Newsletter Section */}
           <div id="nyhetsbrev" className={styles.newsletter}>
             <p className={styles.newsletterText}>Holde deg oppdatert og meld deg på nyhetsbrevet</p>
-            {status === 'success' ? (
-              <p className={styles.successMessage}>Takk for påmeldingen!</p>
-            ) : (
-              <form className={styles.form} onSubmit={handleSubmit} aria-label="Nyhetsbrev">
-                <label htmlFor="footer-email" className="visually-hidden">
-                  E-postadresse
-                </label>
-                <input
-                  id="footer-email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Din e-postadresse"
-                  className={styles.input}
-                  required
-                  disabled={status === 'loading'}
-                />
-                <label className={styles.consent}>
-                  <input
-                    id="footer-newsletter-consent"
-                    name="footer-newsletter-consent"
-                    type="checkbox"
-                    checked={consent}
-                    onChange={(e) => setConsent(e.target.checked)}
-                  />
-                  <span>
-                    Jeg samtykker til{' '}
-                    <a href="/personvern" target="_blank" rel="noopener noreferrer">
-                      personvern
-                    </a>{' '}
-                    og lagring av e-post for nyhetsbrev.
-                  </span>
-                </label>
-                <button
-                  type="submit"
-                  className={`${styles.button} site-button`}
-                  disabled={!consent || status === 'loading'}
-                >
-                  {status === 'loading' ? 'Sender...' : 'Send nå'}
-                </button>
-                {status === 'error' && (
-                  <p className={styles.errorMessage}>Noe gikk galt. Vennligst prøv igjen.</p>
-                )}
-              </form>
-            )}
+            <NewsletterForm idPrefix="footer" />
           </div>
 
           {/* Menu Links */}
