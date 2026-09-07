@@ -1,5 +1,6 @@
 import { PortableText } from '@portabletext/react'
 import Link from 'next/link'
+import { headingAnchor } from '@/lib/anchor'
 import type { Knapp, TekstSeksjon } from '@/types/sanity'
 import styles from './TextSection.module.css'
 
@@ -16,7 +17,7 @@ export function TextSection({ data, dataSanity, cta }: TextSectionProps) {
   const hasCta = Boolean(cta?.beskrivelse?.length || (cta?.tekst && ctaHref))
 
   return (
-    <div className={styles.textSection} data-sanity={dataSanity}>
+    <div id={headingAnchor(data.overskrift)} className={styles.textSection} data-sanity={dataSanity}>
       {(data.overskrift || hasCta) && (
         <div className={styles.textCtaCol}>
           {data.overskrift && <h2 className={styles.textHeading}>{data.overskrift}</h2>}

@@ -1,6 +1,7 @@
 import { PortableText } from '@portabletext/react'
 import Image from 'next/image'
 import { MaybeWatermark } from '@/components/Watermark'
+import { headingAnchor } from '@/lib/anchor'
 import { urlFor } from '@/lib/sanity/image'
 import type { BildeTekstSeksjon } from '@/types/sanity'
 import styles from './ImageTextSection.module.css'
@@ -32,6 +33,7 @@ export function ImageTextSection({
 
   return (
     <div
+      id={headingAnchor(data.visOverskrift ? data.overskrift : undefined)}
       className={`${styles.imageTextSection} ${bildeForst ? '' : styles.imageTextReversed}`}
       data-sanity={dataSanity}
     >
