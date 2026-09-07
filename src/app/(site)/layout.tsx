@@ -1,4 +1,5 @@
 import { stegaClean } from 'next-sanity'
+import { AnchorScroll } from '@/components/AnchorScroll'
 import PlausibleAnalytics from '@/components/analytics/Plausible'
 import { CartDrawer } from '@/components/cart/CartDrawer'
 import CookieBanner from '@/components/cookie/CookieBanner'
@@ -30,6 +31,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       <CartProvider>
         <div className={styles.wrapper} data-site>
           <ScrollToTop />
+          <AnchorScroll />
           <a href="#main-content" className="visually-hidden">
             Hopp til innhold
           </a>
