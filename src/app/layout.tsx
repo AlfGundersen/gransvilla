@@ -36,6 +36,13 @@ export async function generateMetadata(): Promise<Metadata> {
     description: 'Gransvilla - Restaurant, kantine og arrangementer',
     alternates: {
       canonical: '/',
+      // The origin serves Norwegian and is not proxied, so nothing else emits
+      // these. Weglot injects its own correct pair on en.gransvilla.no, where
+      // its URL rewriting also mangles ours — see the note in <head>.
+      languages: {
+        nb: 'https://gransvilla.no',
+        en: 'https://en.gransvilla.no',
+      },
     },
     openGraph: {
       type: 'website',
@@ -73,9 +80,6 @@ export default async function RootLayout({
       <head>
         <meta charSet="utf-8" />
         <meta name="theme-color" content="#000000" />
-        {/* hreflang is injected by Weglot's proxy on both language versions.
-            Hardcoding it here breaks the English page: the proxy rewrites URLs
-            in the HTML it serves, turning the nb href into the en.* URL. */}
         {weglotKey && (
           <>
             <script src="https://cdn.weglot.com/weglot.min.js" />
