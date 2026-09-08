@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google'
 import { draftMode } from 'next/headers'
 import { groq } from 'next-sanity'
 import { VisualEditing } from 'next-sanity/visual-editing'
-import TranslationFallback from '@/components/i18n/TranslationFallback'
+import TranslatedLang from '@/components/i18n/TranslatedLang'
 import { DraftModeBanner } from '@/components/pwa/DraftModeBanner'
 import { ServiceWorkerRegistration } from '@/components/pwa/ServiceWorkerRegistration'
 import { JsonLd } from '@/components/seo/JsonLd'
@@ -120,7 +120,7 @@ export default async function RootLayout({
           </>
         )}
         <ServiceWorkerRegistration />
-        <TranslationFallback />
+        <TranslatedLang />
       </body>
     </html>
   )
