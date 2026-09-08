@@ -3,7 +3,6 @@ import { Inter } from 'next/font/google'
 import { draftMode } from 'next/headers'
 import { groq } from 'next-sanity'
 import { VisualEditing } from 'next-sanity/visual-editing'
-import TranslationFallback from '@/components/i18n/TranslationFallback'
 import { DraftModeBanner } from '@/components/pwa/DraftModeBanner'
 import { ServiceWorkerRegistration } from '@/components/pwa/ServiceWorkerRegistration'
 import { JsonLd } from '@/components/seo/JsonLd'
@@ -82,10 +81,11 @@ export default async function RootLayout({
             <script
               // biome-ignore lint/security/noDangerouslySetInnerHtml: static init snippet, key is public by design
               dangerouslySetInnerHTML={{
-                // dynamics is load-bearing: on en.gransvilla.no React hydration
-                // recovery repaints the DOM with untranslated Norwegian from the
-                // RSC payload — Weglot must observe the DOM and re-translate.
-                __html: `Weglot.initialize({api_key: '${weglotKey}', cache: true, dynamics: [{value: 'body'}], excluded_blocks: [{value: '.language-switcher-button'}], excluded_paths: [{value: '/studio', type: 'START_WITH'}, {value: '/api', type: 'START_WITH'}]});`,
+                // dynamics targets html, not body: React's hydration recovery
+                // repaints from the Norwegian RSC payload and clears lang="en"
+                // and data-wg-translated off <html>. A body-scoped observer never
+                // sees those, so the page stayed lang="nb" after re-translation.
+                __html: `Weglot.initialize({api_key: '${weglotKey}', cache: true, dynamics: [{value: 'html'}], excluded_blocks: [{value: '.language-switcher-button'}], excluded_paths: [{value: '/studio', type: 'START_WITH'}, {value: '/api', type: 'START_WITH'}]});`,
               }}
             />
           </>
@@ -116,7 +116,6 @@ export default async function RootLayout({
           </>
         )}
         <ServiceWorkerRegistration />
-        <TranslationFallback />
       </body>
     </html>
   )

@@ -4,24 +4,6 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import styles from './LanguageSwitcher.module.css'
 
-declare global {
-  interface Window {
-    Weglot?: {
-      switchTo: (lang: string) => void
-      getCurrentLang: () => string
-      on: (event: string, callback: (...args: unknown[]) => void) => void
-      off: (event: string, callback: (...args: unknown[]) => void) => boolean
-      /** https://developers.weglot.com/javascript/javascript-functions */
-      initialized?: boolean
-      translate?: (
-        payload: { words: { t: number; w: string }[]; languageTo: string },
-        callback: (data: unknown) => void,
-      ) => Promise<unknown> | undefined
-      options?: { versions?: { translation?: number } }
-    }
-  }
-}
-
 /**
  * Subtle single-button language toggle for the header. Shows the language
  * you can switch TO (so when on Norwegian it reads "EN"; on English, "NO").
