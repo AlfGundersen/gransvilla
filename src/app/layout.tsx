@@ -69,7 +69,7 @@ export default async function RootLayout({
 
   return (
     // translate="no" matches what weglot.min.js sets pre-hydration
-    <html lang="nb" translate="no" className={inter.variable} suppressHydrationWarning>
+    <html lang="nb" translate="no" className={inter.variable}>
       <head>
         <meta charSet="utf-8" />
         <meta name="theme-color" content="#000000" />
