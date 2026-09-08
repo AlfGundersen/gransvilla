@@ -31,15 +31,20 @@ export default function TranslationFallback() {
     // leaving English content announced to screen readers as Norwegian.
     // Watch the attribute directly and put it back; the guard stops our own
     // write from retriggering the observer.
-    const langObserver = new MutationObserver(() => {
+    const ensureLang = () => {
       if (!destroyed && document.documentElement.lang !== 'en') {
         document.documentElement.lang = 'en'
       }
-    })
+    }
+    const langObserver = new MutationObserver(ensureLang)
     langObserver.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ['lang'],
     })
+    // Assert on mount too, not just on mutation: a failed hydration remounts
+    // this component, and by the time the observer reattaches React has
+    // already written lang="nb", so no further mutation ever fires.
+    ensureLang()
 
     const collect = (): Text[] => {
       const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
