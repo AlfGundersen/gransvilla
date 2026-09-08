@@ -2,8 +2,9 @@ import type { MetadataRoute } from 'next'
 import { groq } from 'next-sanity'
 import { client } from '@/lib/sanity/client'
 import { getProducts } from '@/lib/shopify'
+import { siteUrl } from '@/lib/site-url'
 
-const BASE_URL = `https://${process.env.NEXT_PUBLIC_SITE_URL || 'gransvilla.no'}`
+const BASE_URL = siteUrl()
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Static routes
