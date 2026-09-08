@@ -5,13 +5,15 @@ import { useEffect } from 'react'
 const KEY = process.env.NEXT_PUBLIC_WEGLOT_API_KEY
 
 /**
- * Client-side re-translation for translated subdomains (en.*).
+ * Client-side re-translation for the translated subdomain (en.*).
  *
- * Weglot's proxy serves the page fully translated, but React hydration
- * recovery repaints the DOM from the untranslated RSC payload, erasing
- * the translation. Weglot's own script refuses to translate client-side
- * on proxy subdomains, so we call their translate API directly (verified
- * working from this origin) and swap the text back to English.
+ * Weglot's proxy serves the page already translated, but Next.js embeds an
+ * RSC payload alongside the HTML that the proxy only partially rewrites. React
+ * hydration recovery then repaints the DOM from that payload, leaving a mix of
+ * Norwegian and English on screen. This re-translates whatever React put back.
+ *
+ * Uses Weglot's documented Weglot.translate() method rather than calling their
+ * CDN endpoint directly, so we stay on a supported API.
  */
 export default function TranslationFallback() {
   useEffect(() => {
@@ -43,37 +45,42 @@ export default function TranslationFallback() {
       return nodes
     }
 
-    const translate = async () => {
+    // Weglot.translate's callback shape is documented only by example, so
+    // accept both a bare array of strings and the {to_words: [...]} envelope.
+    const readWords = (data: unknown): (string | null)[] => {
+      if (Array.isArray(data)) return data as (string | null)[]
+      if (data && typeof data === 'object' && 'to_words' in data) {
+        const w = (data as { to_words?: unknown }).to_words
+        if (Array.isArray(w)) return w as (string | null)[]
+      }
+      return []
+    }
+
+    const translate = () => {
+      const wg = window.Weglot
+      // Weglot.translate needs the project config, so wait for initialization.
+      if (!wg?.translate || !wg.initialized || destroyed) return
       const nodes = collect()
       if (nodes.length === 0) return
-      const words = nodes.map((n) => ({ t: 1, w: n.textContent ?? '' }))
-      const version = window.Weglot?.options?.versions?.translation ?? Date.now()
-      try {
-        const res = await fetch(
-          `https://cdn-api-weglot.com/translate?api_key=${KEY}&v=${version}`,
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
-            body: JSON.stringify({
-              l_from: 'nb',
-              l_to: 'en',
-              request_url: `https://gransvilla.no${window.location.pathname}`,
-              words,
-            }),
-          },
-        )
-        if (!res.ok || destroyed) return
-        const data: { to_words?: (string | null)[] } = await res.json()
-        nodes.forEach((n, i) => {
-          const w = data.to_words?.[i]
-          if (w) {
-            n.textContent = w
-            applied.set(n, w)
-          }
-        })
-      } catch {
-        // Network failure: leave the text as-is; next mutation retries.
-      }
+
+      // On failure Weglot calls back with (null, error) AND returns a rejecting
+      // promise — catch it so a network blip isn't an unhandled rejection.
+      wg.translate(
+        { words: nodes.map((n) => ({ t: 1, w: n.textContent ?? '' })), languageTo: 'en' },
+        (data) => {
+          if (destroyed) return
+          const words = readWords(data)
+          nodes.forEach((n, i) => {
+            const w = words[i]
+            if (w) {
+              n.textContent = w
+              applied.set(n, w)
+            }
+          })
+        },
+      )?.catch(() => {
+        // Leave the text as-is; the next mutation reschedules a retry.
+      })
     }
 
     // Debounce so React's repaint storm results in one batched request.

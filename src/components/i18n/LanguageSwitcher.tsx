@@ -11,6 +11,12 @@ declare global {
       getCurrentLang: () => string
       on: (event: string, callback: (...args: unknown[]) => void) => void
       off: (event: string, callback: (...args: unknown[]) => void) => boolean
+      /** https://developers.weglot.com/javascript/javascript-functions */
+      initialized?: boolean
+      translate?: (
+        payload: { words: { t: number; w: string }[]; languageTo: string },
+        callback: (data: unknown) => void,
+      ) => Promise<unknown> | undefined
       options?: { versions?: { translation?: number } }
     }
   }

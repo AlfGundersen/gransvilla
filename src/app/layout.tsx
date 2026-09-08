@@ -73,8 +73,9 @@ export default async function RootLayout({
       <head>
         <meta charSet="utf-8" />
         <meta name="theme-color" content="#000000" />
-        <link rel="alternate" hrefLang="nb" href="https://gransvilla.no" />
-        <link rel="alternate" hrefLang="en" href="https://en.gransvilla.no" />
+        {/* hreflang is injected by Weglot's proxy on both language versions.
+            Hardcoding it here breaks the English page: the proxy rewrites URLs
+            in the HTML it serves, turning the nb href into the en.* URL. */}
         {weglotKey && (
           <>
             <script src="https://cdn.weglot.com/weglot.min.js" />
