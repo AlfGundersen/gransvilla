@@ -25,6 +25,22 @@ export default function TranslationFallback() {
     let timer: ReturnType<typeof setTimeout> | undefined
     let destroyed = false
 
+    // Weglot's proxy sets lang="en" on <html>, then React's hydration recovery
+    // renders lang="nb" from the layout and wipes it. Weglot's own observer is
+    // scoped to the body, so it re-translates the text but never restores this,
+    // leaving English content announced to screen readers as Norwegian.
+    // Watch the attribute directly and put it back; the guard stops our own
+    // write from retriggering the observer.
+    const langObserver = new MutationObserver(() => {
+      if (!destroyed && document.documentElement.lang !== 'en') {
+        document.documentElement.lang = 'en'
+      }
+    })
+    langObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['lang'],
+    })
+
     const collect = (): Text[] => {
       const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
         acceptNode: (n) => {
@@ -118,6 +134,7 @@ export default function TranslationFallback() {
       destroyed = true
       clearTimeout(timer)
       observer.disconnect()
+      langObserver.disconnect()
       window.removeEventListener('load', onReady)
     }
   }, [])
