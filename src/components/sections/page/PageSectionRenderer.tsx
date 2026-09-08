@@ -1,4 +1,3 @@
-import { createDataAttribute } from 'next-sanity'
 import { getBlurDataURL } from '@/lib/sanity/blur'
 import type { EventPageSection, Knapp } from '@/types/sanity'
 import { GallerySection } from './GallerySection'
@@ -8,18 +7,11 @@ import { TextSection } from './TextSection'
 
 interface PageSectionRendererProps {
   sections: EventPageSection[]
-  documentId?: string
-  documentType?: string
   /** Page-level CTA — rendered in the first section if it's a tekstSeksjon */
   cta?: Knapp
 }
 
-export async function PageSectionRenderer({
-  sections,
-  documentId,
-  documentType,
-  cta,
-}: PageSectionRendererProps) {
+export async function PageSectionRenderer({ sections, cta }: PageSectionRendererProps) {
   const blurMap = new Map<string, string | undefined>()
 
   const imageSections = sections.filter(
@@ -42,33 +34,16 @@ export async function PageSectionRenderer({
   return (
     <>
       {sections.map((section, index) => {
-        const dataSanity =
-          documentId && documentType
-            ? createDataAttribute({
-                id: documentId,
-                type: documentType,
-                path: `sections[_key=="${section._key}"]`,
-              }).toString()
-            : undefined
-
         const isFirst = index === 0
 
         switch (section._type) {
           case 'tekstSeksjon':
-            return (
-              <TextSection
-                key={section._key}
-                data={section}
-                dataSanity={dataSanity}
-                cta={isFirst ? cta : undefined}
-              />
-            )
+            return <TextSection key={section._key} data={section} cta={isFirst ? cta : undefined} />
           case 'bildeSeksjon':
             return (
               <ImageSection
                 key={section._key}
                 data={section}
-                dataSanity={dataSanity}
                 eager={isFirst}
                 blurDataURL={blurMap.get(section._key)}
               />
@@ -78,13 +53,12 @@ export async function PageSectionRenderer({
               <ImageTextSection
                 key={section._key}
                 data={section}
-                dataSanity={dataSanity}
                 eager={isFirst}
                 blurDataURL={blurMap.get(section._key)}
               />
             )
           case 'bildegalleriSeksjon':
-            return <GallerySection key={section._key} data={section} dataSanity={dataSanity} />
+            return <GallerySection key={section._key} data={section} />
           default:
             console.warn('Unknown page section type:', (section as { _type: string })._type)
             return null

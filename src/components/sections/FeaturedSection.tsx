@@ -1,7 +1,6 @@
 import { PortableText } from '@portabletext/react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { createDataAttribute } from 'next-sanity'
 import { MaybeWatermark } from '@/components/Watermark'
 import { urlFor } from '@/lib/sanity/image'
 import type { FeaturedSection } from '@/types/sanity'
@@ -9,15 +8,9 @@ import styles from './FeaturedSection.module.css'
 
 interface FeaturedSectionComponentProps {
   data: FeaturedSection
-  documentId?: string
-  documentType?: string
 }
 
-export function FeaturedSectionComponent({
-  data,
-  documentId,
-  documentType,
-}: FeaturedSectionComponentProps) {
+export function FeaturedSectionComponent({ data }: FeaturedSectionComponentProps) {
   const columns = data.columns ?? []
 
   if (columns.length === 0) {
@@ -29,19 +22,7 @@ export function FeaturedSectionComponent({
       <div className={styles.featuredContainer}>
         <div className={styles.featuredGrid}>
           {columns.map((column) => (
-            <div
-              key={column._key}
-              className={styles.featuredColumn}
-              data-sanity={
-                documentId && documentType
-                  ? createDataAttribute({
-                      id: documentId,
-                      type: documentType,
-                      path: `featured.columns[_key=="${column._key}"]`,
-                    }).toString()
-                  : undefined
-              }
-            >
+            <div key={column._key} className={styles.featuredColumn}>
               <div className={styles.featuredContent}>
                 {column.heading && <h2 className={styles.featuredHeading}>{column.heading}</h2>}
                 {column.description && (
@@ -70,13 +51,13 @@ export function FeaturedSectionComponent({
                 return (
                   <div className={styles.featuredImageWrap}>
                     <Image
-                      src={urlFor(displayImage).width(700).height(1050).quality(92).fit('crop').url()}
-                      alt={
-                        displayImage.alt ||
-                        displayImage.assetAltText ||
-                        column.heading ||
-                        ''
-                      }
+                      src={urlFor(displayImage)
+                        .width(700)
+                        .height(1050)
+                        .quality(92)
+                        .fit('crop')
+                        .url()}
+                      alt={displayImage.alt || displayImage.assetAltText || column.heading || ''}
                       fill
                       sizes="(max-width: 768px) 100vw, 25vw"
                     />

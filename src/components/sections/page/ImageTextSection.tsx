@@ -15,17 +15,11 @@ const RATIO_MAP: Record<string, number> = {
 
 interface ImageTextSectionProps {
   data: BildeTekstSeksjon
-  dataSanity?: string
   eager?: boolean
   blurDataURL?: string
 }
 
-export function ImageTextSection({
-  data,
-  dataSanity,
-  eager = false,
-  blurDataURL,
-}: ImageTextSectionProps) {
+export function ImageTextSection({ data, eager = false, blurDataURL }: ImageTextSectionProps) {
   const bildeForst = data.bildeForst !== false
   const ratio = data.bildeforhold || '3/2'
   const width = 1400
@@ -35,14 +29,9 @@ export function ImageTextSection({
     <div
       id={sectionAnchor(data._key, data.visOverskrift ? data.overskrift : undefined)}
       className={`${styles.imageTextSection} ${bildeForst ? '' : styles.imageTextReversed}`}
-      data-sanity={dataSanity}
     >
       {data.bilde && (
-        <div
-          className={styles.imageTextImageWrap}
-          data-sanity={dataSanity}
-          style={{ position: 'relative' }}
-        >
+        <div className={styles.imageTextImageWrap} style={{ position: 'relative' }}>
           <Image
             src={urlFor(data.bilde).width(width).height(height).quality(92).fit('crop').url()}
             alt={data.bilde.alt || data.bilde.assetAltText || ''}
@@ -52,12 +41,11 @@ export function ImageTextSection({
             placeholder={blurDataURL ? 'blur' : 'empty'}
             blurDataURL={blurDataURL}
             className={styles.imageTextImage}
-            data-sanity={dataSanity}
           />
           <MaybeWatermark image={data.bilde} />
         </div>
       )}
-      <div className={styles.imageTextContent} data-sanity={dataSanity}>
+      <div className={styles.imageTextContent}>
         {data.visOverskrift && data.overskrift && (
           <h2 className={styles.imageTextHeading}>{data.overskrift}</h2>
         )}

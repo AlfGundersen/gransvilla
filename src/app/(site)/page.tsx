@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { createDataAttribute } from 'next-sanity'
 import { EventsSectionComponent } from '@/components/sections/EventsSection'
 import { FeaturedProductSectionComponent } from '@/components/sections/FeaturedProductSection'
 import { FeaturedSectionComponent } from '@/components/sections/FeaturedSection'
@@ -18,7 +17,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const { data: frontpage } = await sanityFetch({ query: frontpageQuery })
 
   const seo = frontpage?.seo
-  const ogImage = seo?.ogImage?.asset ? urlFor(seo.ogImage).width(1200).height(630).url() : undefined
+  const ogImage = seo?.ogImage?.asset
+    ? urlFor(seo.ogImage).width(1200).height(630).url()
+    : undefined
 
   return {
     title: seo?.metaTitle || 'Forside',
@@ -67,87 +68,40 @@ export default async function HomePage() {
           },
         }}
       />
-      <SchemaGenerator
-        seo={frontpage.seo}
-        document={{ ...frontpage, title: 'Grans Villa' }}
-      />
+      <SchemaGenerator seo={frontpage.seo} document={{ ...frontpage, title: 'Grans Villa' }} />
       <h1 className="visually-hidden">Gransvilla — Restaurant, kantine og arrangementer</h1>
       {frontpage.hero && (
-        <div
-          data-sanity={createDataAttribute({
-            id: frontpage._id,
-            type: frontpage._type,
-            path: 'hero',
-          }).toString()}
-        >
-          <HeroSectionComponent data={{ ...frontpage.hero, _type: 'heroSection', _key: 'hero' }} />
-        </div>
+        <HeroSectionComponent data={{ ...frontpage.hero, _type: 'heroSection', _key: 'hero' }} />
       )}
 
       {frontpage.featured && (
-        <div
-          data-sanity={createDataAttribute({
-            id: frontpage._id,
-            type: frontpage._type,
-            path: 'featured',
-          }).toString()}
-        >
-          <FeaturedSectionComponent
-            data={{ ...frontpage.featured, _type: 'featuredSection', _key: 'featured' }}
-            documentId={frontpage._id}
-            documentType={frontpage._type}
-          />
-        </div>
+        <FeaturedSectionComponent
+          data={{ ...frontpage.featured, _type: 'featuredSection', _key: 'featured' }}
+        />
       )}
 
       {frontpage.events && (
-        <div
-          data-sanity={createDataAttribute({
-            id: frontpage._id,
-            type: frontpage._type,
-            path: 'events',
-          }).toString()}
-        >
-          <EventsSectionComponent
-            data={{ ...frontpage.events, _type: 'eventsSection', _key: 'events' }}
-            watermarkSrc={watermarkSrc}
-          />
-        </div>
+        <EventsSectionComponent
+          data={{ ...frontpage.events, _type: 'eventsSection', _key: 'events' }}
+          watermarkSrc={watermarkSrc}
+        />
       )}
 
       {frontpage.timeline && (
-        <div
-          data-sanity={createDataAttribute({
-            id: frontpage._id,
-            type: frontpage._type,
-            path: 'timeline',
-          }).toString()}
-        >
-          <TimelineSectionComponent
-            data={{ ...frontpage.timeline, _type: 'timelineSection', _key: 'timeline' }}
-            documentId={frontpage._id}
-            documentType={frontpage._type}
-            watermarkSrc={watermarkSrc}
-          />
-        </div>
+        <TimelineSectionComponent
+          data={{ ...frontpage.timeline, _type: 'timelineSection', _key: 'timeline' }}
+          watermarkSrc={watermarkSrc}
+        />
       )}
 
       {frontpage.featuredProduct && (
-        <div
-          data-sanity={createDataAttribute({
-            id: frontpage._id,
-            type: frontpage._type,
-            path: 'featuredProduct',
-          }).toString()}
-        >
-          <FeaturedProductSectionComponent
-            data={{
-              ...frontpage.featuredProduct,
-              _type: 'featuredProductSection',
-              _key: 'featuredProduct',
-            }}
-          />
-        </div>
+        <FeaturedProductSectionComponent
+          data={{
+            ...frontpage.featuredProduct,
+            _type: 'featuredProductSection',
+            _key: 'featuredProduct',
+          }}
+        />
       )}
     </div>
   )

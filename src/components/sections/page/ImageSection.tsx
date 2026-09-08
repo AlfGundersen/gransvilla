@@ -13,12 +13,11 @@ const RATIO_MAP: Record<string, number> = {
 
 interface ImageSectionProps {
   data: BildeSeksjon
-  dataSanity?: string
   eager?: boolean
   blurDataURL?: string
 }
 
-export function ImageSection({ data, dataSanity, eager = false, blurDataURL }: ImageSectionProps) {
+export function ImageSection({ data, eager = false, blurDataURL }: ImageSectionProps) {
   if (!data.bilde) return null
 
   const ratio = data.bildeforhold || '3/2'
@@ -29,7 +28,6 @@ export function ImageSection({ data, dataSanity, eager = false, blurDataURL }: I
     <div
       className={`${styles.imageSection} ${data.fullBredde ? styles.imageSectionFull : ''}`}
       {...(data.fullBredde ? { 'data-fullwidth': '' } : {})}
-      data-sanity={dataSanity}
       style={{ position: 'relative' }}
     >
       <Image
@@ -41,7 +39,6 @@ export function ImageSection({ data, dataSanity, eager = false, blurDataURL }: I
         placeholder={blurDataURL ? 'blur' : 'empty'}
         blurDataURL={blurDataURL}
         className={styles.imageSectionImage}
-        data-sanity={dataSanity}
       />
       <MaybeWatermark image={data.bilde} />
     </div>

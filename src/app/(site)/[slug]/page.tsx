@@ -6,11 +6,11 @@ import { PageSectionRenderer } from '@/components/sections/page/PageSectionRende
 import { SchemaGenerator } from '@/components/seo/SchemaGenerator'
 import { MaybeWatermark } from '@/components/Watermark'
 import { getBlurDataURL } from '@/lib/sanity/blur'
-import { getProductByHandle, type Product } from '@/lib/shopify'
 import { client } from '@/lib/sanity/client'
 import { urlFor } from '@/lib/sanity/image'
 import { sanityFetch } from '@/lib/sanity/live'
 import { eventQuery, eventsQuery, pageQuery } from '@/lib/sanity/queries'
+import { getProductByHandle, type Product } from '@/lib/shopify'
 import styles from './page.module.css'
 
 export const dynamicParams = true
@@ -123,23 +123,12 @@ export default async function SlugPage({ params }: Props) {
           <div className={styles.eventGrid}>
             {titleBlock}
             {featuredBlock}
-            {sections[0] && (
-              <PageSectionRenderer
-                sections={[sections[0]]}
-                documentId={content._id}
-                documentType={content._type}
-                cta={knapp}
-              />
-            )}
+            {sections[0] && <PageSectionRenderer sections={[sections[0]]} cta={knapp} />}
           </div>
           <EventProductsSection products={eventProducts} />
           {sections.length > 1 && (
             <div className={styles.eventGrid}>
-              <PageSectionRenderer
-                sections={sections.slice(1)}
-                documentId={content._id}
-                documentType={content._type}
-              />
+              <PageSectionRenderer sections={sections.slice(1)} />
             </div>
           )}
         </>
@@ -147,14 +136,7 @@ export default async function SlugPage({ params }: Props) {
         <div className={styles.eventGrid}>
           {titleBlock}
           {featuredBlock}
-          {sections.length > 0 && (
-            <PageSectionRenderer
-              sections={sections}
-              documentId={content._id}
-              documentType={content._type}
-              cta={knapp}
-            />
-          )}
+          {sections.length > 0 && <PageSectionRenderer sections={sections} cta={knapp} />}
         </div>
       )}
     </div>

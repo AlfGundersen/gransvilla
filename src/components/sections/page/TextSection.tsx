@@ -6,22 +6,17 @@ import styles from './TextSection.module.css'
 
 interface TextSectionProps {
   data: TekstSeksjon
-  dataSanity?: string
   /** Page-level CTA (text and/or button) shown in the left column */
   cta?: Knapp
 }
 
-export function TextSection({ data, dataSanity, cta }: TextSectionProps) {
+export function TextSection({ data, cta }: TextSectionProps) {
   const ctaSlug = cta?.lenke?.slug?.current
   const ctaHref = ctaSlug ? `/${ctaSlug}` : cta?.internLenke
   const hasCta = Boolean(cta?.beskrivelse?.length || (cta?.tekst && ctaHref))
 
   return (
-    <div
-      id={sectionAnchor(data._key, data.overskrift)}
-      className={styles.textSection}
-      data-sanity={dataSanity}
-    >
+    <div id={sectionAnchor(data._key, data.overskrift)} className={styles.textSection}>
       {(data.overskrift || hasCta) && (
         <div className={styles.textCtaCol}>
           {data.overskrift && <h2 className={styles.textHeading}>{data.overskrift}</h2>}

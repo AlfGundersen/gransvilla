@@ -17,10 +17,9 @@ const RATIO_MAP: Record<string, number> = {
 
 interface GallerySectionProps {
   data: BildegalleriSeksjon
-  dataSanity?: string
 }
 
-export async function GallerySection({ data, dataSanity }: GallerySectionProps) {
+export async function GallerySection({ data }: GallerySectionProps) {
   const ratio = data.bildeforhold || '3/4'
   const ratioMultiplier = RATIO_MAP[ratio] || 2 / 3
   const thumbWidth = 600
@@ -46,7 +45,7 @@ export async function GallerySection({ data, dataSanity }: GallerySectionProps) 
   }))
 
   return (
-    <div className={styles.gallerySection} data-fullwidth data-sanity={dataSanity}>
+    <div className={styles.gallerySection} data-fullwidth>
       {data.visInnhold && (data.overskrift || data.tekst) && (
         <div className={styles.galleryContent}>
           {data.overskrift && <h2 className={styles.galleryHeading}>{data.overskrift}</h2>}

@@ -2,7 +2,6 @@
 
 import { PortableText } from '@portabletext/react'
 import Image from 'next/image'
-import { createDataAttribute } from 'next-sanity'
 import { WatermarkClient } from '@/components/WatermarkClient'
 import { urlFor } from '@/lib/sanity/image'
 import type { TimelineSection } from '@/types/sanity'
@@ -10,17 +9,10 @@ import styles from './TimelineSection.module.css'
 
 interface TimelineSectionComponentProps {
   data: TimelineSection
-  documentId?: string
-  documentType?: string
   watermarkSrc?: string
 }
 
-export function TimelineSectionComponent({
-  data,
-  documentId,
-  documentType,
-  watermarkSrc,
-}: TimelineSectionComponentProps) {
+export function TimelineSectionComponent({ data, watermarkSrc }: TimelineSectionComponentProps) {
   const { imageTitle, heading, entries, image } = data
   const entryList = entries ?? []
 
@@ -54,19 +46,7 @@ export function TimelineSectionComponent({
             {heading && <h2 className={styles.timelineHeading}>{heading}</h2>}
             {entryList.map((entry) =>
               entry.description ? (
-                <div
-                  key={entry._key}
-                  className={styles.timelineDescription}
-                  data-sanity={
-                    documentId && documentType
-                      ? createDataAttribute({
-                          id: documentId,
-                          type: documentType,
-                          path: `timeline.entries[_key=="${entry._key}"]`,
-                        }).toString()
-                      : undefined
-                  }
-                >
+                <div key={entry._key} className={styles.timelineDescription}>
                   <PortableText value={entry.description} />
                 </div>
               ) : null,
