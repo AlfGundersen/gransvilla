@@ -7,9 +7,12 @@
  * already translated, and asks Weglot only for the difference. The result is
  * committed, so rendering never depends on Weglot being up.
  *
- *   node scripts/translate.mjs           refresh missing strings
- *   node scripts/translate.mjs --dry     show what would be sent, send nothing
- *   node scripts/translate.mjs --prune   also drop keys no longer used anywhere
+ *   node scripts/translate.mjs             fetch strings missing from the cache
+ *   node scripts/translate.mjs --refresh   also re-fetch strings already cached,
+ *                                          picking up corrections made in the
+ *                                          Weglot dashboard
+ *   node scripts/translate.mjs --dry       show what would be sent, send nothing
+ *   node scripts/translate.mjs --prune     also drop keys no longer used anywhere
  */
 
 import { readFileSync, writeFileSync } from 'node:fs'
@@ -31,6 +34,11 @@ const CLIENT_MESSAGES = join(ROOT, 'messages', 'en.client.json')
 const args = new Set(process.argv.slice(2))
 const DRY = args.has('--dry')
 const PRUNE = args.has('--prune')
+/**
+ * Without this, a translation corrected in the Weglot dashboard is never picked
+ * up again, because the key is already in the cache.
+ */
+const REFRESH = args.has('--refresh')
 
 // ---------------------------------------------------------------- env
 
@@ -169,10 +177,16 @@ async function main() {
   console.log(`sources   code ${code.length}  sanity ${sanity.length}  shopify ${shopify.length}`)
 
   const sources = new Set([...code, ...sanity, ...shopify].map(normalize).filter(Boolean))
-  const missing = [...sources].filter((text) => !(text in existing))
+  const missing = REFRESH
+    ? [...sources]
+    : [...sources].filter((text) => !(text in existing))
   const stale = Object.keys(existing).filter((text) => !sources.has(text))
 
-  console.log(`dictionary ${Object.keys(existing).length} known, ${missing.length} missing`)
+  console.log(
+    REFRESH
+      ? `dictionary ${Object.keys(existing).length} known, re-fetching all ${missing.length}`
+      : `dictionary ${Object.keys(existing).length} known, ${missing.length} missing`,
+  )
   if (stale.length) {
     console.log(`${stale.length} no longer referenced${PRUNE ? ' (pruning)' : ' (keep; --prune drops)'}`)
   }
@@ -202,10 +216,17 @@ async function main() {
     process.stdout.write('\n')
 
     let unchanged = 0
+    const corrected = []
     missing.forEach((source, i) => {
+      if (source in next && next[source] !== translated[i]) {
+        corrected.push([next[source], translated[i]])
+      }
       next[source] = translated[i]
       if (translated[i] === source) unchanged += 1
     })
+    for (const [was, now] of corrected) {
+      console.log(`  changed: ${was}  ->  ${now}`)
+    }
     if (unchanged) {
       console.log(`${unchanged} came back identical to the source (check the Weglot quota)`)
     }

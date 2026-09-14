@@ -8,16 +8,27 @@ import Header from '@/components/layout/Header'
 import ScrollToTop from '@/components/layout/ScrollToTop'
 import { CartProvider } from '@/context/CartContext'
 import { CookieConsentProvider } from '@/context/CookieConsentContext'
+import { getTranslator, translateContent } from '@/lib/i18n/server'
 import { urlFor } from '@/lib/sanity/image'
 import { sanityFetch } from '@/lib/sanity/live'
 import { siteSettingsQuery } from '@/lib/sanity/queries'
 import { resolveMenu } from '@/lib/sanity/resolveMenu'
 import styles from './layout.module.css'
 
-export default async function SiteLayout({ children }: { children: React.ReactNode }) {
-  const { data: settings } = await sanityFetch({ query: siteSettingsQuery }).catch(() => ({
+export default async function SiteLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  const t = getTranslator(locale)
+
+  const { data } = await sanityFetch({ query: siteSettingsQuery }).catch(() => ({
     data: null,
   }))
+  const settings = translateContent(data, locale)
 
   const mainMenu = resolveMenu(settings?.mainMenu)
   const footerMenu = settings?.footerMenu?.length ? resolveMenu(settings.footerMenu) : mainMenu
@@ -33,7 +44,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
           <ScrollToTop />
           <AnchorScroll />
           <a href="#main-content" className="visually-hidden">
-            Hopp til innhold
+            {t('Hopp til innhold')}
           </a>
           <Header navigation={stegaClean(mainMenu)} socialLinks={stegaClean(socialLinks)} />
           <main id="main-content" className={styles.main}>

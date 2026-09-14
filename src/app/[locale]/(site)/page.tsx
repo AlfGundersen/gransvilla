@@ -7,14 +7,21 @@ import { TimelineSectionComponent } from '@/components/sections/TimelineSection'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { SchemaGenerator } from '@/components/seo/SchemaGenerator'
 import { getWatermarkSrc } from '@/components/Watermark'
+import { alternatesFor, openGraphLocale } from '@/lib/i18n/metadata'
+import { getTranslator, translateContent } from '@/lib/i18n/server'
 import { urlFor } from '@/lib/sanity/image'
 import { sanityFetch } from '@/lib/sanity/live'
 import { frontpageQuery } from '@/lib/sanity/queries'
 import type { Frontpage } from '@/types/sanity'
 import styles from './page.module.css'
 
-export async function generateMetadata(): Promise<Metadata> {
-  const { data: frontpage } = await sanityFetch({ query: frontpageQuery })
+type Params = { params: Promise<{ locale: string }> }
+
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
+  const { locale } = await params
+  const t = getTranslator(locale)
+  const { data } = await sanityFetch({ query: frontpageQuery })
+  const frontpage = translateContent(data, locale)
 
   const seo = frontpage?.seo
   const ogImage = seo?.ogImage?.asset
@@ -22,28 +29,33 @@ export async function generateMetadata(): Promise<Metadata> {
     : undefined
 
   return {
-    title: seo?.metaTitle || 'Forside',
+    title: seo?.metaTitle || t('Forside'),
     description: seo?.metaDescription || undefined,
+    alternates: alternatesFor('/', locale),
     openGraph: {
-      title: seo?.metaTitle || 'Forside',
+      locale: openGraphLocale(locale),
+      title: seo?.metaTitle || t('Forside'),
       description: seo?.metaDescription || undefined,
       ...(ogImage && { images: [{ url: ogImage, width: 1200, height: 630 }] }),
     },
   }
 }
 
-export default async function HomePage() {
-  const [{ data: frontpage }, watermarkSrc] = await Promise.all([
+export default async function HomePage({ params }: Params) {
+  const { locale } = await params
+  const t = getTranslator(locale)
+  const [{ data }, watermarkSrc] = await Promise.all([
     sanityFetch({ query: frontpageQuery }),
     getWatermarkSrc(),
   ])
+  const frontpage = translateContent(data, locale)
 
   // If no frontpage data from Sanity yet, show placeholder
   if (!frontpage) {
     return (
       <div className={styles.page}>
         <div className={styles.placeholder}>
-          <p>Opprett forsiden i Sanity Studio for å legge til innhold.</p>
+          <p>{t('Opprett forsiden i Sanity Studio for å legge til innhold.')}</p>
         </div>
       </div>
     )
@@ -58,7 +70,7 @@ export default async function HomePage() {
           '@id': 'https://gransvilla.no/#localbusiness',
           name: 'Grans Villa',
           url: 'https://gransvilla.no',
-          description: frontpage.seo?.metaDescription || 'Restaurant, kantine og arrangementer',
+          description: frontpage.seo?.metaDescription || t('Restaurant, kantine og arrangementer'),
           address: {
             '@type': 'PostalAddress',
             streetAddress: 'Jahnebakken 6',
@@ -69,7 +81,7 @@ export default async function HomePage() {
         }}
       />
       <SchemaGenerator seo={frontpage.seo} document={{ ...frontpage, title: 'Grans Villa' }} />
-      <h1 className="visually-hidden">Gransvilla — Restaurant, kantine og arrangementer</h1>
+      <h1 className="visually-hidden">{t('Gransvilla — Restaurant, kantine og arrangementer')}</h1>
       {frontpage.hero && (
         <HeroSectionComponent data={{ ...frontpage.hero, _type: 'heroSection', _key: 'hero' }} />
       )}

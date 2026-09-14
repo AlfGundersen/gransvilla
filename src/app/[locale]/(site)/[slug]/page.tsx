@@ -5,6 +5,9 @@ import { EventProductsSection } from '@/components/sections/EventProductsSection
 import { PageSectionRenderer } from '@/components/sections/page/PageSectionRenderer'
 import { SchemaGenerator } from '@/components/seo/SchemaGenerator'
 import { MaybeWatermark } from '@/components/Watermark'
+import { locales } from '@/lib/i18n/config'
+import { alternatesFor, openGraphLocale } from '@/lib/i18n/metadata'
+import { getTranslator, translateContent } from '@/lib/i18n/server'
 import { getBlurDataURL } from '@/lib/sanity/blur'
 import { client } from '@/lib/sanity/client'
 import { urlFor } from '@/lib/sanity/image'
@@ -16,7 +19,7 @@ import styles from './page.module.css'
 export const dynamicParams = true
 
 interface Props {
-  params: Promise<{ slug: string }>
+  params: Promise<{ locale: string; slug: string }>
 }
 
 export async function generateStaticParams() {
@@ -24,14 +27,13 @@ export async function generateStaticParams() {
     client.fetch(eventsQuery),
     client.fetch<{ slug: { current: string } }[]>(`*[_type == "page"]{ slug }`),
   ])
-  return [
-    ...events.map((event: { slug: { current: string } }) => ({
-      slug: event.slug.current,
-    })),
-    ...pages.map((page) => ({
-      slug: page.slug.current,
-    })),
+  const slugs = [
+    ...events.map((event: { slug: { current: string } }) => event.slug.current),
+    ...pages.map((page) => page.slug.current),
   ]
+  // Slugs stay Norwegian in both languages, so each one is prerendered once per
+  // locale rather than translated into a second URL.
+  return locales.flatMap((locale) => slugs.map((slug) => ({ locale, slug })))
 }
 
 async function fetchContent(slug: string) {
@@ -43,11 +45,12 @@ async function fetchContent(slug: string) {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params
-  const content = await fetchContent(slug)
+  const { locale, slug } = await params
+  const t = getTranslator(locale)
+  const content = translateContent(await fetchContent(slug), locale)
 
   if (!content) {
-    return { title: 'Side ikke funnet' }
+    return { title: t('Side ikke funnet') }
   }
 
   const seo = 'seo' in content ? content.seo : undefined
@@ -59,10 +62,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: seo?.metaTitle || content.title,
     description: seo?.metaDescription || undefined,
-    alternates: {
-      canonical: `/${slug}`,
-    },
+    alternates: alternatesFor(`/${slug}`, locale),
     openGraph: {
+      locale: openGraphLocale(locale),
       title: seo?.metaTitle || content.title,
       description: seo?.metaDescription || undefined,
       ...(ogImage && { images: [{ url: ogImage, width: 1200, height: 630 }] }),
@@ -71,8 +73,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function SlugPage({ params }: Props) {
-  const { slug } = await params
-  const content = await fetchContent(slug)
+  const { locale, slug } = await params
+  const content = translateContent(await fetchContent(slug), locale)
 
   if (!content) {
     notFound()
@@ -85,9 +87,12 @@ export default async function SlugPage({ params }: Props) {
   // Fetch products here so the layout reflects what actually renders —
   // stale Sanity handles must not split the grid around an empty section.
   const productHandles: string[] = content._type === 'event' ? (content.products ?? []) : []
-  const eventProducts = (
-    await Promise.all(productHandles.map((handle) => getProductByHandle(handle)))
-  ).filter((p): p is Product => p !== null)
+  const eventProducts = translateContent(
+    (await Promise.all(productHandles.map((handle) => getProductByHandle(handle)))).filter(
+      (p): p is Product => p !== null,
+    ),
+    locale,
+  )
   const hasEventProducts = eventProducts.length > 0
   const sections = content.sections ?? []
 
@@ -125,7 +130,7 @@ export default async function SlugPage({ params }: Props) {
             {featuredBlock}
             {sections[0] && <PageSectionRenderer sections={[sections[0]]} cta={knapp} />}
           </div>
-          <EventProductsSection products={eventProducts} />
+          <EventProductsSection products={eventProducts} locale={locale} />
           {sections.length > 1 && (
             <div className={styles.eventGrid}>
               <PageSectionRenderer sections={sections.slice(1)} />

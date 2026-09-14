@@ -1,18 +1,31 @@
 import { PortableText } from '@portabletext/react'
 import type { Metadata } from 'next'
+import { alternatesFor } from '@/lib/i18n/metadata'
+import { getTranslator, translateContent } from '@/lib/i18n/server'
 import { sanityFetch } from '@/lib/sanity/live'
 import { siteSettingsQuery } from '@/lib/sanity/queries'
 import { ContactForm } from './ContactForm'
 import styles from './page.module.css'
 
-export const metadata: Metadata = {
-  title: 'Kontakt',
-  description: 'Ta kontakt med Grans Villa',
-  alternates: { canonical: '/kontakt' },
+type Params = { params: Promise<{ locale: string }> }
+
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
+  const { locale } = await params
+  const t = getTranslator(locale)
+
+  return {
+    title: t('Kontakt'),
+    description: t('Ta kontakt med Grans Villa'),
+    alternates: alternatesFor('/kontakt', locale),
+  }
 }
 
-export default async function KontaktPage() {
-  const { data: settings } = await sanityFetch({ query: siteSettingsQuery })
+export default async function KontaktPage({ params }: Params) {
+  const { locale } = await params
+  const t = getTranslator(locale)
+
+  const { data } = await sanityFetch({ query: siteSettingsQuery })
+  const settings = translateContent(data, locale)
   const contactInfo = settings?.contactInfo
 
   return (
@@ -20,7 +33,7 @@ export default async function KontaktPage() {
       <div className={styles.container}>
         {/* Title column */}
         <div className={styles.titleColumn}>
-          <h1 className={styles.title}>Kontakt</h1>
+          <h1 className={styles.title}>{t('Kontakt')}</h1>
         </div>
 
         {/* Form column */}
@@ -32,7 +45,7 @@ export default async function KontaktPage() {
         <div className={styles.infoColumn}>
           {contactInfo?.phone && (
             <div className={styles.infoBlock}>
-              <h2 className={styles.infoHeading}>Ring oss</h2>
+              <h2 className={styles.infoHeading}>{t('Ring oss')}</h2>
               <a href={`tel:${contactInfo.phone.replace(/\s/g, '')}`} className={styles.infoText}>
                 {contactInfo.phone}
               </a>
@@ -41,7 +54,7 @@ export default async function KontaktPage() {
 
           {contactInfo?.email && (
             <div className={styles.infoBlock}>
-              <h2 className={styles.infoHeading}>Skriv til oss</h2>
+              <h2 className={styles.infoHeading}>{t('Skriv til oss')}</h2>
               <a href={`mailto:${contactInfo.email}`} className={styles.infoText}>
                 {contactInfo.email}
               </a>
@@ -50,13 +63,13 @@ export default async function KontaktPage() {
 
           {contactInfo?.address && (
             <div className={styles.infoBlock}>
-              <h2 className={styles.infoHeading}>Besøk oss</h2>
+              <h2 className={styles.infoHeading}>{t('Besøk oss')}</h2>
               <a
                 href="https://www.google.com/maps/search/?api=1&query=Jahnebakken+6%2C+5007+Bergen"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.infoText}
-                aria-label="Vis adressen i Google Maps (åpnes i nytt vindu)"
+                aria-label={t('Vis adressen i Google Maps (åpnes i nytt vindu)')}
               >
                 <PortableText value={contactInfo.address} />
               </a>

@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import { alternatesFor } from '@/lib/i18n/metadata'
+import { getTranslator, translateContent } from '@/lib/i18n/server'
 import { getCollections } from '@/lib/shopify'
 import CollapsibleSection from './CollapsibleSection'
 import ProductCard from './ProductCard'
@@ -6,16 +8,26 @@ import styles from './page.module.css'
 
 export const revalidate = 60
 
-export const metadata: Metadata = {
-  title: 'Butikken',
-  description: 'Handle mat og produkter fra Gransvilla',
-  alternates: { canonical: '/butikken' },
+type Params = { params: Promise<{ locale: string }> }
+
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
+  const { locale } = await params
+  const t = getTranslator(locale)
+
+  return {
+    title: t('Butikken'),
+    description: t('Handle mat og produkter fra Gransvilla'),
+    alternates: alternatesFor('/butikken', locale),
+  }
 }
 
-export default async function ButikkenPage() {
+export default async function ButikkenPage({ params }: Params) {
+  const { locale } = await params
+  const t = getTranslator(locale)
+
   let collections: Awaited<ReturnType<typeof getCollections>> = []
   try {
-    collections = await getCollections()
+    collections = translateContent(await getCollections(), locale)
   } catch {
     // Store unavailable - show empty state
   }
@@ -26,12 +38,12 @@ export default async function ButikkenPage() {
   return (
     <div className={styles.shopPage}>
       <header className={styles.shopHeader}>
-        <h1 className={styles.shopTitle}>Butikken</h1>
+        <h1 className={styles.shopTitle}>{t('Butikken')}</h1>
       </header>
 
       {activeCollections.length === 0 ? (
         <div className={styles.shopEmpty}>
-          <p>Ingen produkter tilgjengelig ennå.</p>
+          <p>{t('Ingen produkter tilgjengelig ennå.')}</p>
         </div>
       ) : (
         <div className={styles.shopSections}>

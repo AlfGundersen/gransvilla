@@ -1,3 +1,6 @@
+'use client'
+
+import { useT } from '@/lib/i18n/provider'
 import s from '../skeleton.module.css'
 import p from './page.module.css'
 
@@ -35,10 +38,11 @@ function CategoryBone() {
 }
 
 export default function ShopLoading() {
+  const t = useT()
   return (
     <div className={p.shopPage}>
       <div className={p.shopHeader}>
-        <h1 className={p.shopTitle}>Butikken</h1>
+        <h1 className={p.shopTitle}>{t('Butikken')}</h1>
       </div>
       <div className={p.shopSections}>
         {[0, 1, 2].map((i) => (

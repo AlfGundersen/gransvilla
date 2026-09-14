@@ -1,12 +1,16 @@
 import Link from 'next/link'
+import { getTranslator } from '@/lib/i18n/server'
 import styles from './page.module.css'
 
 interface Props {
+  params: Promise<{ locale: string }>
   searchParams: Promise<{ order?: string }>
 }
 
-export default async function ThankYouPage({ searchParams }: Props) {
+export default async function ThankYouPage({ params, searchParams }: Props) {
+  const { locale } = await params
   const { order } = await searchParams
+  const t = getTranslator(locale)
 
   return (
     <div className={styles.thankYouPage}>
@@ -25,20 +29,24 @@ export default async function ThankYouPage({ searchParams }: Props) {
           </svg>
         </div>
 
-        <h1 className={styles.thankYouTitle}>Takk for din bestilling!</h1>
+        <h1 className={styles.thankYouTitle}>{t('Takk for din bestilling!')}</h1>
 
-        {order && <p className={styles.thankYouOrderNumber}>Ordrenummer: {order}</p>}
+        {order && (
+          <p className={styles.thankYouOrderNumber}>
+            {t('Ordrenummer')}: {order}
+          </p>
+        )}
 
         <p className={styles.thankYouMessage}>
-          Vi har mottatt din bestilling og sender deg en bekreftelse på e-post.
+          {t('Vi har mottatt din bestilling og sender deg en bekreftelse på e-post.')}
         </p>
 
         <div className={styles.thankYouActions}>
           <Link href="/butikken" className={`${styles.thankYouButtonPrimary} site-button`}>
-            Fortsett å handle
+            {t('Fortsett å handle')}
           </Link>
           <Link href="/" className={`${styles.thankYouButtonSecondary} site-button`}>
-            Tilbake til forsiden
+            {t('Tilbake til forsiden')}
           </Link>
         </div>
       </div>

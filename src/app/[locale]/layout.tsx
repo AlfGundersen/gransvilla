@@ -8,7 +8,9 @@ import { DraftModeBanner } from '@/components/pwa/DraftModeBanner'
 import { ServiceWorkerRegistration } from '@/components/pwa/ServiceWorkerRegistration'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { defaultLocale, isLocale, locales } from '@/lib/i18n/config'
+import { alternatesFor, openGraphLocale } from '@/lib/i18n/metadata'
 import { I18nProvider } from '@/lib/i18n/provider'
+import { getTranslator } from '@/lib/i18n/server'
 import { client } from '@/lib/sanity/client'
 import { urlFor } from '@/lib/sanity/image'
 import { SanityLive } from '@/lib/sanity/live'
@@ -24,7 +26,13 @@ export function generateStaticParams() {
   return locales.map((locale) => ({ locale }))
 }
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const t = getTranslator(locale)
   const settings = await client.fetch<{ favicon?: { asset: { _ref: string } } } | null>(
     groq`*[_type == "siteSettings"][0]{ favicon { asset } }`,
   )
@@ -39,28 +47,20 @@ export async function generateMetadata(): Promise<Metadata> {
       default: 'Gransvilla',
       template: '%s | Gransvilla',
     },
-    description: 'Gransvilla - Restaurant, kantine og arrangementer',
-    alternates: {
-      canonical: '/',
-      // The origin serves Norwegian and is not proxied, so nothing else emits
-      // these. Weglot injects its own correct pair on en.gransvilla.no, where
-      // its URL rewriting also mangles ours — see the note in <head>.
-      languages: {
-        nb: 'https://gransvilla.no',
-        en: 'https://en.gransvilla.no',
-      },
-    },
+    description: t('Gransvilla - Restaurant, kantine og arrangementer'),
+    // Per-page alternates override this; the root pair is the front pages.
+    alternates: alternatesFor('/', locale),
     openGraph: {
       type: 'website',
-      locale: 'nb_NO',
+      locale: openGraphLocale(locale),
       siteName: 'Gransvilla',
       title: 'Gransvilla',
-      description: 'Restaurant, kantine og arrangementer',
+      description: t('Restaurant, kantine og arrangementer'),
     },
     twitter: {
       card: 'summary_large_image',
       title: 'Gransvilla',
-      description: 'Restaurant, kantine og arrangementer',
+      description: t('Restaurant, kantine og arrangementer'),
     },
     manifest: '/manifest.webmanifest',
     appleWebApp: {
@@ -83,6 +83,7 @@ export default async function RootLayout({
   const weglotKey = process.env.NEXT_PUBLIC_WEGLOT_API_KEY
   const { locale } = await params
   const lang = isLocale(locale) ? locale : defaultLocale
+  const t = getTranslator(lang)
 
   return (
     // translate="no" matches what weglot.min.js sets pre-hydration
@@ -118,7 +119,7 @@ export default async function RootLayout({
             '@type': 'Organization',
             name: 'Gransvilla',
             url: 'https://gransvilla.no',
-            description: 'Restaurant, kantine og arrangementer',
+            description: t('Restaurant, kantine og arrangementer'),
           }}
         />
         <I18nProvider locale={lang}>{children}</I18nProvider>

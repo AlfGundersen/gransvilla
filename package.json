@@ -7,6 +7,7 @@
     "prebuild": "node scripts/generate-pwa-icons.mjs",
     "build": "next build",
     "translate": "node scripts/translate.mjs",
+    "translate:refresh": "node scripts/translate.mjs --refresh",
     "start": "next start",
     "lint": "biome lint ./src",
     "format": "biome format --write ./src",

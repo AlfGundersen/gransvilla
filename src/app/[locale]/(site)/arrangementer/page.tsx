@@ -3,6 +3,8 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { MaybeWatermark } from '@/components/Watermark'
+import { alternatesFor } from '@/lib/i18n/metadata'
+import { getTranslator, translateContent } from '@/lib/i18n/server'
 import { getBlurDataURL } from '@/lib/sanity/blur'
 import { urlFor } from '@/lib/sanity/image'
 import { sanityFetch } from '@/lib/sanity/live'
@@ -10,19 +12,31 @@ import { arrangementerSettingsQuery, eventsQuery } from '@/lib/sanity/queries'
 import type { ArrangementerSettings, Event } from '@/types/sanity'
 import styles from './page.module.css'
 
-export const metadata: Metadata = {
-  title: 'Arrangementer',
-  description: 'Se kommende arrangementer hos Gransvilla',
-  alternates: { canonical: '/arrangementer' },
+type Params = { params: Promise<{ locale: string }> }
+
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
+  const { locale } = await params
+  const t = getTranslator(locale)
+
+  return {
+    title: t('Arrangementer'),
+    description: t('Se kommende arrangementer hos Gransvilla'),
+    alternates: alternatesFor('/arrangementer', locale),
+  }
 }
 
-export default async function ArrangementerPage() {
-  const [{ data: events }, { data: settings }] = await Promise.all([
+export default async function ArrangementerPage({ params }: Params) {
+  const { locale } = await params
+  const t = getTranslator(locale)
+
+  const [{ data: rawEvents }, { data: rawSettings }] = await Promise.all([
     sanityFetch({ query: eventsQuery }) as Promise<{ data: Event[] }>,
     sanityFetch({ query: arrangementerSettingsQuery }) as Promise<{
       data: ArrangementerSettings | null
     }>,
   ])
+  const events = translateContent(rawEvents, locale)
+  const settings = translateContent(rawSettings, locale)
 
   const heroLayout = settings?.heroLayout ?? '1-1-2'
   const heroImage = settings?.heroBilde ?? events[0]?.featuredImage
@@ -38,31 +52,31 @@ export default async function ArrangementerPage() {
       <div className={styles.grid}>
         {isWideImage ? (
           <div className={styles.heroTextCol}>
-            <h1 className={styles.heading}>Arrangementer</h1>
+            <h1 className={styles.heading}>{t('Arrangementer')}</h1>
             {settings?.beskrivelse ? (
               <div className={styles.introInline}>
                 <PortableText value={settings.beskrivelse} />
               </div>
             ) : (
               <p className={styles.introInline}>
-                Gransvilla er rammen for uforglemmelige opplevelser. Enten det er bryllup, selskap,
-                konserter eller søndagsfrokost — vi skaper arrangementer med sjel, god mat og vakre
-                omgivelser.
+                {t(
+                  'Gransvilla er rammen for uforglemmelige opplevelser. Enten det er bryllup, selskap, konserter eller søndagsfrokost — vi skaper arrangementer med sjel, god mat og vakre omgivelser.',
+                )}
               </p>
             )}
           </div>
         ) : (
           <>
-            <h1 className={styles.heading}>Arrangementer</h1>
+            <h1 className={styles.heading}>{t('Arrangementer')}</h1>
             {settings?.beskrivelse ? (
               <div className={styles.intro}>
                 <PortableText value={settings.beskrivelse} />
               </div>
             ) : (
               <p className={styles.intro}>
-                Gransvilla er rammen for uforglemmelige opplevelser. Enten det er bryllup, selskap,
-                konserter eller søndagsfrokost — vi skaper arrangementer med sjel, god mat og vakre
-                omgivelser.
+                {t(
+                  'Gransvilla er rammen for uforglemmelige opplevelser. Enten det er bryllup, selskap, konserter eller søndagsfrokost — vi skaper arrangementer med sjel, god mat og vakre omgivelser.',
+                )}
               </p>
             )}
           </>
@@ -126,7 +140,7 @@ export default async function ArrangementerPage() {
             ))}
           </div>
         ) : (
-          <p>Ingen arrangementer for øyeblikket.</p>
+          <p>{t('Ingen arrangementer for øyeblikket.')}</p>
         )}
       </div>
     </div>
