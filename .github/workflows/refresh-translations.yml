@@ -35,7 +35,7 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: main
 
@@ -72,7 +72,7 @@ jobs:
           # package.json has no packageManager field, and the action refuses to
           # guess. Kept in step with the version the project builds on.
           version: 10.27.0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         if: steps.check.outputs.changed == 'true'
         with:
           node-version: 22
@@ -101,13 +101,18 @@ jobs:
             echo "${{ steps.check.outputs.remote }}" > messages/.weglot-version
           fi
 
-          if git diff --quiet -- messages/; then
-            echo "Weglot moved but nothing we render changed."
-            exit 0
-          fi
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add messages/
+
+          # Staged, not `git diff`: the marker is a new file on the first run and
+          # plain `git diff` does not see untracked files — so it was written,
+          # judged "no change", and never committed. Every run then started from
+          # `ours none` and re-fetched all 380 strings.
+          if git diff --cached --quiet; then
+            echo "Weglot moved but nothing we render changed."
+            exit 0
+          fi
           git commit -m "Refresh translations from Weglot
 
           Automated: picks up corrections made in the Weglot dashboard so they
