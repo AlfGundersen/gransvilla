@@ -329,9 +329,17 @@
   color: var(--color-foreground);
   line-height: 1.6;
   margin: 0;
-  overflow: hidden;
   word-break: break-word;
   white-space: normal;
+  /* Fill whatever height the buttons leave. min-height:0 is what lets a flex
+     child shrink below its content. A line-clamp would need a fixed line count
+     the card height does not guarantee, and overflow:hidden alone slices the
+     last line through the glyphs — so the overflow is faded out instead, which
+     reads as "there is more" at any height. */
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 1.6em), transparent 100%);
 }
 
 .shopProductActions {

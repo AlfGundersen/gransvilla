@@ -39,12 +39,10 @@ export default function ProductCard({ product }: ProductCardProps) {
   const [isAdding, setIsAdding] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  // Sanitize and truncate description
-  const sanitizedDescription = product.description.replace(/\n+/g, ' ').trim()
-  const truncatedDescription =
-    sanitizedDescription.length > 200
-      ? sanitizedDescription.slice(0, 200).trim() + '...'
-      : sanitizedDescription
+  // Collapse newlines only. How much fits is a layout question, so the card
+  // clamps in CSS rather than cutting at a character count — a fixed 200 left
+  // visible empty space below the text.
+  const description = product.description.replace(/\n+/g, ' ').trim()
 
   const isSoldOut = !product.variants.some((v) => v.availableForSale)
   const isComingSoon = product.comingSoon ?? false
@@ -106,7 +104,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         {/* Hover overlay with description and buttons (desktop) */}
         <div className={styles.shopProductOverlay}>
-          <p className={styles.shopProductDescription}>{truncatedDescription}</p>
+          <p className={styles.shopProductDescription}>{description}</p>
           <div className={styles.shopProductActions}>
             <button
               type="button"
@@ -142,7 +140,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             </p>
           )}
         </div>
-        <p className={styles.shopMobileDescription}>{truncatedDescription}</p>
+        <p className={styles.shopMobileDescription}>{description}</p>
         <div className={styles.shopMobileActions}>
           <button
             type="button"

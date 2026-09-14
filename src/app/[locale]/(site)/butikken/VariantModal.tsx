@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useCart } from '@/context/CartContext'
 import { useLocale, useT } from '@/lib/i18n/provider'
+import { formatVariantTitle } from '@/lib/i18n/variant-date'
 import styles from './VariantModal.module.css'
 
 type Variant = {
@@ -111,7 +112,9 @@ export function VariantModal({
                 } ${isSoldOut ? styles.variantOptionSoldOut : ''}`}
                 onClick={() => setSelectedVariantId(variant.id)}
               >
-                <span className={styles.variantTitle}>{variant.title}</span>
+                <span className={styles.variantTitle}>
+                  {formatVariantTitle(variant.title, locale)}
+                </span>
                 <span className={styles.variantPrice}>
                   {isSoldOut
                     ? t('Utsolgt')

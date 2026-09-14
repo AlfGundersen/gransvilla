@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { useCart } from '@/context/CartContext'
 import { localeHref } from '@/lib/i18n/href'
 import { useLocale, useT } from '@/lib/i18n/provider'
+import { formatVariantTitle } from '@/lib/i18n/variant-date'
 import styles from './page.module.css'
 
 export default function CheckoutPage() {
@@ -100,7 +101,9 @@ export default function CheckoutPage() {
               <div className={styles.checkoutItemDetails}>
                 <p className={styles.checkoutItemTitle}>{item.title}</p>
                 {item.variantTitle !== 'Default Title' && (
-                  <p className={styles.checkoutItemVariant}>{item.variantTitle}</p>
+                  <p className={styles.checkoutItemVariant}>
+                    {formatVariantTitle(item.variantTitle, locale)}
+                  </p>
                 )}
                 <p className={styles.checkoutItemMeta}>
                   {item.quantity} {t('stk')} × {item.price.toLocaleString(numberLocale)}{' '}

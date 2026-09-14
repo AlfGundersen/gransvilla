@@ -6,6 +6,7 @@ import { useCallback, useEffect, useRef } from 'react'
 import { useCart } from '@/context/CartContext'
 import { localeHref } from '@/lib/i18n/href'
 import { useLocale, useT } from '@/lib/i18n/provider'
+import { formatVariantTitle } from '@/lib/i18n/variant-date'
 import styles from './CartDrawer.module.css'
 
 export function CartDrawer() {
@@ -147,7 +148,9 @@ export function CartDrawer() {
                       {item.title}
                     </Link>
                     {item.variantTitle !== 'Default Title' && (
-                      <p className={styles.itemVariant}>{item.variantTitle}</p>
+                      <p className={styles.itemVariant}>
+                        {formatVariantTitle(item.variantTitle, locale)}
+                      </p>
                     )}
                     <p className={styles.itemPrice}>
                       {item.price.toLocaleString(numberLocale)} {item.currencyCode}
