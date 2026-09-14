@@ -1,3 +1,5 @@
+import { siteUrl } from '@/lib/site-url'
+
 export const locales = ['nb', 'en'] as const
 
 export type Locale = (typeof locales)[number]
@@ -21,7 +23,18 @@ export function isLocale(value: string): value is Locale {
   return (locales as readonly string[]).includes(value)
 }
 
-/** Absolute origin for a locale, used for canonicals, hreflang and sitemaps. */
+/**
+ * Absolute origin for a locale, used for canonicals, hreflang and sitemaps.
+ *
+ * Derived from NEXT_PUBLIC_SITE_URL so preview deployments and local runs do
+ * not emit production URLs. The English origin is the same host with an `en.`
+ * label, which is what the DNS and the Netlify domain alias are set up for.
+ */
 export function originFor(locale: Locale): string {
-  return locale === 'en' ? 'https://en.gransvilla.no' : 'https://gransvilla.no'
+  const origin = siteUrl()
+  if (locale !== 'en') return origin
+
+  const url = new URL(origin)
+  url.hostname = url.hostname.startsWith('en.') ? url.hostname : `en.${url.hostname}`
+  return url.toString().replace(/\/+$/, '')
 }
