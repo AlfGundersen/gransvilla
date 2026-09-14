@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server'
+import { apiMessages } from '@/lib/api-messages'
 import { rateLimit } from '@/lib/rate-limit'
 
 const MAILJET_API_KEY = process.env.MAILJET_API_KEY
@@ -19,7 +20,7 @@ export async function POST(request: NextRequest) {
     const { email } = await request.json()
 
     if (!email || typeof email !== 'string') {
-      return NextResponse.json({ error: 'E-postadresse er påkrevd' }, { status: 400 })
+      return NextResponse.json({ error: apiMessages.emailRequired }, { status: 400 })
     }
 
     if (!isValidEmail(email)) {
@@ -76,16 +77,13 @@ export async function POST(request: NextRequest) {
 
       if (!listResponse.ok) {
         console.error('Mailjet list subscription error:', listData)
-        return NextResponse.json(
-          { error: 'Kunne ikke legge til på nyhetsbrevlisten' },
-          { status: 500 },
-        )
+        return NextResponse.json({ error: apiMessages.newsletterFailed }, { status: 500 })
       }
     }
 
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Newsletter subscription error:', error)
-    return NextResponse.json({ error: 'Noe gikk galt. Vennligst prøv igjen.' }, { status: 500 })
+    return NextResponse.json({ error: apiMessages.generic }, { status: 500 })
   }
 }

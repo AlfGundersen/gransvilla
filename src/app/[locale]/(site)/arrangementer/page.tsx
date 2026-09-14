@@ -96,7 +96,7 @@ export default async function ArrangementerPage({ params }: Params) {
           >
             <Image
               src={urlFor(heroImage).width(1600).height(686).quality(92).fit('crop').url()}
-              alt={heroImage.alt || heroImage.assetAltText || 'Arrangementer'}
+              alt={heroImage.alt || heroImage.assetAltText || t('Arrangementer')}
               width={1600}
               height={686}
               priority

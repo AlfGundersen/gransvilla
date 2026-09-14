@@ -137,7 +137,7 @@ export function EventProductCard({ product }: EventProductCardProps) {
             onClick={handleAddToCart}
             disabled={isLoading}
           >
-            {isAdding ? 'Legger til...' : added ? 'Lagt til!' : 'Legg i handlekurv'}
+            {isAdding ? t('Legger til...') : added ? t('Lagt til!') : t('Legg i handlekurv')}
           </button>
         )}
         <Link
@@ -267,7 +267,7 @@ export function EventProductSingle({ product }: EventProductSingleProps) {
             aria-busy={isAdding}
             aria-live="polite"
           >
-            {isAdding ? 'Legger til...' : added ? 'Lagt til!' : 'Legg i handlekurv'}
+            {isAdding ? t('Legger til...') : added ? t('Lagt til!') : t('Legg i handlekurv')}
           </button>
         )}
         <Link

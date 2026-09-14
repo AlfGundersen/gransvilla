@@ -63,7 +63,7 @@ export default function Newsletter() {
                 className={`${styles.button} site-button`}
                 disabled={status === 'loading' || !consent}
               >
-                {status === 'loading' ? 'Sender...' : 'Meld på'}
+                {status === 'loading' ? t('Sender...') : t('Meld på')}
               </button>
             </div>
             <label className={styles.consent}>

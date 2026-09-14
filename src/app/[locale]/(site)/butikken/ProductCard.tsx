@@ -117,7 +117,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 : isSoldOut
                   ? t('Utsolgt')
                   : isAdding
-                    ? 'Legger til...'
+                    ? t('Legger til...')
                     : t('Legg i handlekurv')}
             </button>
             <Link
@@ -153,7 +153,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               : isSoldOut
                 ? t('Utsolgt')
                 : isAdding
-                  ? 'Legger til...'
+                  ? t('Legger til...')
                   : t('Legg i handlekurv')}
           </button>
           <Link

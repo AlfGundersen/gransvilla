@@ -202,7 +202,7 @@ export default function Header({ navigation, socialLinks }: HeaderProps) {
               ref={menuButtonRef}
               type="button"
               className={styles.menuButton}
-              aria-label={isMenuOpen ? t('Lukk meny') : 'Åpne meny'}
+              aria-label={isMenuOpen ? t('Lukk meny') : t('Åpne meny')}
               aria-expanded={isMenuOpen}
               aria-controls="main-menu"
               onClick={() => setIsMenuOpen(!isMenuOpen)}

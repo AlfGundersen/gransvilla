@@ -14,7 +14,7 @@ interface NewsletterSectionComponentProps {
 export function NewsletterSectionComponent({ data }: NewsletterSectionComponentProps) {
   const locale = useLocale()
   const t = useT()
-  const { heading = 'Meld deg på nyhetsbrevet', description } = data
+  const { heading = t('Meld deg på nyhetsbrevet'), description } = data
   const [email, setEmail] = useState('')
   const [consent, setConsent] = useState(false)
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
@@ -73,7 +73,7 @@ export function NewsletterSectionComponent({ data }: NewsletterSectionComponentP
                 className={`${styles.newsletterButton} site-button`}
                 disabled={status === 'loading' || !consent}
               >
-                {status === 'loading' ? 'Sender...' : 'Meld på'}
+                {status === 'loading' ? t('Sender...') : t('Meld på')}
               </button>
             </div>
             <label className={styles.newsletterConsent}>
