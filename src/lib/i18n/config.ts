@@ -38,3 +38,13 @@ export function originFor(locale: Locale): string {
   url.hostname = url.hostname.startsWith('en.') ? url.hostname : `en.${url.hostname}`
   return url.toString().replace(/\/+$/, '')
 }
+
+/**
+ * Strips the internal `/nb` or `/en` prefix that proxy.ts rewrites onto the
+ * path, so links built from usePathname() point at the public URL rather than
+ * leaking the segment onto the other host.
+ */
+export function publicPath(pathname: string): string {
+  const stripped = pathname.replace(/^\/(?:nb|en)(?=\/|$)/, '')
+  return stripped || '/'
+}
