@@ -8,9 +8,12 @@ name: Refresh translations
 # Triggered, not scheduled. GitHub's cron never fired for this workflow — an
 # afternoon of runs, all manual, none scheduled — and its docs allow five
 # minutes at best while warning that runs are delayed or dropped under load.
-# netlify/functions/weglot-watch.mts now watches Weglot every minute and
-# dispatches this when the translation version actually moves. Run it by hand
-# from the Actions tab whenever you want, which always refreshes.
+# netlify/functions/weglot-watch.mts dispatches this every ten minutes, and the
+# Actions tab has a Run workflow button for when that is too slow.
+#
+# It fetches and compares every time, because Weglot has no signal that moves
+# when a translation is edited: versions.translation, the only version field it
+# exposes, stayed put while two corrections sat in its memory.
 
 on:
   workflow_dispatch:
@@ -30,50 +33,19 @@ jobs:
         with:
           ref: main
 
-      - name: Has anything changed in Weglot?
-        id: check
-        env:
-          WEGLOT_KEY: ${{ secrets.NEXT_PUBLIC_WEGLOT_API_KEY }}
-        run: |
-          remote=$(curl -sf --max-time 20 \
-            "https://api.weglot.com/projects/settings?api_key=$WEGLOT_KEY" \
-            | jq -r '.versions.translation // empty')
-
-          if [ -z "$remote" ]; then
-            # Weglot unreachable or the response shape changed: refresh anyway
-            # rather than silently doing nothing.
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-            echo "Could not read the translation version; refreshing anyway."
-            exit 0
-          fi
-
-          local=$(cat messages/.weglot-version 2>/dev/null || echo "none")
-          echo "remote=$remote" >> "$GITHUB_OUTPUT"
-          echo "Weglot version $remote, ours $local"
-
-          if [ "$remote" = "$local" ] && [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-          fi
-
       - uses: pnpm/action-setup@v4
-        if: steps.check.outputs.changed == 'true'
         with:
           # package.json has no packageManager field, and the action refuses to
           # guess. Kept in step with the version the project builds on.
           version: 10.27.0
       - uses: actions/setup-node@v5
-        if: steps.check.outputs.changed == 'true'
         with:
           node-version: 22
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
-        if: steps.check.outputs.changed == 'true'
 
       - name: Pull corrections from Weglot
-        if: steps.check.outputs.changed == 'true'
         env:
           NEXT_PUBLIC_WEGLOT_API_KEY: ${{ secrets.NEXT_PUBLIC_WEGLOT_API_KEY }}
           NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
@@ -85,21 +57,14 @@ jobs:
         run: pnpm translate:refresh
 
       - name: Commit if anything changed
-        if: steps.check.outputs.changed == 'true'
         run: |
-          # Record the version just pulled, so the next run can skip cheaply.
-          if [ -n "${{ steps.check.outputs.remote }}" ]; then
-            echo "${{ steps.check.outputs.remote }}" > messages/.weglot-version
-          fi
-
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add messages/
 
-          # Staged, not `git diff`: the marker is a new file on the first run and
-          # plain `git diff` does not see untracked files — so it was written,
-          # judged "no change", and never committed. Every run then started from
-          # `ours none` and re-fetched all 380 strings.
+          # The diff is the change detection: Weglot exposes no signal that moves
+          # when a translation is edited, so the only way to know is to fetch and
+          # compare.
           if git diff --cached --quiet; then
             echo "Weglot moved but nothing we render changed."
             exit 0
