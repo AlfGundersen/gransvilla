@@ -145,7 +145,7 @@ export function CartDrawer() {
                       className={styles.itemTitle}
                       onClick={closeCart}
                     >
-                      {item.title}
+                      {t(item.title)}
                     </Link>
                     {item.variantTitle !== 'Default Title' && (
                       <p className={styles.itemVariant}>
