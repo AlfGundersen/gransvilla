@@ -3,23 +3,26 @@ import 'server-only'
 import { cache } from 'react'
 
 /**
- * Translates strings that are not in the committed dictionary yet.
+ * Translations straight from Weglot, so a correction shows up in about a minute
+ * instead of waiting for a commit and a rebuild.
  *
- * A product added in Shopify, or a section rewritten in Sanity, would otherwise
- * stay Norwegian on the English site until someone ran `pnpm translate` and
- * deployed. This fills that gap so no manual deploy is needed.
+ * Re-fetching a string Weglot has already translated does not cost quota. Ten
+ * full refreshes on 2026-09-14 moved ~3000 words each; had they billed, that
+ * alone would have been 30,000 against a 10,000 allowance, and the account sat
+ * at 6,000. So asking every render is free, and only genuinely new text bills.
  *
- * It does not weaken the offline guarantee: every failure path returns the
- * Norwegian source, so a Weglot outage or an exhausted quota degrades to
- * Norwegian text rather than failing a render or a build.
- *
- * Pages are statically generated or ISR-revalidated, so this runs during
- * (re)generation rather than per visitor.
+ * Pages are ISR, so this runs at most once per page per revalidation window —
+ * in the background, while visitors are served the cached page. Failure returns
+ * nothing and the caller falls back to the committed dictionary, which is why
+ * that file still exists.
  */
 
 const ENDPOINT = 'https://api.weglot.com/translate'
 const WORD_TYPE_TEXT = 1
 const BATCH_SIZE = 80
+
+/** Matches the page revalidation window; there is no point being fresher. */
+const REVALIDATE_SECONDS = 60
 
 /** Per-request memoisation, so one payload does not fetch the same string twice. */
 const fetchBatch = cache(async (key: string, locale: string): Promise<Record<string, string>> => {
@@ -41,8 +44,7 @@ const fetchBatch = cache(async (key: string, locale: string): Promise<Record<str
           request_url: 'https://gransvilla.no/',
           words: batch.map((text) => ({ w: text, t: WORD_TYPE_TEXT })),
         }),
-        // Let Next cache the response alongside the page that triggered it.
-        next: { revalidate: 3600, tags: ['i18n-runtime'] },
+        next: { revalidate: REVALIDATE_SECONDS, tags: ['i18n-runtime'] },
       })
       if (!response.ok) continue
 
@@ -52,17 +54,23 @@ const fetchBatch = cache(async (key: string, locale: string): Promise<Record<str
 
       batch.forEach((source, j) => {
         const word = words[j]
-        if (word) out[source] = word
+        // Weglot echoes the source back for anything it has no translation for.
+        // Keeping those would shadow a dictionary entry with Norwegian text.
+        if (word && word !== source) out[source] = word
       })
     } catch {
-      // Leave these untranslated; the caller falls back to the Norwegian source.
+      // Leave these out; the caller falls back to the committed dictionary.
     }
   }
 
   return out
 })
 
-export async function translateMissing(
+/**
+ * Current translations for these strings, or an empty object if Weglot cannot
+ * be reached. Never throws: a translation outage must not fail a render.
+ */
+export async function translateLive(
   texts: string[],
   locale: string,
 ): Promise<Record<string, string>> {

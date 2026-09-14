@@ -1,26 +1,19 @@
 import type { Config } from '@netlify/functions'
 
 /**
- * Asks GitHub to pull translation corrections out of Weglot.
+ * Keeps the committed dictionary in step with Weglot.
  *
- * GitHub's own cron never fired for this workflow — an afternoon of runs, all
- * manual, none scheduled — and its docs allow five minutes at best while
- * warning that runs are delayed or dropped under load. Netlify schedules
- * reliably, so the trigger lives here while the work stays in the workflow.
+ * Pages ask Weglot directly now, so this is no longer what makes a correction
+ * visible — that happens within the page's revalidation window. What it does is
+ * keep messages/en.json current, so the fallback the site drops to when Weglot
+ * is unreachable is a recent one rather than whatever was true at the last
+ * deploy. Hourly is plenty for that.
  *
- * This used to check Weglot's `versions.translation` first and dispatch only
- * when it moved, which would have made a per-minute schedule almost free. That
- * premise was wrong: editing an existing translation does not move it. Proven
- * by two corrections sitting in Weglot's memory — "test alternative text" and a
- * deliberately mangled sentence — while the timestamp stayed put. It is the
- * only version field the settings endpoint exposes, so there is no cheap signal
- * to watch.
- *
- * The workflow compares the translations it fetches against the committed ones
- * and commits only on a real difference, so dispatching unconditionally is
- * correct — just not free. Ten minutes trades a little latency for a tenth of
- * the polling; the Actions tab has a Run workflow button for when that is too
- * slow.
+ * It dispatches unconditionally because Weglot exposes no signal that moves
+ * when a translation is edited: versions.translation, the only version field in
+ * the settings endpoint, stayed put while two corrections sat in its memory.
+ * The workflow compares what it fetches against what is committed and commits
+ * only on a real difference.
  */
 
 const REPO = 'AlfGundersen/gransvilla'
@@ -81,5 +74,5 @@ export default async () => {
 }
 
 export const config: Config = {
-  schedule: '*/10 * * * *',
+  schedule: '7 * * * *',
 }
