@@ -17,7 +17,14 @@ import type { Config } from '@netlify/functions'
  */
 
 const REPO = 'AlfGundersen/gransvilla'
-const MARKER = `https://raw.githubusercontent.com/${REPO}/main/messages/.weglot-version`
+/**
+ * Read through the Contents API, not raw.githubusercontent.com.
+ *
+ * Raw is served with max-age=300, so after a run committed a new marker the
+ * watcher kept reading the old one for five minutes and re-dispatched every
+ * minute. The API caches for 60s, which is the interval we run on.
+ */
+const MARKER = `https://api.github.com/repos/${REPO}/contents/messages/.weglot-version`
 const WORKFLOW = 'refresh-translations.yml'
 
 const githubHeaders = (token: string) => ({
@@ -55,7 +62,10 @@ export default async () => {
     return
   }
 
-  const local = await fetch(MARKER, { signal: AbortSignal.timeout(10_000) })
+  const local = await fetch(MARKER, {
+    headers: { ...githubHeaders(githubToken), Accept: 'application/vnd.github.raw' },
+    signal: AbortSignal.timeout(10_000),
+  })
     .then((r) => (r.ok ? r.text() : ''))
     .then((t) => t.trim())
     .catch(() => '')
