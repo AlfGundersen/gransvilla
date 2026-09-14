@@ -63,6 +63,9 @@ function isTranslatable(value: string): boolean {
 
 export type StringVisitor = (text: string) => string
 
+/** Fields whose value is an HTML fragment rather than plain text. */
+export const HTML_KEYS = new Set(['descriptionHtml'])
+
 /**
  * Returns a structurally identical copy with every translatable string passed
  * through `visit`. Object identity is not preserved, so callers should use the
@@ -80,7 +83,13 @@ export function walkContent<T>(node: T, visit: StringVisitor): T {
   if (node && typeof node === 'object') {
     const out: Record<string, unknown> = {}
     for (const [key, value] of Object.entries(node as Record<string, unknown>)) {
-      out[key] = SKIP_KEYS.has(key) ? value : walkContent(value, visit)
+      if (SKIP_KEYS.has(key)) {
+        out[key] = value
+      } else if (HTML_KEYS.has(key) && typeof value === 'string') {
+        out[key] = translateHtml(value, visit)
+      } else {
+        out[key] = walkContent(value, visit)
+      }
     }
     return out as T
   }
@@ -88,7 +97,12 @@ export function walkContent<T>(node: T, visit: StringVisitor): T {
   return node
 }
 
-/** Collects every translatable string in a payload, deduplicated. */
+/**
+ * Collects every translatable string in a payload, deduplicated.
+ *
+ * HTML fields contribute their text nodes rather than the whole fragment, since
+ * that is what the translator will be asked for at render time.
+ */
 export function collectStrings(node: unknown): string[] {
   const found = new Set<string>()
   walkContent(node, (text) => {
@@ -124,4 +138,34 @@ export function walkLinks<T>(node: T, rewrite: (href: string) => string): T {
   }
 
   return node
+}
+
+/**
+ * Translates the text inside an HTML string, leaving the markup alone.
+ *
+ * Weglot's API does not translate HTML — a sentence wrapped in <p> comes back
+ * untouched — so Shopify's `descriptionHtml` stayed Norwegian while the plain
+ * `description` on the product card translated fine. This splits the string on
+ * tags, hands the translator only the text between them, and reassembles.
+ *
+ * Entities and whitespace-only chunks pass through untouched so spacing between
+ * inline elements survives.
+ */
+export function translateHtml(html: string, visit: StringVisitor): string {
+  return html.replace(/>([^<]+)</g, (match, text: string) => {
+    const trimmed = text.trim()
+    if (!trimmed || !/[a-zA-ZæøåÆØÅ]/.test(trimmed)) return match
+    const [, lead = '', , trail = ''] = text.match(/^(\s*)([\s\S]*?)(\s*)$/) ?? []
+    return `>${lead}${visit(trimmed)}${trail}<`
+  })
+}
+
+/** Every translatable text node inside an HTML string. */
+export function collectHtmlStrings(html: string): string[] {
+  const found: string[] = []
+  translateHtml(html, (text) => {
+    found.push(text)
+    return text
+  })
+  return found
 }
