@@ -2,26 +2,17 @@ name: Refresh translations
 
 # English text is compiled into the site, so a correction made in the Weglot
 # dashboard only reaches visitors once messages/en.json is regenerated and
-# deployed. This does that automatically, so nobody sits refreshing a page
-# waiting for an edit to appear.
+# deployed. Netlify builds on push to main, so committing the file is the
+# deploy.
 #
-# Netlify builds on push to main, so committing the file is the deploy.
-#
-# Runs every five minutes, but the expensive work is guarded: Weglot's settings
-# endpoint exposes `versions.translation`, a timestamp that moves whenever
-# translations change. Each run fetches that one number and stops unless it
-# differs from the marker in the repo, so a frequent schedule costs a single
-# small request rather than re-fetching several hundred strings.
-#
-# Five minutes is the floor GitHub allows, and it is not a guarantee: scheduled
-# runs are delayed under load and can be dropped outright, with the top of the
-# hour called out as the worst time. The offset keeps every run clear of :00.
-# Run it from the Actions tab when an edit needs to go out now; a manual run
-# always refreshes.
+# Triggered, not scheduled. GitHub's cron never fired for this workflow — an
+# afternoon of runs, all manual, none scheduled — and its docs allow five
+# minutes at best while warning that runs are delayed or dropped under load.
+# netlify/functions/weglot-watch.mts now watches Weglot every minute and
+# dispatches this when the translation version actually moves. Run it by hand
+# from the Actions tab whenever you want, which always refreshes.
 
 on:
-  schedule:
-    - cron: '2-59/5 * * * *'
   workflow_dispatch:
 
 concurrency:
