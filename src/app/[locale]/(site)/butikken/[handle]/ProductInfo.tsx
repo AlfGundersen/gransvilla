@@ -6,6 +6,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import { localeHref } from '@/lib/i18n/href'
 import { useLocale, useT } from '@/lib/i18n/provider'
+import { formatVariantTitle } from '@/lib/i18n/variant-date'
 import type { Product } from '@/lib/shopify/types'
 import { AddToCartButton } from './AddToCartButton'
 import styles from './ProductInfo.module.css'
@@ -219,7 +220,7 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
                         } ${isSoldOut ? styles.productInfoOptionButtonSoldOut : ''}`}
                         onClick={() => handleOptionChange(option.name, value)}
                       >
-                        {value}
+                        {formatVariantTitle(value, locale)}
                       </button>
                     )
                   })}

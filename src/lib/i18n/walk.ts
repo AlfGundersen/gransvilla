@@ -54,10 +54,30 @@ const SKIP_KEYS = new Set([
   'sku',
 ])
 
-/** Values that are identifiers or URLs rather than prose. */
+/**
+ * Shopify variant titles for dated events: `08.11.2026 kl. 12:00` (the dot
+ * after `kl` is sometimes missing). Defined here rather than in
+ * variant-date.ts because scripts/translate.mjs imports this module directly
+ * through Node's type stripping, which cannot resolve extensionless relative
+ * imports — so this file must stay import-free.
+ */
+export const VARIANT_DATE = /^(\d{2})\.(\d{2})\.(\d{4})\s+kl\.?\s+(\d{1,2}):(\d{2})$/
+
+/** True for titles variant-date.ts formats, so they stay out of the dictionary. */
+export function isVariantDate(title: string): boolean {
+  return VARIANT_DATE.test(title.trim())
+}
+
+/**
+ * Values that are identifiers, URLs or structured data rather than prose.
+ *
+ * Dated variant titles are formatted by variant-date.ts, so translating them
+ * would only add a curated entry per date and an American 12-hour clock.
+ */
 function isTranslatable(value: string): boolean {
   const trimmed = value.trim()
   if (trimmed.length < 2) return false
+  if (isVariantDate(trimmed)) return false
   return !/^(https?:\/\/|gid:\/\/|image-|file-|#|\/|data:)/.test(trimmed)
 }
 

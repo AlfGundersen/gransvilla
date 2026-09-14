@@ -22,7 +22,7 @@
   position: relative;
   background: var(--color-background);
   border: 1px solid var(--color-foreground);
-  max-width: 400px;
+  max-width: 520px;
   width: 100%;
   max-height: 85vh;
   overflow-y: auto;
@@ -89,6 +89,12 @@
   cursor: pointer;
   transition: border-color var(--transition-fast), background-color var(--transition-fast);
   text-align: left;
+  /* Date and price sit on one row; without this the price wraps into the date. */
+  gap: var(--space-md);
+}
+
+.variantOption > * {
+  white-space: nowrap;
 }
 
 .variantOption:hover:not(:disabled) {
