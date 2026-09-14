@@ -85,7 +85,7 @@ export function ContactForm() {
     } catch (error) {
       setStatus('error')
       setErrorMessage(
-        error instanceof Error ? error.message : 'Noe gikk galt. Vennligst prøv igjen.',
+        error instanceof Error ? error.message : t('Noe gikk galt. Vennligst prøv igjen.'),
       )
     }
   }
@@ -208,7 +208,7 @@ export function ContactForm() {
         </span>
       </label>
 
-      {status === 'error' && <p className={styles.errorMessage}>{errorMessage}</p>}
+      {status === 'error' && <p className={styles.errorMessage}>{t(errorMessage)}</p>}
 
       <button
         type="submit"

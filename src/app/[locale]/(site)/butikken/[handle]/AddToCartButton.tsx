@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useCart } from '@/context/CartContext'
+import { useT } from '@/lib/i18n/provider'
 import styles from './AddToCartButton.module.css'
 
 interface AddToCartButtonProps {
@@ -11,6 +12,7 @@ interface AddToCartButtonProps {
 }
 
 export function AddToCartButton({ variantId, available, quantity = 1 }: AddToCartButtonProps) {
+  const t = useT()
   const { addToCart, isLoading: cartLoading } = useCart()
   const [isAdding, setIsAdding] = useState(false)
   const [added, setAdded] = useState(false)
@@ -49,7 +51,7 @@ export function AddToCartButton({ variantId, available, quantity = 1 }: AddToCar
       aria-busy={isAdding}
       aria-live="polite"
     >
-      {isAdding ? 'Legger til...' : added ? 'Lagt til!' : 'Legg i handlekurv'}
+      {isAdding ? t('Legger til...') : added ? t('Lagt til!') : t('Legg i handlekurv')}
     </button>
   )
 }

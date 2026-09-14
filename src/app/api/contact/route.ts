@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server'
+import { apiMessages } from '@/lib/api-messages'
 
 // Simple in-memory rate limiting (for production, use Redis or similar)
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
@@ -51,10 +52,7 @@ export async function POST(request: NextRequest) {
 
     // Check rate limit
     if (isRateLimited(ip)) {
-      return NextResponse.json(
-        { error: 'For mange forespørsler. Vennligst vent litt før du prøver igjen.' },
-        { status: 429 },
-      )
+      return NextResponse.json({ error: apiMessages.tooManyRequests }, { status: 429 })
     }
 
     const body = await request.json()
@@ -62,10 +60,7 @@ export async function POST(request: NextRequest) {
 
     // Validate required fields
     if (!firstName?.trim() || !lastName?.trim() || !email?.trim()) {
-      return NextResponse.json(
-        { error: 'Vennligst fyll ut alle obligatoriske felt.' },
-        { status: 400 },
-      )
+      return NextResponse.json({ error: apiMessages.missingFields }, { status: 400 })
     }
 
     // Validate email format
@@ -158,15 +153,12 @@ ${message || 'Ingen melding'}
     if (!mailjetResponse.ok) {
       const errorData = await mailjetResponse.json()
       console.error('Mailjet error:', errorData)
-      return NextResponse.json(
-        { error: 'Kunne ikke sende meldingen. Vennligst prøv igjen.' },
-        { status: 500 },
-      )
+      return NextResponse.json({ error: apiMessages.sendFailed }, { status: 500 })
     }
 
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Contact form error:', error)
-    return NextResponse.json({ error: 'Noe gikk galt. Vennligst prøv igjen.' }, { status: 500 })
+    return NextResponse.json({ error: apiMessages.generic }, { status: 500 })
   }
 }

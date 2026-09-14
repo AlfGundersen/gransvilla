@@ -87,7 +87,8 @@ async function* walkFiles(dir) {
  */
 async function collectFromData() {
   const { categoryLabels, cookieInventory } = await import('../src/lib/cookies.ts')
-  return collectStrings([cookieInventory, Object.values(categoryLabels)])
+  const { apiMessages } = await import('../src/lib/api-messages.ts')
+  return collectStrings([cookieInventory, Object.values(categoryLabels), Object.values(apiMessages)])
 }
 
 async function collectFromCode() {
