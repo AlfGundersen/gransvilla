@@ -132,6 +132,7 @@ const SHOPIFY_QUERY = `
       nodes {
         title
         description
+        descriptionHtml
         images(first: 20) { nodes { altText } }
         options { name values }
         variants(first: 50) { nodes { title selectedOptions { name value } } }

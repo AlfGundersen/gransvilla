@@ -180,7 +180,7 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
         {!product.comingSoon && (
           <p className={styles.productInfoPrice}>
             {hasOptions && !allOptionsSelected
-              ? `Fra ${product.price.toLocaleString(numberLocale)} ${product.currencyCode}`
+              ? `${t('Fra')} ${product.price.toLocaleString(numberLocale)} ${product.currencyCode}`
               : `${variantPrice.toLocaleString(numberLocale)} ${product.currencyCode}`}
           </p>
         )}
@@ -321,7 +321,7 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
         </>
       ) : hasOptions && !allOptionsSelected ? (
         <button className={styles.addToCartDisabled} disabled>
-          Velg en dato
+          {t('Velg en dato')}
         </button>
       ) : (
         selectedVariant && (
