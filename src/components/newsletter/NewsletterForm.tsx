@@ -68,7 +68,7 @@ export function NewsletterForm({ idPrefix }: NewsletterFormProps) {
         <span>
           {t('Jeg samtykker til')}{' '}
           <a href="/personvern" target="_blank" rel="noopener noreferrer">
-            {t('personvernerklæringen')}
+            {t('personvern')}
           </a>{' '}
           {t('og lagring av e-post for nyhetsbrev.')}
         </span>

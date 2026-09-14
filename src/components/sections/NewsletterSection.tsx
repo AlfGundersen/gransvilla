@@ -89,7 +89,7 @@ export function NewsletterSectionComponent({ data }: NewsletterSectionComponentP
               <span>
                 {t('Jeg samtykker til')}{' '}
                 <a href="/personvern" target="_blank" rel="noopener noreferrer">
-                  {t('personvernerklæringen')}
+                  {t('personvern')}
                 </a>{' '}
                 {t('og lagring av e-post for nyhetsbrev.')}
               </span>

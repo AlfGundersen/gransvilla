@@ -6,7 +6,15 @@ export interface CookieInfo {
   duration: string
 }
 
-export const cookieInventory: CookieInfo[] = []
+export const cookieInventory: CookieInfo[] = [
+  {
+    name: 'gransvilla-consent',
+    provider: 'Gransvilla',
+    purpose: 'Lagrer dine valg for informasjonskapsler (cookie-samtykke)',
+    category: 'necessary',
+    duration: '1 år',
+  },
+]
 
 export const categoryLabels: Record<CookieInfo['category'], string> = {
   necessary: 'Nødvendige',
