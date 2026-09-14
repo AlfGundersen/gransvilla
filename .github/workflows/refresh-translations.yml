@@ -29,6 +29,10 @@ jobs:
           ref: main
 
       - uses: pnpm/action-setup@v4
+        with:
+          # package.json has no packageManager field, and the action refuses to
+          # guess. Kept in step with the version the project builds on.
+          version: 10.27.0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
