@@ -141,11 +141,27 @@ const SHOPIFY_QUERY = `
   }
 `
 
+/**
+ * Product and option titles specifically. Cart lines come from Shopify's Cart
+ * API on the client, so they never pass through the server-side translation —
+ * these have to be in the client dictionary for the cart drawer and checkout to
+ * show them in English.
+ */
+function shopifyTitles(nodes) {
+  const found = new Set()
+  for (const n of nodes) {
+    if (n.title) found.add(n.title)
+    for (const o of n.options ?? []) if (o.name) found.add(o.name)
+  }
+  return [...found]
+}
+
 async function collectFromShopify() {
   const domain = required('NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN')
   const token = required('NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN')
 
   const found = new Set()
+  const titles = new Set()
   let cursor = null
 
   do {
@@ -163,10 +179,11 @@ async function collectFromShopify() {
     if (errors?.length) throw new Error(`Shopify: ${JSON.stringify(errors).slice(0, 300)}`)
 
     for (const text of collectStrings(data.products.nodes)) found.add(text)
+    for (const text of shopifyTitles(data.products.nodes)) titles.add(text)
     cursor = data.products.pageInfo.hasNextPage ? data.products.pageInfo.endCursor : null
   } while (cursor)
 
-  return [...found]
+  return { all: [...found], titles: [...titles] }
 }
 
 // ---------------------------------------------------------------- run
@@ -187,10 +204,12 @@ async function main() {
   ])
 
   console.log(
-    `sources   code ${code.length}  data ${data.length}  sanity ${sanity.length}  shopify ${shopify.length}`,
+    `sources   code ${code.length}  data ${data.length}  sanity ${sanity.length}  shopify ${shopify.all.length}`,
   )
 
-  const sources = new Set([...code, ...data, ...sanity, ...shopify].map(normalize).filter(Boolean))
+  const sources = new Set(
+    [...code, ...data, ...sanity, ...shopify.all].map(normalize).filter(Boolean),
+  )
   const missing = REFRESH
     ? [...sources]
     : [...sources].filter((text) => !(text in existing))
@@ -205,10 +224,9 @@ async function main() {
     console.log(`${stale.length} no longer referenced${PRUNE ? ' (pruning)' : ' (keep; --prune drops)'}`)
   }
 
-  if (!missing.length) {
-    console.log('nothing to translate')
-    if (!PRUNE || !stale.length) return
-  }
+  // Not an early return even when nothing is missing: which keys belong in the
+  // client dictionary can change on its own, so both files are always rewritten.
+  if (!missing.length) console.log('nothing to translate')
 
   if (DRY) {
     for (const text of missing.slice(0, 40)) console.log(`  + ${text}`)
@@ -253,7 +271,7 @@ async function main() {
   writeFileSync(MESSAGES, `${JSON.stringify(sorted, null, 2)}\n`)
   console.log(`wrote ${Object.keys(sorted).length} entries to messages/en.json`)
 
-  const codeKeys = new Set([...code, ...data].map(normalize))
+  const codeKeys = new Set([...code, ...data, ...shopify.titles].map(normalize))
   const clientOnly = sort(Object.entries(sorted).filter(([key]) => codeKeys.has(key)))
   writeFileSync(CLIENT_MESSAGES, `${JSON.stringify(clientOnly, null, 2)}\n`)
   console.log(`wrote ${Object.keys(clientOnly).length} entries to messages/en.client.json`)

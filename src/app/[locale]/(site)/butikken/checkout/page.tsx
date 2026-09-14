@@ -99,7 +99,7 @@ export default function CheckoutPage() {
                 )}
               </div>
               <div className={styles.checkoutItemDetails}>
-                <p className={styles.checkoutItemTitle}>{item.title}</p>
+                <p className={styles.checkoutItemTitle}>{t(item.title)}</p>
                 {item.variantTitle !== 'Default Title' && (
                   <p className={styles.checkoutItemVariant}>
                     {formatVariantTitle(item.variantTitle, locale)}

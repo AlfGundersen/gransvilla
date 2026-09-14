@@ -1,0 +1,64 @@
+name: Refresh translations
+
+# English text is compiled into the site, so a correction made in the Weglot
+# dashboard only reaches visitors once messages/en.json is regenerated and
+# deployed. This does that on a schedule, and on demand from the Actions tab
+# right after editing — no developer needed.
+#
+# Netlify builds on push to main, so committing the file is the deploy.
+
+on:
+  schedule:
+    # Hourly. Weglot edits land within the hour without anyone asking.
+    - cron: '17 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: refresh-translations
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Pull corrections from Weglot
+        env:
+          NEXT_PUBLIC_WEGLOT_API_KEY: ${{ secrets.NEXT_PUBLIC_WEGLOT_API_KEY }}
+          NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
+          NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
+          NEXT_PUBLIC_SANITY_API_VERSION: ${{ secrets.NEXT_PUBLIC_SANITY_API_VERSION }}
+          SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
+          NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN: ${{ secrets.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN }}
+          NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN: ${{ secrets.NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN }}
+        run: pnpm translate:refresh
+
+      - name: Commit if anything changed
+        run: |
+          if git diff --quiet -- messages/; then
+            echo "No translation changes."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add messages/
+          git commit -m "Refresh translations from Weglot
+
+          Automated: picks up corrections made in the Weglot dashboard so they
+          reach the site without a manual run. See
+          .github/workflows/refresh-translations.yml"
+          git push
