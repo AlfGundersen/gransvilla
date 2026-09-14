@@ -16,6 +16,13 @@ import { eventQuery, eventsQuery, pageQuery } from '@/lib/sanity/queries'
 import { getProductByHandle, type Product } from '@/lib/shopify'
 import styles from './page.module.css'
 
+/**
+ * Published Sanity content should not wait for the next deploy. Only the shop
+ * pages revalidated, so an edit made after a build stayed invisible until
+ * something else triggered one.
+ */
+export const revalidate = 60
+
 export const dynamicParams = true
 
 interface Props {

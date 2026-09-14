@@ -15,6 +15,13 @@ import { siteSettingsQuery } from '@/lib/sanity/queries'
 import { resolveMenu } from '@/lib/sanity/resolveMenu'
 import styles from './layout.module.css'
 
+/**
+ * Published Sanity content should not wait for the next deploy. Only the shop
+ * pages revalidated, so an edit made after a build stayed invisible until
+ * something else triggered one.
+ */
+export const revalidate = 60
+
 export default async function SiteLayout({
   children,
   params,

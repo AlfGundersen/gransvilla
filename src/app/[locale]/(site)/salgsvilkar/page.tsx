@@ -7,6 +7,13 @@ import { salgsvilkarQuery } from '@/lib/sanity/queries'
 import type { Salgsvilkar } from '@/types/sanity'
 import styles from '../personvern/page.module.css'
 
+/**
+ * Published Sanity content should not wait for the next deploy. Only the shop
+ * pages revalidated, so an edit made after a build stayed invisible until
+ * something else triggered one.
+ */
+export const revalidate = 60
+
 type Params = { params: Promise<{ locale: string }> }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
