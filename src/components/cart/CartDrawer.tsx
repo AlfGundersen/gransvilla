@@ -13,6 +13,7 @@ export function CartDrawer() {
     useCart()
   const t = useT()
   const locale = useLocale()
+  const numberLocale = locale === 'en' ? 'en-GB' : 'nb-NO'
 
   const closeButtonRef = useRef<HTMLButtonElement>(null)
   const drawerRef = useRef<HTMLDivElement>(null)
@@ -149,7 +150,7 @@ export function CartDrawer() {
                       <p className={styles.itemVariant}>{item.variantTitle}</p>
                     )}
                     <p className={styles.itemPrice}>
-                      {item.price.toLocaleString('nb-NO')} {item.currencyCode}
+                      {item.price.toLocaleString(numberLocale)} {item.currencyCode}
                     </p>
                     <div className={styles.itemActions}>
                       <div className={styles.quantity}>
