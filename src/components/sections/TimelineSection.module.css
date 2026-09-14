@@ -107,9 +107,11 @@
     min-height: auto;
   }
 
+  /* Image first when stacked: it is what identifies the section, and reading
+     the heading and prose before seeing it was disorienting. */
   .timelineLeftCol {
     padding: var(--space-lg) 0;
-    order: 2;
+    order: -1;
     border-bottom: 1px solid var(--color-border);
   }
 

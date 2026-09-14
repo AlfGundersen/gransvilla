@@ -145,13 +145,19 @@
     gap: var(--space-md);
   }
 
+  /* Image first when stacked. Reading the product name and description before
+     seeing what it is made the section hard to place — the picture is what
+     identifies it. */
   .featProductContent {
     padding: var(--space-lg) 0;
-    border-bottom: 1px solid var(--color-border);
   }
 
   .featProductImageCol {
+    order: -1;
     padding: var(--space-lg) 0;
+    /* The divider follows the reorder: it separates the two blocks, so it
+       belongs under whichever now comes first. */
+    border-bottom: 1px solid var(--color-border);
   }
 
   .featProductImageCol::before {

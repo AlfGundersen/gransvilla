@@ -42,7 +42,10 @@ export async function FeaturedProductSectionComponent({
   const productImage = product.images[0]
 
   return (
-    <section className={styles.featProductSection} aria-label={`Fokusprodukt: ${product.title}`}>
+    <section
+      className={styles.featProductSection}
+      aria-label={`${t('Fokusprodukt')}: ${product.title}`}
+    >
       <div className={styles.featProductContainer}>
         <div className={styles.featProductContent}>
           <h2 className={styles.featProductTitle}>{product.title}</h2>
