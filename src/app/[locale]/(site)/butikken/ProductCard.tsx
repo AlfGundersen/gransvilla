@@ -33,6 +33,7 @@ type ProductCardProps = {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const locale = useLocale()
+  const numberLocale = locale === 'en' ? 'en-GB' : 'nb-NO'
   const t = useT()
   const { addToCart } = useCart()
   const [isAdding, setIsAdding] = useState(false)
@@ -81,7 +82,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <h3 className={styles.shopProductTitle}>{product.title}</h3>
         {!isComingSoon && (
           <p className={styles.shopPrice}>
-            {product.price.toLocaleString('nb-NO')} {product.currencyCode}
+            {product.price.toLocaleString(numberLocale)} {product.currencyCode}
           </p>
         )}
       </div>
@@ -137,7 +138,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           <h3 className={styles.shopProductTitle}>{product.title}</h3>
           {!isComingSoon && (
             <p className={styles.shopPrice}>
-              {product.price.toLocaleString('nb-NO')} {product.currencyCode}
+              {product.price.toLocaleString(numberLocale)} {product.currencyCode}
             </p>
           )}
         </div>

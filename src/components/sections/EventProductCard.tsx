@@ -22,6 +22,7 @@ function hasRealOptions(product: Product) {
 
 export function EventProductCard({ product }: EventProductCardProps) {
   const locale = useLocale()
+  const numberLocale = locale === 'en' ? 'en-GB' : 'nb-NO'
   const t = useT()
   const { addToCart, isLoading: cartLoading } = useCart()
   const [isAdding, setIsAdding] = useState(false)
@@ -94,7 +95,7 @@ export function EventProductCard({ product }: EventProductCardProps) {
       )}
       <h3 className={styles.eventProductTitle}>{product.title}</h3>
       <p className={styles.eventProductPrice}>
-        {variantPrice.toLocaleString('nb-NO')} {currencyCode}
+        {variantPrice.toLocaleString(numberLocale)} {currencyCode}
       </p>
       {product.description && (
         <p className={styles.eventProductDescription}>{product.description}</p>
@@ -157,6 +158,7 @@ interface EventProductSingleProps {
 
 export function EventProductSingle({ product }: EventProductSingleProps) {
   const locale = useLocale()
+  const numberLocale = locale === 'en' ? 'en-GB' : 'nb-NO'
   const t = useT()
   const { addToCart, isLoading: cartLoading } = useCart()
   const [isAdding, setIsAdding] = useState(false)
@@ -219,7 +221,7 @@ export function EventProductSingle({ product }: EventProductSingleProps) {
         <div>
           <h3 className={styles.singleProductTitle}>{product.title}</h3>
           <p className={styles.singleProductPrice}>
-            {variantPrice.toLocaleString('nb-NO')} {currencyCode}
+            {variantPrice.toLocaleString(numberLocale)} {currencyCode}
           </p>
           {product.description && (
             <p className={styles.singleProductDescription}>{product.description}</p>

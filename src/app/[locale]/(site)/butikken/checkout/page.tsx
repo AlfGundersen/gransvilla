@@ -4,11 +4,14 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useCart } from '@/context/CartContext'
-import { useT } from '@/lib/i18n/provider'
+import { localeHref } from '@/lib/i18n/href'
+import { useLocale, useT } from '@/lib/i18n/provider'
 import styles from './page.module.css'
 
 export default function CheckoutPage() {
   const t = useT()
+  const locale = useLocale()
+  const numberLocale = locale === 'en' ? 'en-GB' : 'nb-NO'
   const router = useRouter()
   const { cart, isLoading: cartLoading } = useCart()
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -17,7 +20,7 @@ export default function CheckoutPage() {
   // Redirect if cart is empty
   useEffect(() => {
     if (!cartLoading && (!cart || cart.items.length === 0)) {
-      router.push('/butikken')
+      router.push(localeHref('/butikken', locale))
     }
   }, [cart, cartLoading, router])
 
@@ -28,7 +31,7 @@ export default function CheckoutPage() {
     try {
       const cartId = localStorage.getItem('gransvilla-cart-id')
       if (!cartId) {
-        throw new Error('Ingen handlekurv funnet')
+        throw new Error(t('Ingen handlekurv funnet'))
       }
 
       const response = await fetch('/api/checkout', {
@@ -40,7 +43,7 @@ export default function CheckoutPage() {
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || 'Noe gikk galt')
+        throw new Error(data.error || t('Noe gikk galt'))
       }
 
       // Validate checkout URL points to Shopify before redirecting
@@ -50,11 +53,11 @@ export default function CheckoutPage() {
         (!checkoutUrl.hostname.endsWith('.myshopify.com') &&
           !checkoutUrl.hostname.endsWith('.shopify.com'))
       ) {
-        throw new Error('Ugyldig betalingslenke')
+        throw new Error(t('Ugyldig betalingslenke'))
       }
       window.location.href = data.checkoutUrl
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Noe gikk galt')
+      setError(err instanceof Error ? err.message : t('Noe gikk galt'))
       setIsSubmitting(false)
     }
   }
@@ -62,7 +65,7 @@ export default function CheckoutPage() {
   if (cartLoading) {
     return (
       <div className={styles.checkoutPage}>
-        <div className={styles.checkoutLoading}>Laster...</div>
+        <div className={styles.checkoutLoading}>{t('Laster...')}</div>
       </div>
     )
   }
@@ -75,9 +78,9 @@ export default function CheckoutPage() {
     <div className={styles.checkoutPage}>
       <div className={styles.checkoutContainer}>
         <div className={styles.checkoutHeader}>
-          <h1 className={styles.checkoutTitle}>Bekreft bestilling</h1>
+          <h1 className={styles.checkoutTitle}>{t('Bekreft bestilling')}</h1>
           <p className={styles.checkoutSubtitle}>
-            Se over bestillingen din før du går til betaling
+            {t('Se over bestillingen din før du går til betaling')}
           </p>
         </div>
 
@@ -100,11 +103,12 @@ export default function CheckoutPage() {
                   <p className={styles.checkoutItemVariant}>{item.variantTitle}</p>
                 )}
                 <p className={styles.checkoutItemMeta}>
-                  {item.quantity} stk × {item.price.toLocaleString('nb-NO')} {item.currencyCode}
+                  {item.quantity} {t('stk')} × {item.price.toLocaleString(numberLocale)}{' '}
+                  {item.currencyCode}
                 </p>
               </div>
               <p className={styles.checkoutItemTotal}>
-                {(item.price * item.quantity).toLocaleString('nb-NO')} {item.currencyCode}
+                {(item.price * item.quantity).toLocaleString(numberLocale)} {item.currencyCode}
               </p>
             </div>
           ))}
@@ -112,9 +116,9 @@ export default function CheckoutPage() {
 
         <div className={styles.checkoutTotals}>
           <div className={`${styles.checkoutTotalRow} ${styles.checkoutTotalRowFinal}`}>
-            <span>Totalt</span>
+            <span>{t('Totalt')}</span>
             <span>
-              {cart.totalAmount.toLocaleString('nb-NO')} {cart.currencyCode}
+              {cart.totalAmount.toLocaleString(numberLocale)} {cart.currencyCode}
             </span>
           </div>
         </div>
@@ -127,7 +131,7 @@ export default function CheckoutPage() {
           onClick={handleCheckout}
           disabled={isSubmitting}
         >
-          {isSubmitting ? 'Behandler...' : 'Gå til betaling'}
+          {isSubmitting ? t('Behandler...') : t('Gå til betaling')}
         </button>
 
         <p className={styles.checkoutSecureNote}>
