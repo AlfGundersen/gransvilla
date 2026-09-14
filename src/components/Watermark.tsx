@@ -1,5 +1,5 @@
-import { cache } from 'react'
 import { groq } from 'next-sanity'
+import { cache } from 'react'
 import { urlFor } from '@/lib/sanity/image'
 import { sanityFetch } from '@/lib/sanity/live'
 import type { SanityImage, WatermarkPosition } from '@/types/sanity'

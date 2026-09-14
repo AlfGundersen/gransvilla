@@ -27,7 +27,9 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
   const [quantity, setQuantity] = useState(1)
   const [email, setEmail] = useState('')
   const [consent, setConsent] = useState(false)
-  const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [newsletterStatus, setNewsletterStatus] = useState<
+    'idle' | 'loading' | 'success' | 'error'
+  >('idle')
 
   // Initialize from URL params if present
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>(() => {
@@ -180,9 +182,7 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
       </div>
 
       {product.descriptionHtml && (
-        <div className={styles.productInfoDescription}>
-          {parse(product.descriptionHtml)}
-        </div>
+        <div className={styles.productInfoDescription}>{parse(product.descriptionHtml)}</div>
       )}
 
       {/* Variant Options */}

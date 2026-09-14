@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import styles from './page.module.css'
 
 interface FormData {
@@ -80,7 +80,9 @@ export function ContactForm() {
       })
     } catch (error) {
       setStatus('error')
-      setErrorMessage(error instanceof Error ? error.message : 'Noe gikk galt. Vennligst prøv igjen.')
+      setErrorMessage(
+        error instanceof Error ? error.message : 'Noe gikk galt. Vennligst prøv igjen.',
+      )
     }
   }
 
@@ -189,22 +191,17 @@ export function ContactForm() {
       </div>
 
       <label className={styles.consent}>
-        <input
-          type="checkbox"
-          checked={consent}
-          onChange={(e) => setConsent(e.target.checked)}
-        />
+        <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
         <span>
           Jeg samtykker til at mine personopplysninger behandles i henhold til{' '}
           <a href="/personvern" target="_blank" rel="noopener noreferrer">
             personvernerklæringen
-          </a>.
+          </a>
+          .
         </span>
       </label>
 
-      {status === 'error' && (
-        <p className={styles.errorMessage}>{errorMessage}</p>
-      )}
+      {status === 'error' && <p className={styles.errorMessage}>{errorMessage}</p>}
 
       <button
         type="submit"

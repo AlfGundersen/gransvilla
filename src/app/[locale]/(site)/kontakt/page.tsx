@@ -1,5 +1,5 @@
-import type { Metadata } from 'next'
 import { PortableText } from '@portabletext/react'
+import type { Metadata } from 'next'
 import { sanityFetch } from '@/lib/sanity/live'
 import { siteSettingsQuery } from '@/lib/sanity/queries'
 import { ContactForm } from './ContactForm'

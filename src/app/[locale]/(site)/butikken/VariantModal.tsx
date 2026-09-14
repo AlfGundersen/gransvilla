@@ -78,12 +78,7 @@ export function VariantModal({
   const modalContent = (
     <div className={styles.modalBackdrop} onClick={handleBackdropClick}>
       <div className={styles.modal} ref={modalRef} role="dialog" aria-modal="true">
-        <button
-          type="button"
-          className={styles.closeButton}
-          onClick={onClose}
-          aria-label="Lukk"
-        >
+        <button type="button" className={styles.closeButton} onClick={onClose} aria-label="Lukk">
           ×
         </button>
 
@@ -109,9 +104,7 @@ export function VariantModal({
               >
                 <span className={styles.variantTitle}>{variant.title}</span>
                 <span className={styles.variantPrice}>
-                  {isSoldOut
-                    ? 'Utsolgt'
-                    : `${price.toLocaleString('nb-NO')} ${currencyCode}`}
+                  {isSoldOut ? 'Utsolgt' : `${price.toLocaleString('nb-NO')} ${currencyCode}`}
                 </span>
               </button>
             )

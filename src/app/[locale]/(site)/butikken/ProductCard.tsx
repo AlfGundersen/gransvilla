@@ -5,8 +5,8 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { useCart } from '@/context/CartContext'
 import { shopifyImageUrl } from '@/lib/shopify/image'
-import { VariantModal } from './VariantModal'
 import styles from './page.module.css'
+import { VariantModal } from './VariantModal'
 
 type Variant = {
   id: string
@@ -107,7 +107,13 @@ export default function ProductCard({ product }: ProductCardProps) {
               onClick={handleAddToCart}
               disabled={isAdding || isUnavailable}
             >
-              {isComingSoon ? 'Kommer snart' : isSoldOut ? 'Utsolgt' : isAdding ? 'Legger til...' : 'Legg i handlekurv'}
+              {isComingSoon
+                ? 'Kommer snart'
+                : isSoldOut
+                  ? 'Utsolgt'
+                  : isAdding
+                    ? 'Legger til...'
+                    : 'Legg i handlekurv'}
             </button>
             <Link
               href={`/butikken/${product.handle}`}
@@ -137,7 +143,13 @@ export default function ProductCard({ product }: ProductCardProps) {
             onClick={handleAddToCart}
             disabled={isAdding || isUnavailable}
           >
-            {isComingSoon ? 'Kommer snart' : isSoldOut ? 'Utsolgt' : isAdding ? 'Legger til...' : 'Legg i handlekurv'}
+            {isComingSoon
+              ? 'Kommer snart'
+              : isSoldOut
+                ? 'Utsolgt'
+                : isAdding
+                  ? 'Legger til...'
+                  : 'Legg i handlekurv'}
           </button>
           <Link
             href={`/butikken/${product.handle}`}
