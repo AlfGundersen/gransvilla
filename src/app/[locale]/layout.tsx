@@ -9,7 +9,7 @@ import { JsonLd } from '@/components/seo/JsonLd'
 import { defaultLocale, isLocale, locales } from '@/lib/i18n/config'
 import { alternatesFor, openGraphLocale } from '@/lib/i18n/metadata'
 import { I18nProvider } from '@/lib/i18n/provider'
-import { getTranslator } from '@/lib/i18n/server'
+import { getTranslator, liveClientMessages } from '@/lib/i18n/server'
 import { client } from '@/lib/sanity/client'
 import { urlFor } from '@/lib/sanity/image'
 import { SanityLive } from '@/lib/sanity/live'
@@ -82,6 +82,9 @@ export default async function RootLayout({
   const { locale } = await params
   const lang = isLocale(locale) ? locale : defaultLocale
   const t = getTranslator(lang)
+  // Whatever Weglot says right now for the strings client components use, so a
+  // correction to a button label lands as fast as one to CMS text.
+  const clientOverrides = await liveClientMessages(lang)
 
   return (
     <html lang={lang} className={inter.variable}>
@@ -105,7 +108,9 @@ export default async function RootLayout({
             description: t('Restaurant, kantine og arrangementer'),
           }}
         />
-        <I18nProvider locale={lang}>{children}</I18nProvider>
+        <I18nProvider locale={lang} overrides={clientOverrides}>
+          {children}
+        </I18nProvider>
         <SanityLive />
         {isDraftMode && (
           <>
