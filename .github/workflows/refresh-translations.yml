@@ -2,15 +2,24 @@ name: Refresh translations
 
 # English text is compiled into the site, so a correction made in the Weglot
 # dashboard only reaches visitors once messages/en.json is regenerated and
-# deployed. This does that on a schedule, and on demand from the Actions tab
-# right after editing — no developer needed.
+# deployed. This does that automatically, so nobody sits refreshing a page
+# waiting for an edit to appear.
 #
 # Netlify builds on push to main, so committing the file is the deploy.
+#
+# Runs every five minutes, but the expensive work is guarded: Weglot's settings
+# endpoint exposes `versions.translation`, a timestamp that moves whenever
+# translations change. Each run fetches that one number and stops unless it
+# differs from the marker in the repo, so a frequent schedule costs a single
+# small request rather than re-fetching several hundred strings.
+#
+# Five minutes is the practical floor — GitHub delays scheduled runs under load,
+# so treat it as "within a few minutes", not a guarantee. Run it from the
+# Actions tab when an edit needs to go out now; a manual run always refreshes.
 
 on:
   schedule:
-    # Hourly. Weglot edits land within the hour without anyone asking.
-    - cron: '17 * * * *'
+    - cron: '*/5 * * * *'
   workflow_dispatch:
 
 concurrency:
@@ -28,19 +37,50 @@ jobs:
         with:
           ref: main
 
+      - name: Has anything changed in Weglot?
+        id: check
+        env:
+          WEGLOT_KEY: ${{ secrets.NEXT_PUBLIC_WEGLOT_API_KEY }}
+        run: |
+          remote=$(curl -sf --max-time 20 \
+            "https://api.weglot.com/projects/settings?api_key=$WEGLOT_KEY" \
+            | jq -r '.versions.translation // empty')
+
+          if [ -z "$remote" ]; then
+            # Weglot unreachable or the response shape changed: refresh anyway
+            # rather than silently doing nothing.
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Could not read the translation version; refreshing anyway."
+            exit 0
+          fi
+
+          local=$(cat messages/.weglot-version 2>/dev/null || echo "none")
+          echo "remote=$remote" >> "$GITHUB_OUTPUT"
+          echo "Weglot version $remote, ours $local"
+
+          if [ "$remote" = "$local" ] && [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: pnpm/action-setup@v4
+        if: steps.check.outputs.changed == 'true'
         with:
           # package.json has no packageManager field, and the action refuses to
           # guess. Kept in step with the version the project builds on.
           version: 10.27.0
       - uses: actions/setup-node@v4
+        if: steps.check.outputs.changed == 'true'
         with:
           node-version: 22
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
+        if: steps.check.outputs.changed == 'true'
 
       - name: Pull corrections from Weglot
+        if: steps.check.outputs.changed == 'true'
         env:
           NEXT_PUBLIC_WEGLOT_API_KEY: ${{ secrets.NEXT_PUBLIC_WEGLOT_API_KEY }}
           NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
@@ -52,9 +92,15 @@ jobs:
         run: pnpm translate:refresh
 
       - name: Commit if anything changed
+        if: steps.check.outputs.changed == 'true'
         run: |
+          # Record the version just pulled, so the next run can skip cheaply.
+          if [ -n "${{ steps.check.outputs.remote }}" ]; then
+            echo "${{ steps.check.outputs.remote }}" > messages/.weglot-version
+          fi
+
           if git diff --quiet -- messages/; then
-            echo "No translation changes."
+            echo "Weglot moved but nothing we render changed."
             exit 0
           fi
           git config user.name  "github-actions[bot]"
