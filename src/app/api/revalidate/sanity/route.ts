@@ -1,6 +1,7 @@
 import { revalidatePath, revalidateTag } from 'next/cache'
 import { type NextRequest, NextResponse } from 'next/server'
 import { parseBody } from 'next-sanity/webhook'
+import { SANITY_TAG } from '@/lib/sanity/live'
 
 /**
  * Invalidates cached pages when content is published in Sanity.
@@ -53,9 +54,13 @@ export async function POST(request: NextRequest) {
 
   const revalidated: string[] = []
 
-  // Tag-based first, so a query that opts into tags is invalidated precisely.
-  // Next 16 requires the profile argument; expire:0 drops the entry outright,
-  // matching what the Shopify webhook already does.
+  // The tag every Sanity query carries. Without this the cached GROQ response
+  // survives, and a regenerated page renders the same stale content — which is
+  // exactly what happened before it was added.
+  revalidateTag(SANITY_TAG, { expire: 0 })
+  revalidated.push(`tag:${SANITY_TAG}`)
+
+  // Also by document type, for queries that opt into a narrower tag.
   revalidateTag(body._type, { expire: 0 })
   revalidated.push(`tag:${body._type}`)
 
