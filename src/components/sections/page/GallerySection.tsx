@@ -1,4 +1,4 @@
-import { PortableText } from '@portabletext/react'
+import { RichText } from '@/components/RichText'
 import { getWatermarkSrc } from '@/components/Watermark'
 import { getBlurDataURL } from '@/lib/sanity/blur'
 import { urlFor } from '@/lib/sanity/image'
@@ -51,7 +51,7 @@ export async function GallerySection({ data }: GallerySectionProps) {
           {data.overskrift && <h2 className={styles.galleryHeading}>{data.overskrift}</h2>}
           {data.tekst && (
             <div className={styles.galleryBody}>
-              <PortableText value={data.tekst} />
+              <RichText value={data.tekst} />
             </div>
           )}
         </div>

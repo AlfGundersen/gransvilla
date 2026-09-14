@@ -1,5 +1,5 @@
-import { PortableText } from '@portabletext/react'
 import Link from 'next/link'
+import { RichText } from '@/components/RichText'
 import { sectionAnchor } from '@/lib/anchor'
 import { localeHref } from '@/lib/i18n/href'
 import type { Knapp, TekstSeksjon } from '@/types/sanity'
@@ -25,7 +25,7 @@ export function TextSection({ data, cta, locale }: TextSectionProps) {
           {data.overskrift && <h2 className={styles.textHeading}>{data.overskrift}</h2>}
           {cta?.beskrivelse && (
             <div className={styles.textCtaText}>
-              <PortableText value={cta.beskrivelse} />
+              <RichText value={cta.beskrivelse} />
             </div>
           )}
           {cta?.tekst && ctaHref && (
@@ -37,7 +37,7 @@ export function TextSection({ data, cta, locale }: TextSectionProps) {
       )}
       {data.tekst && (
         <div className={styles.textBody}>
-          <PortableText value={data.tekst} />
+          <RichText value={data.tekst} />
         </div>
       )}
     </div>

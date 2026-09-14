@@ -1,5 +1,5 @@
-import { PortableText } from '@portabletext/react'
 import Image from 'next/image'
+import { RichText } from '@/components/RichText'
 import { MaybeWatermark } from '@/components/Watermark'
 import { sectionAnchor } from '@/lib/anchor'
 import { urlFor } from '@/lib/sanity/image'
@@ -51,7 +51,7 @@ export function ImageTextSection({ data, eager = false, blurDataURL }: ImageText
         )}
         {data.tekst && (
           <div className={styles.imageTextBody}>
-            <PortableText value={data.tekst} />
+            <RichText value={data.tekst} />
           </div>
         )}
       </div>

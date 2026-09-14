@@ -1,6 +1,6 @@
-import { PortableText } from '@portabletext/react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { RichText } from '@/components/RichText'
 import { MaybeWatermark } from '@/components/Watermark'
 import { localeHref } from '@/lib/i18n/href'
 import { getTranslator } from '@/lib/i18n/server'
@@ -33,7 +33,7 @@ export function FeaturedSectionComponent({ data, locale }: FeaturedSectionCompon
                 {column.description && (
                   <div className={styles.featuredDescription}>
                     {Array.isArray(column.description) ? (
-                      <PortableText value={column.description} />
+                      <RichText value={column.description} />
                     ) : (
                       <p>{column.description}</p>
                     )}

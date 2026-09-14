@@ -1,5 +1,5 @@
-import { PortableText } from '@portabletext/react'
 import type { Metadata } from 'next'
+import { RichText } from '@/components/RichText'
 import { alternatesFor } from '@/lib/i18n/metadata'
 import { getTranslator, translateContent } from '@/lib/i18n/server'
 import { sanityFetch } from '@/lib/sanity/live'
@@ -71,7 +71,7 @@ export default async function KontaktPage({ params }: Params) {
                 className={styles.infoText}
                 aria-label={t('Vis adressen i Google Maps (åpnes i nytt vindu)')}
               >
-                <PortableText value={contactInfo.address} />
+                <RichText value={contactInfo.address} />
               </a>
             </div>
           )}

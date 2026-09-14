@@ -1,6 +1,6 @@
-import { PortableText } from '@portabletext/react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { RichText } from '@/components/RichText'
 import { urlFor } from '@/lib/sanity/image'
 import type { ContentSection } from '@/types/sanity'
 import styles from './ContentSection.module.css'
@@ -35,7 +35,7 @@ export function ContentSectionComponent({ data }: ContentSectionComponentProps) 
           {heading && <h2 className={styles.contentHeading}>{heading}</h2>}
           {body && (
             <div className={styles.contentText}>
-              {Array.isArray(body) ? <PortableText value={body} /> : <p>{body}</p>}
+              {Array.isArray(body) ? <RichText value={body} /> : <p>{body}</p>}
             </div>
           )}
           {ctaText && ctaHref && (
