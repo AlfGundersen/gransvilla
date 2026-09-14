@@ -1,5 +1,5 @@
-import { PortableText } from '@portabletext/react'
 import type { Metadata } from 'next'
+import { RichText } from '@/components/RichText'
 import { categoryLabels, cookieInventory } from '@/lib/cookies'
 import { alternatesFor } from '@/lib/i18n/metadata'
 import { getTranslator, translateContent } from '@/lib/i18n/server'
@@ -82,7 +82,7 @@ export default async function PersonvernPage({ params }: Params) {
 
       {data?.innhold ? (
         <div className={styles.content}>
-          <PortableText value={data.innhold} />
+          <RichText value={data.innhold} />
         </div>
       ) : (
         <p className={styles.content}>{t('Ingen personvernerklæring er lagt til ennå.')}</p>

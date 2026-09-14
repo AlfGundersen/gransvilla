@@ -1,7 +1,7 @@
 'use client'
 
-import { PortableText } from '@portabletext/react'
 import Image from 'next/image'
+import { RichText } from '@/components/RichText'
 import { WatermarkClient } from '@/components/WatermarkClient'
 import { urlFor } from '@/lib/sanity/image'
 import type { TimelineSection } from '@/types/sanity'
@@ -47,7 +47,7 @@ export function TimelineSectionComponent({ data, watermarkSrc }: TimelineSection
             {entryList.map((entry) =>
               entry.description ? (
                 <div key={entry._key} className={styles.timelineDescription}>
-                  <PortableText value={entry.description} />
+                  <RichText value={entry.description} />
                 </div>
               ) : null,
             )}

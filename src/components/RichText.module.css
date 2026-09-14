@@ -1,0 +1,22 @@
+/* Renders the soft line breaks editors type with Shift+Enter, while still
+   collapsing ordinary runs of whitespace. Scoped to Portable Text output so it
+   cannot affect layout elsewhere. */
+.richText {
+  white-space: pre-line;
+}
+
+/* Block-level children manage their own spacing; without this the pre-line
+   whitespace around them would add stray blank lines. */
+.richText :is(p, h1, h2, h3, h4, ul, ol, blockquote, figure) {
+  white-space: pre-line;
+}
+
+/* Editors separate paragraphs with an empty block — that is what the gaps in
+   Sanity Studio are. Portable Text renders those as <p></p>, which collapses to
+   nothing, so the spacing they set up never reached the page. Give them the one
+   line they represent. `lh` is the element's own line-height; `em` is the
+   fallback for browsers without it. */
+.richText p:empty {
+  min-height: 1em;
+  min-height: 1lh;
+}

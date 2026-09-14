@@ -1,10 +1,10 @@
 'use client'
 
-import { PortableText } from '@portabletext/react'
 import type { PortableTextBlock } from '@portabletext/types'
 import Image from 'next/image'
 import Link from 'next/link'
 import { NewsletterForm } from '@/components/newsletter/NewsletterForm'
+import { RichText } from '@/components/RichText'
 import { useCookieConsent } from '@/context/CookieConsentContext'
 import { localeHref } from '@/lib/i18n/href'
 import { useLocale, useT } from '@/lib/i18n/provider'
@@ -76,7 +76,7 @@ export default function Footer({
                   aria-label={t('Vis adressen i Google Maps (åpnes i nytt vindu)')}
                 >
                   <address className={styles.address}>
-                    <PortableText value={contactInfo.address} />
+                    <RichText value={contactInfo.address} />
                   </address>
                 </a>
               </div>
@@ -109,7 +109,7 @@ export default function Footer({
             </ul>
             {siteDescription && (
               <div className={styles.socialDescription}>
-                <PortableText value={siteDescription} />
+                <RichText value={siteDescription} />
               </div>
             )}
             <button

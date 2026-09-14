@@ -1,7 +1,7 @@
-import { PortableText } from '@portabletext/react'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import { RichText } from '@/components/RichText'
 import { MaybeWatermark } from '@/components/Watermark'
 import { localeHref } from '@/lib/i18n/href'
 import { alternatesFor } from '@/lib/i18n/metadata'
@@ -56,7 +56,7 @@ export default async function ArrangementerPage({ params }: Params) {
             <h1 className={styles.heading}>{t('Arrangementer')}</h1>
             {settings?.beskrivelse ? (
               <div className={styles.introInline}>
-                <PortableText value={settings.beskrivelse} />
+                <RichText value={settings.beskrivelse} />
               </div>
             ) : (
               <p className={styles.introInline}>
@@ -71,7 +71,7 @@ export default async function ArrangementerPage({ params }: Params) {
             <h1 className={styles.heading}>{t('Arrangementer')}</h1>
             {settings?.beskrivelse ? (
               <div className={styles.intro}>
-                <PortableText value={settings.beskrivelse} />
+                <RichText value={settings.beskrivelse} />
               </div>
             ) : (
               <p className={styles.intro}>
@@ -130,7 +130,7 @@ export default async function ArrangementerPage({ params }: Params) {
                   <h2 className={styles.title}>{event.title}</h2>
                   {event.description && (
                     <div className={styles.description}>
-                      <PortableText value={event.description} />
+                      <RichText value={event.description} />
                     </div>
                   )}
                   <Link

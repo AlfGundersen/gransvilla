@@ -1,7 +1,7 @@
 'use client'
 
-import { PortableText } from '@portabletext/react'
 import { useState } from 'react'
+import { RichText } from '@/components/RichText'
 import { localeHref } from '@/lib/i18n/href'
 import { useLocale, useT } from '@/lib/i18n/provider'
 import type { NewsletterSection } from '@/types/sanity'
@@ -49,11 +49,7 @@ export function NewsletterSectionComponent({ data }: NewsletterSectionComponentP
           <h2 className={styles.newsletterHeading}>{heading}</h2>
           {description && (
             <div className={styles.newsletterDescription}>
-              {Array.isArray(description) ? (
-                <PortableText value={description} />
-              ) : (
-                <p>{description}</p>
-              )}
+              {Array.isArray(description) ? <RichText value={description} /> : <p>{description}</p>}
             </div>
           )}
 
