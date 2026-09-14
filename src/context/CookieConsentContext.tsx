@@ -49,9 +49,7 @@ function writeCookie(consent: ConsentState) {
   })
   const secure = window.location.protocol === 'https:' ? '; Secure' : ''
   // Domain-wide so consent given on gransvilla.no also covers en.gransvilla.no
-  const domain = window.location.hostname.endsWith('gransvilla.no')
-    ? '; domain=.gransvilla.no'
-    : ''
+  const domain = window.location.hostname.endsWith('gransvilla.no') ? '; domain=.gransvilla.no' : ''
   document.cookie = `${COOKIE_NAME}=${encodeURIComponent(value)}; max-age=${MAX_AGE}; path=/; SameSite=Lax${domain}${secure}`
 }
 

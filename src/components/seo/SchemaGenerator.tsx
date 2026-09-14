@@ -45,10 +45,15 @@ function getAutoSchemaType(docType: string): string {
   }
 }
 
-export function SchemaGenerator({ seo, document, baseUrl = 'https://gransvilla.no' }: SchemaGeneratorProps) {
-  const schemaType = seo?.schemaType === 'auto' || !seo?.schemaType
-    ? getAutoSchemaType(document._type)
-    : seo.schemaType
+export function SchemaGenerator({
+  seo,
+  document,
+  baseUrl = 'https://gransvilla.no',
+}: SchemaGeneratorProps) {
+  const schemaType =
+    seo?.schemaType === 'auto' || !seo?.schemaType
+      ? getAutoSchemaType(document._type)
+      : seo.schemaType
 
   if (schemaType === 'none') {
     return null

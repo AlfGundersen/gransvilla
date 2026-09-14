@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 
 // Simple in-memory rate limiting (for production, use Redis or similar)
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
@@ -44,15 +44,16 @@ function hasSpamPatterns(text: string): boolean {
 export async function POST(request: NextRequest) {
   try {
     // Get IP for rate limiting
-    const ip = request.headers.get('x-forwarded-for')?.split(',')[0] ||
-               request.headers.get('x-real-ip') ||
-               'unknown'
+    const ip =
+      request.headers.get('x-forwarded-for')?.split(',')[0] ||
+      request.headers.get('x-real-ip') ||
+      'unknown'
 
     // Check rate limit
     if (isRateLimited(ip)) {
       return NextResponse.json(
         { error: 'For mange forespørsler. Vennligst vent litt før du prøver igjen.' },
-        { status: 429 }
+        { status: 429 },
       )
     }
 
@@ -63,7 +64,7 @@ export async function POST(request: NextRequest) {
     if (!firstName?.trim() || !lastName?.trim() || !email?.trim()) {
       return NextResponse.json(
         { error: 'Vennligst fyll ut alle obligatoriske felt.' },
-        { status: 400 }
+        { status: 400 },
       )
     }
 
@@ -71,7 +72,7 @@ export async function POST(request: NextRequest) {
     if (!isValidEmail(email)) {
       return NextResponse.json(
         { error: 'Vennligst oppgi en gyldig e-postadresse.' },
-        { status: 400 }
+        { status: 400 },
       )
     }
 
@@ -91,10 +92,7 @@ export async function POST(request: NextRequest) {
 
     // Anti-spam: Check for excessively long content
     if (firstName.length > 100 || lastName.length > 100 || message?.length > 5000) {
-      return NextResponse.json(
-        { error: 'Innholdet er for langt.' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Innholdet er for langt.' }, { status: 400 })
     }
 
     // Send email using Mailjet (reusing existing configuration)
@@ -105,10 +103,7 @@ export async function POST(request: NextRequest) {
 
     if (!mailjetApiKey || !mailjetSecretKey) {
       console.error('Mailjet credentials not configured')
-      return NextResponse.json(
-        { error: 'E-posttjenesten er ikke konfigurert.' },
-        { status: 500 }
-      )
+      return NextResponse.json({ error: 'E-posttjenesten er ikke konfigurert.' }, { status: 500 })
     }
 
     const emailData = {
@@ -165,16 +160,13 @@ ${message || 'Ingen melding'}
       console.error('Mailjet error:', errorData)
       return NextResponse.json(
         { error: 'Kunne ikke sende meldingen. Vennligst prøv igjen.' },
-        { status: 500 }
+        { status: 500 },
       )
     }
 
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Contact form error:', error)
-    return NextResponse.json(
-      { error: 'Noe gikk galt. Vennligst prøv igjen.' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Noe gikk galt. Vennligst prøv igjen.' }, { status: 500 })
   }
 }

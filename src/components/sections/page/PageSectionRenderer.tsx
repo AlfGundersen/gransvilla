@@ -6,12 +6,14 @@ import { ImageTextSection } from './ImageTextSection'
 import { TextSection } from './TextSection'
 
 interface PageSectionRendererProps {
+  /** Server components cannot read the I18nProvider, so the page passes it. */
+  locale: string
   sections: EventPageSection[]
   /** Page-level CTA — rendered in the first section if it's a tekstSeksjon */
   cta?: Knapp
 }
 
-export async function PageSectionRenderer({ sections, cta }: PageSectionRendererProps) {
+export async function PageSectionRenderer({ sections, cta, locale }: PageSectionRendererProps) {
   const blurMap = new Map<string, string | undefined>()
 
   const imageSections = sections.filter(
@@ -38,7 +40,14 @@ export async function PageSectionRenderer({ sections, cta }: PageSectionRenderer
 
         switch (section._type) {
           case 'tekstSeksjon':
-            return <TextSection key={section._key} data={section} cta={isFirst ? cta : undefined} />
+            return (
+              <TextSection
+                key={section._key}
+                data={section}
+                cta={isFirst ? cta : undefined}
+                locale={locale}
+              />
+            )
           case 'bildeSeksjon':
             return (
               <ImageSection

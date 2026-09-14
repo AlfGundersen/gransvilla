@@ -6,6 +6,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import LanguageSwitcher from '@/components/i18n/LanguageSwitcher'
 import { useCart } from '@/context/CartContext'
+import { localeHref } from '@/lib/i18n/href'
+import { useLocale, useT } from '@/lib/i18n/provider'
 import type { NavLink, SocialLink } from '@/types/sanity'
 import { socialPlatformLabels } from '@/types/sanity'
 import styles from './Header.module.css'
@@ -16,6 +18,8 @@ interface HeaderProps {
 }
 
 export default function Header({ navigation, socialLinks }: HeaderProps) {
+  const locale = useLocale()
+  const t = useT()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
@@ -121,13 +125,13 @@ export default function Header({ navigation, socialLinks }: HeaderProps) {
       >
         {/* Menu Header */}
         <div className={styles.menuHeader}>
-          <span className={styles.menuLabel}>MENY</span>
+          <span className={styles.menuLabel}>{t('MENY')}</span>
           <button
             ref={closeButtonRef}
             type="button"
             className={styles.closeButton}
             onClick={closeMenu}
-            aria-label="Lukk meny"
+            aria-label={t('Lukk meny')}
           >
             <svg
               width="20"
@@ -153,7 +157,7 @@ export default function Header({ navigation, socialLinks }: HeaderProps) {
               style={{ transitionDelay: isMenuOpen ? `${index * 40}ms` : '0ms' }}
             >
               <Link
-                href={item.href}
+                href={localeHref(item.href, locale)}
                 className={styles.menuLink}
                 onClick={(e) => {
                   if (!e.metaKey && !e.ctrlKey && !e.shiftKey) closeMenu()
@@ -198,7 +202,7 @@ export default function Header({ navigation, socialLinks }: HeaderProps) {
               ref={menuButtonRef}
               type="button"
               className={styles.menuButton}
-              aria-label={isMenuOpen ? 'Lukk meny' : 'Åpne meny'}
+              aria-label={isMenuOpen ? t('Lukk meny') : 'Åpne meny'}
               aria-expanded={isMenuOpen}
               aria-controls="main-menu"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -209,7 +213,11 @@ export default function Header({ navigation, socialLinks }: HeaderProps) {
           </div>
 
           {/* Center: Logo */}
-          <Link href="/" className={styles.logo} aria-label="GransVilla logo – Til forsiden">
+          <Link
+            href={localeHref('/', locale)}
+            className={styles.logo}
+            aria-label={t('GransVilla logo – Til forsiden')}
+          >
             <Image src="/logo.svg" alt="" width={128} height={22} priority aria-hidden="true" />
           </Link>
 
@@ -219,7 +227,7 @@ export default function Header({ navigation, socialLinks }: HeaderProps) {
               type="button"
               className={styles.cartButton}
               onClick={openCart}
-              aria-label={`Handlekurv, ${cartCount} ${cartCount === 1 ? 'vare' : 'varer'}`}
+              aria-label={`${t('Handlekurv')}, ${cartCount} ${cartCount === 1 ? t('vare') : t('varer')}`}
             >
               <svg
                 className={styles.cartIcon}
@@ -238,7 +246,9 @@ export default function Header({ navigation, socialLinks }: HeaderProps) {
                 <path d="M16 10a4 4 0 01-8 0" />
               </svg>
               {cartCount > 0 && <span className={styles.cartBadge}>{cartCount}</span>}
-              <span className={styles.cartText}>Handlekurv ({cartCount})</span>
+              <span className={styles.cartText}>
+                {t('Handlekurv')} ({cartCount})
+              </span>
             </button>
           </div>
         </div>

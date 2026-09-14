@@ -6,6 +6,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { NewsletterForm } from '@/components/newsletter/NewsletterForm'
 import { useCookieConsent } from '@/context/CookieConsentContext'
+import { localeHref } from '@/lib/i18n/href'
+import { useLocale, useT } from '@/lib/i18n/provider'
 import type { NavLink, SocialLink } from '@/types/sanity'
 import { socialPlatformLabels } from '@/types/sanity'
 import styles from './Footer.module.css'
@@ -29,6 +31,8 @@ export default function Footer({
   siteDescription,
   faviconUrl,
 }: FooterProps) {
+  const locale = useLocale()
+  const t = useT()
   const { openSettings } = useCookieConsent()
 
   const handleColorFlip = () => {
@@ -41,17 +45,19 @@ export default function Footer({
         <div className={styles.grid}>
           {/* Newsletter Section */}
           <div id="nyhetsbrev" className={styles.newsletter}>
-            <p className={styles.newsletterText}>Holde deg oppdatert og meld deg på nyhetsbrevet</p>
+            <p className={styles.newsletterText}>
+              {t('Holde deg oppdatert og meld deg på nyhetsbrevet')}
+            </p>
             <NewsletterForm idPrefix="footer" />
           </div>
 
           {/* Menu Links */}
           <nav className={styles.column} aria-label="Bunntekst-navigasjon">
-            <h3 className={styles.heading}>MENY</h3>
+            <h3 className={styles.heading}>{t('MENY')}</h3>
             <ul className={styles.linkList}>
               {navigation.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href}>{link.label}</Link>
+                  <Link href={localeHref(link.href, locale)}>{link.label}</Link>
                 </li>
               ))}
             </ul>
@@ -60,14 +66,14 @@ export default function Footer({
           {/* Location */}
           {contactInfo?.address && (
             <div className={styles.column}>
-              <h3 className={styles.heading}>STED</h3>
+              <h3 className={styles.heading}>{t('STED')}</h3>
               <div className={styles.locations}>
                 <a
                   href="https://www.google.com/maps/search/?api=1&query=Jahnebakken+6%2C+5007+Bergen"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={styles.addressLink}
-                  aria-label="Vis adressen i Google Maps (åpnes i nytt vindu)"
+                  aria-label={t('Vis adressen i Google Maps (åpnes i nytt vindu)')}
                 >
                   <address className={styles.address}>
                     <PortableText value={contactInfo.address} />
@@ -76,9 +82,9 @@ export default function Footer({
               </div>
               <div className={styles.infoSection}>
                 <p className={styles.companyInfo}>
-                  Bergen Smak AS
+                  {t('Bergen Smak AS')}
                   <br />
-                  Org.nr. 986 881 824
+                  {t('Org.nr. 986 881 824')}
                 </p>
               </div>
             </div>
@@ -86,7 +92,7 @@ export default function Footer({
 
           {/* Social */}
           <div className={styles.column}>
-            <h3 className={styles.heading}>SOSIAL</h3>
+            <h3 className={styles.heading}>{t('SOSIAL')}</h3>
             <ul className={styles.socialList}>
               {socialLinks.map((link) => (
                 <li key={link.platform}>
@@ -128,14 +134,14 @@ export default function Footer({
 
         {/* Bottom bar */}
         <div className={styles.bottom}>
-          <Link href="/framdrift" className={styles.legalLink}>
+          <Link href={localeHref('/framdrift', locale)} className={styles.legalLink}>
             Framdrift
           </Link>
-          <Link href="/personvern" className={styles.legalLink}>
-            Personvernerklæring
+          <Link href={localeHref('/personvern', locale)} className={styles.legalLink}>
+            {t('Personvernerklæring')}
           </Link>
-          <Link href="/salgsvilkar" className={styles.legalLink}>
-            Salgsvilkår
+          <Link href={localeHref('/salgsvilkar', locale)} className={styles.legalLink}>
+            {t('Salgsvilkår')}
           </Link>
           <button type="button" className={styles.legalLink} onClick={openSettings}>
             Cookies

@@ -9,9 +9,10 @@ import { TimelineSectionComponent } from './TimelineSection'
 
 interface SectionRendererProps {
   sections: PageSection[]
+  locale: string
 }
 
-export function SectionRenderer({ sections }: SectionRendererProps) {
+export function SectionRenderer({ sections, locale }: SectionRendererProps) {
   return (
     <>
       {sections.map((section) => {
@@ -19,7 +20,7 @@ export function SectionRenderer({ sections }: SectionRendererProps) {
           case 'heroSection':
             return <HeroSectionComponent key={section._key} data={section} />
           case 'featuredSection':
-            return <FeaturedSectionComponent key={section._key} data={section} />
+            return <FeaturedSectionComponent key={section._key} data={section} locale={locale} />
           case 'eventsSection':
             return <EventsSectionComponent key={section._key} data={section} />
           case 'timelineSection':
@@ -27,7 +28,9 @@ export function SectionRenderer({ sections }: SectionRendererProps) {
           case 'contentSection':
             return <ContentSectionComponent key={section._key} data={section} />
           case 'featuredProductSection':
-            return <FeaturedProductSectionComponent key={section._key} data={section} />
+            return (
+              <FeaturedProductSectionComponent key={section._key} data={section} locale={locale} />
+            )
           case 'newsletter':
             return <NewsletterSectionComponent key={section._key} data={section} />
           default:

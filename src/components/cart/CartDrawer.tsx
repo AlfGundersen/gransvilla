@@ -4,11 +4,15 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useCallback, useEffect, useRef } from 'react'
 import { useCart } from '@/context/CartContext'
+import { localeHref } from '@/lib/i18n/href'
+import { useLocale, useT } from '@/lib/i18n/provider'
 import styles from './CartDrawer.module.css'
 
 export function CartDrawer() {
   const { cart, isOpen, isLoading, stockNotice, closeCart, updateQuantity, removeFromCart } =
     useCart()
+  const t = useT()
+  const locale = useLocale()
 
   const closeButtonRef = useRef<HTMLButtonElement>(null)
   const drawerRef = useRef<HTMLDivElement>(null)
@@ -81,13 +85,13 @@ export function CartDrawer() {
       >
         <div className={styles.header}>
           <h2 id="cart-drawer-title" className={styles.title}>
-            Handlekurv
+            {t('Handlekurv')}
           </h2>
           <button
             ref={closeButtonRef}
             className={styles.closeButton}
             onClick={closeCart}
-            aria-label="Lukk handlekurv"
+            aria-label={t('Lukk handlekurv')}
           >
             <svg
               width="24"
@@ -104,9 +108,13 @@ export function CartDrawer() {
 
         {!cart || cart.items.length === 0 ? (
           <div className={styles.empty}>
-            <p>Handlekurven er tom</p>
-            <Link href="/butikken" className={styles.continueLink} onClick={closeCart}>
-              Fortsett å handle
+            <p>{t('Handlekurven er tom')}</p>
+            <Link
+              href={localeHref('/butikken', locale)}
+              className={styles.continueLink}
+              onClick={closeCart}
+            >
+              {t('Fortsett å handle')}
             </Link>
           </div>
         ) : (
@@ -131,7 +139,7 @@ export function CartDrawer() {
                   </div>
                   <div className={styles.itemInfo}>
                     <Link
-                      href={`/butikken/${item.handle}`}
+                      href={localeHref(`/butikken/${item.handle}`, locale)}
                       className={styles.itemTitle}
                       onClick={closeCart}
                     >
@@ -149,7 +157,7 @@ export function CartDrawer() {
                           className={styles.quantityButton}
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
                           disabled={isLoading || item.quantity <= 1}
-                          aria-label="Reduser antall"
+                          aria-label={t('Reduser antall')}
                         >
                           -
                         </button>
@@ -158,7 +166,7 @@ export function CartDrawer() {
                           className={styles.quantityButton}
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
                           disabled={isLoading}
-                          aria-label="Øk antall"
+                          aria-label={t('Øk antall')}
                         >
                           +
                         </button>
@@ -167,9 +175,9 @@ export function CartDrawer() {
                         className={styles.removeButton}
                         onClick={() => removeFromCart(item.id)}
                         disabled={isLoading}
-                        aria-label="Fjern fra handlekurv"
+                        aria-label={t('Fjern fra handlekurv')}
                       >
-                        Fjern
+                        {t('Fjern')}
                       </button>
                     </div>
                   </div>
@@ -179,27 +187,28 @@ export function CartDrawer() {
 
             <div className={styles.footer}>
               <div className={styles.subtotal}>
-                <span>Total sum</span>
+                <span>{t('Total sum')}</span>
                 <span>
-                  {cart.totalAmount.toLocaleString('nb-NO')} {cart.currencyCode}
+                  {cart.totalAmount.toLocaleString(locale === 'en' ? 'en-GB' : 'nb-NO')}{' '}
+                  {cart.currencyCode}
                 </span>
               </div>
               <Link
-                href="/butikken/checkout"
+                href={localeHref('/butikken/checkout', locale)}
                 className={`${styles.checkoutButton} site-button`}
                 onClick={closeCart}
               >
-                Gå til kassen
+                {t('Gå til kassen')}
               </Link>
               <button className={`${styles.continueButton} site-button`} onClick={closeCart}>
-                Fortsett å handle
+                {t('Fortsett å handle')}
               </button>
             </div>
           </>
         )}
 
         {isLoading && (
-          <div className={styles.loadingOverlay} role="status" aria-label="Laster">
+          <div className={styles.loadingOverlay} role="status" aria-label={t('Laster')}>
             <div className={styles.spinner} />
           </div>
         )}

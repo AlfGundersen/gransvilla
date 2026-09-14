@@ -2,6 +2,8 @@
 
 import { PortableText } from '@portabletext/react'
 import { useState } from 'react'
+import { localeHref } from '@/lib/i18n/href'
+import { useLocale, useT } from '@/lib/i18n/provider'
 import type { NewsletterSection } from '@/types/sanity'
 import styles from './NewsletterSection.module.css'
 
@@ -10,6 +12,8 @@ interface NewsletterSectionComponentProps {
 }
 
 export function NewsletterSectionComponent({ data }: NewsletterSectionComponentProps) {
+  const locale = useLocale()
+  const t = useT()
   const { heading = 'Meld deg på nyhetsbrevet', description } = data
   const [email, setEmail] = useState('')
   const [consent, setConsent] = useState(false)
@@ -63,7 +67,7 @@ export function NewsletterSectionComponent({ data }: NewsletterSectionComponentP
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Din e-postadresse"
+                placeholder={t('Din e-postadresse')}
                 className={styles.newsletterInput}
                 required
                 disabled={status === 'loading'}
@@ -85,21 +89,25 @@ export function NewsletterSectionComponent({ data }: NewsletterSectionComponentP
                 onChange={(e) => setConsent(e.target.checked)}
               />
               <span>
-                Jeg samtykker til{' '}
-                <a href="/personvern" target="_blank" rel="noopener noreferrer">
-                  personvern
+                {t('Jeg samtykker til')}{' '}
+                <a
+                  href={localeHref('/personvern', locale)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {t('personvern')}
                 </a>{' '}
-                og lagring av e-post for nyhetsbrev.
+                {t('og lagring av e-post for nyhetsbrev.')}
               </span>
             </label>
           </form>
 
           <div aria-live="polite" aria-atomic="true">
             {status === 'success' && (
-              <p className={styles.newsletterSuccess}>Takk for påmeldingen!</p>
+              <p className={styles.newsletterSuccess}>{t('Takk for påmeldingen!')}</p>
             )}
             {status === 'error' && (
-              <p className={styles.newsletterError}>Noe gikk galt. Vennligst prøv igjen.</p>
+              <p className={styles.newsletterError}>{t('Noe gikk galt. Vennligst prøv igjen.')}</p>
             )}
           </div>
         </div>

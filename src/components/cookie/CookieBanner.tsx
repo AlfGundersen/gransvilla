@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useCookieConsent } from '@/context/CookieConsentContext'
+import { useT } from '@/lib/i18n/provider'
 import styles from './CookieBanner.module.css'
 
 export default function CookieBanner() {
@@ -18,6 +19,7 @@ export default function CookieBanner() {
   } = useCookieConsent()
 
   const [marketing, setMarketing] = useState(false)
+  const t = useT()
   const settingsRef = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
 
@@ -88,28 +90,29 @@ export default function CookieBanner() {
   return (
     <>
       {showBanner && (
-        <div className={styles.banner} role="region" aria-label="Informasjonskapsler">
+        <div className={styles.banner} role="region" aria-label={t('Informasjonskapsler')}>
           <div className={styles.bannerInner}>
             <p className={styles.bannerText}>
-              Vi bruker informasjonskapsler for å sikre at nettsiden fungerer som den skal. Du
-              velger selv hvilke kategorier du vil godta.
+              {t(
+                'Vi bruker informasjonskapsler for å sikre at nettsiden fungerer som den skal. Du velger selv hvilke kategorier du vil godta.',
+              )}
             </p>
             <div className={styles.bannerButtons}>
               <button type="button" className={styles.acceptAll} onClick={acceptAll}>
-                Godta alle
+                {t('Godta alle')}
               </button>
               <button type="button" className={styles.necessaryOnly} onClick={acceptNecessary}>
-                Kun nødvendige
+                {t('Kun nødvendige')}
               </button>
               <button type="button" className={styles.declineAll} onClick={declineAll}>
-                Avvis alle
+                {t('Avvis alle')}
               </button>
               <button
                 type="button"
                 className={styles.settingsButton}
                 onClick={openSettings}
                 ref={triggerRef}
-                aria-label="Innstillinger for informasjonskapsler"
+                aria-label={t('Innstillinger for informasjonskapsler')}
               >
                 <svg
                   width="18"
@@ -137,17 +140,17 @@ export default function CookieBanner() {
           <div
             className={styles.settings}
             role="dialog"
-            aria-label="Innstillinger for informasjonskapsler"
+            aria-label={t('Innstillinger for informasjonskapsler')}
             aria-modal="true"
             ref={settingsRef}
           >
             <div className={styles.settingsHeader}>
-              <h2 className={styles.settingsTitle}>Informasjonskapsler</h2>
+              <h2 className={styles.settingsTitle}>{t('Informasjonskapsler')}</h2>
               <button
                 type="button"
                 className={styles.closeButton}
                 onClick={closeSettings}
-                aria-label="Lukk"
+                aria-label={t('Lukk')}
               >
                 &times;
               </button>
@@ -156,8 +159,10 @@ export default function CookieBanner() {
             <div className={styles.categories}>
               <div className={styles.category}>
                 <div className={styles.categoryInfo}>
-                  <span className={styles.categoryName}>Nødvendige</span>
-                  <span className={styles.categoryDesc}>Sesjon, handlekurv og pålogging</span>
+                  <span className={styles.categoryName}>{t('Nødvendige')}</span>
+                  <span className={styles.categoryDesc}>
+                    {t('Sesjon, handlekurv og pålogging')}
+                  </span>
                 </div>
                 <label className={styles.toggle}>
                   <input type="checkbox" checked disabled />
@@ -167,8 +172,8 @@ export default function CookieBanner() {
 
               <div className={styles.category}>
                 <div className={styles.categoryInfo}>
-                  <span className={styles.categoryName}>Markedsføring</span>
-                  <span className={styles.categoryDesc}>Tilpasset innhold og annonser</span>
+                  <span className={styles.categoryName}>{t('Markedsføring')}</span>
+                  <span className={styles.categoryDesc}>{t('Tilpasset innhold og annonser')}</span>
                 </div>
                 <label className={styles.toggle}>
                   <input
@@ -183,13 +188,13 @@ export default function CookieBanner() {
 
             <div className={styles.settingsActions}>
               <button type="button" className={styles.saveButton} onClick={handleSave}>
-                Lagre innstillinger
+                {t('Lagre innstillinger')}
               </button>
               <button type="button" className={styles.acceptAllSettings} onClick={acceptAll}>
-                Godta alle
+                {t('Godta alle')}
               </button>
               <button type="button" className={styles.declineAllSettings} onClick={declineAll}>
-                Avvis alle
+                {t('Avvis alle')}
               </button>
             </div>
           </div>

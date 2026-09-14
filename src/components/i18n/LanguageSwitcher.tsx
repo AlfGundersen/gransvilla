@@ -1,58 +1,33 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { defaultLocale, publicPath } from '@/lib/i18n/config'
+import { localeHref } from '@/lib/i18n/href'
+import { useLocale } from '@/lib/i18n/provider'
 import styles from './LanguageSwitcher.module.css'
 
-declare global {
-  interface Window {
-    Weglot?: {
-      switchTo: (lang: string) => void
-      getCurrentLang: () => string
-      on: (event: string, callback: (...args: unknown[]) => void) => void
-      off: (event: string, callback: (...args: unknown[]) => void) => boolean
-      /** https://developers.weglot.com/javascript/javascript-functions */
-      initialized?: boolean
-      translate?: (
-        payload: { words: { t: number; w: string }[]; languageTo: string },
-        callback: (data: unknown) => void,
-      ) => Promise<unknown> | undefined
-      options?: { versions?: { translation?: number } }
-    }
-  }
-}
-
 /**
- * Subtle single-button language toggle for the header. Shows the language
- * you can switch TO (so when on Norwegian it reads "EN"; on English, "NO").
+ * Subtle single-button language toggle for the header. Shows the language you
+ * can switch TO (so on Norwegian it reads "EN"; on English, "NO").
  *
- * Navigates directly to the same path on the other domain instead of
- * Weglot.switchTo — Weglot captures the URL at initial page load, so after
- * client-side navigation switchTo sends visitors to the wrong page.
+ * Both the label and the link come from the route, so the server-rendered HTML
+ * is already correct and nothing flips on hydration.
  */
 export default function LanguageSwitcher() {
-  const [isEnglish, setIsEnglish] = useState(false)
-  const pathname = usePathname()
+  const locale = useLocale()
+  const pathname = publicPath(usePathname() || '/')
 
-  useEffect(() => {
-    setIsEnglish(window.location.hostname.startsWith('en.'))
-  }, [])
-
-  const label = isEnglish ? 'NO' : 'EN'
-  const ariaLabel = isEnglish ? 'Norsk versjon' : 'English version'
+  const isEnglish = locale === 'en'
+  const target = isEnglish ? defaultLocale : 'en'
 
   return (
-    <button
-      type="button"
+    <a
+      href={localeHref(pathname, target)}
       className={`${styles.button} language-switcher-button`}
-      aria-label={ariaLabel}
-      onClick={() => {
-        const targetHost = isEnglish ? 'gransvilla.no' : 'en.gransvilla.no'
-        const path = pathname || window.location.pathname
-        window.location.href = `https://${targetHost}${path}${window.location.search}${window.location.hash}`
-      }}
+      aria-label={isEnglish ? 'Norsk versjon' : 'English version'}
+      hrefLang={target}
     >
-      {label}
-    </button>
+      {isEnglish ? 'NO' : 'EN'}
+    </a>
   )
 }

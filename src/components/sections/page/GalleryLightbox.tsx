@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { useT } from '@/lib/i18n/provider'
 import type { GalleryImageData, OriginRect } from './GalleryClient'
 import styles from './GalleryLightbox.module.css'
 
@@ -28,6 +29,7 @@ export function GalleryLightbox({
   onPrev,
   onNext,
 }: GalleryLightboxProps) {
+  const t = useT()
   const overlayRef = useRef<HTMLDivElement>(null)
   const closeButtonRef = useRef<HTMLButtonElement>(null)
   const previousFocusRef = useRef<HTMLElement | null>(null)
@@ -138,7 +140,7 @@ export function GalleryLightbox({
         ref={closeButtonRef}
         className={styles.closeButton}
         onClick={onClose}
-        aria-label="Lukk"
+        aria-label={t('Lukk')}
       >
         <svg
           width="28"
@@ -158,7 +160,7 @@ export function GalleryLightbox({
         <button
           className={`${styles.navButton} ${styles.navPrev}`}
           onClick={onPrev}
-          aria-label="Forrige bilde"
+          aria-label={t('Forrige bilde')}
         >
           <svg
             width="24"
@@ -213,7 +215,7 @@ export function GalleryLightbox({
         <button
           className={`${styles.navButton} ${styles.navNext}`}
           onClick={onNext}
-          aria-label="Neste bilde"
+          aria-label={t('Neste bilde')}
         >
           <svg
             width="24"

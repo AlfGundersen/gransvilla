@@ -1,14 +1,23 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { localeHref } from '@/lib/i18n/href'
+import { getTranslator } from '@/lib/i18n/server'
 import type { Product } from '@/lib/shopify/types'
 import { EventProductCard, EventProductSingle } from './EventProductCard'
 import styles from './EventProductsSection.module.css'
 
 interface EventProductsSectionProps {
   products: Product[]
+  /** Server components cannot read the I18nProvider, so the page passes it. */
+  locale: string
 }
 
-export function EventProductsSection({ products: validProducts }: EventProductsSectionProps) {
+export function EventProductsSection({
+  products: validProducts,
+  locale,
+}: EventProductsSectionProps) {
+  const t = getTranslator(locale)
+
   if (validProducts.length === 0) {
     return null
   }
@@ -16,12 +25,14 @@ export function EventProductsSection({ products: validProducts }: EventProductsS
   const isSingle = validProducts.length === 1
 
   return (
-    <section className={styles.eventProductsSection} aria-label="Produkter">
+    <section className={styles.eventProductsSection} aria-label={t('Produkter')}>
       <div className={styles.eventProductsHeader}>
-        <h2 className={styles.eventProductsHeading}>Fra nettbutikken</h2>
-        <p className={styles.eventProductsSubtext}>Produkter knyttet til dette arrangementet</p>
-        <Link href="/butikken" className={styles.eventProductsLink}>
-          Se alle produkter
+        <h2 className={styles.eventProductsHeading}>{t('Fra nettbutikken')}</h2>
+        <p className={styles.eventProductsSubtext}>
+          {t('Produkter knyttet til dette arrangementet')}
+        </p>
+        <Link href={localeHref('/butikken', locale)} className={styles.eventProductsLink}>
+          {t('Se alle produkter')}
         </Link>
       </div>
       {isSingle ? (
