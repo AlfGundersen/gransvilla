@@ -21,6 +21,12 @@ import { translateAll } from './lib/weglot.mjs'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const MESSAGES = join(ROOT, 'messages', 'en.json')
+/**
+ * The subset reachable from t() calls in the code. Client components bundle
+ * this rather than the full dictionary, which is mostly CMS prose already
+ * rendered on the server.
+ */
+const CLIENT_MESSAGES = join(ROOT, 'messages', 'en.client.json')
 
 const args = new Set(process.argv.slice(2))
 const DRY = args.has('--dry')
@@ -206,9 +212,16 @@ async function main() {
   }
 
   // Sorted so the committed diff is reviewable.
-  const sorted = Object.fromEntries(Object.entries(next).sort(([a], [b]) => a.localeCompare(b)))
+  const sort = (entries) => Object.fromEntries(entries.sort(([a], [b]) => a.localeCompare(b)))
+
+  const sorted = sort(Object.entries(next))
   writeFileSync(MESSAGES, `${JSON.stringify(sorted, null, 2)}\n`)
   console.log(`wrote ${Object.keys(sorted).length} entries to messages/en.json`)
+
+  const codeKeys = new Set(code.map(normalize))
+  const clientOnly = sort(Object.entries(sorted).filter(([key]) => codeKeys.has(key)))
+  writeFileSync(CLIENT_MESSAGES, `${JSON.stringify(clientOnly, null, 2)}\n`)
+  console.log(`wrote ${Object.keys(clientOnly).length} entries to messages/en.client.json`)
 }
 
 main().catch((error) => {

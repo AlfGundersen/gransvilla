@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useCart } from '@/context/CartContext'
+import { useLocale, useT } from '@/lib/i18n/provider'
 import styles from './VariantModal.module.css'
 
 type Variant = {
@@ -31,6 +32,9 @@ export function VariantModal({
   const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null)
   const [isAdding, setIsAdding] = useState(false)
   const modalRef = useRef<HTMLDivElement>(null)
+  const t = useT()
+  const locale = useLocale()
+  const numberLocale = locale === 'en' ? 'en-GB' : 'nb-NO'
 
   // Reset selection when modal opens
   useEffect(() => {
@@ -78,14 +82,19 @@ export function VariantModal({
   const modalContent = (
     <div className={styles.modalBackdrop} onClick={handleBackdropClick}>
       <div className={styles.modal} ref={modalRef} role="dialog" aria-modal="true">
-        <button type="button" className={styles.closeButton} onClick={onClose} aria-label="Lukk">
+        <button
+          type="button"
+          className={styles.closeButton}
+          onClick={onClose}
+          aria-label={t('Lukk')}
+        >
           ×
         </button>
 
         <h2 className={styles.modalTitle}>{productTitle}</h2>
-        <p className={styles.modalSubtitle}>Velg en dato</p>
+        <p className={styles.modalSubtitle}>{t('Velg en dato')}</p>
 
-        <div className={styles.variantList} role="radiogroup" aria-label="Velg dato">
+        <div className={styles.variantList} role="radiogroup" aria-label={t('Velg dato')}>
           {variants.map((variant) => {
             const isSoldOut = !variant.availableForSale
             const price = parseFloat(variant.price.amount)
@@ -104,7 +113,9 @@ export function VariantModal({
               >
                 <span className={styles.variantTitle}>{variant.title}</span>
                 <span className={styles.variantPrice}>
-                  {isSoldOut ? 'Utsolgt' : `${price.toLocaleString('nb-NO')} ${currencyCode}`}
+                  {isSoldOut
+                    ? t('Utsolgt')
+                    : `${price.toLocaleString(numberLocale)} ${currencyCode}`}
                 </span>
               </button>
             )
@@ -118,10 +129,10 @@ export function VariantModal({
           disabled={!selectedVariantId || isAdding}
         >
           {isAdding
-            ? 'Legger til...'
+            ? t('Legger til...')
             : selectedVariant
-              ? `Legg i handlekurv – ${parseFloat(selectedVariant.price.amount).toLocaleString('nb-NO')} ${currencyCode}`
-              : 'Velg en dato'}
+              ? `${t('Legg i handlekurv')} – ${parseFloat(selectedVariant.price.amount).toLocaleString(numberLocale)} ${currencyCode}`
+              : t('Velg en dato')}
         </button>
       </div>
     </div>

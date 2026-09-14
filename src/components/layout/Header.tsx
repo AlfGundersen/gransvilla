@@ -6,6 +6,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import LanguageSwitcher from '@/components/i18n/LanguageSwitcher'
 import { useCart } from '@/context/CartContext'
+import { useT } from '@/lib/i18n/provider'
 import type { NavLink, SocialLink } from '@/types/sanity'
 import { socialPlatformLabels } from '@/types/sanity'
 import styles from './Header.module.css'
@@ -16,6 +17,7 @@ interface HeaderProps {
 }
 
 export default function Header({ navigation, socialLinks }: HeaderProps) {
+  const t = useT()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
@@ -127,7 +129,7 @@ export default function Header({ navigation, socialLinks }: HeaderProps) {
             type="button"
             className={styles.closeButton}
             onClick={closeMenu}
-            aria-label="Lukk meny"
+            aria-label={t('Lukk meny')}
           >
             <svg
               width="20"
@@ -198,7 +200,7 @@ export default function Header({ navigation, socialLinks }: HeaderProps) {
               ref={menuButtonRef}
               type="button"
               className={styles.menuButton}
-              aria-label={isMenuOpen ? 'Lukk meny' : 'Åpne meny'}
+              aria-label={isMenuOpen ? t('Lukk meny') : 'Åpne meny'}
               aria-expanded={isMenuOpen}
               aria-controls="main-menu"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -209,7 +211,7 @@ export default function Header({ navigation, socialLinks }: HeaderProps) {
           </div>
 
           {/* Center: Logo */}
-          <Link href="/" className={styles.logo} aria-label="GransVilla logo – Til forsiden">
+          <Link href="/" className={styles.logo} aria-label={t('GransVilla logo – Til forsiden')}>
             <Image src="/logo.svg" alt="" width={128} height={22} priority aria-hidden="true" />
           </Link>
 

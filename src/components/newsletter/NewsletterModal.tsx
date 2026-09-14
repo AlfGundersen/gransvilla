@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { useT } from '@/lib/i18n/provider'
 import { NewsletterForm } from './NewsletterForm'
 import styles from './NewsletterModal.module.css'
 
@@ -11,6 +12,7 @@ interface NewsletterModalProps {
 
 export function NewsletterModal({ open, onClose }: NewsletterModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null)
+  const t = useT()
 
   useEffect(() => {
     const dialog = dialogRef.current
@@ -32,13 +34,18 @@ export function NewsletterModal({ open, onClose }: NewsletterModalProps) {
         // Native <dialog>: a click on the backdrop targets the dialog itself
         if (e.target === dialogRef.current) onClose()
       }}
-      aria-label="Meld deg på nyhetsbrev"
+      aria-label={t('Meld deg på nyhetsbrev')}
     >
       <div className={styles.content}>
-        <button type="button" className={styles.closeButton} onClick={onClose} aria-label="Lukk">
+        <button
+          type="button"
+          className={styles.closeButton}
+          onClick={onClose}
+          aria-label={t('Lukk')}
+        >
           ×
         </button>
-        <p className={styles.title}>Holde deg oppdatert og meld deg på nyhetsbrevet</p>
+        <p className={styles.title}>{t('Holde deg oppdatert og meld deg på nyhetsbrevet')}</p>
         <NewsletterForm idPrefix="modal" />
       </div>
     </dialog>

@@ -8,6 +8,7 @@ import { DraftModeBanner } from '@/components/pwa/DraftModeBanner'
 import { ServiceWorkerRegistration } from '@/components/pwa/ServiceWorkerRegistration'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { defaultLocale, isLocale, locales } from '@/lib/i18n/config'
+import { I18nProvider } from '@/lib/i18n/provider'
 import { client } from '@/lib/sanity/client'
 import { urlFor } from '@/lib/sanity/image'
 import { SanityLive } from '@/lib/sanity/live'
@@ -120,7 +121,7 @@ export default async function RootLayout({
             description: 'Restaurant, kantine og arrangementer',
           }}
         />
-        {children}
+        <I18nProvider locale={lang}>{children}</I18nProvider>
         <SanityLive />
         {isDraftMode && (
           <>

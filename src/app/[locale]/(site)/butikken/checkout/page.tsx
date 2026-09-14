@@ -4,9 +4,11 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useCart } from '@/context/CartContext'
+import { useT } from '@/lib/i18n/provider'
 import styles from './page.module.css'
 
 export default function CheckoutPage() {
+  const t = useT()
   const router = useRouter()
   const { cart, isLoading: cartLoading } = useCart()
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -128,7 +130,9 @@ export default function CheckoutPage() {
           {isSubmitting ? 'Behandler...' : 'Gå til betaling'}
         </button>
 
-        <p className={styles.checkoutSecureNote}>Du blir sendt til en sikker betalingsside</p>
+        <p className={styles.checkoutSecureNote}>
+          {t('Du blir sendt til en sikker betalingsside')}
+        </p>
       </div>
     </div>
   )

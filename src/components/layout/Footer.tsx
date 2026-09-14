@@ -6,6 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { NewsletterForm } from '@/components/newsletter/NewsletterForm'
 import { useCookieConsent } from '@/context/CookieConsentContext'
+import { useT } from '@/lib/i18n/provider'
 import type { NavLink, SocialLink } from '@/types/sanity'
 import { socialPlatformLabels } from '@/types/sanity'
 import styles from './Footer.module.css'
@@ -29,6 +30,7 @@ export default function Footer({
   siteDescription,
   faviconUrl,
 }: FooterProps) {
+  const t = useT()
   const { openSettings } = useCookieConsent()
 
   const handleColorFlip = () => {
@@ -41,7 +43,9 @@ export default function Footer({
         <div className={styles.grid}>
           {/* Newsletter Section */}
           <div id="nyhetsbrev" className={styles.newsletter}>
-            <p className={styles.newsletterText}>Holde deg oppdatert og meld deg på nyhetsbrevet</p>
+            <p className={styles.newsletterText}>
+              {t('Holde deg oppdatert og meld deg på nyhetsbrevet')}
+            </p>
             <NewsletterForm idPrefix="footer" />
           </div>
 
@@ -67,7 +71,7 @@ export default function Footer({
                   target="_blank"
                   rel="noopener noreferrer"
                   className={styles.addressLink}
-                  aria-label="Vis adressen i Google Maps (åpnes i nytt vindu)"
+                  aria-label={t('Vis adressen i Google Maps (åpnes i nytt vindu)')}
                 >
                   <address className={styles.address}>
                     <PortableText value={contactInfo.address} />

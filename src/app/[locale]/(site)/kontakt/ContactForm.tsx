@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { useT } from '@/lib/i18n/provider'
 import styles from './page.module.css'
 
 interface FormData {
@@ -12,6 +13,7 @@ interface FormData {
 }
 
 export function ContactForm() {
+  const t = useT()
   const [formData, setFormData] = useState<FormData>({
     firstName: '',
     lastName: '',
@@ -89,8 +91,8 @@ export function ContactForm() {
   if (status === 'success') {
     return (
       <div className={styles.successMessage}>
-        <h2 className={styles.successTitle}>Takk for din henvendelse!</h2>
-        <p>Vi tar kontakt med deg så snart som mulig.</p>
+        <h2 className={styles.successTitle}>{t('Takk for din henvendelse!')}</h2>
+        <p>{t('Vi tar kontakt med deg så snart som mulig.')}</p>
       </div>
     )
   }

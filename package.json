@@ -32,7 +32,8 @@
     "sanity": "^5.8.0",
     "sanity-plugin-asset-source-unsplash": "^7.0.2",
     "sanity-plugin-media": "^4.1.1",
-    "sanity-plugin-plausible-analytics": "^1.1.0"
+    "sanity-plugin-plausible-analytics": "^1.1.0",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.11",

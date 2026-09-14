@@ -4,6 +4,7 @@ import parse from 'html-react-parser'
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
+import { useLocale, useT } from '@/lib/i18n/provider'
 import type { Product } from '@/lib/shopify/types'
 import { AddToCartButton } from './AddToCartButton'
 import styles from './ProductInfo.module.css'
@@ -20,6 +21,8 @@ interface ProductInfoProps {
 }
 
 export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
+  const t = useT()
+  const numberLocale = useLocale() === 'en' ? 'en-GB' : 'nb-NO'
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -175,8 +178,8 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
         {!product.comingSoon && (
           <p className={styles.productInfoPrice}>
             {hasOptions && !allOptionsSelected
-              ? `Fra ${product.price.toLocaleString('nb-NO')} ${product.currencyCode}`
-              : `${variantPrice.toLocaleString('nb-NO')} ${product.currencyCode}`}
+              ? `Fra ${product.price.toLocaleString(numberLocale)} ${product.currencyCode}`
+              : `${variantPrice.toLocaleString(numberLocale)} ${product.currencyCode}`}
           </p>
         )}
       </div>
@@ -227,14 +230,14 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
       {/* Quantity Selector - hidden for coming soon */}
       {!product.comingSoon && (
         <div className={styles.productInfoQuantitySection}>
-          <label className={styles.productInfoQuantityLabel}>Antall</label>
+          <label className={styles.productInfoQuantityLabel}>{t('Antall')}</label>
           <div className={styles.productInfoQuantity}>
             <button
               type="button"
               className={styles.productInfoQuantityButton}
               onClick={decreaseQuantity}
               disabled={quantity <= 1}
-              aria-label="Reduser antall"
+              aria-label={t('Reduser antall')}
             >
               -
             </button>
@@ -244,7 +247,7 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
               className={styles.productInfoQuantityButton}
               onClick={increaseQuantity}
               disabled={maxQuantity !== null && quantity >= maxQuantity}
-              aria-label="Øk antall"
+              aria-label={t('Øk antall')}
             >
               +
             </button>
@@ -259,23 +262,23 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
       {product.comingSoon ? (
         <>
           <div className={styles.comingSoonBanner}>
-            <span>Kommer snart</span>
+            <span>{t('Kommer snart')}</span>
           </div>
 
           {/* Newsletter signup for coming soon products */}
           <div className={styles.comingSoonNewsletter}>
             <p className={styles.comingSoonNewsletterText}>
-              Meld deg på nyhetsbrevet for å få beskjed når dette blir tilgjengelig.
+              {t('Meld deg på nyhetsbrevet for å få beskjed når dette blir tilgjengelig.')}
             </p>
             {newsletterStatus === 'success' ? (
-              <p className={styles.comingSoonNewsletterSuccess}>Takk for påmeldingen!</p>
+              <p className={styles.comingSoonNewsletterSuccess}>{t('Takk for påmeldingen!')}</p>
             ) : (
               <form className={styles.comingSoonNewsletterForm} onSubmit={handleNewsletterSubmit}>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Din e-postadresse"
+                  placeholder={t('Din e-postadresse')}
                   aria-label="E-postadresse"
                   className={styles.comingSoonNewsletterInput}
                   required
@@ -299,10 +302,12 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
                   className={styles.comingSoonNewsletterButton}
                   disabled={newsletterStatus === 'loading' || !consent}
                 >
-                  {newsletterStatus === 'loading' ? 'Sender...' : 'Meld på'}
+                  {newsletterStatus === 'loading' ? t('Sender...') : t('Meld på')}
                 </button>
                 {newsletterStatus === 'error' && (
-                  <p className={styles.comingSoonNewsletterError}>Noe gikk galt. Prøv igjen.</p>
+                  <p className={styles.comingSoonNewsletterError}>
+                    {t('Noe gikk galt. Prøv igjen.')}
+                  </p>
                 )}
               </form>
             )}

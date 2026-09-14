@@ -1,9 +1,11 @@
 'use client'
 
 import { useState } from 'react'
+import { useT } from '@/lib/i18n/provider'
 import styles from './Newsletter.module.css'
 
 export default function Newsletter() {
+  const t = useT()
   const [email, setEmail] = useState('')
   const [consent, setConsent] = useState(false)
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
@@ -36,7 +38,7 @@ export default function Newsletter() {
       <div className={styles.container}>
         <div className={styles.content}>
           <span className={styles.label}>Hold deg oppdatert</span>
-          <h2 className={styles.title}>Meld deg på nyhetsbrevet</h2>
+          <h2 className={styles.title}>{t('Meld deg på nyhetsbrevet')}</h2>
           <p className={styles.description}>
             Få informasjon om kommende arrangementer, konserter og spesialtilbud direkte i
             innboksen.
@@ -48,7 +50,7 @@ export default function Newsletter() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Din e-postadresse"
+                placeholder={t('Din e-postadresse')}
                 aria-label="E-postadresse"
                 className={styles.input}
                 required
@@ -80,9 +82,11 @@ export default function Newsletter() {
             </label>
           </form>
 
-          {status === 'success' && <p className={styles.successMessage}>Takk for påmeldingen!</p>}
+          {status === 'success' && (
+            <p className={styles.successMessage}>{t('Takk for påmeldingen!')}</p>
+          )}
           {status === 'error' && (
-            <p className={styles.errorMessage}>Noe gikk galt. Vennligst prøv igjen.</p>
+            <p className={styles.errorMessage}>{t('Noe gikk galt. Vennligst prøv igjen.')}</p>
           )}
         </div>
       </div>
