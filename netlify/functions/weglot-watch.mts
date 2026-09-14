@@ -20,6 +20,12 @@ const REPO = 'AlfGundersen/gransvilla'
 const MARKER = `https://raw.githubusercontent.com/${REPO}/main/messages/.weglot-version`
 const WORKFLOW = 'refresh-translations.yml'
 
+const githubHeaders = (token: string) => ({
+  Authorization: `Bearer ${token}`,
+  Accept: 'application/vnd.github+json',
+  'X-GitHub-Api-Version': '2022-11-28',
+})
+
 export default async () => {
   const weglotKey = Netlify.env.get('NEXT_PUBLIC_WEGLOT_API_KEY')
   const githubToken = Netlify.env.get('GITHUB_DISPATCH_TOKEN')
@@ -59,18 +65,38 @@ export default async () => {
     return
   }
 
+  // A run takes longer than the minute between checks, and the marker only
+  // changes once it commits — so without this the same difference is seen
+  // several times and dispatches a run each time.
+  const inFlight = await fetch(
+    `https://api.github.com/repos/${REPO}/actions/workflows/${WORKFLOW}/runs` +
+      '?status=in_progress&per_page=1',
+    { headers: githubHeaders(githubToken), signal: AbortSignal.timeout(10_000) },
+  )
+    .then((r) => (r.ok ? (r.json() as Promise<{ total_count?: number }>) : null))
+    .catch(() => null)
+
+  const queued = await fetch(
+    `https://api.github.com/repos/${REPO}/actions/workflows/${WORKFLOW}/runs` +
+      '?status=queued&per_page=1',
+    { headers: githubHeaders(githubToken), signal: AbortSignal.timeout(10_000) },
+  )
+    .then((r) => (r.ok ? (r.json() as Promise<{ total_count?: number }>) : null))
+    .catch(() => null)
+
+  const busy = (inFlight?.total_count ?? 0) + (queued?.total_count ?? 0)
+  if (busy > 0) {
+    console.log(`Weglot moved to ${remote}, but a run is already going. Waiting.`)
+    return
+  }
+
   console.log(`Weglot moved: ${local || 'none'} → ${remote}. Dispatching ${WORKFLOW}.`)
 
   const dispatch = await fetch(
     `https://api.github.com/repos/${REPO}/actions/workflows/${WORKFLOW}/dispatches`,
     {
       method: 'POST',
-      headers: {
-        Authorization: `Bearer ${githubToken}`,
-        Accept: 'application/vnd.github+json',
-        'X-GitHub-Api-Version': '2022-11-28',
-        'Content-Type': 'application/json',
-      },
+      headers: { ...githubHeaders(githubToken), 'Content-Type': 'application/json' },
       body: JSON.stringify({ ref: 'main' }),
       signal: AbortSignal.timeout(15_000),
     },
