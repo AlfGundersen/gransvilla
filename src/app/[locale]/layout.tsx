@@ -9,6 +9,7 @@ import { ServiceWorkerRegistration } from '@/components/pwa/ServiceWorkerRegistr
 import { JsonLd } from '@/components/seo/JsonLd'
 import { client } from '@/lib/sanity/client'
 import { urlFor } from '@/lib/sanity/image'
+import { defaultLocale, isLocale, locales } from '@/lib/i18n/config'
 import { SanityLive } from '@/lib/sanity/live'
 import '@/styles/globals.css'
 
@@ -17,6 +18,10 @@ const inter = Inter({
   variable: '--font-inter',
   display: 'swap',
 })
+
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }))
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await client.fetch<{ favicon?: { asset: { _ref: string } } } | null>(
@@ -68,15 +73,19 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function RootLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode
+  params: Promise<{ locale: string }>
 }>) {
   const { isEnabled: isDraftMode } = await draftMode()
   const weglotKey = process.env.NEXT_PUBLIC_WEGLOT_API_KEY
+  const { locale } = await params
+  const lang = isLocale(locale) ? locale : defaultLocale
 
   return (
     // translate="no" matches what weglot.min.js sets pre-hydration
-    <html lang="nb" translate="no" className={inter.variable}>
+    <html lang={lang} translate="no" className={inter.variable}>
       <head>
         <meta charSet="utf-8" />
         <meta name="theme-color" content="#000000" />
