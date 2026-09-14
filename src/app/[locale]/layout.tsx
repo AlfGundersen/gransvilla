@@ -10,6 +10,7 @@ import { defaultLocale, isLocale, locales } from '@/lib/i18n/config'
 import { alternatesFor, openGraphLocale } from '@/lib/i18n/metadata'
 import { I18nProvider } from '@/lib/i18n/provider'
 import { getTranslator, liveClientMessages } from '@/lib/i18n/server'
+import { INVERTED_INIT_SCRIPT } from '@/lib/inverted-colors'
 import { client } from '@/lib/sanity/client'
 import { urlFor } from '@/lib/sanity/image'
 import { SanityLive } from '@/lib/sanity/live'
@@ -87,9 +88,12 @@ export default async function RootLayout({
   const clientOverrides = await liveClientMessages(lang)
 
   return (
-    <html lang={lang} className={inter.variable}>
+    <html lang={lang} className={inter.variable} suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
+        {/* Before the body paints, so a remembered colour flip does not blink. */}
+        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: a fixed literal, no interpolation */}
+        <script dangerouslySetInnerHTML={{ __html: INVERTED_INIT_SCRIPT }} />
         <meta name="theme-color" content="#000000" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         <link rel="preconnect" href="https://use.typekit.net" />
