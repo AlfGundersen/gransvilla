@@ -38,6 +38,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.11",
+    "@netlify/functions": "^6.0.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
