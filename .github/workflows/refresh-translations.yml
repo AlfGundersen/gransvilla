@@ -13,13 +13,15 @@ name: Refresh translations
 # differs from the marker in the repo, so a frequent schedule costs a single
 # small request rather than re-fetching several hundred strings.
 #
-# Five minutes is the practical floor — GitHub delays scheduled runs under load,
-# so treat it as "within a few minutes", not a guarantee. Run it from the
-# Actions tab when an edit needs to go out now; a manual run always refreshes.
+# Five minutes is the floor GitHub allows, and it is not a guarantee: scheduled
+# runs are delayed under load and can be dropped outright, with the top of the
+# hour called out as the worst time. The offset keeps every run clear of :00.
+# Run it from the Actions tab when an edit needs to go out now; a manual run
+# always refreshes.
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '2-59/5 * * * *'
   workflow_dispatch:
 
 concurrency:
