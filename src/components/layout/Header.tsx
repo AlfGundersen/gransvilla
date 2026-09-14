@@ -123,7 +123,7 @@ export default function Header({ navigation, socialLinks }: HeaderProps) {
       >
         {/* Menu Header */}
         <div className={styles.menuHeader}>
-          <span className={styles.menuLabel}>MENY</span>
+          <span className={styles.menuLabel}>{t('MENY')}</span>
           <button
             ref={closeButtonRef}
             type="button"
@@ -221,7 +221,7 @@ export default function Header({ navigation, socialLinks }: HeaderProps) {
               type="button"
               className={styles.cartButton}
               onClick={openCart}
-              aria-label={`Handlekurv, ${cartCount} ${cartCount === 1 ? 'vare' : 'varer'}`}
+              aria-label={`${t('Handlekurv')}, ${cartCount} ${cartCount === 1 ? t('vare') : t('varer')}`}
             >
               <svg
                 className={styles.cartIcon}
@@ -240,7 +240,9 @@ export default function Header({ navigation, socialLinks }: HeaderProps) {
                 <path d="M16 10a4 4 0 01-8 0" />
               </svg>
               {cartCount > 0 && <span className={styles.cartBadge}>{cartCount}</span>}
-              <span className={styles.cartText}>Handlekurv ({cartCount})</span>
+              <span className={styles.cartText}>
+                {t('Handlekurv')} ({cartCount})
+              </span>
             </button>
           </div>
         </div>

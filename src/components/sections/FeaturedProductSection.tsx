@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { getTranslator, translateContent } from '@/lib/i18n/server'
 import { getProducts } from '@/lib/shopify'
 import { shopifyImageUrl } from '@/lib/shopify/image'
 import type { FeaturedProductSection } from '@/types/sanity'
@@ -7,15 +8,21 @@ import styles from './FeaturedProductSection.module.css'
 
 interface FeaturedProductSectionProps {
   data: FeaturedProductSection
+  /** This component fetches Shopify itself, so it has to translate that too. */
+  locale: string
 }
 
-export async function FeaturedProductSectionComponent({ data }: FeaturedProductSectionProps) {
+export async function FeaturedProductSectionComponent({
+  data,
+  locale,
+}: FeaturedProductSectionProps) {
+  const t = getTranslator(locale)
   const { productHandle } = data
 
   // Fetch all listed products from Shopify
   let products: Awaited<ReturnType<typeof getProducts>> = []
   try {
-    products = await getProducts(20)
+    products = await translateContent(await getProducts(20), locale)
   } catch {
     // Store unavailable
   }
@@ -44,10 +51,10 @@ export async function FeaturedProductSectionComponent({ data }: FeaturedProductS
 
           <div className={styles.featProductButtons}>
             <Link href={productUrl} className={`${styles.featProductBtnPrimary} site-button`}>
-              Les mer
+              {t('Les mer')}
             </Link>
             <Link href="/butikken" className={`${styles.featProductBtnSecondary} site-button`}>
-              Se alle produkter
+              {t('Se alle produkter')}
             </Link>
           </div>
         </div>

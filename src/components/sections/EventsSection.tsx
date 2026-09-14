@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useCallback, useState } from 'react'
 import { WatermarkClient } from '@/components/WatermarkClient'
+import { useT } from '@/lib/i18n/provider'
 import { urlFor } from '@/lib/sanity/image'
 import type { EventsSection } from '@/types/sanity'
 import styles from './EventsSection.module.css'
@@ -14,6 +15,7 @@ interface EventsSectionComponentProps {
 }
 
 export function EventsSectionComponent({ data, watermarkSrc }: EventsSectionComponentProps) {
+  const t = useT()
   const items = data.items ?? []
   const [activeIndex, setActiveIndex] = useState(0)
 
@@ -38,14 +40,14 @@ export function EventsSectionComponent({ data, watermarkSrc }: EventsSectionComp
   ].filter(Boolean)
 
   return (
-    <section className={styles.eventsSection} aria-label="Arrangementer">
+    <section className={styles.eventsSection} aria-label={t('Arrangementer')}>
       <div className={styles.eventsContainer}>
         <div
           className={`${styles.eventsGrid} ${!hasAnySecondImage || singleImage ? styles.eventsGrid2col : styles.eventsGrid3col}`}
         >
           {/* Navigation column */}
           <div className={styles.eventsNav}>
-            <h2 className={styles.eventsHeading}>Arrangementer</h2>
+            <h2 className={styles.eventsHeading}>{t('Arrangementer')}</h2>
             <div className={styles.eventsMobileTop}>
               <div className={styles.eventsMobileNavCol}>
                 <ul className={styles.eventsNavList}>

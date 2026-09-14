@@ -35,8 +35,8 @@ export default async function ArrangementerPage({ params }: Params) {
       data: ArrangementerSettings | null
     }>,
   ])
-  const events = translateContent(rawEvents, locale)
-  const settings = translateContent(rawSettings, locale)
+  const events = await translateContent(rawEvents, locale)
+  const settings = await translateContent(rawSettings, locale)
 
   const heroLayout = settings?.heroLayout ?? '1-1-2'
   const heroImage = settings?.heroBilde ?? events[0]?.featuredImage
@@ -133,7 +133,7 @@ export default async function ArrangementerPage({ params }: Params) {
                     </div>
                   )}
                   <Link href={`/${event.slug.current}`} className={`${styles.cta} site-button`}>
-                    Les mer
+                    {t('Les mer')}
                   </Link>
                 </div>
               </div>

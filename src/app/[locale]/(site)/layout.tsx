@@ -28,7 +28,7 @@ export default async function SiteLayout({
   const { data } = await sanityFetch({ query: siteSettingsQuery }).catch(() => ({
     data: null,
   }))
-  const settings = translateContent(data, locale)
+  const settings = await translateContent(data, locale)
 
   const mainMenu = resolveMenu(settings?.mainMenu)
   const footerMenu = settings?.footerMenu?.length ? resolveMenu(settings.footerMenu) : mainMenu

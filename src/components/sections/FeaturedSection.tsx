@@ -2,15 +2,19 @@ import { PortableText } from '@portabletext/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { MaybeWatermark } from '@/components/Watermark'
+import { getTranslator } from '@/lib/i18n/server'
 import { urlFor } from '@/lib/sanity/image'
 import type { FeaturedSection } from '@/types/sanity'
 import styles from './FeaturedSection.module.css'
 
 interface FeaturedSectionComponentProps {
   data: FeaturedSection
+  /** Server components cannot read the I18nProvider, so the caller passes it. */
+  locale: string
 }
 
-export function FeaturedSectionComponent({ data }: FeaturedSectionComponentProps) {
+export function FeaturedSectionComponent({ data, locale }: FeaturedSectionComponentProps) {
+  const t = getTranslator(locale)
   const columns = data.columns ?? []
 
   if (columns.length === 0) {
@@ -38,9 +42,11 @@ export function FeaturedSectionComponent({ data }: FeaturedSectionComponentProps
                   <Link
                     href={`/${column.link.slug.current}`}
                     className={`${styles.featuredCta} site-button`}
-                    aria-label={column.heading ? `Vis mer om ${column.heading}` : 'Vis mer'}
+                    aria-label={
+                      column.heading ? `${t('Vis mer om')} ${column.heading}` : t('Vis mer')
+                    }
                   >
-                    Vis mer
+                    {t('Vis mer')}
                   </Link>
                 )}
               </div>

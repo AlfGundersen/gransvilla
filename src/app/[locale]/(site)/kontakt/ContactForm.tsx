@@ -102,7 +102,8 @@ export function ContactForm() {
       <div className={styles.formRow}>
         <div className={styles.formGroup}>
           <label htmlFor="firstName" className={styles.label}>
-            Fornavn<span className={styles.required}>*</span>
+            {t('Fornavn')}
+            <span className={styles.required}>*</span>
           </label>
           <input
             type="text"
@@ -117,7 +118,8 @@ export function ContactForm() {
         </div>
         <div className={styles.formGroup}>
           <label htmlFor="lastName" className={styles.label}>
-            Etternavn<span className={styles.required}>*</span>
+            {t('Etternavn')}
+            <span className={styles.required}>*</span>
           </label>
           <input
             type="text"
@@ -135,7 +137,8 @@ export function ContactForm() {
       <div className={styles.formRow}>
         <div className={styles.formGroup}>
           <label htmlFor="email" className={styles.label}>
-            E-post<span className={styles.required}>*</span>
+            {t('E-post')}
+            <span className={styles.required}>*</span>
           </label>
           <input
             type="email"
@@ -150,7 +153,7 @@ export function ContactForm() {
         </div>
         <div className={styles.formGroup}>
           <label htmlFor="phone" className={styles.label}>
-            Telefon
+            {t('Telefon')}
           </label>
           <input
             type="tel"
@@ -166,7 +169,7 @@ export function ContactForm() {
 
       <div className={styles.formGroup}>
         <label htmlFor="message" className={styles.label}>
-          Melding
+          {t('Melding')}
         </label>
         <textarea
           id="message"
@@ -195,9 +198,9 @@ export function ContactForm() {
       <label className={styles.consent}>
         <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
         <span>
-          Jeg samtykker til at mine personopplysninger behandles i henhold til{' '}
+          {t('Jeg samtykker til at mine personopplysninger behandles i henhold til')}{' '}
           <a href="/personvern" target="_blank" rel="noopener noreferrer">
-            personvernerklæringen
+            {t('personvernerklæringen')}
           </a>
           .
         </span>
@@ -210,7 +213,7 @@ export function ContactForm() {
         className={`${styles.submitButton} site-button`}
         disabled={!consent || status === 'loading'}
       >
-        {status === 'loading' ? 'Sender...' : 'Send nå'}
+        {status === 'loading' ? t('Sender...') : t('Send nå')}
       </button>
     </form>
   )

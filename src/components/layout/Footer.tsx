@@ -51,7 +51,7 @@ export default function Footer({
 
           {/* Menu Links */}
           <nav className={styles.column} aria-label="Bunntekst-navigasjon">
-            <h3 className={styles.heading}>MENY</h3>
+            <h3 className={styles.heading}>{t('MENY')}</h3>
             <ul className={styles.linkList}>
               {navigation.map((link) => (
                 <li key={link.href}>
@@ -64,7 +64,7 @@ export default function Footer({
           {/* Location */}
           {contactInfo?.address && (
             <div className={styles.column}>
-              <h3 className={styles.heading}>STED</h3>
+              <h3 className={styles.heading}>{t('STED')}</h3>
               <div className={styles.locations}>
                 <a
                   href="https://www.google.com/maps/search/?api=1&query=Jahnebakken+6%2C+5007+Bergen"
@@ -80,9 +80,9 @@ export default function Footer({
               </div>
               <div className={styles.infoSection}>
                 <p className={styles.companyInfo}>
-                  Bergen Smak AS
+                  {t('Bergen Smak AS')}
                   <br />
-                  Org.nr. 986 881 824
+                  {t('Org.nr. 986 881 824')}
                 </p>
               </div>
             </div>
@@ -90,7 +90,7 @@ export default function Footer({
 
           {/* Social */}
           <div className={styles.column}>
-            <h3 className={styles.heading}>SOSIAL</h3>
+            <h3 className={styles.heading}>{t('SOSIAL')}</h3>
             <ul className={styles.socialList}>
               {socialLinks.map((link) => (
                 <li key={link.platform}>
@@ -136,10 +136,10 @@ export default function Footer({
             Framdrift
           </Link>
           <Link href="/personvern" className={styles.legalLink}>
-            Personvernerklæring
+            {t('Personvernerklæring')}
           </Link>
           <Link href="/salgsvilkar" className={styles.legalLink}>
-            Salgsvilkår
+            {t('Salgsvilkår')}
           </Link>
           <button type="button" className={styles.legalLink} onClick={openSettings}>
             Cookies

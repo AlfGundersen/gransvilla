@@ -80,6 +80,16 @@ async function* walkFiles(dir) {
   }
 }
 
+/**
+ * Strings held in data modules and rendered through a dynamic t(value) call,
+ * which the t('literal') scan above cannot see. The cookie inventory is
+ * rendered both in the banner and in the /personvern table.
+ */
+async function collectFromData() {
+  const { categoryLabels, cookieInventory } = await import('../src/lib/cookies.ts')
+  return collectStrings([cookieInventory, Object.values(categoryLabels)])
+}
+
 async function collectFromCode() {
   const found = new Set()
   for await (const file of walkFiles(join(ROOT, 'src'))) {
@@ -168,15 +178,18 @@ async function main() {
 
   const existing = JSON.parse(readFileSync(MESSAGES, 'utf8'))
 
-  const [code, sanity, shopify] = await Promise.all([
+  const [code, data, sanity, shopify] = await Promise.all([
     collectFromCode(),
+    collectFromData(),
     collectFromSanity(),
     collectFromShopify(),
   ])
 
-  console.log(`sources   code ${code.length}  sanity ${sanity.length}  shopify ${shopify.length}`)
+  console.log(
+    `sources   code ${code.length}  data ${data.length}  sanity ${sanity.length}  shopify ${shopify.length}`,
+  )
 
-  const sources = new Set([...code, ...sanity, ...shopify].map(normalize).filter(Boolean))
+  const sources = new Set([...code, ...data, ...sanity, ...shopify].map(normalize).filter(Boolean))
   const missing = REFRESH
     ? [...sources]
     : [...sources].filter((text) => !(text in existing))
@@ -239,7 +252,7 @@ async function main() {
   writeFileSync(MESSAGES, `${JSON.stringify(sorted, null, 2)}\n`)
   console.log(`wrote ${Object.keys(sorted).length} entries to messages/en.json`)
 
-  const codeKeys = new Set(code.map(normalize))
+  const codeKeys = new Set([...code, ...data].map(normalize))
   const clientOnly = sort(Object.entries(sorted).filter(([key]) => codeKeys.has(key)))
   writeFileSync(CLIENT_MESSAGES, `${JSON.stringify(clientOnly, null, 2)}\n`)
   console.log(`wrote ${Object.keys(clientOnly).length} entries to messages/en.client.json`)

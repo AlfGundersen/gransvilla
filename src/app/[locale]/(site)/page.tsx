@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { locale } = await params
   const t = getTranslator(locale)
   const { data } = await sanityFetch({ query: frontpageQuery })
-  const frontpage = translateContent(data, locale)
+  const frontpage = await translateContent(data, locale)
 
   const seo = frontpage?.seo
   const ogImage = seo?.ogImage?.asset
@@ -48,7 +48,7 @@ export default async function HomePage({ params }: Params) {
     sanityFetch({ query: frontpageQuery }),
     getWatermarkSrc(),
   ])
-  const frontpage = translateContent(data, locale)
+  const frontpage = await translateContent(data, locale)
 
   // If no frontpage data from Sanity yet, show placeholder
   if (!frontpage) {
@@ -88,6 +88,7 @@ export default async function HomePage({ params }: Params) {
 
       {frontpage.featured && (
         <FeaturedSectionComponent
+          locale={locale}
           data={{ ...frontpage.featured, _type: 'featuredSection', _key: 'featured' }}
         />
       )}
@@ -108,6 +109,7 @@ export default async function HomePage({ params }: Params) {
 
       {frontpage.featuredProduct && (
         <FeaturedProductSectionComponent
+          locale={locale}
           data={{
             ...frontpage.featuredProduct,
             _type: 'featuredProductSection',

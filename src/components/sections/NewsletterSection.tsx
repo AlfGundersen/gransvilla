@@ -87,11 +87,11 @@ export function NewsletterSectionComponent({ data }: NewsletterSectionComponentP
                 onChange={(e) => setConsent(e.target.checked)}
               />
               <span>
-                Jeg samtykker til{' '}
+                {t('Jeg samtykker til')}{' '}
                 <a href="/personvern" target="_blank" rel="noopener noreferrer">
-                  personvern
+                  {t('personvernerklæringen')}
                 </a>{' '}
-                og lagring av e-post for nyhetsbrev.
+                {t('og lagring av e-post for nyhetsbrev.')}
               </span>
             </label>
           </form>

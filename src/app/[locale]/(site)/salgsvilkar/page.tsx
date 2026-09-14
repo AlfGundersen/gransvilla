@@ -27,7 +27,7 @@ export default async function SalgsvilkarPage({ params }: Params) {
   const { data: raw } = (await sanityFetch({ query: salgsvilkarQuery })) as {
     data: Salgsvilkar | null
   }
-  const data = translateContent(raw, locale)
+  const data = await translateContent(raw, locale)
 
   return (
     <div className={styles.page}>

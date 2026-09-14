@@ -25,7 +25,7 @@ export default async function KontaktPage({ params }: Params) {
   const t = getTranslator(locale)
 
   const { data } = await sanityFetch({ query: siteSettingsQuery })
-  const settings = translateContent(data, locale)
+  const settings = await translateContent(data, locale)
   const contactInfo = settings?.contactInfo
 
   return (

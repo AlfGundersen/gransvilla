@@ -47,7 +47,7 @@ async function fetchContent(slug: string) {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params
   const t = getTranslator(locale)
-  const content = translateContent(await fetchContent(slug), locale)
+  const content = await translateContent(await fetchContent(slug), locale)
 
   if (!content) {
     return { title: t('Side ikke funnet') }
@@ -74,7 +74,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function SlugPage({ params }: Props) {
   const { locale, slug } = await params
-  const content = translateContent(await fetchContent(slug), locale)
+  const content = await translateContent(await fetchContent(slug), locale)
 
   if (!content) {
     notFound()
@@ -87,7 +87,7 @@ export default async function SlugPage({ params }: Props) {
   // Fetch products here so the layout reflects what actually renders —
   // stale Sanity handles must not split the grid around an empty section.
   const productHandles: string[] = content._type === 'event' ? (content.products ?? []) : []
-  const eventProducts = translateContent(
+  const eventProducts = await translateContent(
     (await Promise.all(productHandles.map((handle) => getProductByHandle(handle)))).filter(
       (p): p is Product => p !== null,
     ),

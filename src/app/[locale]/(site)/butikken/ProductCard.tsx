@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 import { useCart } from '@/context/CartContext'
+import { useT } from '@/lib/i18n/provider'
 import { shopifyImageUrl } from '@/lib/shopify/image'
 import styles from './page.module.css'
 import { VariantModal } from './VariantModal'
@@ -30,6 +31,7 @@ type ProductCardProps = {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const t = useT()
   const { addToCart } = useCart()
   const [isAdding, setIsAdding] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -94,8 +96,10 @@ export default function ProductCard({ product }: ProductCardProps) {
         )}
 
         {/* Status badge */}
-        {isComingSoon && <div className={styles.shopComingSoonBadge}>Kommer snart</div>}
-        {isSoldOut && !isComingSoon && <div className={styles.shopSoldOutBadge}>Utsolgt</div>}
+        {isComingSoon && <div className={styles.shopComingSoonBadge}>{t('Kommer snart')}</div>}
+        {isSoldOut && !isComingSoon && (
+          <div className={styles.shopSoldOutBadge}>{t('Utsolgt')}</div>
+        )}
 
         {/* Hover overlay with description and buttons (desktop) */}
         <div className={styles.shopProductOverlay}>
@@ -108,18 +112,18 @@ export default function ProductCard({ product }: ProductCardProps) {
               disabled={isAdding || isUnavailable}
             >
               {isComingSoon
-                ? 'Kommer snart'
+                ? t('Kommer snart')
                 : isSoldOut
-                  ? 'Utsolgt'
+                  ? t('Utsolgt')
                   : isAdding
                     ? 'Legger til...'
-                    : 'Legg i handlekurv'}
+                    : t('Legg i handlekurv')}
             </button>
             <Link
               href={`/butikken/${product.handle}`}
               className={`${styles.shopReadMoreButton} site-button`}
             >
-              Les mer
+              {t('Les mer')}
             </Link>
           </div>
         </div>
@@ -144,18 +148,18 @@ export default function ProductCard({ product }: ProductCardProps) {
             disabled={isAdding || isUnavailable}
           >
             {isComingSoon
-              ? 'Kommer snart'
+              ? t('Kommer snart')
               : isSoldOut
-                ? 'Utsolgt'
+                ? t('Utsolgt')
                 : isAdding
                   ? 'Legger til...'
-                  : 'Legg i handlekurv'}
+                  : t('Legg i handlekurv')}
           </button>
           <Link
             href={`/butikken/${product.handle}`}
             className={`${styles.shopReadMoreButton} site-button`}
           >
-            Les mer
+            {t('Les mer')}
           </Link>
         </div>
       </div>

@@ -27,7 +27,7 @@ export default async function ButikkenPage({ params }: Params) {
 
   let collections: Awaited<ReturnType<typeof getCollections>> = []
   try {
-    collections = translateContent(await getCollections(), locale)
+    collections = await translateContent(await getCollections(), locale)
   } catch {
     // Store unavailable - show empty state
   }

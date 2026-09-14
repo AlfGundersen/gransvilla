@@ -27,7 +27,7 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, handle } = await params
   const t = getTranslator(locale)
-  const product = translateContent(await getProductByHandle(handle), locale)
+  const product = await translateContent(await getProductByHandle(handle), locale)
 
   if (!product) {
     return { title: t('Produkt ikke funnet') }
@@ -71,8 +71,8 @@ export default async function ProductPage({ params }: Props) {
       params: { handle },
     }) as Promise<{ data: RelatedEvent[] }>,
   ])
-  const product = translateContent(rawProduct, locale)
-  const relatedEvents = translateContent(rawRelated, locale)
+  const product = await translateContent(rawProduct, locale)
+  const relatedEvents = await translateContent(rawRelated, locale)
 
   if (!product) {
     notFound()

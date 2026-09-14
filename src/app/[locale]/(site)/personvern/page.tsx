@@ -36,7 +36,7 @@ export default async function PersonvernPage({ params }: Params) {
   const { data: raw } = (await sanityFetch({ query: personvernQuery })) as {
     data: Personvernerklaering | null
   }
-  const data = translateContent(raw, locale)
+  const data = await translateContent(raw, locale)
 
   return (
     <div className={styles.page}>
