@@ -4,7 +4,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useCallback, useMemo, useState } from 'react'
 import { useCart } from '@/context/CartContext'
-import { useT } from '@/lib/i18n/provider'
+import { localeHref } from '@/lib/i18n/href'
+import { useLocale, useT } from '@/lib/i18n/provider'
 import { shopifyImageUrl } from '@/lib/shopify/image'
 import type { Product } from '@/lib/shopify/types'
 import styles from './EventProductsSection.module.css'
@@ -20,6 +21,7 @@ function hasRealOptions(product: Product) {
 }
 
 export function EventProductCard({ product }: EventProductCardProps) {
+  const locale = useLocale()
   const t = useT()
   const { addToCart, isLoading: cartLoading } = useCart()
   const [isAdding, setIsAdding] = useState(false)
@@ -138,7 +140,7 @@ export function EventProductCard({ product }: EventProductCardProps) {
           </button>
         )}
         <Link
-          href={`/butikken/${product.handle}`}
+          href={localeHref(`/butikken/${product.handle}`, locale)}
           className={`${styles.eventProductLinkButton} site-button`}
         >
           {t('Les mer')}
@@ -154,6 +156,7 @@ interface EventProductSingleProps {
 }
 
 export function EventProductSingle({ product }: EventProductSingleProps) {
+  const locale = useLocale()
   const t = useT()
   const { addToCart, isLoading: cartLoading } = useCart()
   const [isAdding, setIsAdding] = useState(false)
@@ -266,7 +269,7 @@ export function EventProductSingle({ product }: EventProductSingleProps) {
           </button>
         )}
         <Link
-          href={`/butikken/${product.handle}`}
+          href={localeHref(`/butikken/${product.handle}`, locale)}
           className={`${styles.singleProductSecondaryBtn} site-button`}
         >
           {t('Les mer')}

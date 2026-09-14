@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { localeHref } from '@/lib/i18n/href'
 import { getTranslator } from '@/lib/i18n/server'
 import styles from './page.module.css'
 
@@ -42,10 +43,16 @@ export default async function ThankYouPage({ params, searchParams }: Props) {
         </p>
 
         <div className={styles.thankYouActions}>
-          <Link href="/butikken" className={`${styles.thankYouButtonPrimary} site-button`}>
+          <Link
+            href={localeHref('/butikken', locale)}
+            className={`${styles.thankYouButtonPrimary} site-button`}
+          >
             {t('Fortsett å handle')}
           </Link>
-          <Link href="/" className={`${styles.thankYouButtonSecondary} site-button`}>
+          <Link
+            href={localeHref('/', locale)}
+            className={`${styles.thankYouButtonSecondary} site-button`}
+          >
             {t('Tilbake til forsiden')}
           </Link>
         </div>

@@ -2,6 +2,7 @@ import { PortableText } from '@portabletext/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { MaybeWatermark } from '@/components/Watermark'
+import { localeHref } from '@/lib/i18n/href'
 import { getTranslator } from '@/lib/i18n/server'
 import { urlFor } from '@/lib/sanity/image'
 import type { FeaturedSection } from '@/types/sanity'
@@ -40,7 +41,7 @@ export function FeaturedSectionComponent({ data, locale }: FeaturedSectionCompon
                 )}
                 {column.link?.slug?.current && (
                   <Link
-                    href={`/${column.link.slug.current}`}
+                    href={localeHref(`/${column.link.slug.current}`, locale)}
                     className={`${styles.featuredCta} site-button`}
                     aria-label={
                       column.heading ? `${t('Vis mer om')} ${column.heading}` : t('Vis mer')

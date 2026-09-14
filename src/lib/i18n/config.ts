@@ -24,25 +24,20 @@ export function isLocale(value: string): value is Locale {
 }
 
 /**
- * Absolute origin for a locale, used for canonicals, hreflang and sitemaps.
+ * Absolute base for a locale, used for canonicals, hreflang and sitemaps.
  *
- * Derived from NEXT_PUBLIC_SITE_URL so preview deployments and local runs do
- * not emit production URLs. The English origin is the same host with an `en.`
- * label, which is what the DNS and the Netlify domain alias are set up for.
+ * Both languages live on one host; English is the `/en` path prefix. The
+ * subdomain was dropped because it was six days old, had been broken the whole
+ * time, and keeping it would have made every deploy wait on a DNS change.
  */
 export function originFor(locale: Locale): string {
   const origin = siteUrl()
-  if (locale !== 'en') return origin
-
-  const url = new URL(origin)
-  url.hostname = url.hostname.startsWith('en.') ? url.hostname : `en.${url.hostname}`
-  return url.toString().replace(/\/+$/, '')
+  return locale === defaultLocale ? origin : `${origin}/${locale}`
 }
 
 /**
- * Strips the internal `/nb` or `/en` prefix that proxy.ts rewrites onto the
- * path, so links built from usePathname() point at the public URL rather than
- * leaking the segment onto the other host.
+ * Strips the `/nb` or `/en` prefix from a pathname, so links built from
+ * usePathname() do not accumulate it.
  */
 export function publicPath(pathname: string): string {
   const stripped = pathname.replace(/^\/(?:nb|en)(?=\/|$)/, '')

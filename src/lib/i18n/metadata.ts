@@ -4,18 +4,23 @@ import { defaultLocale, isLocale, type Locale, locales, originFor } from './conf
 /**
  * Canonical + hreflang for one page.
  *
- * Both locales serve the same paths — only the host differs — so the alternates
- * are the same path on each origin. Previously these lived only on the root
- * layout and always pointed at the two front pages, which told crawlers every
- * English page's Norwegian counterpart was the home page.
+ * Both locales serve the same paths under a different prefix, so the alternates
+ * are the same path on each locale base. Previously these lived only on the
+ * root layout and always pointed at the two front pages, which told crawlers
+ * every English page's Norwegian counterpart was the home page.
  */
 export function alternatesFor(path: string, locale: string): Metadata['alternates'] {
   const resolved: Locale = isLocale(locale) ? locale : defaultLocale
   const clean = path === '/' ? '' : path.replace(/\/+$/, '')
 
+  // originFor already carries the locale prefix, so the root must not append a
+  // trailing slash — /en/ redirects to /en, and a canonical must not point at a
+  // redirect.
+  const join = (l: Locale) => (clean ? `${originFor(l)}${clean}` : originFor(l))
+
   return {
-    canonical: `${originFor(resolved)}${clean || '/'}`,
-    languages: Object.fromEntries(locales.map((l) => [l, `${originFor(l)}${clean || '/'}`])),
+    canonical: join(resolved),
+    languages: Object.fromEntries(locales.map((l) => [l, join(l)])),
   }
 }
 

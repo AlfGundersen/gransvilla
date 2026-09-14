@@ -4,7 +4,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useCallback, useState } from 'react'
 import { WatermarkClient } from '@/components/WatermarkClient'
-import { useT } from '@/lib/i18n/provider'
+import { localeHref } from '@/lib/i18n/href'
+import { useLocale, useT } from '@/lib/i18n/provider'
 import { urlFor } from '@/lib/sanity/image'
 import type { EventsSection } from '@/types/sanity'
 import styles from './EventsSection.module.css'
@@ -15,6 +16,7 @@ interface EventsSectionComponentProps {
 }
 
 export function EventsSectionComponent({ data, watermarkSrc }: EventsSectionComponentProps) {
+  const locale = useLocale()
   const t = useT()
   const items = data.items ?? []
   const [activeIndex, setActiveIndex] = useState(0)
@@ -54,7 +56,7 @@ export function EventsSectionComponent({ data, watermarkSrc }: EventsSectionComp
                   {items.map((item, index) => (
                     <li key={item._key}>
                       <Link
-                        href={`/${item.event.slug.current}`}
+                        href={localeHref(`/${item.event.slug.current}`, locale)}
                         className={`${styles.eventsNavLink} ${index === activeIndex ? styles.eventsNavLinkActive : ''}`}
                         onMouseEnter={() => setActiveIndex(index)}
                         onFocus={() => setActiveIndex(index)}
@@ -66,7 +68,7 @@ export function EventsSectionComponent({ data, watermarkSrc }: EventsSectionComp
                   ))}
                 </ul>
                 <Link
-                  href={`/${activeItem.event.slug.current}`}
+                  href={localeHref(`/${activeItem.event.slug.current}`, locale)}
                   className={`${styles.eventsMobileButton} site-button`}
                 >
                   Om {activeItem.event.title}

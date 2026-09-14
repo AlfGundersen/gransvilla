@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { useT } from '@/lib/i18n/provider'
+import { localeHref } from '@/lib/i18n/href'
+import { useLocale, useT } from '@/lib/i18n/provider'
 import styles from './NewsletterForm.module.css'
 
 interface NewsletterFormProps {
@@ -10,6 +11,7 @@ interface NewsletterFormProps {
 }
 
 export function NewsletterForm({ idPrefix }: NewsletterFormProps) {
+  const locale = useLocale()
   const [email, setEmail] = useState('')
   const [consent, setConsent] = useState(false)
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
@@ -67,7 +69,7 @@ export function NewsletterForm({ idPrefix }: NewsletterFormProps) {
         />
         <span>
           {t('Jeg samtykker til')}{' '}
-          <a href="/personvern" target="_blank" rel="noopener noreferrer">
+          <a href={localeHref('/personvern', locale)} target="_blank" rel="noopener noreferrer">
             {t('personvern')}
           </a>{' '}
           {t('og lagring av e-post for nyhetsbrev.')}

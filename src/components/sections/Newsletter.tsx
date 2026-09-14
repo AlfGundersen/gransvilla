@@ -1,10 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { useT } from '@/lib/i18n/provider'
+import { localeHref } from '@/lib/i18n/href'
+import { useLocale, useT } from '@/lib/i18n/provider'
 import styles from './Newsletter.module.css'
 
 export default function Newsletter() {
+  const locale = useLocale()
   const t = useT()
   const [email, setEmail] = useState('')
   const [consent, setConsent] = useState(false)
@@ -74,7 +76,11 @@ export default function Newsletter() {
               />
               <span>
                 {t('Jeg samtykker til')}{' '}
-                <a href="/personvern" target="_blank" rel="noopener noreferrer">
+                <a
+                  href={localeHref('/personvern', locale)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {t('personvern')}
                 </a>{' '}
                 {t('og lagring av e-post for nyhetsbrev.')}

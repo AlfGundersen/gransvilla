@@ -4,7 +4,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 import { useCart } from '@/context/CartContext'
-import { useT } from '@/lib/i18n/provider'
+import { localeHref } from '@/lib/i18n/href'
+import { useLocale, useT } from '@/lib/i18n/provider'
 import { shopifyImageUrl } from '@/lib/shopify/image'
 import styles from './page.module.css'
 import { VariantModal } from './VariantModal'
@@ -31,6 +32,7 @@ type ProductCardProps = {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const locale = useLocale()
   const t = useT()
   const { addToCart } = useCart()
   const [isAdding, setIsAdding] = useState(false)
@@ -120,7 +122,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                     : t('Legg i handlekurv')}
             </button>
             <Link
-              href={`/butikken/${product.handle}`}
+              href={localeHref(`/butikken/${product.handle}`, locale)}
               className={`${styles.shopReadMoreButton} site-button`}
             >
               {t('Les mer')}
@@ -156,7 +158,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                   : t('Legg i handlekurv')}
           </button>
           <Link
-            href={`/butikken/${product.handle}`}
+            href={localeHref(`/butikken/${product.handle}`, locale)}
             className={`${styles.shopReadMoreButton} site-button`}
           >
             {t('Les mer')}

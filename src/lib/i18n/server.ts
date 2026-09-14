@@ -3,8 +3,9 @@ import 'server-only'
 import messages from '../../../messages/en.json'
 import { defaultLocale, isLocale, type Locale } from './config'
 import { createTranslator, normalizeKey, type Translate } from './dictionary'
+import { localeHref } from './href'
 import { translateMissing } from './runtime'
-import { collectStrings, walkContent } from './walk'
+import { collectStrings, walkContent, walkLinks } from './walk'
 
 const dictionaries: Record<Locale, Record<string, string>> = {
   nb: {},
@@ -46,5 +47,6 @@ export async function translateContent<T>(payload: T, locale: string): Promise<T
   const fetched = missing.length ? await translateMissing(missing, resolved) : {}
   const translate = createTranslator(resolved, { ...dictionary, ...fetched })
 
-  return walkContent(payload, translate)
+  const translated = walkContent(payload, translate)
+  return walkLinks(translated, (href) => localeHref(href, resolved))
 }

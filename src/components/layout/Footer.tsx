@@ -6,7 +6,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { NewsletterForm } from '@/components/newsletter/NewsletterForm'
 import { useCookieConsent } from '@/context/CookieConsentContext'
-import { useT } from '@/lib/i18n/provider'
+import { localeHref } from '@/lib/i18n/href'
+import { useLocale, useT } from '@/lib/i18n/provider'
 import type { NavLink, SocialLink } from '@/types/sanity'
 import { socialPlatformLabels } from '@/types/sanity'
 import styles from './Footer.module.css'
@@ -30,6 +31,7 @@ export default function Footer({
   siteDescription,
   faviconUrl,
 }: FooterProps) {
+  const locale = useLocale()
   const t = useT()
   const { openSettings } = useCookieConsent()
 
@@ -55,7 +57,7 @@ export default function Footer({
             <ul className={styles.linkList}>
               {navigation.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href}>{link.label}</Link>
+                  <Link href={localeHref(link.href, locale)}>{link.label}</Link>
                 </li>
               ))}
             </ul>
@@ -132,13 +134,13 @@ export default function Footer({
 
         {/* Bottom bar */}
         <div className={styles.bottom}>
-          <Link href="/framdrift" className={styles.legalLink}>
+          <Link href={localeHref('/framdrift', locale)} className={styles.legalLink}>
             Framdrift
           </Link>
-          <Link href="/personvern" className={styles.legalLink}>
+          <Link href={localeHref('/personvern', locale)} className={styles.legalLink}>
             {t('Personvernerklæring')}
           </Link>
-          <Link href="/salgsvilkar" className={styles.legalLink}>
+          <Link href={localeHref('/salgsvilkar', locale)} className={styles.legalLink}>
             {t('Salgsvilkår')}
           </Link>
           <button type="button" className={styles.legalLink} onClick={openSettings}>

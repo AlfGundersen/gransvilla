@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { useT } from '@/lib/i18n/provider'
+import { localeHref } from '@/lib/i18n/href'
+import { useLocale, useT } from '@/lib/i18n/provider'
 import styles from './page.module.css'
 
 interface FormData {
@@ -13,6 +14,7 @@ interface FormData {
 }
 
 export function ContactForm() {
+  const locale = useLocale()
   const t = useT()
   const [formData, setFormData] = useState<FormData>({
     firstName: '',
@@ -199,7 +201,7 @@ export function ContactForm() {
         <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
         <span>
           {t('Jeg samtykker til at mine personopplysninger behandles i henhold til')}{' '}
-          <a href="/personvern" target="_blank" rel="noopener noreferrer">
+          <a href={localeHref('/personvern', locale)} target="_blank" rel="noopener noreferrer">
             {t('personvernerklæringen')}
           </a>
           .

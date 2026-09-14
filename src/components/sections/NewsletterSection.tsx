@@ -2,7 +2,8 @@
 
 import { PortableText } from '@portabletext/react'
 import { useState } from 'react'
-import { useT } from '@/lib/i18n/provider'
+import { localeHref } from '@/lib/i18n/href'
+import { useLocale, useT } from '@/lib/i18n/provider'
 import type { NewsletterSection } from '@/types/sanity'
 import styles from './NewsletterSection.module.css'
 
@@ -11,6 +12,7 @@ interface NewsletterSectionComponentProps {
 }
 
 export function NewsletterSectionComponent({ data }: NewsletterSectionComponentProps) {
+  const locale = useLocale()
   const t = useT()
   const { heading = 'Meld deg på nyhetsbrevet', description } = data
   const [email, setEmail] = useState('')
@@ -88,7 +90,11 @@ export function NewsletterSectionComponent({ data }: NewsletterSectionComponentP
               />
               <span>
                 {t('Jeg samtykker til')}{' '}
-                <a href="/personvern" target="_blank" rel="noopener noreferrer">
+                <a
+                  href={localeHref('/personvern', locale)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {t('personvern')}
                 </a>{' '}
                 {t('og lagring av e-post for nyhetsbrev.')}

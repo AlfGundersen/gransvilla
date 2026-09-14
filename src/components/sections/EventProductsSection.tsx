@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { localeHref } from '@/lib/i18n/href'
 import { getTranslator } from '@/lib/i18n/server'
 import type { Product } from '@/lib/shopify/types'
 import { EventProductCard, EventProductSingle } from './EventProductCard'
@@ -30,7 +31,7 @@ export function EventProductsSection({
         <p className={styles.eventProductsSubtext}>
           {t('Produkter knyttet til dette arrangementet')}
         </p>
-        <Link href="/butikken" className={styles.eventProductsLink}>
+        <Link href={localeHref('/butikken', locale)} className={styles.eventProductsLink}>
           {t('Se alle produkter')}
         </Link>
       </div>

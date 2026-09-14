@@ -128,12 +128,14 @@ export default async function SlugPage({ params }: Props) {
           <div className={styles.eventGrid}>
             {titleBlock}
             {featuredBlock}
-            {sections[0] && <PageSectionRenderer sections={[sections[0]]} cta={knapp} />}
+            {sections[0] && (
+              <PageSectionRenderer locale={locale} sections={[sections[0]]} cta={knapp} />
+            )}
           </div>
           <EventProductsSection products={eventProducts} locale={locale} />
           {sections.length > 1 && (
             <div className={styles.eventGrid}>
-              <PageSectionRenderer sections={sections.slice(1)} />
+              <PageSectionRenderer locale={locale} sections={sections.slice(1)} />
             </div>
           )}
         </>
@@ -141,7 +143,9 @@ export default async function SlugPage({ params }: Props) {
         <div className={styles.eventGrid}>
           {titleBlock}
           {featuredBlock}
-          {sections.length > 0 && <PageSectionRenderer sections={sections} cta={knapp} />}
+          {sections.length > 0 && (
+            <PageSectionRenderer locale={locale} sections={sections} cta={knapp} />
+          )}
         </div>
       )}
     </div>

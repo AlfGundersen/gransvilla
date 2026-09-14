@@ -6,7 +6,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import LanguageSwitcher from '@/components/i18n/LanguageSwitcher'
 import { useCart } from '@/context/CartContext'
-import { useT } from '@/lib/i18n/provider'
+import { localeHref } from '@/lib/i18n/href'
+import { useLocale, useT } from '@/lib/i18n/provider'
 import type { NavLink, SocialLink } from '@/types/sanity'
 import { socialPlatformLabels } from '@/types/sanity'
 import styles from './Header.module.css'
@@ -17,6 +18,7 @@ interface HeaderProps {
 }
 
 export default function Header({ navigation, socialLinks }: HeaderProps) {
+  const locale = useLocale()
   const t = useT()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
@@ -155,7 +157,7 @@ export default function Header({ navigation, socialLinks }: HeaderProps) {
               style={{ transitionDelay: isMenuOpen ? `${index * 40}ms` : '0ms' }}
             >
               <Link
-                href={item.href}
+                href={localeHref(item.href, locale)}
                 className={styles.menuLink}
                 onClick={(e) => {
                   if (!e.metaKey && !e.ctrlKey && !e.shiftKey) closeMenu()
@@ -211,7 +213,11 @@ export default function Header({ navigation, socialLinks }: HeaderProps) {
           </div>
 
           {/* Center: Logo */}
-          <Link href="/" className={styles.logo} aria-label={t('GransVilla logo – Til forsiden')}>
+          <Link
+            href={localeHref('/', locale)}
+            className={styles.logo}
+            aria-label={t('GransVilla logo – Til forsiden')}
+          >
             <Image src="/logo.svg" alt="" width={128} height={22} priority aria-hidden="true" />
           </Link>
 

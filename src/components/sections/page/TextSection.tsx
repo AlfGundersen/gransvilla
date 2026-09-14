@@ -1,6 +1,7 @@
 import { PortableText } from '@portabletext/react'
 import Link from 'next/link'
 import { sectionAnchor } from '@/lib/anchor'
+import { localeHref } from '@/lib/i18n/href'
 import type { Knapp, TekstSeksjon } from '@/types/sanity'
 import styles from './TextSection.module.css'
 
@@ -8,11 +9,13 @@ interface TextSectionProps {
   data: TekstSeksjon
   /** Page-level CTA (text and/or button) shown in the left column */
   cta?: Knapp
+  locale: string
 }
 
-export function TextSection({ data, cta }: TextSectionProps) {
+export function TextSection({ data, cta, locale }: TextSectionProps) {
   const ctaSlug = cta?.lenke?.slug?.current
-  const ctaHref = ctaSlug ? `/${ctaSlug}` : cta?.internLenke
+  const rawHref = ctaSlug ? `/${ctaSlug}` : cta?.internLenke
+  const ctaHref = rawHref ? localeHref(rawHref, locale) : undefined
   const hasCta = Boolean(cta?.beskrivelse?.length || (cta?.tekst && ctaHref))
 
   return (

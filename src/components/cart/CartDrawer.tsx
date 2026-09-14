@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useCallback, useEffect, useRef } from 'react'
 import { useCart } from '@/context/CartContext'
+import { localeHref } from '@/lib/i18n/href'
 import { useLocale, useT } from '@/lib/i18n/provider'
 import styles from './CartDrawer.module.css'
 
@@ -108,7 +109,11 @@ export function CartDrawer() {
         {!cart || cart.items.length === 0 ? (
           <div className={styles.empty}>
             <p>{t('Handlekurven er tom')}</p>
-            <Link href="/butikken" className={styles.continueLink} onClick={closeCart}>
+            <Link
+              href={localeHref('/butikken', locale)}
+              className={styles.continueLink}
+              onClick={closeCart}
+            >
               {t('Fortsett å handle')}
             </Link>
           </div>
@@ -134,7 +139,7 @@ export function CartDrawer() {
                   </div>
                   <div className={styles.itemInfo}>
                     <Link
-                      href={`/butikken/${item.handle}`}
+                      href={localeHref(`/butikken/${item.handle}`, locale)}
                       className={styles.itemTitle}
                       onClick={closeCart}
                     >
@@ -189,7 +194,7 @@ export function CartDrawer() {
                 </span>
               </div>
               <Link
-                href="/butikken/checkout"
+                href={localeHref('/butikken/checkout', locale)}
                 className={`${styles.checkoutButton} site-button`}
                 onClick={closeCart}
               >

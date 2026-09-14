@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { MaybeWatermark } from '@/components/Watermark'
+import { localeHref } from '@/lib/i18n/href'
 import { alternatesFor } from '@/lib/i18n/metadata'
 import { getTranslator, translateContent } from '@/lib/i18n/server'
 import { getBlurDataURL } from '@/lib/sanity/blur'
@@ -132,7 +133,10 @@ export default async function ArrangementerPage({ params }: Params) {
                       <PortableText value={event.description} />
                     </div>
                   )}
-                  <Link href={`/${event.slug.current}`} className={`${styles.cta} site-button`}>
+                  <Link
+                    href={localeHref(`/${event.slug.current}`, locale)}
+                    className={`${styles.cta} site-button`}
+                  >
                     {t('Les mer')}
                   </Link>
                 </div>

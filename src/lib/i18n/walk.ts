@@ -97,3 +97,31 @@ export function collectStrings(node: unknown): string[] {
   })
   return [...found]
 }
+
+/**
+ * Rewrites internal links inside a CMS payload to the active locale.
+ *
+ * Editors write Norwegian URLs in Sanity — both relative (`/om-oss`) and
+ * absolute (`https://gransvilla.no/om-oss`). Those are correct for Norwegian,
+ * and because slugs are identical across languages the English counterpart is
+ * the same path with the locale prefix, so no lookup table is needed.
+ *
+ * Separate from walkContent because `href` is on its skip list: link targets
+ * must never be fed to the translator.
+ */
+export function walkLinks<T>(node: T, rewrite: (href: string) => string): T {
+  if (Array.isArray(node)) {
+    return node.map((entry) => walkLinks(entry, rewrite)) as T
+  }
+
+  if (node && typeof node === 'object') {
+    const out: Record<string, unknown> = {}
+    for (const [key, value] of Object.entries(node as Record<string, unknown>)) {
+      out[key] =
+        key === 'href' && typeof value === 'string' ? rewrite(value) : walkLinks(value, rewrite)
+    }
+    return out as T
+  }
+
+  return node
+}

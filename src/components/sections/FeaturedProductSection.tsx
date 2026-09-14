@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { localeHref } from '@/lib/i18n/href'
 import { getTranslator, translateContent } from '@/lib/i18n/server'
 import { getProducts } from '@/lib/shopify'
 import { shopifyImageUrl } from '@/lib/shopify/image'
@@ -37,7 +38,7 @@ export async function FeaturedProductSectionComponent({
   // Use selected product if listed, otherwise fall back to first listed product
   const product = selectedProduct ?? products[0]
 
-  const productUrl = `/butikken/${product.handle}`
+  const productUrl = localeHref(`/butikken/${product.handle}`, locale)
   const productImage = product.images[0]
 
   return (
@@ -53,7 +54,10 @@ export async function FeaturedProductSectionComponent({
             <Link href={productUrl} className={`${styles.featProductBtnPrimary} site-button`}>
               {t('Les mer')}
             </Link>
-            <Link href="/butikken" className={`${styles.featProductBtnSecondary} site-button`}>
+            <Link
+              href={localeHref('/butikken', locale)}
+              className={`${styles.featProductBtnSecondary} site-button`}
+            >
               {t('Se alle produkter')}
             </Link>
           </div>

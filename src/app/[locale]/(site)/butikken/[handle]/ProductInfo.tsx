@@ -4,6 +4,7 @@ import parse from 'html-react-parser'
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
+import { localeHref } from '@/lib/i18n/href'
 import { useLocale, useT } from '@/lib/i18n/provider'
 import type { Product } from '@/lib/shopify/types'
 import { AddToCartButton } from './AddToCartButton'
@@ -22,7 +23,8 @@ interface ProductInfoProps {
 
 export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
   const t = useT()
-  const numberLocale = useLocale() === 'en' ? 'en-GB' : 'nb-NO'
+  const locale = useLocale()
+  const numberLocale = locale === 'en' ? 'en-GB' : 'nb-NO'
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -292,7 +294,11 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
                   />
                   <span>
                     Jeg samtykker til{' '}
-                    <a href="/personvern" target="_blank" rel="noopener noreferrer">
+                    <a
+                      href={localeHref('/personvern', locale)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       personvern
                     </a>
                   </span>
@@ -333,7 +339,7 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
           {relatedEvents.map((event) => (
             <Link
               key={event._id}
-              href={`/${event.slug.current}`}
+              href={localeHref(`/${event.slug.current}`, locale)}
               className={styles.relatedEventBanner}
             >
               <span className={styles.relatedEventText}>

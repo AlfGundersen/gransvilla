@@ -1,32 +1,30 @@
 import type { MetadataRoute } from 'next'
 import { groq } from 'next-sanity'
-import { locales, originFor } from '@/lib/i18n/config'
+import { defaultLocale, type Locale, locales, originFor } from '@/lib/i18n/config'
 import { client } from '@/lib/sanity/client'
 import { getProducts } from '@/lib/shopify'
 
 /**
  * One sitemap covering both languages.
  *
- * Every path exists on both origins — only the host differs — so each entry
- * carries the hreflang pair rather than the file being duplicated per host.
+ * Every path exists in both languages — English under the `/en` prefix — so
+ * each entry carries the hreflang pair.
  *
  * Paths come from the routes and Sanity slugs that actually exist. The previous
  * hardcoded list had drifted: /kantine and /praktisk-info were listed but have
  * no Sanity document, and /om-oss appeared twice because it is also a Sanity
  * page.
  */
-const BASE_URL = originFor('nb')
-
 function entry(
   path: string,
   rest: Omit<MetadataRoute.Sitemap[number], 'url' | 'alternates'>,
 ): MetadataRoute.Sitemap[number] {
   const clean = path === '/' ? '' : path
+  const join = (l: Locale) => (clean ? `${originFor(l)}${clean}` : originFor(l))
+
   return {
-    url: `${BASE_URL}${clean || '/'}`,
-    alternates: {
-      languages: Object.fromEntries(locales.map((l) => [l, `${originFor(l)}${clean || '/'}`])),
-    },
+    url: join(defaultLocale),
+    alternates: { languages: Object.fromEntries(locales.map((l) => [l, join(l)])) },
     ...rest,
   }
 }

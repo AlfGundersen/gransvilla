@@ -7,7 +7,9 @@
   padding: var(--space-lg) 0 var(--space-lg) var(--space-lg);
 }
 
-.textSection a {
+/* Prose links stay underlined; the CTA is a button and must not be.
+   Without the :not(), this rule outranks .textCtaButton on specificity. */
+.textSection a:not(.textCtaButton) {
   text-decoration: underline;
 }
 
