@@ -8,6 +8,7 @@ import { RichText } from '@/components/RichText'
 import { useCookieConsent } from '@/context/CookieConsentContext'
 import { localeHref } from '@/lib/i18n/href'
 import { useLocale, useT } from '@/lib/i18n/provider'
+import { INVERTED_STORAGE_KEY } from '@/lib/inverted-colors'
 import type { NavLink, SocialLink } from '@/types/sanity'
 import { socialPlatformLabels } from '@/types/sanity'
 import styles from './Footer.module.css'
@@ -36,7 +37,12 @@ export default function Footer({
   const { openSettings } = useCookieConsent()
 
   const handleColorFlip = () => {
-    document.documentElement.classList.toggle('inverted')
+    const inverted = document.documentElement.classList.toggle('inverted')
+    try {
+      localStorage.setItem(INVERTED_STORAGE_KEY, inverted ? '1' : '0')
+    } catch {
+      // Storage can be unavailable; the flip still applies for this page view.
+    }
   }
 
   return (

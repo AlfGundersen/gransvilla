@@ -60,6 +60,18 @@
   mix-blend-mode: multiply;
 }
 
+/*
+ * The drawing is black line work on a white fill with a transparent surround.
+ * Multiply is what hides that fill against the light background; on the dark
+ * one it would swallow the lines instead, so the blend has to flip with the
+ * colours. Inverted, the fill goes dark and screens away while the lines come
+ * back as cream.
+ */
+:global(html.inverted) .timelineImageWrap img {
+  filter: var(--invert-ink);
+  mix-blend-mode: screen;
+}
+
 /* Right column - Heading and text */
 .timelineTextCol {
   display: flex;

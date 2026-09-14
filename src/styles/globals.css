@@ -281,6 +281,11 @@ html.inverted {
   --color-primary: #F5F0E3;
   --color-secondary: #c9c4b7;
   --color-border: #F5F0E3;
+
+  /* Turns black artwork into the cream foreground rather than plain white, so
+     inverted line art reads as the same ink as the text beside it. */
+  --invert-ink: invert(92%) sepia(8%) saturate(365%) hue-rotate(10deg) brightness(103%)
+    contrast(89%);
 }
 
 html.inverted body {
@@ -288,7 +293,7 @@ html.inverted body {
 }
 
 html.inverted img[src*="logo"] {
-  filter: invert(92%) sepia(8%) saturate(365%) hue-rotate(10deg) brightness(103%) contrast(89%);
+  filter: var(--invert-ink);
 }
 
 /* --------------------------------------
