@@ -65,6 +65,21 @@
   margin-bottom: 0;
 }
 
+/* Stand-in picture for a section with no heading. Decorative: it exists to
+   fill the column on the wide layout, where the gap would otherwise show. */
+.textPlaceholderCol {
+  padding-top: var(--space-lg);
+  padding-bottom: var(--space-lg);
+}
+
+.textPlaceholderImg {
+  width: 100%;
+  height: auto;
+  display: block;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+}
+
 /* The button sits after the body text, not beside it */
 .textCtaWrap {
   margin-top: var(--space-lg);
@@ -131,6 +146,12 @@
   .textCtaCol {
     grid-column: 1 / -1;
     padding-right: 0;
+  }
+
+  /* Nothing to fill: the columns are stacked here, so the picture would only
+     be one more thing to scroll past. */
+  .textPlaceholderCol {
+    display: none;
   }
 
   .textCtaCol::after {
