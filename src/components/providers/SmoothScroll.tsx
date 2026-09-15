@@ -26,14 +26,21 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
 
     lenisRef.current = lenis
 
+    // The loop has to be cancellable. This effect re-runs on every route
+    // change, so a loop left running would outlive its Lenis instance and
+    // keep calling raf() on a destroyed one — one extra loop per page
+    // visited, all of them on the main thread for the rest of the session.
+    let frame = 0
+
     function raf(time: number) {
       lenis.raf(time)
-      requestAnimationFrame(raf)
+      frame = requestAnimationFrame(raf)
     }
 
-    requestAnimationFrame(raf)
+    frame = requestAnimationFrame(raf)
 
     return () => {
+      cancelAnimationFrame(frame)
       lenis.destroy()
       lenisRef.current = null
     }
