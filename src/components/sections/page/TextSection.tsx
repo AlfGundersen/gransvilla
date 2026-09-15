@@ -4,6 +4,7 @@ import { NewsletterButton } from '@/components/newsletter/NewsletterButton'
 import { RichText } from '@/components/RichText'
 import { sectionAnchor } from '@/lib/anchor'
 import { localeHref } from '@/lib/i18n/href'
+import { knappHref } from '@/lib/knapp'
 import { NEWSLETTER_HREF } from '@/lib/newsletter'
 import { getBlurDataURL } from '@/lib/sanity/blur'
 import { urlFor } from '@/lib/sanity/image'
@@ -19,8 +20,7 @@ interface TextSectionProps {
 }
 
 export async function TextSection({ data, cta, locale }: TextSectionProps) {
-  const ctaSlug = cta?.lenke?.slug?.current
-  const rawHref = ctaSlug ? `/${ctaSlug}` : cta?.internLenke
+  const rawHref = knappHref(cta)
   const ctaHref = rawHref ? localeHref(rawHref, locale) : undefined
   // The newsletter is a modal, not a page, so that choice opens the signup
   // rather than navigating anywhere.

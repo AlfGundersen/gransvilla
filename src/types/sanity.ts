@@ -142,10 +142,15 @@ export interface TekstSeksjon {
 
 // Optional page-level CTA (event and page documents) — text and/or button,
 // rendered in the left column of the page's first text section
+export type Lenketype = 'snarvei' | 'side' | 'url'
+
 export interface Knapp {
   beskrivelse?: BlockContent
   tekst?: string
+  /** Absent on buttons stored before the choice existed; inferred from the fields. */
+  lenketype?: Lenketype
   internLenke?: string
+  url?: string
   lenke?: {
     title?: string
     slug?: { current: string }

@@ -373,7 +373,9 @@ export const eventQuery = groq`
     knapp {
       "beskrivelse": beskrivelse[defined(_type)],
       tekst,
+      lenketype,
       internLenke,
+      url,
       lenke-> {
         title,
         slug
@@ -401,7 +403,9 @@ export const pageQuery = groq`
     knapp {
       "beskrivelse": beskrivelse[defined(_type)],
       tekst,
+      lenketype,
       internLenke,
+      url,
       lenke-> {
         title,
         slug
