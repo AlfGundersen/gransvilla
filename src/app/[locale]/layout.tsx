@@ -13,7 +13,6 @@ import { getTranslator, liveClientMessages } from '@/lib/i18n/server'
 import { INVERTED_INIT_SCRIPT } from '@/lib/inverted-colors'
 import { client } from '@/lib/sanity/client'
 import { urlFor } from '@/lib/sanity/image'
-import { SanityLive } from '@/lib/sanity/live'
 import '@/styles/globals.css'
 
 const inter = Inter({
@@ -115,7 +114,8 @@ export default async function RootLayout({
         <I18nProvider locale={lang} overrides={clientOverrides}>
           {children}
         </I18nProvider>
-        <SanityLive />
+        {/* DEBUG(nav-bisect): SanityLive's EventSource removed to test whether an
+            open SSE connection is what cancels address-bar navigations on iOS. */}
         {isDraftMode && (
           <>
             <VisualEditing />

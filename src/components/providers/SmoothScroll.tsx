@@ -14,6 +14,12 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
       return
     }
 
+    // DEBUG(nav-bisect): ?nolenis skips smooth scrolling entirely, so one
+    // deploy can test the page with and without it.
+    if (new URLSearchParams(window.location.search).has('nolenis')) {
+      return
+    }
+
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - 2 ** (-10 * t)),
