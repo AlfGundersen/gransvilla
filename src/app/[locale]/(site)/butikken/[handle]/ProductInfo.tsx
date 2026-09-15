@@ -37,7 +37,8 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
     'idle' | 'loading' | 'success' | 'error'
   >('idle')
 
-  // Initialize from URL params if present
+  // Initialize from URL params if present, then fill in anything that has
+  // only one answer.
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>(() => {
     const initial: Record<string, string> = {}
     product.options?.forEach((option) => {
@@ -45,6 +46,23 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
         const paramValue = searchParams.get(option.name)
         if (paramValue && option.values.includes(paramValue)) {
           initial[option.name] = paramValue
+          return
+        }
+
+        // A single date left to sell is not a choice. Picking it here opens
+        // the page on the real price and an add-to-cart button, instead of a
+        // disabled "Velg en dato" the visitor has to satisfy first.
+        const sellable = option.values.filter((value) =>
+          product.variants?.some(
+            (variant) =>
+              variant.availableForSale &&
+              variant.selectedOptions?.some(
+                (opt) => opt.name === option.name && opt.value === value,
+              ),
+          ),
+        )
+        if (sellable.length === 1) {
+          initial[option.name] = sellable[0]
         }
       }
     })

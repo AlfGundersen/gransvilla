@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useCart } from '@/context/CartContext'
 import { useLocale, useT } from '@/lib/i18n/provider'
@@ -37,12 +37,20 @@ export function VariantModal({
   const locale = useLocale()
   const numberLocale = locale === 'en' ? 'en-GB' : 'nb-NO'
 
+  // The same rule as the product page: one date for sale is not a choice.
+  // Held as an id rather than a variant so re-renders of the parent cannot
+  // reset a selection the visitor has already made.
+  const soleAvailableVariantId = useMemo(() => {
+    const sellable = variants.filter((variant) => variant.availableForSale)
+    return sellable.length === 1 ? sellable[0].id : null
+  }, [variants])
+
   // Reset selection when modal opens
   useEffect(() => {
     if (isOpen) {
-      setSelectedVariantId(null)
+      setSelectedVariantId(soleAvailableVariantId)
     }
-  }, [isOpen])
+  }, [isOpen, soleAvailableVariantId])
 
   // Close on escape key
   useEffect(() => {
