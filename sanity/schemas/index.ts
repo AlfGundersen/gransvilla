@@ -27,6 +27,7 @@ import tekstSeksjon from './sections/tekstSeksjon'
 import bildeSeksjon from './sections/bildeSeksjon'
 import bildeTekstSeksjon from './sections/bildeTekstSeksjon'
 import bildegalleriSeksjon from './sections/bildegalleriSeksjon'
+import nyhetsbrevSeksjon from './sections/nyhetsbrevSeksjon'
 
 export const schemaTypes = [
   // Documents
@@ -58,4 +59,5 @@ export const schemaTypes = [
   bildeSeksjon,
   bildeTekstSeksjon,
   bildegalleriSeksjon,
+  nyhetsbrevSeksjon,
 ]

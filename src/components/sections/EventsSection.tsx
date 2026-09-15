@@ -42,14 +42,14 @@ export function EventsSectionComponent({ data, watermarkSrc }: EventsSectionComp
   ].filter(Boolean)
 
   return (
-    <section className={styles.eventsSection} aria-label={t('Arrangementer')}>
+    <section className={styles.eventsSection} aria-label={t('Andre arrangementer')}>
       <div className={styles.eventsContainer}>
         <div
           className={`${styles.eventsGrid} ${!hasAnySecondImage || singleImage ? styles.eventsGrid2col : styles.eventsGrid3col}`}
         >
           {/* Navigation column */}
           <div className={styles.eventsNav}>
-            <h2 className={styles.eventsHeading}>{t('Arrangementer')}</h2>
+            <h2 className={styles.eventsHeading}>{t('Andre arrangementer')}</h2>
             <div className={styles.eventsMobileTop}>
               <div className={styles.eventsMobileNavCol}>
                 <ul className={styles.eventsNavList}>

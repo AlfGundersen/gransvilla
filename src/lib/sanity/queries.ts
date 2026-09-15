@@ -305,6 +305,17 @@ export const eventsQuery = groq`
   }
 `
 
+// Sibling events for the in-page navigation on an event page. Titles and slugs
+// only — pulling the full event would send every description through the
+// translator just to render a list of links.
+export const otherEventsQuery = groq`
+  *[_type == "event" && slug.current != $slug] | order(_createdAt desc) {
+    _id,
+    title,
+    slug
+  }
+`
+
 // Event page sections fragment
 const eventSectionsFragment = groq`
   sections[] {
@@ -343,6 +354,10 @@ const eventSectionsFragment = groq`
         ${imageFragment},
         alt
       }
+    },
+    _type == "nyhetsbrevSeksjon" => {
+      overskrift,
+      "tekst": tekst[defined(_type)]
     }
   }
 `

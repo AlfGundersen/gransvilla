@@ -3,6 +3,7 @@ import type { EventPageSection, Knapp } from '@/types/sanity'
 import { GallerySection } from './GallerySection'
 import { ImageSection } from './ImageSection'
 import { ImageTextSection } from './ImageTextSection'
+import { NewsletterSection } from './NewsletterSection'
 import { TextSection } from './TextSection'
 
 interface PageSectionRendererProps {
@@ -68,6 +69,8 @@ export async function PageSectionRenderer({ sections, cta, locale }: PageSection
             )
           case 'bildegalleriSeksjon':
             return <GallerySection key={section._key} data={section} />
+          case 'nyhetsbrevSeksjon':
+            return <NewsletterSection key={section._key} data={section} />
           default:
             console.warn('Unknown page section type:', (section as { _type: string })._type)
             return null

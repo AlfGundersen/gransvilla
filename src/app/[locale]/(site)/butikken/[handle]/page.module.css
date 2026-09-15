@@ -4,6 +4,12 @@
   padding: var(--space-xl) var(--container-padding);
 }
 
+/* The title lives in the right-hand column, so the link back to the listing
+   sits above the whole two-column block rather than inside one of them. */
+.productBack {
+  margin-bottom: var(--space-lg);
+}
+
 .productContainer {
   display: grid;
   grid-template-columns: 1fr 1fr;

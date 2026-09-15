@@ -1,0 +1,93 @@
+/* Mirrors TextSection: heading in the first inner column, content in the rest,
+   with the same hairline between them. */
+.newsletterSection {
+  grid-column: 2 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--space-lg);
+  position: relative;
+  padding: var(--space-lg) 0 var(--space-lg) var(--space-lg);
+}
+
+.newsletterSection::after {
+  content: '';
+  position: absolute;
+  top: var(--space-lg);
+  bottom: var(--space-lg);
+  left: 0;
+  width: 1px;
+  background-color: var(--color-border);
+}
+
+.newsletterHeadingCol {
+  grid-column: 1 / 2;
+  position: relative;
+  padding-right: var(--space-lg);
+}
+
+.newsletterHeadingCol::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 1px;
+  background-color: var(--color-border);
+}
+
+.newsletterHeading {
+  font-family: var(--font-heading);
+  font-size: var(--text-3xl);
+  font-weight: var(--font-heading-weight);
+  line-height: 1.2;
+  margin: 0;
+}
+
+.newsletterBody {
+  grid-column: 2 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  /* The form's inputs stretch to the column otherwise, which reads as a
+     full-width field next to short body copy. */
+  max-width: 34rem;
+}
+
+.newsletterText {
+  font-size: var(--text-base);
+  line-height: 1.7;
+}
+
+.newsletterText p {
+  margin: 0 0 var(--space-md);
+}
+
+.newsletterText p:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 767px) {
+  .newsletterSection {
+    grid-column: 1 / -1;
+    grid-template-columns: 1fr;
+    padding-left: 0;
+  }
+
+  .newsletterSection::after {
+    display: none;
+  }
+
+  .newsletterHeadingCol {
+    grid-column: 1 / -1;
+    padding-right: 0;
+  }
+
+  .newsletterHeadingCol::after {
+    display: none;
+  }
+
+  .newsletterBody {
+    grid-column: 1 / -1;
+    max-width: none;
+  }
+}
