@@ -68,3 +68,10 @@
     padding-block: 0.125rem;
   }
 }
+
+/* Half-height rich text editor, used by the button's «Tekst» field.
+   Sanity hard-codes height: 19em on the editor; a short note next to a button
+   does not need that, and it pushed the rest of the form off the screen. */
+.compact-text [data-testid="pt-editor"][data-fullscreen="false"] {
+  height: 9.5em;
+}
