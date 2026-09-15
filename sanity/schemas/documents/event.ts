@@ -86,7 +86,6 @@ export default defineType({
         { type: 'bildeSeksjon' },
         { type: 'bildeTekstSeksjon' },
         { type: 'bildegalleriSeksjon' },
-        { type: 'nyhetsbrevSeksjon' },
       ],
       group: 'content',
     }),

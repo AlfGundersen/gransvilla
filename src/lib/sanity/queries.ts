@@ -354,10 +354,6 @@ const eventSectionsFragment = groq`
         ${imageFragment},
         alt
       }
-    },
-    _type == "nyhetsbrevSeksjon" => {
-      overskrift,
-      "tekst": tekst[defined(_type)]
     }
   }
 `

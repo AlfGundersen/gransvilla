@@ -64,6 +64,7 @@ export default defineType({
         list: [
           { title: 'Kontakt', value: '/kontakt' },
           { title: 'Butikken', value: '/butikken' },
+          { title: 'Nyhetsbrev', value: '#nyhetsbrev' },
         ],
       },
       description:
