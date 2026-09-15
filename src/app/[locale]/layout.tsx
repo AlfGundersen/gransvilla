@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { draftMode } from 'next/headers'
 import { groq } from 'next-sanity'
-import { VisualEditing } from 'next-sanity/visual-editing'
 import { DraftModeBanner } from '@/components/pwa/DraftModeBanner'
 import { ServiceWorkerRegistration } from '@/components/pwa/ServiceWorkerRegistration'
 import { JsonLd } from '@/components/seo/JsonLd'
@@ -131,7 +130,6 @@ export default async function RootLayout({
                 /api/revalidate/sanity clears the SANITY_TAG entries on
                 publish, which is what actually refreshes the cached pages. */}
             <SanityLive />
-            <VisualEditing />
             <DraftModeBanner />
           </>
         )}
