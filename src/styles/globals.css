@@ -255,7 +255,7 @@ button {
 
 @media (max-width: 768px) {
   li {
-    line-height: 1;
+    line-height: 1.5;
   }
 
   header li,
