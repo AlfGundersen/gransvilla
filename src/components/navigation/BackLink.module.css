@@ -1,0 +1,28 @@
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  width: fit-content;
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-secondary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.backLink:hover,
+.backLink:focus-visible {
+  color: var(--color-foreground);
+  text-decoration: none;
+}
+
+.arrow {
+  flex-shrink: 0;
+  transition: transform var(--transition-fast);
+}
+
+.backLink:hover .arrow,
+.backLink:focus-visible .arrow {
+  transform: translateX(-4px);
+}

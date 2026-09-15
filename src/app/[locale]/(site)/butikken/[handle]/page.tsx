@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { BackLink } from '@/components/navigation/BackLink'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { locales } from '@/lib/i18n/config'
+import { localeHref } from '@/lib/i18n/href'
 import { alternatesFor, openGraphLocale } from '@/lib/i18n/metadata'
 import { getTranslator, translateContent } from '@/lib/i18n/server'
 import { sanityFetch } from '@/lib/sanity/live'
@@ -64,6 +66,7 @@ export async function generateStaticParams() {
 
 export default async function ProductPage({ params }: Props) {
   const { locale, handle } = await params
+  const t = getTranslator(locale)
   const [rawProduct, { data: rawRelated }] = await Promise.all([
     getProductByHandle(handle),
     sanityFetch({
@@ -96,6 +99,11 @@ export default async function ProductPage({ params }: Props) {
               : 'https://schema.org/OutOfStock',
           },
         }}
+      />
+      <BackLink
+        href={localeHref('/butikken', locale)}
+        label={t('Tilbake til butikken')}
+        className={styles.productBack}
       />
       <div className={styles.productContainer}>
         <ProductGallery images={product.images} title={product.title} />
