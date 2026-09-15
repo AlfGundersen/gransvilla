@@ -81,19 +81,97 @@
   object-fit: cover;
 }
 
-.eventTitle {
+/* The first grid cell: the title on a plain page, and on an event page the
+   back link and the sibling-event nav stacked around it.
+   Span row 1 (featured image) AND row 2 (first section), so the sticky child
+   travels across both and releases after the first section. */
+.titleCol {
   grid-column: 1 / 2;
-  /* Span row 1 (featured image) AND row 2 (first section) so the sticky
-     containing block covers both — sticky releases after first section. */
   grid-row: 1 / span 2;
+  position: relative;
+}
+
+/* The sticky element is a child of the cell rather than the cell itself:
+   Chrome constrains a sticky *grid item* to the whole grid container, not to
+   its own grid area, which let the column slide down over later sections —
+   a full-width gallery puts its heading in this same column. Against a plain
+   block parent the travel stops where the cell does. The background is the
+   second half of that: nothing may show through if it ever does overlap. */
+.titleSticky {
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: calc(var(--header-height) + var(--space-md));
+  background-color: var(--color-background);
+  padding-bottom: var(--space-md);
+}
+
+.eventTitle {
   font-family: var(--font-heading);
   font-size: var(--text-4xl);
   font-weight: var(--font-heading-weight);
   line-height: 1.1;
   margin: 0;
-  position: sticky;
-  top: calc(var(--header-height) + var(--space-md));
-  align-self: start;
+}
+
+.otherEvents {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: var(--space-xl);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border);
+}
+
+.otherEventsHeading {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-normal);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-secondary);
+  margin: 0;
+}
+
+.otherEventsList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.otherEventsItem+.otherEventsItem {
+  border-top: 1px solid var(--color-border);
+}
+
+.otherEventsLink {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding: var(--space-sm) 0;
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  line-height: 1.2;
+  color: var(--color-foreground);
+  text-decoration: none;
+  transition: opacity var(--transition-fast);
+}
+
+.otherEventsLink:hover,
+.otherEventsLink:focus-visible {
+  opacity: 0.6;
+  text-decoration: none;
+}
+
+.otherEventsArrow {
+  transition: transform var(--transition-fast);
+}
+
+.otherEventsLink:hover .otherEventsArrow,
+.otherEventsLink:focus-visible .otherEventsArrow {
+  transform: translateX(4px);
 }
 
 /* Mobile */
@@ -111,11 +189,40 @@
     display: none;
   }
 
-  .eventTitle {
+  .titleCol {
     grid-column: 1 / -1;
     grid-row: auto;
+  }
+
+  .titleSticky {
     position: static;
+    padding-bottom: 0;
+  }
+
+  .eventTitle {
     font-size: var(--text-5xl);
+  }
+
+  /* The nav sits between the title and the hero image here, so it collapses
+     into wrapping chips rather than pushing the image off the first screen. */
+  .otherEventsList {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+
+  .otherEventsItem+.otherEventsItem {
+    border-top: none;
+  }
+
+  .otherEventsLink {
+    border: 1px solid var(--color-border);
+    padding: var(--space-xs) var(--space-md);
+    font-size: var(--text-base);
+  }
+
+  .otherEventsArrow {
+    display: none;
   }
 
   .featuredImage {

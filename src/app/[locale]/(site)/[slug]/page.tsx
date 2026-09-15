@@ -1,18 +1,20 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { EventProductsSection } from '@/components/sections/EventProductsSection'
 import { PageSectionRenderer } from '@/components/sections/page/PageSectionRenderer'
 import { SchemaGenerator } from '@/components/seo/SchemaGenerator'
 import { MaybeWatermark } from '@/components/Watermark'
 import { locales } from '@/lib/i18n/config'
+import { localeHref } from '@/lib/i18n/href'
 import { alternatesFor, openGraphLocale } from '@/lib/i18n/metadata'
 import { getTranslator, translateContent } from '@/lib/i18n/server'
 import { getBlurDataURL } from '@/lib/sanity/blur'
 import { client } from '@/lib/sanity/client'
 import { urlFor } from '@/lib/sanity/image'
 import { sanityFetch } from '@/lib/sanity/live'
-import { eventQuery, eventsQuery, pageQuery } from '@/lib/sanity/queries'
+import { eventQuery, eventsQuery, otherEventsQuery, pageQuery } from '@/lib/sanity/queries'
 import { getProductByHandle, type Product } from '@/lib/shopify'
 import styles from './page.module.css'
 
@@ -27,6 +29,12 @@ export const dynamicParams = true
 
 interface Props {
   params: Promise<{ locale: string; slug: string }>
+}
+
+interface OtherEvent {
+  _id: string
+  title: string
+  slug: { current: string }
 }
 
 export async function generateStaticParams() {
@@ -81,11 +89,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function SlugPage({ params }: Props) {
   const { locale, slug } = await params
-  const content = await translateContent(await fetchContent(slug), locale)
+  const t = getTranslator(locale)
+  const [rawContent, { data: rawOtherEvents }] = await Promise.all([
+    fetchContent(slug),
+    sanityFetch({ query: otherEventsQuery, params: { slug } }) as Promise<{ data: OtherEvent[] }>,
+  ])
+  const content = await translateContent(rawContent, locale)
 
   if (!content) {
     notFound()
   }
+
+  // Only events belong to the /arrangementer listing; a plain page reached at
+  // the same route level has nothing to go back to.
+  const isEvent = content._type === 'event'
+  const otherEvents = isEvent ? await translateContent(rawOtherEvents, locale) : []
 
   const blurDataURL = content.featuredImage?.asset
     ? await getBlurDataURL(content.featuredImage)
@@ -107,7 +125,37 @@ export default async function SlugPage({ params }: Props) {
   // injected after the first section. Otherwise, keep a single grid so the
   // existing section-divider borders work as before.
   const knapp = content.knapp
-  const titleBlock = <h1 className={styles.eventTitle}>{content.title}</h1>
+  const titleBlock = isEvent ? (
+    <div className={styles.titleCol}>
+      <div className={styles.titleSticky}>
+        <h1 className={styles.eventTitle}>{content.title}</h1>
+        {otherEvents.length > 0 && (
+          <nav className={styles.otherEvents} aria-label={t('Andre arrangementer')}>
+            <h2 className={styles.otherEventsHeading}>{t('Andre arrangementer')}</h2>
+            <ul className={styles.otherEventsList}>
+              {otherEvents.map((event) => (
+                <li key={event._id} className={styles.otherEventsItem}>
+                  <Link
+                    href={localeHref(`/${event.slug.current}`, locale)}
+                    className={styles.otherEventsLink}
+                  >
+                    <span>{event.title}</span>
+                    <span className={styles.otherEventsArrow} aria-hidden="true">
+                      →
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
+      </div>
+    </div>
+  ) : (
+    <div className={styles.titleCol}>
+      <h1 className={`${styles.eventTitle} ${styles.titleSticky}`}>{content.title}</h1>
+    </div>
+  )
 
   const featuredBlock = content.featuredImage?.asset && (
     <div className={styles.featuredImage}>
