@@ -115,9 +115,22 @@ export default async function RootLayout({
         <I18nProvider locale={lang} overrides={clientOverrides}>
           {children}
         </I18nProvider>
-        <SanityLive />
         {isDraftMode && (
           <>
+            {/* Live updates are for editors, not visitors.
+
+                Rendered for everyone, SanityLive holds an EventSource open to
+                the Live API for as long as the page is open, and on iOS
+                WebKit an open SSE connection swallows a navigation typed into
+                the address bar: the new page starts loading, then this one
+                reloads instead. Reproduced on iPhone in both Chrome and
+                Brave, and bisected on deploy-preview-31 — dropping this one
+                component fixed it with everything else left in place.
+
+                Published content still reaches visitors without it.
+                /api/revalidate/sanity clears the SANITY_TAG entries on
+                publish, which is what actually refreshes the cached pages. */}
+            <SanityLive />
             <VisualEditing />
             <DraftModeBanner />
           </>
