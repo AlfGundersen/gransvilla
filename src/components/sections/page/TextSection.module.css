@@ -67,11 +67,6 @@
 
 /* Stand-in picture for a section with no heading. Decorative: it exists to
    fill the column on the wide layout, where the gap would otherwise show. */
-.textPlaceholderCol {
-  padding-top: var(--space-lg);
-  padding-bottom: var(--space-lg);
-}
-
 .textPlaceholderImg {
   width: 100%;
   height: auto;

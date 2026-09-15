@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity'
+import { CompactText } from '../../components/CompactText'
 
 /**
  * Valgfri CTA-knapp brukt på arrangement- og innholdssider
@@ -6,6 +7,7 @@ import { defineField, defineType } from 'sanity'
 
 type KnappVerdi = {
   visKnapp?: boolean
+  visTekst?: boolean
   beskrivelse?: unknown[]
   tekst?: string
   lenketype?: string
@@ -119,11 +121,22 @@ export default defineType({
       hidden: skjulUtenKnapp,
     }),
     defineField({
+      name: 'visTekst',
+      title: 'Legg til tekst',
+      type: 'boolean',
+      description: 'Slå på for å vise en kort tekst ved siden av overskriften i seksjonen',
+      initialValue: false,
+      hidden: skjulUtenKnapp,
+    }),
+    defineField({
       name: 'beskrivelse',
       title: 'Tekst',
       type: 'simpleBlockContent',
       description: 'Valgfri kort tekst som vises til venstre i seksjonen, sammen med overskriften',
-      hidden: skjulUtenKnapp,
+      components: { input: CompactText },
+      hidden: ({ parent }) =>
+        skjulUtenKnapp({ parent }) ||
+        (!verdi(parent)?.visTekst && !verdi(parent)?.beskrivelse?.length),
     }),
   ],
 })
