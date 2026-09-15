@@ -1,8 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
-import { NewsletterModal } from '@/components/newsletter/NewsletterModal'
+import { NewsletterButton } from '@/components/newsletter/NewsletterButton'
+import { NEWSLETTER_HREF } from '@/lib/newsletter'
 import styles from './HeroSection.module.css'
 
 interface HeroAnnouncementProps {
@@ -15,8 +15,7 @@ interface HeroAnnouncementProps {
  * any other href stays a normal link.
  */
 export function HeroAnnouncement({ text, href }: HeroAnnouncementProps) {
-  const [modalOpen, setModalOpen] = useState(false)
-  const isNewsletter = !href || href === '#nyhetsbrev'
+  const isNewsletter = !href || href === NEWSLETTER_HREF
 
   if (!isNewsletter) {
     return (
@@ -26,16 +25,5 @@ export function HeroAnnouncement({ text, href }: HeroAnnouncementProps) {
     )
   }
 
-  return (
-    <>
-      <button
-        type="button"
-        className={`${styles.heroAnnouncement} site-button`}
-        onClick={() => setModalOpen(true)}
-      >
-        {text}
-      </button>
-      <NewsletterModal open={modalOpen} onClose={() => setModalOpen(false)} />
-    </>
-  )
+  return <NewsletterButton label={text} className={`${styles.heroAnnouncement} site-button`} />
 }
