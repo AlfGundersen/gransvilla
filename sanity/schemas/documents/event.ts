@@ -1,5 +1,5 @@
-import { defineField, defineType } from 'sanity'
 import { SearchIcon } from '@sanity/icons'
+import { defineField, defineType } from 'sanity'
 import { AltTextInput } from '../../components/AltTextInput'
 import { ShopifyProductInput } from '../../components/ShopifyProductInput'
 import { watermarkFields } from '../objects/watermarkFields'
@@ -73,7 +73,8 @@ export default defineType({
       name: 'knapp',
       title: 'Knapp',
       type: 'knapp',
-      description: 'Valgfri tekst og/eller knapp som vises til venstre i den første tekstseksjonen',
+      description:
+        'Valgfri tekst og/eller knapp i den første tekstseksjonen. Teksten vises til venstre, knappen rett under brødteksten.',
       group: 'content',
     }),
     defineField({
@@ -94,27 +95,29 @@ export default defineType({
       title: 'Tilknyttede produkter',
       type: 'array',
       description: 'Produkter fra nettbutikken som er knyttet til dette arrangementet',
-      of: [{
-        type: 'object',
-        fields: [
-          defineField({
-            name: 'productHandle',
-            title: 'Velg produkt fra Shopify',
-            type: 'string',
-            components: { input: ShopifyProductInput },
-          }),
-        ],
-        preview: {
-          select: {
-            productHandle: 'productHandle',
-          },
-          prepare({ productHandle }) {
-            return {
-              title: productHandle || 'Velg et produkt',
-            }
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'productHandle',
+              title: 'Velg produkt fra Shopify',
+              type: 'string',
+              components: { input: ShopifyProductInput },
+            }),
+          ],
+          preview: {
+            select: {
+              productHandle: 'productHandle',
+            },
+            prepare({ productHandle }) {
+              return {
+                title: productHandle || 'Velg et produkt',
+              }
+            },
           },
         },
-      }],
+      ],
       group: 'content',
     }),
     defineField({
@@ -131,9 +134,12 @@ export default defineType({
     },
     prepare({ title, description }) {
       const text = Array.isArray(description)
-        ? description.map((block: { children?: { text?: string }[] }) =>
-            block.children?.map((c) => c.text).join('') ?? ''
-          ).join(' ')
+        ? description
+            .map(
+              (block: { children?: { text?: string }[] }) =>
+                block.children?.map((c) => c.text).join('') ?? '',
+            )
+            .join(' ')
         : description || ''
       return {
         title,

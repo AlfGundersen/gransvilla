@@ -37,7 +37,7 @@ export default defineType({
       name: 'beskrivelse',
       title: 'Tekst',
       type: 'simpleBlockContent',
-      description: 'Valgfri kort tekst som vises over knappen',
+      description: 'Valgfri kort tekst som vises til venstre i seksjonen, sammen med overskriften',
       hidden: skjulUtenKnapp,
     }),
     defineField({
