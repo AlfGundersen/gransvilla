@@ -65,9 +65,9 @@
   margin-bottom: 0;
 }
 
-/* Button with no text above it aligns to the bottom of the section */
-.textCtaCol > .textCtaButton:first-child {
-  margin-top: auto;
+/* The button sits after the body text, not beside it */
+.textCtaWrap {
+  margin-top: var(--space-lg);
 }
 
 /* Same look as the Fremhevet "Vis mer" button */
@@ -125,9 +125,11 @@
     display: none;
   }
 
+  /* The heading led the body text here only because the button travelled with
+     it and had to land last. With the button under the text, the column holds
+     the heading alone, and it belongs above what it heads. */
   .textCtaCol {
     grid-column: 1 / -1;
-    order: 2;
     padding-right: 0;
   }
 

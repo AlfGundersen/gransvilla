@@ -1,5 +1,5 @@
-import { defineField, defineType } from 'sanity'
 import { SearchIcon } from '@sanity/icons'
+import { defineField, defineType } from 'sanity'
 import { AltTextInput } from '../../components/AltTextInput'
 import { watermarkFields } from '../objects/watermarkFields'
 
@@ -73,7 +73,8 @@ export default defineType({
       name: 'knapp',
       title: 'Knapp',
       type: 'knapp',
-      description: 'Valgfri tekst og/eller knapp som vises til venstre i den første tekstseksjonen',
+      description:
+        'Valgfri tekst og/eller knapp i den første tekstseksjonen. Teksten vises til venstre, knappen rett under brødteksten.',
       group: 'content',
     }),
     defineField({
