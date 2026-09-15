@@ -27,6 +27,13 @@
   --color-border: #000000;
   --color-white: #ffffff;
   --color-overlay: rgba(0, 0, 0, 0.3);
+  /* Loading placeholders. These were referenced by the skeletons but never
+     defined, which made every `background: linear-gradient(... var(--color-muted) ...)`
+     invalid — so the bones rendered as nothing and a page mid-load looked
+     blank instead of loading. */
+  --color-muted: #EAE3D3;
+  --color-skeleton: rgba(0, 0, 0, 0.07);
+  --color-skeleton-shimmer: rgba(0, 0, 0, 0.02);
 
   /* ===========================================
      Typography - Gransvilla brand
@@ -281,6 +288,9 @@ html.inverted {
   --color-primary: #F5F0E3;
   --color-secondary: #c9c4b7;
   --color-border: #F5F0E3;
+  --color-muted: #272423;
+  --color-skeleton: rgba(245, 240, 227, 0.1);
+  --color-skeleton-shimmer: rgba(245, 240, 227, 0.03);
 
   /* Turns black artwork into the cream foreground rather than plain white, so
      inverted line art reads as the same ink as the text beside it. */

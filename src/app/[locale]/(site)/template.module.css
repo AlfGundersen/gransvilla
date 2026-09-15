@@ -5,13 +5,19 @@
  */
 @keyframes pageEnter {
   from {
-    opacity: 0;
+    opacity: 0.55;
   }
   to {
     opacity: 1;
   }
 }
 
+/*
+ * Starts part-way rather than at zero. A navigation between prerendered pages
+ * has the new page ready almost immediately, so fading up from nothing was the
+ * only reason it read as "blank, then it populates" — the content was there
+ * the whole time, just invisible.
+ */
 .pageEnter {
-  animation: pageEnter 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  animation: pageEnter 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
