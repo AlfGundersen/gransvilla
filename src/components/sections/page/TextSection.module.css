@@ -34,12 +34,17 @@
 /* Left column — optional heading + page-level CTA text/button */
 .textCtaCol {
   grid-column: 1 / 2;
+  position: relative;
+  padding-right: var(--space-lg);
+}
+
+.textCtaSticky {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: var(--space-md);
-  position: relative;
-  padding-right: var(--space-lg);
+  position: sticky;
+  top: calc(var(--header-height) + var(--space-md));
 }
 
 .textCtaCol::after {
@@ -63,16 +68,6 @@
 
 .textCtaText p:last-child {
   margin-bottom: 0;
-}
-
-/* Stand-in picture for a section with no heading. Decorative: it exists to
-   fill the column on the wide layout, where the gap would otherwise show. */
-.textPlaceholderImg {
-  width: 100%;
-  height: auto;
-  display: block;
-  aspect-ratio: 2 / 3;
-  object-fit: cover;
 }
 
 /* The button sits after the body text, not beside it */
@@ -143,10 +138,8 @@
     padding-right: 0;
   }
 
-  /* Nothing to fill: the columns are stacked here, so the picture would only
-     be one more thing to scroll past. */
-  .textPlaceholderCol {
-    display: none;
+  .textCtaSticky {
+    position: static;
   }
 
   .textCtaCol::after {
