@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { SharedImage } from '@/components/SharedImage'
 import { EventProductsSection } from '@/components/sections/EventProductsSection'
 import { PageSectionRenderer } from '@/components/sections/page/PageSectionRenderer'
 import { SchemaGenerator } from '@/components/seo/SchemaGenerator'
@@ -161,21 +160,16 @@ export default async function SlugPage({ params }: Props) {
   const featuredBlock = content.featuredImage?.asset && (
     <div className={styles.featuredImage}>
       <div style={{ position: 'relative' }}>
-        {/* Receiving end of the morph from the shop-style listings: the
-            featured card on the front page and the event cards on
-            /arrangementer both carry this same name. */}
-        <SharedImage name={`page-image-${slug}`}>
-          <Image
-            src={urlFor(content.featuredImage).width(1600).quality(92).url()}
-            alt={content.featuredImage.alt || content.featuredImage.assetAltText || content.title}
-            width={1200}
-            height={675}
-            className={styles.featuredImageImg}
-            priority
-            placeholder={blurDataURL ? 'blur' : 'empty'}
-            blurDataURL={blurDataURL}
-          />
-        </SharedImage>
+        <Image
+          src={urlFor(content.featuredImage).width(1600).quality(92).url()}
+          alt={content.featuredImage.alt || content.featuredImage.assetAltText || content.title}
+          width={1200}
+          height={675}
+          className={styles.featuredImageImg}
+          priority
+          placeholder={blurDataURL ? 'blur' : 'empty'}
+          blurDataURL={blurDataURL}
+        />
         <MaybeWatermark image={content.featuredImage} />
       </div>
     </div>
