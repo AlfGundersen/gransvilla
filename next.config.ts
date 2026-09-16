@@ -43,7 +43,24 @@ const baseSecurityHeaders = [
   },
 ]
 
+/*
+ * Cache key for the service worker, rebuilt every deploy.
+ *
+ * sw.js cache-firsts anything matching its asset pattern, which includes
+ * unhashed files like /logo.svg and the PWA icons. CACHE_NAME used to be a
+ * hardcoded string, and activate only clears caches whose name differs from
+ * it — so it never cleared, and swapping one of those files would have served
+ * the old one to returning visitors indefinitely.
+ *
+ * Netlify sets COMMIT_REF. The timestamp fallback only matters for local
+ * production builds, where a fresh cache every time costs nothing.
+ */
+const swVersion = process.env.COMMIT_REF?.slice(0, 8) ?? Date.now().toString(36)
+
 const nextConfig: NextConfig = {
+  env: {
+    NEXT_PUBLIC_SW_VERSION: swVersion,
+  },
   // Enables React's <ViewTransition> component (see (site)/template.tsx).
   experimental: {
     viewTransition: true,
