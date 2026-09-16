@@ -376,10 +376,12 @@ html.inverted img[src*="logo"] {
  * links to carry the same view-transition-name, so the browser morphs one into
  * the other rather than cross-fading the page over both.
  *
- *   .product-image  shop grid, and the front page's featured product,
- *                   → the product gallery hero
- *   .page-image     the front page's featured columns, and the cards on
- *                   /arrangementer, → the hero on that page
+ * Only the product pairing uses this. The featured columns and the event
+ * cards are portrait (2:3) while the page heroes are landscape (16:9), and
+ * because object-fit is pinned, inverting the aspect ratio mid-flight changed
+ * which part of the photo you were looking at as it travelled. It read as a
+ * transformation rather than as one object moving, so those two now take the
+ * ordinary page transition instead.
  *
  * 440ms matches what the page swap totals (60ms delay + 380ms), so the image
  * stops moving at the same moment everything around it does. Running the morph
@@ -390,16 +392,13 @@ html.inverted img[src*="logo"] {
  * listings are square or portrait and the heroes are landscape — and without
  * it the snapshot stretches as the frame changes shape mid-flight.
  */
-::view-transition-group(.product-image),
-::view-transition-group(.page-image) {
+::view-transition-group(.product-image) {
   animation-duration: 440ms;
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 ::view-transition-old(.product-image),
-::view-transition-new(.product-image),
-::view-transition-old(.page-image),
-::view-transition-new(.page-image) {
+::view-transition-new(.product-image) {
   animation-duration: 440ms;
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   height: 100%;
@@ -420,11 +419,7 @@ html.inverted img[src*="logo"] {
   ::view-transition-group(.product-image),
   ::view-transition-old(.product-image),
   ::view-transition-new(.product-image),
-  ::view-transition-group(.page-image),
-  ::view-transition-old(.page-image),
-  ::view-transition-new(.page-image) {
-    animation: none;
-  }
+
 
   *,
   *::before,
