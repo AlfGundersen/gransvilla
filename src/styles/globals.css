@@ -328,9 +328,13 @@ html.inverted img[src*="logo"] {
   }
 }
 
-@keyframes slide-from-right {
+/*
+ * The page travels left → right: the outgoing page leaves to the right and the
+ * incoming one arrives from the left.
+ */
+@keyframes slide-from-left {
   from {
-    transform: translateX(16px);
+    transform: translateX(-16px);
   }
 
   to {
@@ -338,13 +342,13 @@ html.inverted img[src*="logo"] {
   }
 }
 
-@keyframes slide-to-left {
+@keyframes slide-to-right {
   from {
     transform: translateX(0);
   }
 
   to {
-    transform: translateX(-16px);
+    transform: translateX(16px);
   }
 }
 
@@ -357,7 +361,7 @@ html.inverted img[src*="logo"] {
  */
 ::view-transition-old(.page-content) {
   animation: 260ms cubic-bezier(0.32, 0, 0.67, 0) both fade-out,
-    260ms cubic-bezier(0.32, 0, 0.67, 0) both slide-to-left;
+    260ms cubic-bezier(0.32, 0, 0.67, 0) both slide-to-right;
 }
 
 /*
@@ -368,7 +372,7 @@ html.inverted img[src*="logo"] {
  */
 ::view-transition-new(.page-content) {
   animation: 380ms cubic-bezier(0.22, 1, 0.36, 1) 60ms both fade-in,
-    380ms cubic-bezier(0.22, 1, 0.36, 1) 60ms both slide-from-right;
+    380ms cubic-bezier(0.22, 1, 0.36, 1) 60ms both slide-from-left;
 }
 
 /*
