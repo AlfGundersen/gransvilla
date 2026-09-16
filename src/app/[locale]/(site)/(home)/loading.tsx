@@ -1,9 +1,9 @@
-import p from './page.module.css'
-import s from './skeleton.module.css'
+import p from '../page.module.css'
+import s from '../skeleton.module.css'
 
 export default function HomeLoading() {
   return (
-    <div className={p.page}>
+    <div className={`${p.page} ${s.page}`}>
       {/* Hero */}
       <div className={p.hero}>
         <div className={`${s.bone} ${s.h1}`} style={{ margin: '0 auto' }} />

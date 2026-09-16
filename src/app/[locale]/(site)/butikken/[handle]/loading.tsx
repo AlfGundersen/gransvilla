@@ -3,7 +3,7 @@ import p from './page.module.css'
 
 export default function ProductLoading() {
   return (
-    <div className={p.productPage}>
+    <div className={`${p.productPage} ${s.page}`}>
       <div className={p.productContainer}>
         {/* Gallery */}
         <div className={p.productGallery}>

@@ -13,7 +13,7 @@ import { urlFor } from '@/lib/sanity/image'
 import { sanityFetch } from '@/lib/sanity/live'
 import { frontpageQuery } from '@/lib/sanity/queries'
 import type { Frontpage } from '@/types/sanity'
-import styles from './page.module.css'
+import styles from '../page.module.css'
 
 /**
  * Published Sanity content should not wait for the next deploy. Only the shop

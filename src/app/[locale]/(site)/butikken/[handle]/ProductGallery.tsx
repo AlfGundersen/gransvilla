@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useState } from 'react'
+import { useState, ViewTransition } from 'react'
 import { shopifyImageUrl } from '@/lib/shopify/image'
 import styles from './ProductGallery.module.css'
 
@@ -15,9 +15,11 @@ interface ProductImage {
 interface ProductGalleryProps {
   images: ProductImage[]
   title: string
+  /** Pairs the hero with the matching card image in the shop grid. */
+  handle: string
 }
 
-export function ProductGallery({ images, title }: ProductGalleryProps) {
+export function ProductGallery({ images, title, handle }: ProductGalleryProps) {
   const [selectedIndex, setSelectedIndex] = useState(0)
 
   if (images.length === 0) {
@@ -35,14 +37,21 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
   return (
     <div className={styles.productGallery}>
       <div className={styles.productGalleryMainImage}>
-        <Image
-          src={shopifyImageUrl(selectedImage.url, { width: 1200, crop: 'center' })}
-          alt={selectedImage.altText || title}
-          fill
-          className={styles.productGalleryImage}
-          priority
-          sizes="(max-width: 768px) 100vw, 50vw"
-        />
+        {/*
+         * Receiving end of the morph from ProductCard. `default="none"` keeps
+         * switching thumbnails instant — only the arrival from the shop grid
+         * animates.
+         */}
+        <ViewTransition name={`product-image-${handle}`} default="none" share="product-image">
+          <Image
+            src={shopifyImageUrl(selectedImage.url, { width: 1200, crop: 'center' })}
+            alt={selectedImage.altText || title}
+            fill
+            className={styles.productGalleryImage}
+            priority
+            sizes="(max-width: 768px) 100vw, 50vw"
+          />
+        </ViewTransition>
       </div>
 
       {images.length > 1 && (

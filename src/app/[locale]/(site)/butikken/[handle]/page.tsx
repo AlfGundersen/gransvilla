@@ -106,7 +106,7 @@ export default async function ProductPage({ params }: Props) {
         className={styles.productBack}
       />
       <div className={styles.productContainer}>
-        <ProductGallery images={product.images} title={product.title} />
+        <ProductGallery images={product.images} title={product.title} handle={handle} />
         <ProductInfo product={product} relatedEvents={relatedEvents} />
       </div>
     </div>

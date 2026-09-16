@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, ViewTransition } from 'react'
 import { useCart } from '@/context/CartContext'
 import { localeHref } from '@/lib/i18n/href'
 import { useLocale, useT } from '@/lib/i18n/provider'
@@ -87,13 +87,25 @@ export default function ProductCard({ product }: ProductCardProps) {
 
       <div className={styles.shopImageWrapper}>
         {product.images[0] && (
-          <Image
-            src={shopifyImageUrl(product.images[0].url, { width: 800, crop: 'center' })}
-            alt={product.images[0].altText || product.title}
-            fill
-            className={styles.shopImage}
-            sizes="(max-width: 767px) 100vw, 33vw"
-          />
+          /*
+           * Paired with the same name in ProductGallery, so the card image
+           * morphs into the product page hero instead of cross-fading.
+           * `default="none"` keeps it to that one case — without it, the
+           * hover overlay and badge would animate on every re-render.
+           */
+          <ViewTransition
+            name={`product-image-${product.handle}`}
+            default="none"
+            share="product-image"
+          >
+            <Image
+              src={shopifyImageUrl(product.images[0].url, { width: 800, crop: 'center' })}
+              alt={product.images[0].altText || product.title}
+              fill
+              className={styles.shopImage}
+              sizes="(max-width: 767px) 100vw, 33vw"
+            />
+          </ViewTransition>
         )}
 
         {/* Status badge */}
