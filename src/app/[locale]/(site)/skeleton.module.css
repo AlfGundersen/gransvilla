@@ -1,23 +1,12 @@
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
 /* Tinted, not the near-black --color-border the gradient used to reach for:
-   a placeholder has to read as absent content, not as a filled block. */
+   a placeholder has to read as absent content, not as a filled block.
+
+   Flat, with no shimmer. A sweeping highlight pulls the eye to the placeholder
+   and keeps it there, which is the opposite of what a placeholder is for — the
+   skeleton should be quiet enough to stop registering. The only movement here
+   is the skeleton fading in (below), and the page arriving over it. */
 .bone {
-  background: linear-gradient(
-    90deg,
-    var(--color-skeleton) 25%,
-    var(--color-skeleton-shimmer) 50%,
-    var(--color-skeleton) 75%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.8s ease-in-out infinite;
+  background: var(--color-skeleton);
   border-radius: 2px;
 }
 
@@ -63,4 +52,46 @@
 .imageSquare {
   aspect-ratio: 1;
   width: 100%;
+}
+
+/*
+ * Skeleton root.
+ *
+ * A skeleton is almost always shorter than the content it stands in for, and
+ * .main only stretches to the bottom of the viewport — so the footer sat in
+ * view during load and then got shoved down the moment real content arrived.
+ * Holding a viewport's worth of height keeps it below the fold until the page
+ * is actually there.
+ *
+ * dvh second so mobile browsers measure against visible chrome; vh stays as
+ * the fallback for anything that doesn't support it.
+ */
+@keyframes skeleton-appear {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.page {
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  /*
+   * Held invisible for 300ms, then faded in.
+   *
+   * Warm navigations on this site settle in 6-10ms, and the usual guidance is
+   * to show nothing at all under ~100ms and reach for a skeleton only past
+   * ~400ms. Rendering bones immediately meant a flash of placeholder on
+   * navigations that were already finished — the skeleton was reporting work
+   * that wasn't happening.
+   *
+   * `both` matters: the backwards fill holds opacity 0 through the delay, so
+   * a fast navigation never paints the skeleton at all. Only a genuinely slow
+   * one (cold ISR, a live Shopify or Sanity fetch) ever reaches the fade.
+   */
+  animation: skeleton-appear 240ms ease-out 300ms both;
 }

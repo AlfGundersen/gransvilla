@@ -10,7 +10,7 @@ import p from './page.module.css'
  */
 export default function PageLoading() {
   return (
-    <div className={p.eventPage}>
+    <div className={`${p.eventPage} ${s.page}`}>
       <div className={p.eventGrid}>
         {/* Title column — back link, title, sibling events */}
         <div className={p.titleCol}>

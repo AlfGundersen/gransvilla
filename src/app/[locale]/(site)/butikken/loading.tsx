@@ -40,7 +40,7 @@ function CategoryBone() {
 export default function ShopLoading() {
   const t = useT()
   return (
-    <div className={p.shopPage}>
+    <div className={`${p.shopPage} ${s.page}`}>
       <div className={p.shopHeader}>
         <h1 className={p.shopTitle}>{t('Butikken')}</h1>
       </div>
