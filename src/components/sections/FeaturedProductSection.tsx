@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { SharedImage } from '@/components/SharedImage'
 import { localeHref } from '@/lib/i18n/href'
 import { getTranslator, translateContent } from '@/lib/i18n/server'
 import { getProducts } from '@/lib/shopify'
@@ -68,13 +69,17 @@ export async function FeaturedProductSectionComponent({
 
         {productImage && (
           <div className={styles.featProductImageCol}>
-            <Image
-              src={shopifyImageUrl(productImage.url, { width: 800, crop: 'center' })}
-              alt={productImage.altText || product.title}
-              width={productImage.width || 800}
-              height={productImage.height || 600}
-              className={styles.featProductImage}
-            />
+            {/* Same name the shop grid uses, so the front page morphs straight
+                into the product page. The two never share a screen. */}
+            <SharedImage name={`product-image-${product.handle}`} transitionClass="product-image">
+              <Image
+                src={shopifyImageUrl(productImage.url, { width: 800, crop: 'center' })}
+                alt={productImage.altText || product.title}
+                width={productImage.width || 800}
+                height={productImage.height || 600}
+                className={styles.featProductImage}
+              />
+            </SharedImage>
           </div>
         )}
       </div>
