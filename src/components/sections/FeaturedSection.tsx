@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { RichText } from '@/components/RichText'
+import { SharedImage } from '@/components/SharedImage'
 import { MaybeWatermark } from '@/components/Watermark'
 import { localeHref } from '@/lib/i18n/href'
 import { getTranslator } from '@/lib/i18n/server'
@@ -17,6 +18,14 @@ interface FeaturedSectionComponentProps {
 export function FeaturedSectionComponent({ data, locale }: FeaturedSectionComponentProps) {
   const t = getTranslator(locale)
   const columns = data.columns ?? []
+
+  /*
+   * A view-transition-name has to be unique among mounted elements, and these
+   * columns are editor-built — nothing stops two of them pointing at the same
+   * page. Claim each slug once; a second column linking to the same place
+   * still renders, it just doesn't take part in the morph.
+   */
+  const claimedSlugs = new Set<string>()
 
   if (columns.length === 0) {
     return null
@@ -55,19 +64,27 @@ export function FeaturedSectionComponent({ data, locale }: FeaturedSectionCompon
               {(() => {
                 const displayImage = column.image?.asset ? column.image : column.link?.featuredImage
                 if (!displayImage?.asset) return null
+
+                const slug = column.link?.slug?.current
+                const canShare = Boolean(slug) && !claimedSlugs.has(slug as string)
+                if (canShare) claimedSlugs.add(slug as string)
+
+                const image = (
+                  <Image
+                    src={urlFor(displayImage).width(700).height(1050).quality(92).fit('crop').url()}
+                    alt={displayImage.alt || displayImage.assetAltText || column.heading || ''}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 25vw"
+                  />
+                )
+
                 return (
                   <div className={styles.featuredImageWrap}>
-                    <Image
-                      src={urlFor(displayImage)
-                        .width(700)
-                        .height(1050)
-                        .quality(92)
-                        .fit('crop')
-                        .url()}
-                      alt={displayImage.alt || displayImage.assetAltText || column.heading || ''}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 25vw"
-                    />
+                    {canShare ? (
+                      <SharedImage name={`page-image-${slug}`}>{image}</SharedImage>
+                    ) : (
+                      image
+                    )}
                     <MaybeWatermark image={displayImage} />
                   </div>
                 )
