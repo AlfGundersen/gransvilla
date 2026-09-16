@@ -42,7 +42,13 @@ export function ProductGallery({ images, title, handle }: ProductGalleryProps) {
          * switching thumbnails instant — only the arrival from the shop grid
          * animates.
          */}
-        <ViewTransition name={`product-image-${handle}`} default="none" share="product-image">
+        <ViewTransition
+          name={`product-image-${handle}`}
+          default="none"
+          share="product-image"
+          enter="page-content"
+          exit="page-content"
+        >
           <Image
             src={shopifyImageUrl(selectedImage.url, { width: 1200, crop: 'center' })}
             alt={selectedImage.altText || title}

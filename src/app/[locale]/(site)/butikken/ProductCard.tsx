@@ -92,11 +92,17 @@ export default function ProductCard({ product }: ProductCardProps) {
            * morphs into the product page hero instead of cross-fading.
            * `default="none"` keeps it to that one case — without it, the
            * hover overlay and badge would animate on every re-render.
+           *
+           * enter/exit matter more here than anywhere: a named element drops
+           * out of its parent's snapshot, so leaving the shop for anything
+           * but a product left every card in the grid popping out at once.
            */
           <ViewTransition
             name={`product-image-${product.handle}`}
             default="none"
             share="product-image"
+            enter="page-content"
+            exit="page-content"
           >
             <Image
               src={shopifyImageUrl(product.images[0].url, { width: 800, crop: 'center' })}

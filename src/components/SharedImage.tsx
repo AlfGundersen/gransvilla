@@ -22,13 +22,28 @@ type SharedImageProps = {
  * A client component because <ViewTransition> needs one, but the image itself
  * is still rendered on the server and passed through as children.
  *
- * `default="none"` limits this to the shared case. Without it, every unrelated
+ * `default="none"` limits this to navigation. Without it, every unrelated
  * re-render in the subtree would animate too — which is what once left every
  * image on the site hidden behind an abandoned transition snapshot.
+ *
+ * enter/exit fall back to the page animation, and that is not optional. Naming
+ * an element excludes it from its parent's snapshot, so with `share` alone an
+ * unmatched image sat out the page transition entirely and popped into place
+ * while everything around it faded — arriving at an event from the events
+ * carousel or the "Andre arrangementer" list, or leaving the shop for anything
+ * other than a product. `share` still wins whenever there is a match, so the
+ * morph is unaffected; this only covers the case where there is nothing to
+ * morph from.
  */
 export function SharedImage({ name, transitionClass = 'page-image', children }: SharedImageProps) {
   return (
-    <ViewTransition name={name} default="none" share={transitionClass}>
+    <ViewTransition
+      name={name}
+      default="none"
+      share={transitionClass}
+      enter="page-content"
+      exit="page-content"
+    >
       {children}
     </ViewTransition>
   )
