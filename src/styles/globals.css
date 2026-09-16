@@ -380,31 +380,57 @@ html.inverted img[src*="logo"] {
  * links to carry the same view-transition-name, so the browser morphs one into
  * the other rather than cross-fading the page over both.
  *
- * Only the product pairing uses this. The featured columns and the event
- * cards are portrait (2:3) while the page heroes are landscape (16:9), and
- * because object-fit is pinned, inverting the aspect ratio mid-flight changed
- * which part of the photo you were looking at as it travelled. It read as a
- * transformation rather than as one object moving, so those two now take the
- * ordinary page transition instead.
+ *   .product-image  shop grid, and the front page's featured product,
+ *                   → the product gallery hero
+ *   .page-image     the front page's featured columns, and the cards on
+ *                   /arrangementer, → the hero on that page
  *
  * 440ms matches what the page swap totals (60ms delay + 380ms), so the image
  * stops moving at the same moment everything around it does. Running the morph
  * longer left it still travelling after the page had settled, which reads as
  * the navigation lagging rather than as emphasis.
  *
- * object-fit is pinned because the two sides are different shapes — the
- * listings are square or portrait and the heroes are landscape — and without
- * it the snapshot stretches as the frame changes shape mid-flight.
+ * object-fit is pinned because the frame changes shape mid-flight, and without
+ * it the snapshot stretches instead of cropping.
  */
-::view-transition-group(.product-image) {
+::view-transition-group(.product-image),
+::view-transition-group(.page-image) {
   animation-duration: 440ms;
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/*
+ * Matched shapes — the shop card and the gallery hero are both square, so the
+ * default cross-fade is fine: the two frames look alike the whole way across.
+ */
 ::view-transition-old(.product-image),
 ::view-transition-new(.product-image) {
   animation-duration: 440ms;
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  height: 100%;
+  object-fit: cover;
+}
+
+/*
+ * Mismatched shapes — a portrait card into a landscape hero, or 4:3 into a
+ * square one. The frame inverts while it travels and object-fit re-crops as it
+ * goes, so with the default cross-fade you spend the middle of the transition
+ * looking at two different crops of the same photo blended together.
+ *
+ * Fading them apart instead: the old image is gone by 220ms, the new one only
+ * starts arriving at 160ms. The 60ms of overlap is enough to avoid a blank
+ * frame, but short enough that the two crops are never both legible at once.
+ * The group keeps morphing underneath for the full 440ms, so the image still
+ * travels to where it is going.
+ */
+::view-transition-old(.page-image) {
+  animation: 220ms cubic-bezier(0.4, 0, 1, 1) both fade-out;
+  height: 100%;
+  object-fit: cover;
+}
+
+::view-transition-new(.page-image) {
+  animation: 280ms cubic-bezier(0, 0, 0.2, 1) 160ms both fade-in;
   height: 100%;
   object-fit: cover;
 }
@@ -423,7 +449,11 @@ html.inverted img[src*="logo"] {
   ::view-transition-group(.product-image),
   ::view-transition-old(.product-image),
   ::view-transition-new(.product-image),
-
+  ::view-transition-group(.page-image),
+  ::view-transition-old(.page-image),
+  ::view-transition-new(.page-image) {
+    animation: none;
+  }
 
   *,
   *::before,

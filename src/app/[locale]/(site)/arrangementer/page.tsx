@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { RichText } from '@/components/RichText'
+import { SharedImage } from '@/components/SharedImage'
 import { MaybeWatermark } from '@/components/Watermark'
 import { localeHref } from '@/lib/i18n/href'
 import { alternatesFor } from '@/lib/i18n/metadata'
@@ -114,22 +115,27 @@ export default async function ArrangementerPage({ params }: Params) {
               <div key={event._id} className={styles.card}>
                 {event.featuredImage?.asset && (
                   <div className={styles.imageWrapper} style={{ position: 'relative' }}>
-                    <Image
-                      src={urlFor(event.featuredImage)
-                        .width(400)
-                        .height(600)
-                        .quality(92)
-                        .fit('crop')
-                        .url()}
-                      alt={
-                        event.featuredImage.alt || event.featuredImage.assetAltText || event.title
-                      }
-                      width={400}
-                      height={600}
-                      placeholder={cardBlurs[i] ? 'blur' : 'empty'}
-                      blurDataURL={cardBlurs[i]}
-                      className={styles.image}
-                    />
+                    {/* Only the cards are named. The hero above can fall back
+                        to events[0]'s image, and naming both would put the
+                        same view-transition-name on screen twice. */}
+                    <SharedImage name={`page-image-${event.slug.current}`}>
+                      <Image
+                        src={urlFor(event.featuredImage)
+                          .width(400)
+                          .height(600)
+                          .quality(92)
+                          .fit('crop')
+                          .url()}
+                        alt={
+                          event.featuredImage.alt || event.featuredImage.assetAltText || event.title
+                        }
+                        width={400}
+                        height={600}
+                        placeholder={cardBlurs[i] ? 'blur' : 'empty'}
+                        blurDataURL={cardBlurs[i]}
+                        className={styles.image}
+                      />
+                    </SharedImage>
                     <MaybeWatermark image={event.featuredImage} />
                   </div>
                 )}
