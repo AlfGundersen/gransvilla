@@ -1,4 +1,15 @@
-const CACHE_NAME = 'gransvilla-v3'
+/*
+ * Versioned by the `?v=` the page registers this worker with, so every deploy
+ * gets its own cache and the activate handler below clears the previous one.
+ *
+ * This was a hardcoded string, and since activate only deletes caches whose
+ * name differs from it, nothing was ever cleared. Hashed assets were fine —
+ * a new build gives them new URLs — but the asset branch below also
+ * cache-firsts unhashed files like /logo.svg and the icons, and those would
+ * have been served from the old cache forever.
+ */
+const VERSION = new URL(self.location.href).searchParams.get('v') || 'v3'
+const CACHE_NAME = `gransvilla-${VERSION}`
 const OFFLINE_URL = '/offline.html'
 
 self.addEventListener('install', (event) => {
