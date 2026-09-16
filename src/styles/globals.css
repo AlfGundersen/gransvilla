@@ -381,14 +381,18 @@ html.inverted img[src*="logo"] {
  *   .page-image     the front page's featured columns, and the cards on
  *                   /arrangementer, → the hero on that page
  *
- * Slower than the page swap so the morph stays the focal point. object-fit is
- * pinned because the two sides are different shapes — the listings are square
- * or portrait and the heroes are landscape — and without it the snapshot
- * stretches as the frame changes shape mid-flight.
+ * 440ms matches what the page swap totals (60ms delay + 380ms), so the image
+ * stops moving at the same moment everything around it does. Running the morph
+ * longer left it still travelling after the page had settled, which reads as
+ * the navigation lagging rather than as emphasis.
+ *
+ * object-fit is pinned because the two sides are different shapes — the
+ * listings are square or portrait and the heroes are landscape — and without
+ * it the snapshot stretches as the frame changes shape mid-flight.
  */
 ::view-transition-group(.product-image),
 ::view-transition-group(.page-image) {
-  animation-duration: 520ms;
+  animation-duration: 440ms;
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -396,7 +400,7 @@ html.inverted img[src*="logo"] {
 ::view-transition-new(.product-image),
 ::view-transition-old(.page-image),
 ::view-transition-new(.page-image) {
-  animation-duration: 520ms;
+  animation-duration: 440ms;
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   height: 100%;
   object-fit: cover;
