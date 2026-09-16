@@ -18,6 +18,13 @@
  * only reason it read as "blank, then it populates" — the content was there
  * the whole time, just invisible.
  */
-.pageEnter {
-  animation: pageEnter 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+/*
+ * Fallback only. Where view transitions are supported the page swap is handled
+ * by <ViewTransition> (globals.css, `.page-content`), and running both would
+ * double up the fade.
+ */
+@supports not (view-transition-class: none) {
+  .pageEnter {
+    animation: pageEnter 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  }
 }

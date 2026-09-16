@@ -44,6 +44,10 @@ const baseSecurityHeaders = [
 ]
 
 const nextConfig: NextConfig = {
+  // Enables React's <ViewTransition> component (see (site)/template.tsx).
+  experimental: {
+    viewTransition: true,
+  },
   images: {
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 31536000,
