@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next'
 import { groq } from 'next-sanity'
 import { defaultLocale, type Locale, locales, originFor } from '@/lib/i18n/config'
 import { client } from '@/lib/sanity/client'
+import { hiddenProductHandlesQuery } from '@/lib/sanity/queries'
 import { getProducts } from '@/lib/shopify'
 
 /**
@@ -58,10 +59,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   let productRoutes: MetadataRoute.Sitemap = []
   try {
-    const products = await getProducts(100)
-    productRoutes = products.map((product) =>
-      entry(`/butikken/${product.handle}`, { changeFrequency: 'weekly', priority: 0.8 }),
-    )
+    const [products, hidden] = await Promise.all([
+      getProducts(100),
+      client.fetch<string[] | null>(hiddenProductHandlesQuery),
+    ])
+    // Products kept out of the shop listing are kept out of search too
+    productRoutes = products
+      .filter((product) => !hidden?.includes(product.handle))
+      .map((product) =>
+        entry(`/butikken/${product.handle}`, { changeFrequency: 'weekly', priority: 0.8 }),
+      )
   } catch {
     // Shopify fetch may fail during build; skip product URLs
   }

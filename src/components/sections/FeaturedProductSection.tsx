@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { SharedImage } from '@/components/SharedImage'
 import { localeHref } from '@/lib/i18n/href'
 import { getTranslator, translateContent } from '@/lib/i18n/server'
+import { getHiddenProductHandles } from '@/lib/sanity/hiddenProducts'
 import { getProducts } from '@/lib/shopify'
 import { shopifyImageUrl } from '@/lib/shopify/image'
 import type { FeaturedProductSection } from '@/types/sanity'
@@ -24,7 +25,11 @@ export async function FeaturedProductSectionComponent({
   // Fetch all listed products from Shopify
   let products: Awaited<ReturnType<typeof getProducts>> = []
   try {
-    products = await translateContent(await getProducts(20), locale)
+    const hidden = await getHiddenProductHandles()
+    products = await translateContent(
+      (await getProducts(20)).filter((p) => !hidden.has(p.handle)),
+      locale,
+    )
   } catch {
     // Store unavailable
   }

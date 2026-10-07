@@ -329,6 +329,8 @@ export interface Page {
   featuredImage?: SanityImage & { alt?: string }
   knapp?: Knapp
   sections?: EventPageSection[]
+  /** Shopify handles of the products sold from this page */
+  products?: string[]
   seo?: {
     metaTitle?: string
     metaDescription?: string

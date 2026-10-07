@@ -2,8 +2,10 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { stegaClean } from 'next-sanity'
 import { SharedImage } from '@/components/SharedImage'
 import { EventProductsSection } from '@/components/sections/EventProductsSection'
+import { PageProductsLayout } from '@/components/sections/PageProductsLayout'
 import { PageSectionRenderer } from '@/components/sections/page/PageSectionRenderer'
 import { SchemaGenerator } from '@/components/seo/SchemaGenerator'
 import { MaybeWatermark } from '@/components/Watermark'
@@ -13,10 +15,19 @@ import { alternatesFor, openGraphLocale } from '@/lib/i18n/metadata'
 import { getTranslator, translateContent } from '@/lib/i18n/server'
 import { getBlurDataURL } from '@/lib/sanity/blur'
 import { client } from '@/lib/sanity/client'
+import { getHiddenProductHandles } from '@/lib/sanity/hiddenProducts'
 import { urlFor } from '@/lib/sanity/image'
 import { sanityFetch } from '@/lib/sanity/live'
-import { eventQuery, eventsQuery, otherEventsQuery, pageQuery } from '@/lib/sanity/queries'
+import {
+  eventQuery,
+  eventsQuery,
+  hiddenProductHandlesQuery,
+  otherEventsQuery,
+  pageQuery,
+} from '@/lib/sanity/queries'
 import { getProductByHandle, type Product } from '@/lib/shopify'
+import type { EventPageSection } from '@/types/sanity'
+import { ProductPageContent, productMetadata } from '../butikken/[handle]/ProductPageContent'
 import styles from './page.module.css'
 
 /**
@@ -39,13 +50,15 @@ interface OtherEvent {
 }
 
 export async function generateStaticParams() {
-  const [events, pages] = await Promise.all([
+  const [events, pages, hiddenProducts] = await Promise.all([
     client.fetch(eventsQuery),
     client.fetch<{ slug: { current: string } }[]>(`*[_type == "page"]{ slug }`),
+    client.fetch<string[] | null>(hiddenProductHandlesQuery),
   ])
   const slugs = [
     ...events.map((event: { slug: { current: string } }) => event.slug.current),
     ...pages.map((page) => page.slug.current),
+    ...(hiddenProducts ?? []),
   ]
   // Slugs stay Norwegian in both languages, so each one is prerendered once per
   // locale rather than translated into a second URL.
@@ -60,12 +73,22 @@ async function fetchContent(slug: string) {
   return event || page
 }
 
+/**
+ * A product kept out of the shop listing is served here, at the top level, so
+ * its printed address is /framdrift-lunsj rather than a path through a shop it
+ * does not appear in. Only reached when no page or event owns the slug.
+ */
+async function isHiddenProduct(slug: string) {
+  return (await getHiddenProductHandles()).has(slug)
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params
   const t = getTranslator(locale)
   const content = await translateContent(await fetchContent(slug), locale)
 
   if (!content) {
+    if (await isHiddenProduct(slug)) return productMetadata(locale, slug)
     return { title: t('Side ikke funnet') }
   }
 
@@ -98,6 +121,7 @@ export default async function SlugPage({ params }: Props) {
   const content = await translateContent(rawContent, locale)
 
   if (!content) {
+    if (await isHiddenProduct(slug)) return <ProductPageContent locale={locale} handle={slug} />
     notFound()
   }
 
@@ -112,7 +136,9 @@ export default async function SlugPage({ params }: Props) {
 
   // Fetch products here so the layout reflects what actually renders —
   // stale Sanity handles must not split the grid around an empty section.
-  const productHandles: string[] = content._type === 'event' ? (content.products ?? []) : []
+  // Cleaned because draft mode threads invisible source-map characters through
+  // every string, and a handle carrying those matches nothing in Shopify.
+  const productHandles: string[] = stegaClean(content.products ?? [])
   const eventProducts = await translateContent(
     (await Promise.all(productHandles.map((handle) => getProductByHandle(handle)))).filter(
       (p): p is Product => p !== null,
@@ -121,6 +147,25 @@ export default async function SlugPage({ params }: Props) {
   )
   const hasEventProducts = eventProducts.length > 0
   const sections = content.sections ?? []
+
+  // A plain page that sells something is laid out like the shop instead: its
+  // text beside its products. The text sections move into that listing, so
+  // only the rest are left to render underneath.
+  if (!isEvent && hasEventProducts) {
+    const otherSections = sections.filter(
+      (section: EventPageSection) => section._type !== 'tekstSeksjon',
+    )
+    return (
+      <PageProductsLayout page={content} products={eventProducts}>
+        <SchemaGenerator seo={content.seo} document={content} />
+        {otherSections.length > 0 && (
+          <div className={styles.eventGrid}>
+            <PageSectionRenderer locale={locale} sections={otherSections} />
+          </div>
+        )}
+      </PageProductsLayout>
+    )
+  }
 
   // Only split the grid into two when an EventProductsSection needs to be
   // injected after the first section. Otherwise, keep a single grid so the
