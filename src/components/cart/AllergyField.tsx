@@ -34,7 +34,7 @@ export function AllergyField({ value, onChange, disabled }: AllergyFieldProps) {
         placeholder={t('F.eks. gluten, nøtter eller laktose')}
         aria-describedby={`${id}-hint`}
         maxLength={MAX_LENGTH}
-        rows={2}
+        rows={1}
         disabled={disabled}
       />
       <p id={`${id}-hint`} className={styles.hint}>

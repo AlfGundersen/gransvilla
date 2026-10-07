@@ -18,6 +18,8 @@
   font-size: var(--text-base);
   color: var(--color-foreground);
   width: 100%;
+  /* One line, as tall as the quantity stepper it sits beside */
+  min-height: 46px;
   resize: vertical;
 }
 
