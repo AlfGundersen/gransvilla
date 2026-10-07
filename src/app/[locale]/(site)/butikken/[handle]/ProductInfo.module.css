@@ -120,6 +120,20 @@
    Quantity Selector
    =========================================== */
 
+.productInfoOrderRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-lg);
+}
+
+/* Takes what the quantity leaves, and drops to its own row once that is too
+   little to type in. */
+.productInfoAllergies {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
 .productInfoQuantitySection {
   display: flex;
   flex-direction: column;

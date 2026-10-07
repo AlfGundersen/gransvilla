@@ -252,37 +252,41 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
 
       {/* Quantity Selector - hidden for coming soon */}
       {!product.comingSoon && (
-        <div className={styles.productInfoQuantitySection}>
-          <label className={styles.productInfoQuantityLabel}>{t('Antall')}</label>
-          <div className={styles.productInfoQuantity}>
-            <button
-              type="button"
-              className={styles.productInfoQuantityButton}
-              onClick={decreaseQuantity}
-              disabled={quantity <= 1}
-              aria-label={t('Reduser antall')}
-            >
-              -
-            </button>
-            <span className={styles.productInfoQuantityValue}>{quantity}</span>
-            <button
-              type="button"
-              className={styles.productInfoQuantityButton}
-              onClick={increaseQuantity}
-              disabled={maxQuantity !== null && quantity >= maxQuantity}
-              aria-label={t('Øk antall')}
-            >
-              +
-            </button>
+        <div className={styles.productInfoOrderRow}>
+          <div className={styles.productInfoQuantitySection}>
+            <label className={styles.productInfoQuantityLabel}>{t('Antall')}</label>
+            <div className={styles.productInfoQuantity}>
+              <button
+                type="button"
+                className={styles.productInfoQuantityButton}
+                onClick={decreaseQuantity}
+                disabled={quantity <= 1}
+                aria-label={t('Reduser antall')}
+              >
+                -
+              </button>
+              <span className={styles.productInfoQuantityValue}>{quantity}</span>
+              <button
+                type="button"
+                className={styles.productInfoQuantityButton}
+                onClick={increaseQuantity}
+                disabled={maxQuantity !== null && quantity >= maxQuantity}
+                aria-label={t('Øk antall')}
+              >
+                +
+              </button>
+            </div>
+            {maxQuantity !== null && maxQuantity <= 10 && maxQuantity > 0 && (
+              <p className={styles.productInfoStockWarning}>Kun {maxQuantity} igjen på lager</p>
+            )}
           </div>
-          {maxQuantity !== null && maxQuantity <= 10 && maxQuantity > 0 && (
-            <p className={styles.productInfoStockWarning}>Kun {maxQuantity} igjen på lager</p>
+          {/* Beside the quantity where there is room, wrapping underneath where there is not */}
+          {product.askAllergies && selectedVariant?.availableForSale !== false && (
+            <div className={styles.productInfoAllergies}>
+              <AllergyField value={allergies} onChange={setAllergies} />
+            </div>
           )}
         </div>
-      )}
-
-      {product.askAllergies && !product.comingSoon && selectedVariant?.availableForSale !== false && (
-        <AllergyField value={allergies} onChange={setAllergies} />
       )}
 
       {/* Add to Cart or Coming Soon */}
