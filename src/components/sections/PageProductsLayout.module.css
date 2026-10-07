@@ -59,6 +59,15 @@
   --product-description-leading: 1.45;
 }
 
+/* Side by side, the card is half the window, so the text follows the window
+   down rather than outgrowing the box on a small laptop. Below this the
+   columns stack and the card is full width again. */
+@media (min-width: 1024px) {
+  .section .productColumn {
+    --product-description-size: clamp(var(--text-lg), 1.75vw, var(--text-2xl));
+  }
+}
+
 .section .productColumn::after {
   /* The shop's own rules for this line count rows of two and outrank anything
      written here, hence the !important. */
