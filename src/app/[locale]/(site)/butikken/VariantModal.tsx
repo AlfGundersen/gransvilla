@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { AllergyField } from '@/components/cart/AllergyField'
 import { useCart } from '@/context/CartContext'
 import { useLocale, useT } from '@/lib/i18n/provider'
 import { formatVariantTitle } from '@/lib/i18n/variant-date'
@@ -20,6 +21,8 @@ interface VariantModalProps {
   productTitle: string
   variants: Variant[]
   currencyCode: string
+  /** Ask for allergies before adding, for products that send them to the kitchen */
+  askAllergies?: boolean
 }
 
 export function VariantModal({
@@ -28,10 +31,12 @@ export function VariantModal({
   productTitle,
   variants,
   currencyCode,
+  askAllergies = false,
 }: VariantModalProps) {
   const { addToCart } = useCart()
   const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null)
   const [isAdding, setIsAdding] = useState(false)
+  const [allergies, setAllergies] = useState('')
   const modalRef = useRef<HTMLDivElement>(null)
   const t = useT()
   const locale = useLocale()
@@ -49,6 +54,7 @@ export function VariantModal({
   useEffect(() => {
     if (isOpen) {
       setSelectedVariantId(soleAvailableVariantId)
+      setAllergies('')
     }
   }, [isOpen, soleAvailableVariantId])
 
@@ -77,8 +83,10 @@ export function VariantModal({
 
     setIsAdding(true)
     try {
-      await addToCart(selectedVariantId, 1)
+      await addToCart(selectedVariantId, 1, askAllergies ? allergies : undefined)
       onClose()
+    } catch (error) {
+      console.error('Failed to add to cart:', error)
     } finally {
       setIsAdding(false)
     }
@@ -87,6 +95,8 @@ export function VariantModal({
   if (!isOpen) return null
 
   const selectedVariant = variants.find((v) => v.id === selectedVariantId)
+  // A product with nothing to choose only opens this to ask for allergies
+  const isDefaultOnly = variants.length === 1 && variants[0].title === 'Default Title'
 
   const modalContent = (
     <div className={styles.modalBackdrop} onClick={handleBackdropClick}>
@@ -101,9 +111,14 @@ export function VariantModal({
         </button>
 
         <h2 className={styles.modalTitle}>{productTitle}</h2>
-        <p className={styles.modalSubtitle}>{t('Velg en dato')}</p>
+        {!isDefaultOnly && <p className={styles.modalSubtitle}>{t('Velg en dato')}</p>}
 
-        <div className={styles.variantList} role="radiogroup" aria-label={t('Velg dato')}>
+        <div
+          className={styles.variantList}
+          role="radiogroup"
+          aria-label={t('Velg dato')}
+          hidden={isDefaultOnly}
+        >
           {variants.map((variant) => {
             const isSoldOut = !variant.availableForSale
             const price = parseFloat(variant.price.amount)
@@ -132,6 +147,12 @@ export function VariantModal({
             )
           })}
         </div>
+
+        {askAllergies && (
+          <div className={styles.allergies}>
+            <AllergyField value={allergies} onChange={setAllergies} disabled={isAdding} />
+          </div>
+        )}
 
         <button
           type="button"

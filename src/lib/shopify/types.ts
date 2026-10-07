@@ -48,11 +48,18 @@ export interface ShopifyProduct {
   comingSoon?: {
     value: string
   } | null
+  askAllergies?: {
+    value: string
+  } | null
 }
 
 export interface ShopifyCartLine {
   id: string
   quantity: number
+  attributes: {
+    key: string
+    value: string | null
+  }[]
   merchandise: {
     id: string
     title: string
@@ -101,6 +108,8 @@ export interface Product {
     values: string[]
   }[]
   comingSoon: boolean
+  /** The product page asks the buyer for allergies and sends them with the order */
+  askAllergies: boolean
 }
 
 export interface CartItem {
@@ -116,6 +125,7 @@ export interface CartItem {
     altText: string | null
   }
   handle: string
+  allergies?: string
 }
 
 export interface Cart {

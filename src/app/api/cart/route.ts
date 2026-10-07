@@ -1,6 +1,18 @@
 import { type NextRequest, NextResponse } from 'next/server'
+import { apiMessages } from '@/lib/api-messages'
+import { isPastVariantDate } from '@/lib/i18n/variant-date'
 import { rateLimit } from '@/lib/rate-limit'
-import { addToCart, createCart, getCart, removeFromCart, updateCartLine } from '@/lib/shopify'
+import {
+  ALLERGY_ATTRIBUTE,
+  addToCart,
+  createCart,
+  getCart,
+  getVariantForCart,
+  removeFromCart,
+  updateCartLine,
+} from '@/lib/shopify'
+
+const MAX_ALLERGIES_LENGTH = 300
 
 function isNonEmptyString(value: unknown): value is string {
   return typeof value === 'string' && value.length > 0 && value.length < 500
@@ -35,7 +47,7 @@ export async function POST(request: NextRequest) {
   if (limited) return limited
 
   try {
-    const { cartId, variantId, quantity = 1 } = await request.json()
+    const { cartId, variantId, quantity = 1, allergies } = await request.json()
 
     if (!isNonEmptyString(variantId)) {
       return NextResponse.json({ error: 'Valid variantId is required' }, { status: 400 })
@@ -48,19 +60,40 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    if (allergies !== undefined && typeof allergies !== 'string') {
+      return NextResponse.json({ error: 'Allergies must be text' }, { status: 400 })
+    }
+
+    const variant = await getVariantForCart(variantId)
+    if (!variant) {
+      return NextResponse.json({ error: 'Valid variantId is required' }, { status: 400 })
+    }
+
+    // A page rendered before the date passed can still offer it
+    if (isPastVariantDate(variant.title)) {
+      return NextResponse.json({ error: apiMessages.datePassed }, { status: 409 })
+    }
+
+    // Only kept for a product that asks for it, so the attribute cannot be
+    // used to write arbitrary text onto any order line.
+    const allergyText = variant.askAllergies
+      ? (allergies ?? '').replace(/\s+/g, ' ').trim().slice(0, MAX_ALLERGIES_LENGTH)
+      : ''
+    const attributes = allergyText ? [{ key: ALLERGY_ATTRIBUTE, value: allergyText }] : []
+
     let cart
 
     if (cartId && isNonEmptyString(cartId)) {
       // Try to add to existing cart
       try {
-        cart = await addToCart(cartId, variantId, quantity)
+        cart = await addToCart(cartId, variantId, quantity, attributes)
       } catch {
         // Cart might be expired, create new one
-        cart = await createCart(variantId, quantity)
+        cart = await createCart(variantId, quantity, attributes)
       }
     } else {
       // Create new cart with item
-      cart = await createCart(variantId, quantity)
+      cart = await createCart(variantId, quantity, attributes)
     }
 
     return NextResponse.json({ cart })

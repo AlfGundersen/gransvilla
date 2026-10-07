@@ -9,9 +9,17 @@ interface AddToCartButtonProps {
   variantId: string
   available: boolean
   quantity?: number
+  allergies?: string
+  onAdded?: () => void
 }
 
-export function AddToCartButton({ variantId, available, quantity = 1 }: AddToCartButtonProps) {
+export function AddToCartButton({
+  variantId,
+  available,
+  quantity = 1,
+  allergies,
+  onAdded,
+}: AddToCartButtonProps) {
   const t = useT()
   const { addToCart, isLoading: cartLoading } = useCart()
   const [isAdding, setIsAdding] = useState(false)
@@ -25,8 +33,9 @@ export function AddToCartButton({ variantId, available, quantity = 1 }: AddToCar
     setIsAdding(true)
 
     try {
-      await addToCart(variantId, quantity)
+      await addToCart(variantId, quantity, allergies)
       setAdded(true)
+      onAdded?.()
       setTimeout(() => setAdded(false), 2000)
     } catch (error) {
       console.error('Failed to add to cart:', error)

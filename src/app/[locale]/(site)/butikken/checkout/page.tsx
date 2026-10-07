@@ -44,7 +44,7 @@ export default function CheckoutPage() {
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || t('Noe gikk galt'))
+        throw new Error(data.error ? t(data.error) : t('Noe gikk galt'))
       }
 
       // Validate checkout URL points to Shopify before redirecting
@@ -103,6 +103,11 @@ export default function CheckoutPage() {
                 {item.variantTitle !== 'Default Title' && (
                   <p className={styles.checkoutItemVariant}>
                     {formatVariantTitle(item.variantTitle, locale)}
+                  </p>
+                )}
+                {item.allergies && (
+                  <p className={styles.checkoutItemVariant}>
+                    {t('Allergier')}: {item.allergies}
                   </p>
                 )}
                 <p className={styles.checkoutItemMeta}>

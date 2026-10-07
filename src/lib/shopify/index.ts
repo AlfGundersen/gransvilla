@@ -1,3 +1,4 @@
+import { isPastVariantDate } from '@/lib/i18n/variant-date'
 import { shopifyFetch } from './client'
 import {
   ADD_TO_CART_MUTATION,
@@ -9,6 +10,7 @@ import {
   REMOVE_FROM_CART_MUTATION,
   UPDATE_CART_BUYER_MUTATION,
   UPDATE_CART_MUTATION,
+  VARIANT_FOR_CART_QUERY,
 } from './queries'
 import type { Cart, CartItem, Product, ShopifyCart, ShopifyProduct } from './types'
 
@@ -21,24 +23,64 @@ export type Collection = {
   products: Product[]
 }
 
+/**
+ * The line item attribute a buyer's allergies travel under. Shopify shows it
+ * beneath the line in checkout, on the order and on the packing slip, so the
+ * key is the Norwegian word the kitchen reads.
+ */
+export const ALLERGY_ATTRIBUTE = 'Allergier'
+
+type CartLineAttribute = { key: string; value: string }
+
 function displayCurrency(code: string): string {
   return code === 'NOK' ? 'kr' : code
 }
 
 // Helper to transform Shopify product to simplified format
 function transformProduct(product: ShopifyProduct): Product {
+  // Shopify does not know a variant titled `08.11.2026 kl. 12:00` is a date,
+  // so one that has been stays for sale until it is deleted there. Dropped
+  // here, it is gone from every listing, page and picker at once.
+  const allVariants = product.variants.edges.map((edge) => edge.node)
+  const variants = allVariants.filter((variant) => !isPastVariantDate(variant.title))
+  const droppedPast = variants.length < allVariants.length
+
+  // The options list is separate from the variants, and would go on offering
+  // a date no variant is left to back.
+  const options = droppedPast
+    ? product.options
+        ?.map((option) => ({
+          ...option,
+          values: option.values.filter((value) =>
+            variants.some((variant) =>
+              variant.selectedOptions?.some(
+                (selected) => selected.name === option.name && selected.value === value,
+              ),
+            ),
+          ),
+        }))
+        .filter((option) => option.values.length > 0)
+    : product.options
+
+  // Shopify's lowest price may belong to a date that has been.
+  const price =
+    droppedPast && variants.length > 0
+      ? Math.min(...variants.map((variant) => parseFloat(variant.price.amount)))
+      : parseFloat(product.priceRange.minVariantPrice.amount)
+
   return {
     id: product.id,
     title: product.title,
     handle: product.handle,
     description: product.description,
     descriptionHtml: product.descriptionHtml,
-    price: parseFloat(product.priceRange.minVariantPrice.amount),
+    price,
     currencyCode: displayCurrency(product.priceRange.minVariantPrice.currencyCode),
     images: product.images.edges.map((edge) => edge.node),
-    variants: product.variants.edges.map((edge) => edge.node),
-    options: product.options,
+    variants,
+    options,
     comingSoon: product.comingSoon?.value === 'true',
+    askAllergies: product.askAllergies?.value === 'true',
   }
 }
 
@@ -57,6 +99,9 @@ function transformCart(cart: ShopifyCart): Cart {
       currencyCode: displayCurrency(edge.node.merchandise.price.currencyCode),
       image: edge.node.merchandise.product.images.edges[0]?.node,
       handle: edge.node.merchandise.product.handle,
+      allergies:
+        edge.node.attributes.find((attribute) => attribute.key === ALLERGY_ATTRIBUTE)?.value ||
+        undefined,
     })),
     totalAmount: parseFloat(cart.cost.totalAmount.amount),
     currencyCode: displayCurrency(cart.cost.totalAmount.currencyCode),
@@ -122,9 +167,35 @@ export async function getProductByHandle(handle: string): Promise<Product | null
   return transformProduct(data.productByHandle)
 }
 
+/**
+ * What the cart route checks before accepting a variant: its title, to turn
+ * away a date that has been, and whether its product takes allergies at all.
+ */
+export async function getVariantForCart(
+  variantId: string,
+): Promise<{ title: string; askAllergies: boolean } | null> {
+  const data = await shopifyFetch<{
+    node: { title?: string; product?: { askAllergies: { value: string } | null } } | null
+  }>({
+    query: VARIANT_FOR_CART_QUERY,
+    variables: { id: variantId },
+  })
+
+  if (!data.node?.title) return null
+
+  return {
+    title: data.node.title,
+    askAllergies: data.node.product?.askAllergies?.value === 'true',
+  }
+}
+
 // Create a new cart
-export async function createCart(variantId?: string, quantity = 1): Promise<Cart> {
-  const input = variantId ? { lines: [{ merchandiseId: variantId, quantity }] } : {}
+export async function createCart(
+  variantId?: string,
+  quantity = 1,
+  attributes: CartLineAttribute[] = [],
+): Promise<Cart> {
+  const input = variantId ? { lines: [{ merchandiseId: variantId, quantity, attributes }] } : {}
 
   const data = await shopifyFetch<{
     cartCreate: { cart: ShopifyCart }
@@ -137,14 +208,19 @@ export async function createCart(variantId?: string, quantity = 1): Promise<Cart
 }
 
 // Add item to cart
-export async function addToCart(cartId: string, variantId: string, quantity = 1): Promise<Cart> {
+export async function addToCart(
+  cartId: string,
+  variantId: string,
+  quantity = 1,
+  attributes: CartLineAttribute[] = [],
+): Promise<Cart> {
   const data = await shopifyFetch<{
     cartLinesAdd: { cart: ShopifyCart }
   }>({
     query: ADD_TO_CART_MUTATION,
     variables: {
       cartId,
-      lines: [{ merchandiseId: variantId, quantity }],
+      lines: [{ merchandiseId: variantId, quantity, attributes }],
     },
   })
 

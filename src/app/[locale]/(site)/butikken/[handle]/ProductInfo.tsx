@@ -4,6 +4,7 @@ import parse from 'html-react-parser'
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
+import { AllergyField } from '@/components/cart/AllergyField'
 import { localeHref } from '@/lib/i18n/href'
 import { useLocale, useT } from '@/lib/i18n/provider'
 import { formatVariantTitle } from '@/lib/i18n/variant-date'
@@ -31,6 +32,7 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
   const searchParams = useSearchParams()
 
   const [quantity, setQuantity] = useState(1)
+  const [allergies, setAllergies] = useState('')
   const [email, setEmail] = useState('')
   const [consent, setConsent] = useState(false)
   const [newsletterStatus, setNewsletterStatus] = useState<
@@ -279,6 +281,10 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
         </div>
       )}
 
+      {product.askAllergies && !product.comingSoon && selectedVariant?.availableForSale !== false && (
+        <AllergyField value={allergies} onChange={setAllergies} />
+      )}
+
       {/* Add to Cart or Coming Soon */}
       {product.comingSoon ? (
         <>
@@ -342,14 +348,20 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
         <button className={styles.addToCartDisabled} disabled>
           {t('Velg en dato')}
         </button>
+      ) : selectedVariant ? (
+        <AddToCartButton
+          variantId={selectedVariant.id}
+          available={selectedVariant.availableForSale}
+          quantity={quantity}
+          allergies={product.askAllergies ? allergies : undefined}
+          // The next lunch added is as likely to be for someone else
+          onAdded={() => setAllergies('')}
+        />
       ) : (
-        selectedVariant && (
-          <AddToCartButton
-            variantId={selectedVariant.id}
-            available={selectedVariant.availableForSale}
-            quantity={quantity}
-          />
-        )
+        // Every date has been, so there is no variant left to offer
+        <button type="button" className={styles.addToCartDisabled} disabled>
+          {t('Utsolgt')}
+        </button>
       )}
 
       {/* Related Events */}

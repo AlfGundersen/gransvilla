@@ -1,4 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server'
+import { apiMessages } from '@/lib/api-messages'
+import { isPastVariantDate } from '@/lib/i18n/variant-date'
 import { rateLimit } from '@/lib/rate-limit'
 import { getCart } from '@/lib/shopify'
 
@@ -31,6 +33,11 @@ export async function POST(request: NextRequest) {
     const cart = await getCart(cartId)
     if (!cart) {
       return NextResponse.json({ error: 'Cart not found' }, { status: 404 })
+    }
+
+    // A cart can sit in the browser for days, long enough for a date in it to pass
+    if (cart.items.some((item) => isPastVariantDate(item.variantTitle))) {
+      return NextResponse.json({ error: apiMessages.cartDatePassed }, { status: 409 })
     }
 
     // Validate checkout URL points to Shopify
