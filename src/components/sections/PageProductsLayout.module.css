@@ -1,0 +1,84 @@
+/* Additions to the shop classes this layout borrows from
+   butikken/page.module.css. Selectors are doubled up with .section so they
+   outrank the single-class shop rules whatever order the two files load in. */
+
+.section .infoContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.section .logo {
+  display: block;
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+}
+
+.infoText {
+  font-size: var(--text-base);
+  line-height: 1.6;
+  max-width: 52ch;
+}
+
+.infoText p {
+  margin: 0 0 var(--space-md);
+}
+
+.infoText p:last-child {
+  margin-bottom: 0;
+}
+
+.infoText a {
+  text-decoration: underline;
+}
+
+/* Two columns rather than the shop's three: the text takes one half and the
+   products the other, one to a row, so both get more room than a category in
+   the shop does. The shop's right-hand rule and padding assume a second product
+   beside each one, which there never is here. */
+@media (min-width: 1024px) {
+  .section {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.section .products {
+  grid-template-columns: 1fr;
+}
+
+.section .productColumn {
+  padding-right: 0;
+  /* The card is about twice the width it has in the shop, and the hover text
+     set at the shop's size left most of the box empty. */
+  --product-description-size: var(--text-2xl);
+  --product-description-leading: 1.45;
+}
+
+.section .productColumn::after {
+  /* The shop's own rules for this line count rows of two and outrank anything
+     written here, hence the !important. */
+  display: none !important;
+}
+
+/* With one product to a row, a plain rule between them does the job. */
+.section .products > * + * .productColumn {
+  border-top: 1px solid var(--color-border);
+}
+
+/* The shop hides its sidebar on mobile in favour of a toggle this layout does
+   not have, so the text has to be put back. */
+@media (max-width: 767px) {
+  .section .info {
+    display: flex;
+    padding: 0 0 var(--space-lg);
+  }
+
+  .section .infoContent {
+    position: static;
+  }
+
+  .infoText {
+    max-width: none;
+  }
+}

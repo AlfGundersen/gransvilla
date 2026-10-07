@@ -412,6 +412,7 @@ export const pageQuery = groq`
       }
     },
     ${eventSectionsFragment},
+    "products": products[].productHandle,
     seo {
       ${seoFragment}
     }
@@ -442,6 +443,24 @@ export const salgsvilkarQuery = groq`
 export const eventsByProductHandleQuery = groq`
   *[_type == "event" && $handle in products[].productHandle] {
     _id,
+    title,
+    slug
+  }
+`
+
+// Products a page sells on its own and keeps out of the shop listing. The
+// defined() guards matter: without them a page with no products contributes a
+// null, which generateStaticParams rejects as a slug.
+export const hiddenProductHandlesQuery = groq`
+  array::unique(
+    *[_type == "page" && defined(products)]
+      .products[skjulIButikken == true && defined(productHandle)].productHandle
+  )
+`
+
+// The page a product is sold from, for products kept out of the shop listing
+export const pageByHiddenProductHandleQuery = groq`
+  *[_type == "page" && count(products[skjulIButikken == true && productHandle == $handle]) > 0][0] {
     title,
     slug
   }

@@ -1,6 +1,7 @@
 import { SearchIcon } from '@sanity/icons'
 import { defineField, defineType } from 'sanity'
 import { AltTextInput } from '../../components/AltTextInput'
+import { ShopifyProductInput } from '../../components/ShopifyProductInput'
 import { watermarkFields } from '../objects/watermarkFields'
 
 export default defineType({
@@ -87,6 +88,47 @@ export default defineType({
         { type: 'bildeSeksjon' },
         { type: 'bildeTekstSeksjon' },
         { type: 'bildegalleriSeksjon' },
+      ],
+      group: 'content',
+    }),
+    defineField({
+      name: 'products',
+      title: 'Tilknyttede produkter',
+      type: 'array',
+      description:
+        'Produkter fra nettbutikken som selges fra denne siden. Siden får da samme oppsett som butikken: teksten til venstre og produktene til høyre.',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'productHandle',
+              title: 'Velg produkt fra Shopify',
+              type: 'string',
+              components: { input: ShopifyProductInput },
+            }),
+            defineField({
+              name: 'skjulIButikken',
+              title: 'Skjul i butikken',
+              type: 'boolean',
+              description:
+                'Produktet vises bare på denne siden og via direktelenke, ikke i butikkoversikten.',
+              initialValue: false,
+            }),
+          ],
+          preview: {
+            select: {
+              productHandle: 'productHandle',
+              skjulIButikken: 'skjulIButikken',
+            },
+            prepare({ productHandle, skjulIButikken }) {
+              return {
+                title: productHandle || 'Velg et produkt',
+                subtitle: skjulIButikken ? 'Skjult i butikken' : undefined,
+              }
+            },
+          },
+        },
       ],
       group: 'content',
     }),

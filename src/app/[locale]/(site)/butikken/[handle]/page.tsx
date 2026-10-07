@@ -1,23 +1,14 @@
 import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
-import { BackLink } from '@/components/navigation/BackLink'
-import { JsonLd } from '@/components/seo/JsonLd'
+import { redirect } from 'next/navigation'
 import { locales } from '@/lib/i18n/config'
 import { localeHref } from '@/lib/i18n/href'
-import { alternatesFor, openGraphLocale } from '@/lib/i18n/metadata'
-import { getTranslator, translateContent } from '@/lib/i18n/server'
-import { sanityFetch } from '@/lib/sanity/live'
-import { eventsByProductHandleQuery } from '@/lib/sanity/queries'
-import { getProductByHandle, getProducts } from '@/lib/shopify'
-import { ProductGallery } from './ProductGallery'
-import { ProductInfo } from './ProductInfo'
-import styles from './page.module.css'
-
-interface RelatedEvent {
-  _id: string
-  title: string
-  slug: { current: string }
-}
+import { getProducts } from '@/lib/shopify'
+import {
+  fetchOwnerPage,
+  ProductPageContent,
+  productMetadata,
+  productPath,
+} from './ProductPageContent'
 
 export const revalidate = 60
 export const dynamicParams = true
@@ -28,27 +19,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, handle } = await params
-  const t = getTranslator(locale)
-  const product = await translateContent(await getProductByHandle(handle), locale)
-
-  if (!product) {
-    return { title: t('Produkt ikke funnet') }
-  }
-
-  return {
-    title: product.title,
-    description: product.description,
-    alternates: alternatesFor(`/butikken/${handle}`, locale),
-    openGraph: {
-      locale: openGraphLocale(locale),
-      title: product.title,
-      description: product.description,
-      type: 'website',
-      ...(product.images[0] && {
-        images: [{ url: product.images[0].url, alt: product.images[0].altText || product.title }],
-      }),
-    },
-  }
+  return productMetadata(locale, handle)
 }
 
 export async function generateStaticParams() {
@@ -66,49 +37,12 @@ export async function generateStaticParams() {
 
 export default async function ProductPage({ params }: Props) {
   const { locale, handle } = await params
-  const t = getTranslator(locale)
-  const [rawProduct, { data: rawRelated }] = await Promise.all([
-    getProductByHandle(handle),
-    sanityFetch({
-      query: eventsByProductHandleQuery,
-      params: { handle },
-    }) as Promise<{ data: RelatedEvent[] }>,
-  ])
-  const product = await translateContent(rawProduct, locale)
-  const relatedEvents = await translateContent(rawRelated, locale)
 
-  if (!product) {
-    notFound()
+  // A product kept out of the shop has its own address outside /butikken. The
+  // links that still point here — its card, the cart — are sent on to it.
+  if (await fetchOwnerPage(handle)) {
+    redirect(localeHref(productPath(handle, true), locale))
   }
 
-  return (
-    <div className={styles.productPage}>
-      <JsonLd
-        data={{
-          '@context': 'https://schema.org',
-          '@type': 'Product',
-          name: product.title,
-          description: product.description,
-          ...(product.images[0] && { image: product.images[0].url }),
-          offers: {
-            '@type': 'Offer',
-            price: product.price,
-            priceCurrency: product.currencyCode,
-            availability: product.variants.some((v) => v.availableForSale)
-              ? 'https://schema.org/InStock'
-              : 'https://schema.org/OutOfStock',
-          },
-        }}
-      />
-      <BackLink
-        href={localeHref('/butikken', locale)}
-        label={t('Tilbake til butikken')}
-        className={styles.productBack}
-      />
-      <div className={styles.productContainer}>
-        <ProductGallery images={product.images} title={product.title} handle={handle} />
-        <ProductInfo product={product} relatedEvents={relatedEvents} />
-      </div>
-    </div>
-  )
+  return <ProductPageContent locale={locale} handle={handle} />
 }

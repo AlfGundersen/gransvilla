@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { alternatesFor } from '@/lib/i18n/metadata'
 import { getTranslator, translateContent } from '@/lib/i18n/server'
+import { getHiddenProductHandles } from '@/lib/sanity/hiddenProducts'
 import { getCollections } from '@/lib/shopify'
 import CollapsibleSection from './CollapsibleSection'
 import ProductCard from './ProductCard'
@@ -32,8 +33,12 @@ export default async function ButikkenPage({ params }: Params) {
     // Store unavailable - show empty state
   }
 
-  // Filter out empty collections (Shopify controls order)
-  const activeCollections = collections.filter((c) => c.products.length > 0)
+  // Products sold only from a page of their own are left out, and a collection
+  // that held nothing else goes with them (Shopify controls order)
+  const hidden = await getHiddenProductHandles()
+  const activeCollections = collections
+    .map((c) => ({ ...c, products: c.products.filter((p) => !hidden.has(p.handle)) }))
+    .filter((c) => c.products.length > 0)
 
   return (
     <div className={styles.shopPage}>

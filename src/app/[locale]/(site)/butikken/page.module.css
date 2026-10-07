@@ -325,9 +325,11 @@
 }
 
 .shopProductDescription {
-  font-size: var(--text-md);
+  /* Overridable because a page that sells a single product shows this card far
+     larger than the shop does — see PageProductsLayout. */
+  font-size: var(--product-description-size, var(--text-md));
   color: var(--color-foreground);
-  line-height: 1.6;
+  line-height: var(--product-description-leading, 1.6);
   margin: 0;
   word-break: break-word;
   white-space: normal;
