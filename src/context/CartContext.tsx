@@ -18,7 +18,7 @@ interface CartContextType {
   stockNotice: string | null
   openCart: () => void
   closeCart: () => void
-  addToCart: (variantId: string, quantity?: number) => Promise<void>
+  addToCart: (variantId: string, quantity?: number, allergies?: string) => Promise<void>
   updateQuantity: (lineId: string, quantity: number) => Promise<void>
   removeFromCart: (lineId: string) => Promise<void>
   cartCount: number
@@ -67,7 +67,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const openCart = useCallback(() => setIsOpen(true), [])
   const closeCart = useCallback(() => setIsOpen(false), [])
 
-  const addToCart = useCallback(async (variantId: string, quantity = 1) => {
+  const addToCart = useCallback(async (variantId: string, quantity = 1, allergies?: string) => {
     setIsLoading(true)
     setStockNotice(null)
     try {
@@ -82,10 +82,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
       const response = await fetch('/api/cart', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cartId, variantId, quantity }),
+        body: JSON.stringify({ cartId, variantId, quantity, allergies }),
       })
 
-      if (!response.ok) throw new Error('Failed to add to cart')
+      if (!response.ok) {
+        // The one refusal worth explaining: the date passed while the page was open
+        if (response.status === 409) {
+          const { error } = await response.json()
+          setStockNotice(error)
+          setTimeout(() => setStockNotice(null), 10000)
+        }
+        throw new Error('Failed to add to cart')
+      }
 
       const data = await response.json()
       setCart(data.cart)

@@ -28,6 +28,7 @@ type ProductCardProps = {
     images: { url: string; altText: string | null }[]
     variants: Variant[]
     comingSoon?: boolean
+    askAllergies?: boolean
   }
 }
 
@@ -53,12 +54,15 @@ export default function ProductCard({ product }: ProductCardProps) {
     product.variants.length > 1 ||
     (product.variants.length === 1 && product.variants[0].title !== 'Default Title')
 
+  const opensModal = hasMultipleVariants || (product.askAllergies ?? false)
+
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
 
-    // If product has variants, open modal instead
-    if (hasMultipleVariants) {
+    // If product has variants, open modal instead. One that asks for allergies
+    // goes the same way, or adding from the card would skip the question.
+    if (opensModal) {
       setIsModalOpen(true)
       return
     }
@@ -184,13 +188,14 @@ export default function ProductCard({ product }: ProductCardProps) {
       </div>
 
       {/* Variant selection modal */}
-      {hasMultipleVariants && (
+      {opensModal && (
         <VariantModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           productTitle={product.title}
           variants={product.variants}
           currencyCode={product.currencyCode}
+          askAllergies={product.askAllergies}
         />
       )}
     </div>

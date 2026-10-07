@@ -130,7 +130,8 @@ export function EventProductCard({ product }: EventProductCardProps) {
         </div>
       )}
       <div className={styles.eventProductCardButtons}>
-        {available && (
+        {/* A product that asks for allergies is added from its own page, where the question is */}
+        {available && !product.askAllergies && (
           <button
             type="button"
             className={`${styles.eventProductButton} site-button`}
@@ -258,7 +259,8 @@ export function EventProductSingle({ product }: EventProductSingleProps) {
         )}
       </div>
       <div className={styles.singleProductButtons}>
-        {available && (
+        {/* A product that asks for allergies is added from its own page, where the question is */}
+        {available && !product.askAllergies && (
           <button
             type="button"
             className={`${styles.singleProductPrimaryBtn} site-button`}

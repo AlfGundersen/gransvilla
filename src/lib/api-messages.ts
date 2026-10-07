@@ -20,6 +20,9 @@ export const apiMessages = {
   emailRequired: 'E-postadresse er påkrevd',
   newsletterFailed: 'Kunne ikke legge til på nyhetsbrevlisten',
   generic: 'Noe gikk galt. Vennligst prøv igjen.',
+  datePassed: 'Denne datoen er ikke lenger tilgjengelig.',
+  cartDatePassed:
+    'Handlekurven inneholder en dato som ikke lenger er tilgjengelig. Fjern den for å gå videre.',
 } as const
 
 export type ApiMessage = (typeof apiMessages)[keyof typeof apiMessages]

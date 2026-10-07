@@ -152,6 +152,11 @@ export function CartDrawer() {
                         {formatVariantTitle(item.variantTitle, locale)}
                       </p>
                     )}
+                    {item.allergies && (
+                      <p className={styles.itemVariant}>
+                        {t('Allergier')}: {item.allergies}
+                      </p>
+                    )}
                     <p className={styles.itemPrice}>
                       {item.price.toLocaleString(numberLocale)} {item.currencyCode}
                     </p>

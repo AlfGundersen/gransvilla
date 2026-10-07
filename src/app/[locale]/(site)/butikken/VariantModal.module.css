@@ -126,6 +126,14 @@
   color: var(--color-background);
 }
 
+.variantList[hidden] {
+  display: none;
+}
+
+.allergies {
+  margin-bottom: var(--space-lg);
+}
+
 .addButton {
   width: 100%;
   padding: var(--space-md);

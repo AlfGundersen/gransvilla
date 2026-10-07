@@ -56,6 +56,9 @@ export const COLLECTIONS_QUERY = `
                 comingSoon: metafield(namespace: "custom", key: "coming_soon") {
                   value
                 }
+                askAllergies: metafield(namespace: "custom", key: "ask_allergies") {
+                  value
+                }
               }
             }
           }
@@ -116,6 +119,9 @@ export const PRODUCTS_QUERY = `
           comingSoon: metafield(namespace: "custom", key: "coming_soon") {
             value
           }
+          askAllergies: metafield(namespace: "custom", key: "ask_allergies") {
+            value
+          }
         }
       }
     }
@@ -147,7 +153,7 @@ export const PRODUCT_BY_HANDLE_QUERY = `
           }
         }
       }
-      variants(first: 20) {
+      variants(first: 100) {
         edges {
           node {
             id
@@ -172,6 +178,9 @@ export const PRODUCT_BY_HANDLE_QUERY = `
       comingSoon: metafield(namespace: "custom", key: "coming_soon") {
         value
       }
+      askAllergies: metafield(namespace: "custom", key: "ask_allergies") {
+        value
+      }
     }
   }
 `
@@ -188,6 +197,10 @@ export const CREATE_CART_MUTATION = `
             node {
               id
               quantity
+              attributes {
+                key
+                value
+              }
               merchandise {
                 ... on ProductVariant {
                   id
@@ -236,6 +249,10 @@ export const ADD_TO_CART_MUTATION = `
             node {
               id
               quantity
+              attributes {
+                key
+                value
+              }
               merchandise {
                 ... on ProductVariant {
                   id
@@ -283,6 +300,10 @@ export const GET_CART_QUERY = `
           node {
             id
             quantity
+            attributes {
+              key
+              value
+            }
             merchandise {
               ... on ProductVariant {
                 id
@@ -330,6 +351,10 @@ export const UPDATE_CART_MUTATION = `
             node {
               id
               quantity
+              attributes {
+                key
+                value
+              }
               merchandise {
                 ... on ProductVariant {
                   id
@@ -378,6 +403,10 @@ export const REMOVE_FROM_CART_MUTATION = `
             node {
               id
               quantity
+              attributes {
+                key
+                value
+              }
               merchandise {
                 ... on ProductVariant {
                   id
@@ -443,6 +472,10 @@ export const UPDATE_CART_BUYER_MUTATION = `
             node {
               id
               quantity
+              attributes {
+                key
+                value
+              }
               merchandise {
                 ... on ProductVariant {
                   id
@@ -482,6 +515,22 @@ export const UPDATE_CART_BUYER_MUTATION = `
       userErrors {
         field
         message
+      }
+    }
+  }
+`
+
+// What the cart route needs to know about a variant before accepting it
+export const VARIANT_FOR_CART_QUERY = `
+  query VariantForCart($id: ID!) {
+    node(id: $id) {
+      ... on ProductVariant {
+        title
+        product {
+          askAllergies: metafield(namespace: "custom", key: "ask_allergies") {
+            value
+          }
+        }
       }
     }
   }
