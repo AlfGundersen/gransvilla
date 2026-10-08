@@ -233,6 +233,8 @@ export async function getCart(cartId: string): Promise<Cart | null> {
     cart: ShopifyCart | null
   }>({
     query: GET_CART_QUERY,
+    // One visitor's cart as it is now, not as it was a minute ago
+    revalidate: 0,
     variables: { cartId },
   })
 

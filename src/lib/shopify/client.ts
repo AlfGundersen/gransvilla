@@ -8,6 +8,22 @@ interface ShopifyResponse<T> {
   errors?: { message: string }[]
 }
 
+/**
+ * Every Storefront request is a POST, queries and mutations alike, and
+ * `next.revalidate` puts a POST in Next's data cache keyed on its body. That is
+ * what makes the product pages fast — and what must never happen to a
+ * mutation: two visitors adding the same first item within a minute sent
+ * byte-identical `cartCreate` requests, the second was answered from the
+ * cache, and both walked away holding the same cart. An identical
+ * `cartLinesAdd` repeated inside the window was not sent at all.
+ *
+ * So a mutation is never cached, whatever the caller asks for, and neither is
+ * anything fetched with `revalidate: 0` — one visitor's cart, read back.
+ */
+function isMutation(query: string): boolean {
+  return /^\s*mutation\b/.test(query)
+}
+
 export async function shopifyFetch<T>({
   query,
   variables = {},
@@ -29,7 +45,9 @@ export async function shopifyFetch<T>({
         'X-Shopify-Storefront-Access-Token': storefrontToken,
       },
       body: JSON.stringify({ query, variables }),
-      next: { revalidate, tags },
+      ...(revalidate === 0 || isMutation(query)
+        ? { cache: 'no-store' as const }
+        : { next: { revalidate, tags } }),
     })
 
     const json: ShopifyResponse<T> = await response.json()
