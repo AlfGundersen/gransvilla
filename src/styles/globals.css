@@ -280,10 +280,18 @@ button {
    Focus styles
    -------------------------------------- */
 
-:focus-visible {
+/* The ring is for finding your place by keyboard. While the page is being
+   used with a pointer (<FocusModality> marks the document), nothing draws one:
+   not this rule, and not the outlines individual components set. */
+:where(html:not([data-pointer])) :focus-visible {
   outline: 1px solid var(--color-accent);
   outline-offset: 4px;
   border-radius: 5px;
+}
+
+html[data-pointer] :focus,
+html[data-pointer] :focus-visible {
+  outline: none !important;
 }
 
 @media (max-width: 768px) {
@@ -363,129 +371,77 @@ html.inverted img[src*="logo"] {
 }
 
 /*
- * The page travels left → right: the outgoing page leaves to the right and the
- * incoming one arrives from the left.
- */
-@keyframes slide-from-left {
-  from {
-    transform: translateX(-16px);
-  }
-
-  to {
-    transform: translateX(0);
-  }
-}
-
-@keyframes slide-to-right {
-  from {
-    transform: translateX(0);
-  }
-
-  to {
-    transform: translateX(16px);
-  }
-}
-
-/*
  * Page transition. Driven by the <ViewTransition> in (site)/template.tsx,
  * which tags this subtree with the `page-content` view-transition-class.
  *
- * Targeting the subtree rather than `root` is deliberate: `root` captures the
- * whole document, so a slide there would drag the sticky header along with it.
+ * One movement, and a slow one: the old page fades away, then the new one
+ * fades up in its place. Nothing slides and nothing travels. It used to — the
+ * pages moved sideways as they swapped, quickly, an image in a listing morphed
+ * into the hero of the page it led to on a curve of its own, and the footer
+ * snapped to its new place underneath. Each was reasonable alone; together
+ * they read as flicker. Slower is the point here: a second of calm is worth
+ * more than three hundred milliseconds of business.
+ *
+ * The two fades barely overlap. The old page is nearly gone before the new one
+ * starts to show, so at no point are two pages legible on top of each other.
  */
+:root {
+  --page-out: 420ms;
+  --page-in: 720ms;
+  --page-in-delay: 300ms;
+  --page-ease-out: cubic-bezier(0.4, 0, 0.6, 1);
+  --page-ease-in: cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
 ::view-transition-old(.page-content) {
-  animation: 260ms cubic-bezier(0.32, 0, 0.67, 0) both fade-out,
-    260ms cubic-bezier(0.32, 0, 0.67, 0) both slide-to-right;
+  animation: var(--page-out) var(--page-ease-out) both fade-out;
 }
 
-/*
- * Asymmetric on purpose. The outgoing page eases *in* (accelerates away), the
- * incoming one eases *out* (settles), and the 60ms delay lets the old page
- * clear before the new one lands instead of the two sliding through each
- * other. A single shared curve is the usual shortcut; this reads softer.
- */
 ::view-transition-new(.page-content) {
-  animation: 380ms cubic-bezier(0.22, 1, 0.36, 1) 60ms both fade-in,
-    380ms cubic-bezier(0.22, 1, 0.36, 1) 60ms both slide-from-left;
+  animation: var(--page-in) var(--page-ease-in) var(--page-in-delay) both fade-in;
 }
 
 /*
- * Listing → detail morphs. An image in a listing and the hero on the page it
- * links to carry the same view-transition-name, so the browser morphs one into
- * the other rather than cross-fading the page over both.
+ * The shell. Everything outside the page content is one snapshot: the header,
+ * and the footer, which sits wherever the page above it ends. Swapped
+ * instantly, the footer jumped to its new place the moment a link was
+ * followed, under a page that was still fading. It now fades with the page.
  *
- *   .product-image  shop grid, and the front page's featured product,
- *                   → the product gallery hero
- *   .page-image     the front page's featured columns, and the cards on
- *                   /arrangementer, → the hero on that page
- *
- * 440ms matches what the page swap totals (60ms delay + 380ms), so the image
- * stops moving at the same moment everything around it does. Running the morph
- * longer left it still travelling after the page had settled, which reads as
- * the navigation lagging rather than as emphasis.
- *
- * object-fit is pinned because the frame changes shape mid-flight, and without
- * it the snapshot stretches instead of cropping.
+ * The header is lifted out of that snapshot by name, so it is the one thing
+ * that does not move, fade or blink while a page changes. Named here and not
+ * in the header's own stylesheet: a CSS module rewrites the name along with
+ * its class names, and the rules below would no longer match it.
  */
-::view-transition-group(.product-image),
-::view-transition-group(.page-image) {
-  animation-duration: 440ms;
-  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+[data-site] > header {
+  view-transition-name: site-header;
 }
 
-/*
- * Matched shapes — the shop card and the gallery hero are both square, so the
- * default cross-fade is fine: the two frames look alike the whole way across.
- */
-::view-transition-old(.product-image),
-::view-transition-new(.product-image) {
-  animation-duration: 440ms;
-  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-  height: 100%;
-  object-fit: cover;
+::view-transition-old(root) {
+  animation: var(--page-out) var(--page-ease-out) both fade-out;
 }
 
-/*
- * Mismatched shapes — a portrait card into a landscape hero, or 4:3 into a
- * square one. The frame inverts while it travels and object-fit re-crops as it
- * goes, so with the default cross-fade you spend the middle of the transition
- * looking at two different crops of the same photo blended together.
- *
- * Fading them apart instead: the old image is gone by 220ms, the new one only
- * starts arriving at 160ms. The 60ms of overlap is enough to avoid a blank
- * frame, but short enough that the two crops are never both legible at once.
- * The group keeps morphing underneath for the full 440ms, so the image still
- * travels to where it is going.
- */
-::view-transition-old(.page-image) {
-  animation: 220ms cubic-bezier(0.4, 0, 1, 1) both fade-out;
-  height: 100%;
-  object-fit: cover;
-}
-
-::view-transition-new(.page-image) {
-  animation: 280ms cubic-bezier(0, 0, 0.2, 1) 160ms both fade-in;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* The shell (sticky header, footer) holds still while the page swaps. */
-::view-transition-old(root),
 ::view-transition-new(root) {
+  animation: var(--page-in) var(--page-ease-in) var(--page-in-delay) both fade-in;
+}
+
+::view-transition-group(site-header),
+::view-transition-old(site-header),
+::view-transition-new(site-header) {
   animation: none;
+}
+
+/* The header is the same before and after; show the new one and nothing else */
+::view-transition-old(site-header) {
+  display: none;
 }
 
 /* Reduce motion for accessibility */
 @media (prefers-reduced-motion: reduce) {
 
+  ::view-transition-old(root),
+  ::view-transition-new(root),
   ::view-transition-old(.page-content),
-  ::view-transition-new(.page-content),
-  ::view-transition-group(.product-image),
-  ::view-transition-old(.product-image),
-  ::view-transition-new(.product-image),
-  ::view-transition-group(.page-image),
-  ::view-transition-old(.page-image),
-  ::view-transition-new(.page-image) {
+  ::view-transition-new(.page-content) {
     animation: none;
   }
 

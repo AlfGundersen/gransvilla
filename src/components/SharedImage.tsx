@@ -1,50 +1,23 @@
-'use client'
-
-import { ViewTransition } from 'react'
-
 type SharedImageProps = {
-  /**
-   * Must match the name on the other side of the navigation, and must be
-   * unique among mounted elements. Keyed on the slug or product handle, which
-   * is what both sides already have in common.
-   */
-  name: string
-  /** CSS hook — see `::view-transition-*(.page-image)` in globals.css. */
+  /** Kept so the call sites still say which page an image leads to. */
+  name?: string
   transitionClass?: string
   children: React.ReactNode
 }
 
 /**
- * Pairs an image in a listing with the same image on the page it links to, so
- * the browser morphs one into the other instead of cross-fading the whole page
- * over it.
+ * Used to pair an image in a listing with the same image on the page it links
+ * to, so the browser morphed one into the other during the navigation.
  *
- * A client component because <ViewTransition> needs one, but the image itself
- * is still rendered on the server and passed through as children.
+ * It no longer does. The morph was one of several things moving at once when a
+ * page changed, and the site now has a single slow fade instead (globals.css,
+ * `.page-content`). The images are part of that fade like everything else.
  *
- * `default="none"` limits this to navigation. Without it, every unrelated
- * re-render in the subtree would animate too — which is what once left every
- * image on the site hidden behind an abandoned transition snapshot.
- *
- * enter/exit fall back to the page animation, and that is not optional. Naming
- * an element excludes it from its parent's snapshot, so with `share` alone an
- * unmatched image sat out the page transition entirely and popped into place
- * while everything around it faded — arriving at an event from the events
- * carousel or the "Andre arrangementer" list, or leaving the shop for anything
- * other than a product. `share` still wins whenever there is a match, so the
- * morph is unaffected; this only covers the case where there is nothing to
- * morph from.
+ * Left in place as a pass-through rather than deleted from every call site, so
+ * the morph can come back by restoring the <ViewTransition> here — and
+ * <WarmImage>, which sits beside these, still makes sure the big image is in
+ * the cache when the page fades up.
  */
-export function SharedImage({ name, transitionClass = 'page-image', children }: SharedImageProps) {
-  return (
-    <ViewTransition
-      name={name}
-      default="none"
-      share={transitionClass}
-      enter="page-content"
-      exit="page-content"
-    >
-      {children}
-    </ViewTransition>
-  )
+export function SharedImage({ children }: SharedImageProps) {
+  return children
 }

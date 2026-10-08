@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState, ViewTransition } from 'react'
+import { useState } from 'react'
 import { WarmImage } from '@/components/WarmImage'
 import { useCart } from '@/context/CartContext'
 import { localeHref } from '@/lib/i18n/href'
@@ -96,31 +96,13 @@ export default function ProductCard({ product }: ProductCardProps) {
           <WarmImage {...warmTarget(productHeroImage(product.images[0].url))} />
         )}
         {product.images[0] && (
-          /*
-           * Paired with the same name in ProductGallery, so the card image
-           * morphs into the product page hero instead of cross-fading.
-           * `default="none"` keeps it to that one case — without it, the
-           * hover overlay and badge would animate on every re-render.
-           *
-           * enter/exit matter more here than anywhere: a named element drops
-           * out of its parent's snapshot, so leaving the shop for anything
-           * but a product left every card in the grid popping out at once.
-           */
-          <ViewTransition
-            name={`product-image-${product.handle}`}
-            default="none"
-            share="product-image"
-            enter="page-content"
-            exit="page-content"
-          >
-            <Image
-              src={shopifyImageUrl(product.images[0].url, { width: 800, crop: 'center' })}
-              alt={product.images[0].altText || product.title}
-              fill
-              className={styles.shopImage}
-              sizes="(max-width: 767px) 100vw, 33vw"
-            />
-          </ViewTransition>
+          <Image
+            src={shopifyImageUrl(product.images[0].url, { width: 800, crop: 'center' })}
+            alt={product.images[0].altText || product.title}
+            fill
+            className={styles.shopImage}
+            sizes="(max-width: 767px) 100vw, 33vw"
+          />
         )}
 
         {/* Status badge */}
