@@ -54,13 +54,13 @@ export async function productMetadata(locale: string, handle: string): Promise<M
 
   return {
     title: product.title,
-    description: product.description,
+    description: product.description.replace(/\s+/g, ' '),
     ...(ownerPage && { robots: { index: false, follow: false } }),
     alternates: alternatesFor(productPath(handle, Boolean(ownerPage)), locale),
     openGraph: {
       locale: openGraphLocale(locale),
       title: product.title,
-      description: product.description,
+      description: product.description.replace(/\s+/g, ' '),
       type: 'website',
       ...(product.images[0] && {
         images: [{ url: product.images[0].url, alt: product.images[0].altText || product.title }],
@@ -99,7 +99,7 @@ export async function ProductPageContent({ locale, handle }: { locale: string; h
           '@context': 'https://schema.org',
           '@type': 'Product',
           name: product.title,
-          description: product.description,
+          description: product.description.replace(/\s+/g, ' '),
           ...(product.images[0] && { image: product.images[0].url }),
           offers: {
             '@type': 'Offer',

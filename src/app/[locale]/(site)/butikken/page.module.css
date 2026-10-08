@@ -332,7 +332,8 @@
   line-height: var(--product-description-leading, 1.6);
   margin: 0;
   word-break: break-word;
-  white-space: normal;
+  /* Keeps the blank lines between the description's paragraphs */
+  white-space: pre-line;
   /* Fill whatever height the buttons leave. min-height:0 is what lets a flex
      child shrink below its content. A line-clamp would need a fixed line count
      the card height does not guarantee, and overflow:hidden alone slices the

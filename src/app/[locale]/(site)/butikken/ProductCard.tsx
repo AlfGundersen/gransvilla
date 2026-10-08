@@ -42,10 +42,10 @@ export default function ProductCard({ product }: ProductCardProps) {
   const [isAdding, setIsAdding] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  // Collapse newlines only. How much fits is a layout question, so the card
+  // Paragraphs are kept. How much fits is a layout question, so the card
   // clamps in CSS rather than cutting at a character count — a fixed 200 left
   // visible empty space below the text.
-  const description = product.description.replace(/\n+/g, ' ').trim()
+  const description = product.description.trim()
 
   const isSoldOut = !product.variants.some((v) => v.availableForSale)
   const isComingSoon = product.comingSoon ?? false

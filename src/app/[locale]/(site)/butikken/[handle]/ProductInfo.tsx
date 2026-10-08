@@ -5,11 +5,14 @@ import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import { AllergyField } from '@/components/cart/AllergyField'
+import { useCart } from '@/context/CartContext'
 import { localeHref } from '@/lib/i18n/href'
 import { useLocale, useT } from '@/lib/i18n/provider'
 import { formatVariantTitle, variantDateOrder } from '@/lib/i18n/variant-date'
 import type { Product } from '@/lib/shopify/types'
 import { AddToCartButton } from './AddToCartButton'
+import buttonStyles from './AddToCartButton.module.css'
+import { ConfirmDatesModal } from './ConfirmDatesModal'
 import styles from './ProductInfo.module.css'
 
 interface RelatedEvent {
@@ -87,6 +90,25 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
     product.options.length > 0 &&
     !(product.options.length === 1 && product.options[0].name === 'Title')
 
+  // A product sold by date can be booked for several dates in one go: the
+  // lunch is bought for the week, not one day at a time. Only when the date is
+  // the one thing to choose, so a second option cannot make a pick ambiguous.
+  const dateOption = useMemo(() => {
+    const options = product.options?.filter((opt) => opt.name !== 'Title') ?? []
+    const [only] = options
+    return options.length === 1 && only.values.every((value) => variantDateOrder(value) !== null)
+      ? only
+      : null
+  }, [product.options])
+
+  const { addToCart } = useCart()
+  const [selectedDates, setSelectedDates] = useState<string[]>(() => {
+    const first = dateOption && selectedOptions[dateOption.name]
+    return first ? [first] : []
+  })
+  const [isConfirmingDates, setIsConfirmingDates] = useState(false)
+  const [isAddingDates, setIsAddingDates] = useState(false)
+
   // Build a set of option values that have no available variant.
   // For multi-option products this checks "value is reachable given currently
   // selected other options". For single-option products it just checks stock.
@@ -160,8 +182,75 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
     })
   }
 
-  // Get max quantity available for selected variant
-  const maxQuantity = selectedVariant?.quantityAvailable ?? null
+  // The variants behind the chosen dates, in calendar order
+  const selectedDateVariants = useMemo(() => {
+    if (!dateOption) return []
+    return selectedDates.flatMap((date) => {
+      const variant = product.variants?.find(
+        (candidate) =>
+          candidate.availableForSale &&
+          candidate.selectedOptions?.some(
+            (opt) => opt.name === dateOption.name && opt.value === date,
+          ),
+      )
+      return variant ? [{ date, variant }] : []
+    })
+  }, [dateOption, selectedDates, product.variants])
+
+  /** Keeps the single-date state and the address in step with the dates chosen. */
+  const applyDates = (dates: string[]) => {
+    if (!dateOption) return
+    setSelectedDates(dates)
+    setSelectedOptions(dates.length > 0 ? { [dateOption.name]: dates[0] } : {})
+
+    // The address can only name one date, so it does when there is one
+    const params = new URLSearchParams(searchParams.toString())
+    if (dates.length === 1) params.set(dateOption.name, dates[0])
+    else params.delete(dateOption.name)
+    const query = params.toString()
+    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false })
+  }
+
+  const toggleDate = (value: string) => {
+    if (!dateOption || soldOutValues.has(`${dateOption.name}::${value}`)) return
+    // Filtering the option's own list keeps the chosen dates in calendar order
+    applyDates(
+      dateOption.values.filter((date) =>
+        date === value ? !selectedDates.includes(date) : selectedDates.includes(date),
+      ),
+    )
+  }
+
+  const addSelectedDates = async () => {
+    setIsConfirmingDates(false)
+    setIsAddingDates(true)
+    const added: string[] = []
+    try {
+      for (const { date, variant } of selectedDateVariants) {
+        await addToCart(variant.id, quantity, product.askAllergies ? allergies : undefined)
+        added.push(date)
+      }
+      setAllergies('')
+    } catch (error) {
+      console.error('Failed to add to cart:', error)
+    } finally {
+      // Whatever did not make it stays chosen, ready to try again
+      applyDates(selectedDates.filter((date) => !added.includes(date)))
+      setIsAddingDates(false)
+    }
+  }
+
+  // Get max quantity available for the selected variant, or across the chosen
+  // dates: the same number of seats is booked on each
+  const dateStock = selectedDateVariants.flatMap(({ variant }) =>
+    typeof variant.quantityAvailable === 'number' ? [variant.quantityAvailable] : [],
+  )
+  const maxQuantity =
+    selectedDateVariants.length > 1
+      ? dateStock.length > 0
+        ? Math.min(...dateStock)
+        : null
+      : (selectedVariant?.quantityAvailable ?? null)
 
   // Cap quantity when variant changes and has less stock
   useEffect(() => {
@@ -229,27 +318,41 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
             ?.filter((opt) => opt.name !== 'Title')
             .map((option) => (
               <fieldset key={option.name} className={styles.productInfoOptionGroup}>
-                <legend className={styles.productInfoOptionLabel}>{option.name}</legend>
+                <legend className={styles.productInfoOptionLabel}>
+                  {option.name}
+                  {option === dateOption && (
+                    <span className={styles.productInfoOptionHint}>
+                      {' '}
+                      ({t('du kan velge flere')})
+                    </span>
+                  )}
+                </legend>
                 <div
                   className={`${styles.productInfoOptionValues} ${optionDatesClass(option.values)}`}
-                  role="radiogroup"
+                  role={option === dateOption ? 'group' : 'radiogroup'}
                   aria-label={option.name}
                 >
                   {option.values.map((value) => {
                     const isSoldOut = soldOutValues.has(`${option.name}::${value}`)
+                    // Dates are switched on and off; anything else is one of several
+                    const isDate = option === dateOption
+                    const isSelected = isDate
+                      ? selectedDates.includes(value)
+                      : selectedOptions[option.name] === value
                     return (
                       <button
                         key={value}
                         type="button"
-                        role="radio"
-                        aria-checked={selectedOptions[option.name] === value}
+                        role={isDate ? undefined : 'radio'}
+                        aria-checked={isDate ? undefined : isSelected}
+                        aria-pressed={isDate ? isSelected : undefined}
                         aria-disabled={isSoldOut}
                         className={`${styles.productInfoOptionButton} ${
-                          selectedOptions[option.name] === value
-                            ? styles.productInfoOptionButtonActive
-                            : ''
+                          isSelected ? styles.productInfoOptionButtonActive : ''
                         } ${isSoldOut ? styles.productInfoOptionButtonSoldOut : ''}`}
-                        onClick={() => handleOptionChange(option.name, value)}
+                        onClick={() =>
+                          isDate ? toggleDate(value) : handleOptionChange(option.name, value)
+                        }
                       >
                         {formatVariantTitle(value, locale)}
                       </button>
@@ -363,6 +466,34 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
         <button className={styles.addToCartDisabled} disabled>
           {t('Velg en dato')}
         </button>
+      ) : selectedDateVariants.length > 1 ? (
+        <>
+          <button
+            type="button"
+            className={`${buttonStyles.button} site-button`}
+            onClick={() => setIsConfirmingDates(true)}
+            disabled={isAddingDates}
+            aria-busy={isAddingDates}
+            aria-live="polite"
+          >
+            {isAddingDates
+              ? t('Legger til...')
+              : `${t('Legg i handlekurv')} (${selectedDateVariants.length} ${t('datoer')})`}
+          </button>
+          <ConfirmDatesModal
+            isOpen={isConfirmingDates}
+            onClose={() => setIsConfirmingDates(false)}
+            onConfirm={addSelectedDates}
+            productTitle={product.title}
+            dates={selectedDateVariants.map(({ date, variant }) => ({
+              title: date,
+              price: parseFloat(variant.price.amount),
+            }))}
+            quantity={quantity}
+            currencyCode={product.currencyCode}
+            allergies={product.askAllergies ? allergies.trim() : undefined}
+          />
+        </>
       ) : selectedVariant ? (
         <AddToCartButton
           variantId={selectedVariant.id}

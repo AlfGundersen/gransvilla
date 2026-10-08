@@ -37,6 +37,11 @@
   margin: 0;
 }
 
+/* The air between paragraphs that the editor put in in Shopify */
+.productInfoDescription p + p {
+  margin-top: 1em;
+}
+
 /* ===========================================
    Variant Options
    =========================================== */
@@ -57,9 +62,18 @@
 }
 
 .productInfoOptionLabel {
+  /* A legend takes no part in the fieldset's gap, so the air is its own */
+  margin-bottom: var(--space-sm);
   font-size: var(--text-sm);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+/* Beside the label, in its own voice rather than the label's capitals */
+.productInfoOptionHint {
+  letter-spacing: normal;
+  text-transform: none;
+  opacity: 0.7;
 }
 
 .productInfoOptionValues {

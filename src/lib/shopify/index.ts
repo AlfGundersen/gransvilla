@@ -1,5 +1,6 @@
 import { isPastVariantDate } from '@/lib/i18n/variant-date'
 import { shopifyFetch } from './client'
+import { descriptionParagraphs } from './description'
 import {
   ADD_TO_CART_MUTATION,
   COLLECTIONS_QUERY,
@@ -72,7 +73,10 @@ function transformProduct(product: ShopifyProduct): Product {
     id: product.id,
     title: product.title,
     handle: product.handle,
-    description: product.description,
+    // Shopify's plain text runs the paragraphs together; keep them apart
+    description: product.descriptionHtml
+      ? descriptionParagraphs(product.descriptionHtml)
+      : product.description,
     descriptionHtml: product.descriptionHtml,
     price,
     currencyCode: displayCurrency(product.priceRange.minVariantPrice.currencyCode),
