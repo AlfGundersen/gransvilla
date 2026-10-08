@@ -503,6 +503,24 @@
     display: none;
   }
 
+  /* A small shop is not folded at all: no category heading to tap, no tinted
+     panel, just the products one after another */
+  .shopSection[data-flat] {
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+  }
+
+  .shopSection[data-flat]::before,
+  .shopSection[data-flat]::after,
+  .shopSection[data-flat] .shopCategoryToggle {
+    display: none;
+  }
+
+  .shopSection[data-flat] .shopProductGrid {
+    padding-bottom: 0;
+  }
+
   /* Show the mobile toggle header */
   .shopCategoryToggle {
     display: flex;

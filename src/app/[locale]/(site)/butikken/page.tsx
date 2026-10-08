@@ -22,8 +22,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   }
 }
 
-/** Fewer products than this and the mobile categories start unfolded. */
-const OPEN_BELOW_PRODUCTS = 5
+/** Fewer products than this and mobile lists them without the category folds. */
+const FLAT_BELOW_PRODUCTS = 5
 
 export default async function ButikkenPage({ params }: Params) {
   const { locale } = await params
@@ -44,9 +44,9 @@ export default async function ButikkenPage({ params }: Params) {
     .filter((c) => c.products.length > 0)
 
   // With only a handful of products there is nothing to tidy away, so on
-  // mobile the categories start unfolded instead of asking for a tap each
+  // mobile they are listed one after another instead of behind a tap each
   const productCount = activeCollections.reduce((sum, c) => sum + c.products.length, 0)
-  const startOpen = productCount < OPEN_BELOW_PRODUCTS
+  const flat = productCount < FLAT_BELOW_PRODUCTS
 
   return (
     <div className={styles.shopPage}>
@@ -65,7 +65,7 @@ export default async function ButikkenPage({ params }: Params) {
               key={collection.id}
               title={collection.title}
               description={collection.description}
-              defaultOpen={startOpen}
+              flat={flat}
             >
               {collection.products.map((product) => (
                 <div key={product.id} className={styles.shopProductColumn}>
