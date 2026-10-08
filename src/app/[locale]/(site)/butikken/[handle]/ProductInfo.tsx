@@ -7,7 +7,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { AllergyField } from '@/components/cart/AllergyField'
 import { localeHref } from '@/lib/i18n/href'
 import { useLocale, useT } from '@/lib/i18n/provider'
-import { formatVariantTitle } from '@/lib/i18n/variant-date'
+import { formatVariantTitle, variantDateOrder } from '@/lib/i18n/variant-date'
 import type { Product } from '@/lib/shopify/types'
 import { AddToCartButton } from './AddToCartButton'
 import styles from './ProductInfo.module.css'
@@ -21,6 +21,17 @@ interface RelatedEvent {
 interface ProductInfoProps {
   product: Product
   relatedEvents?: RelatedEvent[]
+}
+
+/**
+ * Dates are laid out as a grid of equal buttons instead of each being as wide
+ * as its own digits, which left the rows ragged. Other options keep their
+ * natural widths.
+ */
+function optionDatesClass(values: string[]): string {
+  if (!values.every((value) => variantDateOrder(value) !== null)) return ''
+  const timed = values.some((value) => value.includes('kl'))
+  return timed ? styles.productInfoOptionValuesTimed : styles.productInfoOptionValuesDays
 }
 
 export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
@@ -220,7 +231,7 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
               <fieldset key={option.name} className={styles.productInfoOptionGroup}>
                 <legend className={styles.productInfoOptionLabel}>{option.name}</legend>
                 <div
-                  className={styles.productInfoOptionValues}
+                  className={`${styles.productInfoOptionValues} ${optionDatesClass(option.values)}`}
                   role="radiogroup"
                   aria-label={option.name}
                 >
@@ -240,12 +251,7 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
                         } ${isSoldOut ? styles.productInfoOptionButtonSoldOut : ''}`}
                         onClick={() => handleOptionChange(option.name, value)}
                       >
-                        {formatVariantTitle(value, locale)}{' '}
-                        {isSoldOut && (
-                          <span className={styles.productInfoOptionSoldOutLabel}>
-                            {t('Utsolgt')}
-                          </span>
-                        )}
+                        {formatVariantTitle(value, locale)}
                       </button>
                     )
                   })}
