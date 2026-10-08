@@ -2,10 +2,12 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { RichText } from '@/components/RichText'
 import { SharedImage } from '@/components/SharedImage'
+import { WarmImage } from '@/components/WarmImage'
 import { MaybeWatermark } from '@/components/Watermark'
 import { localeHref } from '@/lib/i18n/href'
 import { getTranslator } from '@/lib/i18n/server'
-import { urlFor } from '@/lib/sanity/image'
+import { pageHeroSrc, urlFor } from '@/lib/sanity/image'
+import { pageHeroImage, warmTarget } from '@/lib/warm-image'
 import type { FeaturedSection } from '@/types/sanity'
 import styles from './FeaturedSection.module.css'
 
@@ -80,6 +82,13 @@ export function FeaturedSectionComponent({ data, locale }: FeaturedSectionCompon
 
                 return (
                   <div className={styles.featuredImageWrap}>
+                    {/* The page shows its own featured image, which need not be
+                        the one this column does */}
+                    {canShare && column.link?.featuredImage?.asset && (
+                      <WarmImage
+                        {...warmTarget(pageHeroImage(pageHeroSrc(column.link.featuredImage)))}
+                      />
+                    )}
                     {canShare ? (
                       <SharedImage name={`page-image-${slug}`}>{image}</SharedImage>
                     ) : (

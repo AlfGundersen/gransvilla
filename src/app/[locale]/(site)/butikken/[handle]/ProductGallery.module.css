@@ -14,7 +14,9 @@
   position: relative;
   aspect-ratio: 1;
   overflow: hidden;
-  background: var(--color-border);
+  /* What shows while the image loads: the page's own placeholder tone, not
+     black, which read as a flash at the end of the morph from a listing */
+  background: var(--color-muted);
 }
 
 .productGalleryImage {
