@@ -361,6 +361,14 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
                     )
                   })}
                 </div>
+                {/* Said where the dates are picked, so the one quantity further
+                    down is not taken to be the only chance to set it */}
+                {option === dateOption && selectedDateVariants.length > 1 && (
+                  <p className={styles.productInfoDatesHint} aria-live="polite">
+                    {selectedDateVariants.length} {t('datoer valgt')}.{' '}
+                    {t('Du kan velge ulike antall per dato i neste steg.')}
+                  </p>
+                )}
               </fieldset>
             ))}
         </div>
@@ -403,16 +411,6 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
             </div>
           )}
         </div>
-      )}
-
-      {/* Said before the button is pressed, so the one quantity above is not
-          taken to be the only chance to set it */}
-      {selectedDateVariants.length > 1 && (
-        <p className={styles.productInfoDatesHint}>
-          {t(
-            'Antallet gjelder alle valgte datoer. Du kan endre det for hver dato i neste steg, før noe legges i handlekurven.',
-          )}
-        </p>
       )}
 
       {/* Add to Cart or Coming Soon */}
