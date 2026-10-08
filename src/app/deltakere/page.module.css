@@ -64,12 +64,40 @@
   color: var(--color-accent);
 }
 
-.filters {
+.filters,
+.days {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-sm);
+}
+
+.filters {
+  margin-bottom: var(--space-sm);
+}
+
+.days {
   margin-bottom: var(--space-lg);
+}
+
+.day {
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--color-skeleton);
+  color: var(--color-foreground);
+  font-size: var(--text-sm);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.day[aria-current='page'] {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.daySeats {
+  margin-left: var(--space-xs);
+  opacity: 0.6;
 }
 
 .filter {
@@ -160,26 +188,24 @@
 }
 
 .contactButton {
-  display: inline-block;
   padding: 0 var(--space-sm);
   border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-foreground);
+  font: inherit;
   cursor: pointer;
-  list-style: none;
   white-space: nowrap;
 }
 
-.contactButton::-webkit-details-marker {
-  display: none;
-}
-
-.contact[open] .contactButton {
-  display: none;
-}
-
-.contact a {
-  display: block;
-  color: var(--color-foreground);
+.contact {
+  display: flex;
+  flex-direction: column;
   overflow-wrap: anywhere;
+}
+
+.contactCountdown {
+  font-size: var(--text-xs);
+  opacity: 0.6;
 }
 
 @media print {
@@ -190,7 +216,9 @@
 
   .actions,
   .filters,
-  .contact:not([open]) {
+  .days,
+  .contactButton,
+  .contactCountdown {
     display: none;
   }
 
