@@ -239,6 +239,9 @@ select {
 
 button {
   cursor: pointer;
+  /* Left to the browser, iOS paints button text in its link blue. A button
+     takes the colour of the text around it unless its own class says otherwise. */
+  color: inherit;
   font-weight: var(--font-weight-bold) !important;
 }
 

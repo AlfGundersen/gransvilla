@@ -6,18 +6,18 @@ import styles from './page.module.css'
 interface CollapsibleSectionProps {
   title: string
   description?: string | null
-  /** Start unfolded on mobile; the visitor can still fold it away */
-  defaultOpen?: boolean
+  /** On mobile, list the products straight down with no heading to tap open */
+  flat?: boolean
   children: React.ReactNode
 }
 
 export default function CollapsibleSection({
   title,
   description,
-  defaultOpen = false,
+  flat = false,
   children,
 }: CollapsibleSectionProps) {
-  const [isOpen, setIsOpen] = useState(defaultOpen)
+  const [isOpen, setIsOpen] = useState(flat)
   const contentRef = useRef<HTMLDivElement>(null)
   const [height, setHeight] = useState<number>(0)
 
@@ -45,7 +45,7 @@ export default function CollapsibleSection({
   const toggle = useCallback(() => setIsOpen((o) => !o), [])
 
   return (
-    <section className={styles.shopSection} data-open={isOpen}>
+    <section className={styles.shopSection} data-open={isOpen} data-flat={flat || undefined}>
       {/* Mobile-only: tappable header */}
       <button className={styles.shopCategoryToggle} onClick={toggle} aria-expanded={isOpen}>
         <div className={styles.shopToggleHeader}>
@@ -94,7 +94,7 @@ export default function CollapsibleSection({
       {/* Product grid — animated on mobile */}
       <div
         className={styles.shopProductGridWrapper}
-        style={{ height: height > 0 ? height : undefined }}
+        style={{ height: height > 0 && !flat ? height : undefined }}
         data-open={isOpen}
       >
         <div ref={contentRef} className={styles.shopProductGrid}>
