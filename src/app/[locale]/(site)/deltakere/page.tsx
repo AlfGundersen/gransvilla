@@ -6,6 +6,7 @@ import { type AttendeeList, getAttendeeLists, isAdminConfigured } from '@/lib/sh
 import { isStaffAuthConfigured, isStaffSession, STAFF_COOKIE } from '@/lib/staff-auth'
 import { AttendeeLists } from './AttendeeLists'
 import { login, logout } from './actions'
+import { LoginButton } from './LoginButton'
 import { PrintButton } from './PrintButton'
 import styles from './page.module.css'
 
@@ -52,27 +53,34 @@ export default async function DeltakerePage({ params, searchParams }: Props) {
   }
 
   if (!isStaffSession((await cookies()).get(STAFF_COOKIE)?.value)) {
+    const error = feil ? LOGIN_ERRORS[feil] : undefined
+
     return (
-      <div className={styles.page}>
-        <h1 className={styles.title}>Deltakerlister</h1>
+      <div className={styles.loginPage}>
         <form action={login} className={styles.login}>
-          <label htmlFor="passord">Passord</label>
+          <h1 className={styles.loginTitle}>Deltakerlister</h1>
+          <p className={styles.loginIntro}>For ansatte ved Grans Villa.</p>
+          <label htmlFor="passord" className={styles.label}>
+            Passord
+          </label>
           <input
             id="passord"
             name="passord"
             type="password"
             autoComplete="current-password"
             required
+            // biome-ignore lint/a11y/noAutofocus: the page has this one field and nothing else to do
+            autoFocus
+            aria-invalid={error ? true : undefined}
+            aria-describedby={error ? 'passord-feil' : undefined}
             className={styles.input}
           />
-          {feil && LOGIN_ERRORS[feil] && (
-            <p role="alert" className={styles.error}>
-              {LOGIN_ERRORS[feil]}
+          {error && (
+            <p id="passord-feil" role="alert" className={styles.error}>
+              {error}
             </p>
           )}
-          <button type="submit" className={styles.button}>
-            Logg inn
-          </button>
+          <LoginButton className={styles.loginButton} />
         </form>
       </div>
     )
