@@ -165,6 +165,14 @@
   min-width: 0;
 }
 
+/* On a phone the room beside the quantity is too narrow even for the
+   placeholder, so the field always has a row to itself */
+@media (max-width: 767px) {
+  .productInfoAllergies {
+    flex-basis: 100%;
+  }
+}
+
 .productInfoQuantitySection {
   display: flex;
   flex-direction: column;

@@ -246,6 +246,37 @@ button {
 }
 
 /* --------------------------------------
+   Scrollbars
+   Thin, and in the colour of the text they sit beside, so a dark panel gets a
+   light one and the page a dark one. Wherever something scrolls: the page,
+   the cart, the menu, the dialogs. Keyed on [data-site] being in the document
+   so the Studio keeps its own, and wrapped in :where() so any component that
+   hides its scrollbar on purpose still wins.
+   -------------------------------------- */
+
+:where(html:has([data-site])),
+:where(html:has([data-site])) * {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, currentColor 35%, transparent) transparent;
+}
+
+/* Safari, which has neither property above until 18.2 */
+@supports not (scrollbar-color: auto) {
+  :where(html:has([data-site])) ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  :where(html:has([data-site])) ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  :where(html:has([data-site])) ::-webkit-scrollbar-thumb {
+    background-color: color-mix(in srgb, currentColor 35%, transparent);
+  }
+}
+
+/* --------------------------------------
    Focus styles
    -------------------------------------- */
 

@@ -5,7 +5,7 @@ import { useT } from '@/lib/i18n/provider'
 import styles from './AllergyField.module.css'
 
 /** Matches the limit the cart route enforces */
-const MAX_LENGTH = 300
+const MAX_LENGTH = 100
 
 interface AllergyFieldProps {
   value: string

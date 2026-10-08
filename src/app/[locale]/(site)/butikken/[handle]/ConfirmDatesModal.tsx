@@ -2,19 +2,19 @@
 
 import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { useLocale, useT } from '@/lib/i18n/provider'
-import { formatVariantTitle } from '@/lib/i18n/variant-date'
+import { useT } from '@/lib/i18n/provider'
+import { DatesSummary } from '../DatesSummary'
 import modal from '../VariantModal.module.css'
-import styles from './ConfirmDatesModal.module.css'
 
 interface ConfirmDatesModalProps {
   isOpen: boolean
   onClose: () => void
-  onConfirm: () => void
+  /** Called with the seats settled on for each date, in the order of `dates` */
+  onConfirm: (quantities: number[]) => void
   productTitle: string
   /** The dates about to be added, in calendar order */
-  dates: { title: string; price: number }[]
-  /** Seats per date */
+  dates: { title: string; price: number; max?: number | null }[]
+  /** Seats each date starts with */
   quantity: number
   currencyCode: string
   allergies?: string
@@ -38,8 +38,6 @@ export function ConfirmDatesModal({
   allergies,
 }: ConfirmDatesModalProps) {
   const t = useT()
-  const locale = useLocale()
-  const numberLocale = locale === 'en' ? 'en-GB' : 'nb-NO'
 
   useEffect(() => {
     if (!isOpen) return
@@ -55,9 +53,6 @@ export function ConfirmDatesModal({
   }, [isOpen, onClose])
 
   if (!isOpen || typeof document === 'undefined') return null
-
-  const money = (amount: number) => `${amount.toLocaleString(numberLocale)} ${currencyCode}`
-  const total = dates.reduce((sum, date) => sum + date.price * quantity, 0)
 
   return createPortal(
     // biome-ignore lint/a11y/noStaticElementInteractions: the backdrop only catches clicks beside the dialog
@@ -88,36 +83,14 @@ export function ConfirmDatesModal({
         </h2>
         <p className={modal.modalSubtitle}>{t('Bekreft datoer')}</p>
 
-        <ul className={styles.dates}>
-          {dates.map((date) => (
-            <li key={date.title} className={styles.date}>
-              <span className={styles.dateTitle}>{formatVariantTitle(date.title, locale)}</span>
-              <span>
-                {quantity} × {money(date.price)}
-              </span>
-            </li>
-          ))}
-        </ul>
-
-        <p className={styles.total}>
-          <span>{t('Totalt')}</span>
-          <span>{money(total)}</span>
-        </p>
-
-        {allergies && (
-          <p className={styles.allergies}>
-            {t('Allergier')}: {allergies}
-          </p>
-        )}
-
-        <div className={styles.actions}>
-          <button type="button" className={styles.cancel} onClick={onClose}>
-            {t('Avbryt')}
-          </button>
-          <button type="button" className={modal.addButton} onClick={onConfirm}>
-            {t('Legg i handlekurv')}
-          </button>
-        </div>
+        <DatesSummary
+          dates={dates}
+          quantity={quantity}
+          currencyCode={currencyCode}
+          allergies={allergies}
+          onCancel={onClose}
+          onConfirm={onConfirm}
+        />
       </div>
     </div>,
     document.body,

@@ -101,7 +101,7 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
       : null
   }, [product.options])
 
-  const { addToCart } = useCart()
+  const { addLinesToCart } = useCart()
   const [selectedDates, setSelectedDates] = useState<string[]>(() => {
     const first = dateOption && selectedOptions[dateOption.name]
     return first ? [first] : []
@@ -221,21 +221,23 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
     )
   }
 
-  const addSelectedDates = async () => {
+  const addSelectedDates = async (quantities: number[]) => {
     setIsConfirmingDates(false)
     setIsAddingDates(true)
-    const added: string[] = []
     try {
-      for (const { date, variant } of selectedDateVariants) {
-        await addToCart(variant.id, quantity, product.askAllergies ? allergies : undefined)
-        added.push(date)
-      }
+      await addLinesToCart(
+        selectedDateVariants.map(({ variant }, i) => ({
+          variantId: variant.id,
+          quantity: quantities[i] ?? quantity,
+        })),
+        product.askAllergies ? allergies : undefined,
+      )
       setAllergies('')
+      applyDates([])
     } catch (error) {
+      // Nothing was added, so the dates stay chosen, ready to try again
       console.error('Failed to add to cart:', error)
     } finally {
-      // Whatever did not make it stays chosen, ready to try again
-      applyDates(selectedDates.filter((date) => !added.includes(date)))
       setIsAddingDates(false)
     }
   }
@@ -488,6 +490,7 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
             dates={selectedDateVariants.map(({ date, variant }) => ({
               title: date,
               price: parseFloat(variant.price.amount),
+              max: variant.quantityAvailable,
             }))}
             quantity={quantity}
             currencyCode={product.currencyCode}
