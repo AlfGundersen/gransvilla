@@ -1,5 +1,7 @@
 import { stegaClean } from 'next-sanity'
 import { AnchorScroll } from '@/components/AnchorScroll'
+import { FocusModality } from '@/components/FocusModality'
+import { ImageFade } from '@/components/ImageFade'
 import PlausibleAnalytics from '@/components/analytics/Plausible'
 import { CartDrawer } from '@/components/cart/CartDrawer'
 import CookieBanner from '@/components/cookie/CookieBanner'
@@ -49,6 +51,8 @@ export default async function SiteLayout({
       <CartProvider>
         <div className={styles.wrapper} data-site>
           <ScrollToTop />
+          <FocusModality />
+          <ImageFade />
           <AnchorScroll />
           <a href="#main-content" className="visually-hidden">
             {t('Hopp til innhold')}

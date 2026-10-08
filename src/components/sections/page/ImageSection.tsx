@@ -36,8 +36,6 @@ export function ImageSection({ data, eager = false, blurDataURL }: ImageSectionP
         width={width}
         height={height}
         loading={eager ? 'eager' : 'lazy'}
-        placeholder={blurDataURL ? 'blur' : 'empty'}
-        blurDataURL={blurDataURL}
         className={styles.imageSectionImage}
       />
       <MaybeWatermark image={data.bilde} />

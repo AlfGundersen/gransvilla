@@ -131,6 +131,13 @@
   color: var(--color-background);
 }
 
+/* Dark theme: a chosen date is the accent, like the button it leads to */
+:global(html.inverted) .productInfoOptionButtonActive {
+  border-color: var(--color-accent);
+  background-color: var(--color-accent);
+  color: #fff;
+}
+
 /* Sold out: the date fades back, at the same size as the rest */
 .productInfoOptionButtonSoldOut {
   border-color: color-mix(in srgb, var(--color-border) 20%, transparent);
@@ -163,6 +170,21 @@
 .productInfoAllergies {
   flex: 1 1 220px;
   min-width: 0;
+}
+
+/* On a phone the room beside the quantity is too narrow even for the
+   placeholder, so the field always has a row to itself */
+@media (max-width: 767px) {
+  .productInfoAllergies {
+    flex-basis: 100%;
+  }
+}
+
+.productInfoDatesHint {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--color-secondary);
 }
 
 .productInfoQuantitySection {
@@ -228,7 +250,7 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   background: var(--color-primary);
-  color: var(--color-white);
+  color: var(--color-on-primary);
   border: none;
   cursor: not-allowed;
   opacity: 0.6;

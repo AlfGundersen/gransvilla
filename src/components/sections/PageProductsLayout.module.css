@@ -12,8 +12,13 @@
 .section .logo {
   display: block;
   width: 100%;
-  max-width: 200px;
+  max-width: 280px;
   height: auto;
+}
+
+/* A dark logo on the dark theme: turned into the same cream ink as the text */
+:global(html.inverted) .section .logo {
+  filter: var(--invert-ink);
 }
 
 .infoText {
@@ -54,6 +59,12 @@
     grid-template-columns: 1fr 1fr;
     align-items: start;
     gap: calc(var(--space-lg) * 2);
+  }
+
+  /* In the middle of its own column, both ways */
+  .section .infoContentWithLogo .logo {
+    align-self: center;
+    justify-self: center;
   }
 
   /* The rule between the logo and the text, matching the shop's own between

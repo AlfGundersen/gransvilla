@@ -1,0 +1,125 @@
+/* The summary shown before several dates go into the cart */
+
+.dates {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-border);
+  font-variant-numeric: tabular-nums;
+}
+
+.date,
+.total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-sm) 0;
+}
+
+.date {
+  border-bottom: 1px solid var(--color-skeleton);
+  font-size: var(--text-sm);
+}
+
+.dateTitle {
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+}
+
+.seats {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--color-border);
+}
+
+.stepperButton {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  background: transparent;
+  color: var(--color-foreground);
+  font-size: var(--text-base);
+  cursor: pointer;
+}
+
+.stepperButton:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.stepperValue {
+  min-width: 2ch;
+  text-align: center;
+}
+
+.price {
+  min-width: 4.5em;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.total {
+  margin: 0 0 var(--space-md);
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-variant-numeric: tabular-nums;
+}
+
+.allergies {
+  margin: 0 0 var(--space-lg);
+  font-size: var(--text-sm);
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.cancel,
+.confirm {
+  padding: var(--space-md) var(--space-lg);
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  cursor: pointer;
+}
+
+.confirm {
+  flex: 1;
+  border: 1px solid var(--color-foreground);
+  background: var(--color-foreground);
+  color: var(--color-background);
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.confirm:hover {
+  border-color: var(--color-accent);
+  background-color: var(--color-accent);
+}
+
+:global(html.inverted) .confirm {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: #fff;
+}
+
+:global(html.inverted) .confirm:hover {
+  border-color: var(--color-foreground);
+  background-color: var(--color-foreground);
+  color: var(--color-background);
+}
+
+.cancel {
+  flex: none;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-foreground);
+}

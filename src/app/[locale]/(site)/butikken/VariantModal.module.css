@@ -109,6 +109,28 @@
   color: var(--color-background);
 }
 
+:global(html.inverted) .variantOptionSelected {
+  border-color: var(--color-accent);
+  background-color: var(--color-accent);
+  color: #fff;
+}
+
+:global(html.inverted) .variantOptionSelected .variantPrice {
+  color: #fff;
+}
+
+:global(html.inverted) .addButton:not(:disabled) {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: #fff;
+}
+
+:global(html.inverted) .addButton:hover:not(:disabled) {
+  border-color: var(--color-foreground);
+  background-color: var(--color-foreground);
+  color: var(--color-background);
+}
+
 .variantOptionSoldOut {
   opacity: 0.5;
   cursor: not-allowed;

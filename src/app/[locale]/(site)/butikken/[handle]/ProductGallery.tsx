@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useState, ViewTransition } from 'react'
+import { useState } from 'react'
 import { shopifyImageUrl } from '@/lib/shopify/image'
 import { productHeroImage } from '@/lib/warm-image'
 import styles from './ProductGallery.module.css'
@@ -38,25 +38,12 @@ export function ProductGallery({ images, title, handle }: ProductGalleryProps) {
   return (
     <div className={styles.productGallery}>
       <div className={styles.productGalleryMainImage}>
-        {/*
-         * Receiving end of the morph from ProductCard. `default="none"` keeps
-         * switching thumbnails instant — only the arrival from the shop grid
-         * animates.
-         */}
-        <ViewTransition
-          name={`product-image-${handle}`}
-          default="none"
-          share="product-image"
-          enter="page-content"
-          exit="page-content"
-        >
-          <Image
-            {...productHeroImage(selectedImage.url)}
-            alt={selectedImage.altText || title}
-            className={styles.productGalleryImage}
-            priority
-          />
-        </ViewTransition>
+        <Image
+          {...productHeroImage(selectedImage.url)}
+          alt={selectedImage.altText || title}
+          className={styles.productGalleryImage}
+          priority
+        />
       </div>
 
       {images.length > 1 && (

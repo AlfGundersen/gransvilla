@@ -19,6 +19,11 @@ interface CartContextType {
   openCart: () => void
   closeCart: () => void
   addToCart: (variantId: string, quantity?: number, allergies?: string) => Promise<void>
+  /** Several lines in one request: they all land in the cart together, or none do */
+  addLinesToCart: (
+    lines: { variantId: string; quantity: number }[],
+    allergies?: string,
+  ) => Promise<void>
   updateQuantity: (lineId: string, quantity: number) => Promise<void>
   removeFromCart: (lineId: string) => Promise<void>
   cartCount: number
@@ -128,6 +133,58 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
+  const addLinesToCart = useCallback(
+    async (lines: { variantId: string; quantity: number }[], allergies?: string) => {
+      setIsLoading(true)
+      setStockNotice(null)
+      try {
+        const cartId = localStorage.getItem(CART_ID_KEY)
+        const held = (variantId: string, items: CartItem[] = []) =>
+          items
+            .filter((item) => item.variantId === variantId)
+            .reduce((sum, item) => sum + item.quantity, 0)
+        const before = lines.map((line) => held(line.variantId, cartRef.current?.items))
+
+        const response = await fetch('/api/cart', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ cartId, lines, allergies }),
+        })
+
+        if (!response.ok) {
+          // The one refusal worth explaining: a date passed while the page was open
+          if (response.status === 409) {
+            const { error } = await response.json()
+            setStockNotice(error)
+            setTimeout(() => setStockNotice(null), 10000)
+          }
+          throw new Error('Failed to add to cart')
+        }
+
+        const data = await response.json()
+        setCart(data.cart)
+        localStorage.setItem(CART_ID_KEY, data.cart.id)
+        setIsOpen(true)
+
+        // Shopify adds what stock allows and says nothing about the rest
+        const items = (data.cart as Cart).items
+        const short = lines.some(
+          (line, i) => held(line.variantId, items) - before[i] < line.quantity,
+        )
+        if (short) {
+          setStockNotice('Ikke alt ble lagt til grunnet begrenset lagerbeholdning')
+          setTimeout(() => setStockNotice(null), 10000)
+        }
+      } catch (error) {
+        console.error('Failed to add to cart:', error)
+        throw error
+      } finally {
+        setIsLoading(false)
+      }
+    },
+    [],
+  )
+
   const updateQuantity = useCallback(async (lineId: string, quantity: number) => {
     const cartId = localStorage.getItem(CART_ID_KEY)
     if (!cartId) return
@@ -195,6 +252,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         openCart,
         closeCart,
         addToCart,
+        addLinesToCart,
         updateQuantity,
         removeFromCart,
         cartCount,
@@ -217,6 +275,7 @@ export function useCart() {
       openCart: () => {},
       closeCart: () => {},
       addToCart: async () => {},
+      addLinesToCart: async () => {},
       updateQuantity: async () => {},
       removeFromCart: async () => {},
       cartCount: 0,

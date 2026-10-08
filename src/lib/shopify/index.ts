@@ -231,6 +231,48 @@ export async function addToCart(
   return transformCart(data.cartLinesAdd.cart)
 }
 
+/** One line on its way into a cart. */
+export type CartLineInput = {
+  variantId: string
+  quantity: number
+  attributes?: CartLineAttribute[]
+}
+
+function toShopifyLines(lines: CartLineInput[]) {
+  return lines.map(({ variantId, quantity, attributes = [] }) => ({
+    merchandiseId: variantId,
+    quantity,
+    attributes,
+  }))
+}
+
+/**
+ * Several lines in one mutation. Booking a week of lunches used to be one
+ * request per date, and the cart filled up a line at a time while the visitor
+ * watched; this way they all arrive together or not at all.
+ */
+export async function createCartWithLines(lines: CartLineInput[]): Promise<Cart> {
+  const data = await shopifyFetch<{
+    cartCreate: { cart: ShopifyCart }
+  }>({
+    query: CREATE_CART_MUTATION,
+    variables: { input: { lines: toShopifyLines(lines) } },
+  })
+
+  return transformCart(data.cartCreate.cart)
+}
+
+export async function addLinesToCart(cartId: string, lines: CartLineInput[]): Promise<Cart> {
+  const data = await shopifyFetch<{
+    cartLinesAdd: { cart: ShopifyCart }
+  }>({
+    query: ADD_TO_CART_MUTATION,
+    variables: { cartId, lines: toShopifyLines(lines) },
+  })
+
+  return transformCart(data.cartLinesAdd.cart)
+}
+
 // Get cart by ID
 export async function getCart(cartId: string): Promise<Cart | null> {
   const data = await shopifyFetch<{

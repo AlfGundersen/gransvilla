@@ -6,7 +6,7 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   background: var(--color-primary);
-  color: var(--color-white);
+  color: var(--color-on-primary);
   border: none;
   cursor: pointer;
   transition: background-color var(--transition-fast), border-color var(--transition-fast);
@@ -16,6 +16,19 @@
 .button:focus-visible:not(:disabled) {
   background-color: var(--color-accent);
   border-color: var(--color-accent);
+}
+
+/* On the dark theme the cream primary button reads as a blank panel; the way
+   into the cart is the accent instead, and turns cream when pointed at. */
+:global(html.inverted) .button {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+:global(html.inverted) .button:hover:not(:disabled),
+:global(html.inverted) .button:focus-visible:not(:disabled) {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
 }
 
 .button:disabled {

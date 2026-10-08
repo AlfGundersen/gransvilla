@@ -103,8 +103,6 @@ export default async function ArrangementerPage({ params }: Params) {
               width={1600}
               height={686}
               priority
-              placeholder={heroBlur ? 'blur' : 'empty'}
-              blurDataURL={heroBlur}
               className={styles.heroImg}
             />
             <MaybeWatermark image={heroImage} />
@@ -134,8 +132,6 @@ export default async function ArrangementerPage({ params }: Params) {
                         }
                         width={400}
                         height={600}
-                        placeholder={cardBlurs[i] ? 'blur' : 'empty'}
-                        blurDataURL={cardBlurs[i]}
                         className={styles.image}
                       />
                     </SharedImage>
