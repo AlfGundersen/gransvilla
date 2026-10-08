@@ -48,6 +48,8 @@
   font-size: var(--text-base);
   line-height: 1.6;
   color: var(--color-secondary);
+  /* Keeps the blank lines between the description's paragraphs */
+  white-space: pre-line;
 }
 
 .featProductButtons {

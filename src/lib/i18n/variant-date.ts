@@ -74,6 +74,13 @@ function osloOffsetMinutes(utcMs: number): number {
 const VARIANT_DAY = /^(\d{2})\.(\d{2})\.(\d{4})$/
 
 /**
+ * When a date with no time of day stops being for sale: 13:00, Norwegian time.
+ * The only thing sold that way is the lunch, served 11–13, and a lunch that
+ * has been cleared away should not still be on offer that afternoon.
+ */
+const DAY_ENDS_AT_HOUR = 13
+
+/**
  * True when a dated variant title names a moment that has already been.
  *
  * Shopify has no idea these titles are dates, so a lunch that was served last
@@ -81,9 +88,8 @@ const VARIANT_DAY = /^(\d{2})\.(\d{2})\.(\d{4})$/
  * Norwegian time whatever the server's own clock is set to — Netlify runs in
  * UTC, which would keep a 12:00 lunch on sale until 13:00 or 14:00.
  *
- * A title with a time is past from that time. One with only a date says
- * nothing about when in the day, so it lasts the day out and is past from
- * midnight.
+ * A title with a time is past from that time. One with only a date is the
+ * lunch, and is past once lunch is over that day.
  *
  * A cart line's title joins several options as `A / B`, so each part is tried.
  * Anything that is not a dated title is never past.
@@ -94,8 +100,10 @@ export function isPastVariantDate(title: string, now: number = Date.now()): bool
     const dayOnly = timed ? null : part.trim().match(VARIANT_DAY)
     if (!timed && !dayOnly) return false
 
-    const [, day, month, year, hour = 0, minute = 0] = (timed ?? dayOnly ?? []).map(Number)
-    const wallClock = Date.UTC(year, month - 1, timed ? day : day + 1, hour, minute)
+    const [, day, month, year, hour = DAY_ENDS_AT_HOUR, minute = 0] = (timed ?? dayOnly ?? []).map(
+      Number,
+    )
+    const wallClock = Date.UTC(year, month - 1, day, hour, minute)
     return wallClock - osloOffsetMinutes(wallClock) * 60_000 <= now
   })
 }

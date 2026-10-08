@@ -1,0 +1,56 @@
+/* What the confirmation adds to the variant modal's classes it is built on */
+
+.dates {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-border);
+  font-variant-numeric: tabular-nums;
+}
+
+.date,
+.total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-sm) 0;
+}
+
+.date {
+  border-bottom: 1px solid var(--color-skeleton);
+  font-size: var(--text-sm);
+}
+
+.dateTitle {
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+}
+
+.total {
+  margin: 0 0 var(--space-md);
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-variant-numeric: tabular-nums;
+}
+
+.allergies {
+  margin: 0 0 var(--space-lg);
+  font-size: var(--text-sm);
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.cancel {
+  flex: none;
+  padding: var(--space-md) var(--space-lg);
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-foreground);
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  cursor: pointer;
+}

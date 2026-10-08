@@ -298,6 +298,8 @@
   line-height: 1.6;
   color: var(--color-secondary);
   margin: 0;
+  /* Keeps the blank lines between the description's paragraphs */
+  white-space: pre-line;
 }
 
 .singleProductButtons {
