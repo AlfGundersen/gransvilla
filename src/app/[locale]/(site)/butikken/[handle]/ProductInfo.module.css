@@ -72,6 +72,8 @@
   padding: var(--space-sm) var(--space-md);
   background: none;
   border: 1px solid var(--color-border);
+  /* Set outright: left to the browser, iOS paints button text in its link blue */
+  color: var(--color-foreground);
   font-size: var(--text-sm);
   cursor: pointer;
   transition: border-color var(--transition-fast), background-color var(--transition-fast);
@@ -88,32 +90,28 @@
   color: var(--color-background);
 }
 
+/* Sold out: the date steps back and says so, rather than being struck through */
 .productInfoOptionButtonSoldOut {
-  opacity: 0.5;
-  position: relative;
-  overflow: hidden;
+  border-color: color-mix(in srgb, var(--color-border) 25%, transparent);
+  color: color-mix(in srgb, var(--color-foreground) 45%, transparent);
+  cursor: default;
 }
 
-/* Diagonal slash from top-right to bottom-left.
-   Note: a linear-gradient's color band is perpendicular to its direction,
-   so `to bottom right` produces a line going from top-right to bottom-left. */
-.productInfoOptionButtonSoldOut::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom right,
-    transparent calc(50% - 1px),
-    currentColor calc(50% - 1px),
-    currentColor calc(50% + 1px),
-    transparent calc(50% + 1px)
-  );
-  pointer-events: none;
+.productInfoOptionButtonSoldOut.productInfoOptionButtonActive {
+  color: color-mix(in srgb, var(--color-background) 70%, transparent);
+}
+
+.productInfoOptionSoldOutLabel {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .productInfoOptionButtonSoldOut:hover,
 .productInfoOptionButtonSoldOut:focus-visible {
-  border-color: var(--color-border);
+  border-color: color-mix(in srgb, var(--color-border) 25%, transparent);
 }
 
 /* ===========================================

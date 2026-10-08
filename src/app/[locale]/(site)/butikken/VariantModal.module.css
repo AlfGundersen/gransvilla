@@ -86,6 +86,8 @@
   padding: var(--space-md);
   border: 1px solid var(--color-border);
   background: transparent;
+  /* Set outright: left to the browser, iOS paints button text in its link blue */
+  color: var(--color-foreground);
   cursor: pointer;
   transition: border-color var(--transition-fast), background-color var(--transition-fast);
   text-align: left;
