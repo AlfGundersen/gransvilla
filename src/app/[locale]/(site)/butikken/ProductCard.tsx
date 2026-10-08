@@ -3,10 +3,12 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState, ViewTransition } from 'react'
+import { WarmImage } from '@/components/WarmImage'
 import { useCart } from '@/context/CartContext'
 import { localeHref } from '@/lib/i18n/href'
 import { useLocale, useT } from '@/lib/i18n/provider'
 import { shopifyImageUrl } from '@/lib/shopify/image'
+import { productHeroImage, warmTarget } from '@/lib/warm-image'
 import styles from './page.module.css'
 import { VariantModal } from './VariantModal'
 
@@ -88,8 +90,10 @@ export default function ProductCard({ product }: ProductCardProps) {
           </p>
         )}
       </div>
-
       <div className={styles.shopImageWrapper}>
+        {product.images[0] && (
+          <WarmImage {...warmTarget(productHeroImage(product.images[0].url))} />
+        )}
         {product.images[0] && (
           /*
            * Paired with the same name in ProductGallery, so the card image
@@ -151,8 +155,6 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
         </div>
       </div>
-
-      {/* Mobile-only details section */}
       <div className={styles.shopMobileDetails}>
         <div className={styles.shopMobileHeader}>
           <h3 className={styles.shopProductTitle}>{product.title}</h3>
@@ -186,18 +188,16 @@ export default function ProductCard({ product }: ProductCardProps) {
           </Link>
         </div>
       </div>
-
-      {/* Variant selection modal */}
-      {opensModal && (
-        <VariantModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          productTitle={product.title}
-          variants={product.variants}
-          currencyCode={product.currencyCode}
-          askAllergies={product.askAllergies}
-        />
-      )}
+      opensModal && (
+      <VariantModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        productTitle={product.title}
+        variants={product.variants}
+        currencyCode={product.currencyCode}
+        askAllergies={product.askAllergies}
+      />
+      )
     </div>
   )
 }

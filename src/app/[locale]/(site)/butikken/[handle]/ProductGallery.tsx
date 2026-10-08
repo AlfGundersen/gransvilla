@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import { useState, ViewTransition } from 'react'
 import { shopifyImageUrl } from '@/lib/shopify/image'
+import { productHeroImage } from '@/lib/warm-image'
 import styles from './ProductGallery.module.css'
 
 interface ProductImage {
@@ -50,12 +51,10 @@ export function ProductGallery({ images, title, handle }: ProductGalleryProps) {
           exit="page-content"
         >
           <Image
-            src={shopifyImageUrl(selectedImage.url, { width: 1200, crop: 'center' })}
+            {...productHeroImage(selectedImage.url)}
             alt={selectedImage.altText || title}
-            fill
             className={styles.productGalleryImage}
             priority
-            sizes="(max-width: 768px) 100vw, 50vw"
           />
         </ViewTransition>
       </div>

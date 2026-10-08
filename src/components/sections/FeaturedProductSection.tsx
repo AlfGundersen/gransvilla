@@ -1,11 +1,13 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { SharedImage } from '@/components/SharedImage'
+import { WarmImage } from '@/components/WarmImage'
 import { localeHref } from '@/lib/i18n/href'
 import { getTranslator, translateContent } from '@/lib/i18n/server'
 import { getHiddenProductHandles } from '@/lib/sanity/hiddenProducts'
 import { getProducts } from '@/lib/shopify'
 import { shopifyImageUrl } from '@/lib/shopify/image'
+import { productHeroImage, warmTarget } from '@/lib/warm-image'
 import type { FeaturedProductSection } from '@/types/sanity'
 import styles from './FeaturedProductSection.module.css'
 
@@ -76,6 +78,7 @@ export async function FeaturedProductSectionComponent({
           <div className={styles.featProductImageCol}>
             {/* Same name the shop grid uses, so the front page morphs straight
                 into the product page. The two never share a screen. */}
+            <WarmImage {...warmTarget(productHeroImage(productImage.url))} />
             <SharedImage name={`product-image-${product.handle}`} transitionClass="product-image">
               <Image
                 src={shopifyImageUrl(productImage.url, { width: 800, crop: 'center' })}

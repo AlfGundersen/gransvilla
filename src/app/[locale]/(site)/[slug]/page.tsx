@@ -16,7 +16,7 @@ import { getTranslator, translateContent } from '@/lib/i18n/server'
 import { getBlurDataURL } from '@/lib/sanity/blur'
 import { client } from '@/lib/sanity/client'
 import { getHiddenProductHandles } from '@/lib/sanity/hiddenProducts'
-import { urlFor } from '@/lib/sanity/image'
+import { pageHeroSrc, urlFor } from '@/lib/sanity/image'
 import { sanityFetch } from '@/lib/sanity/live'
 import {
   eventQuery,
@@ -26,6 +26,7 @@ import {
   pageQuery,
 } from '@/lib/sanity/queries'
 import { getProductByHandle, type Product } from '@/lib/shopify'
+import { pageHeroImage } from '@/lib/warm-image'
 import type { EventPageSection } from '@/types/sanity'
 import { ProductPageContent, productMetadata } from '../butikken/[handle]/ProductPageContent'
 import styles from './page.module.css'
@@ -211,10 +212,8 @@ export default async function SlugPage({ params }: Props) {
             /arrangementer both carry this same name. */}
         <SharedImage name={`page-image-${slug}`}>
           <Image
-            src={urlFor(content.featuredImage).width(1600).quality(92).url()}
+            {...pageHeroImage(pageHeroSrc(content.featuredImage))}
             alt={content.featuredImage.alt || content.featuredImage.assetAltText || content.title}
-            width={1200}
-            height={675}
             className={styles.featuredImageImg}
             priority
             placeholder={blurDataURL ? 'blur' : 'empty'}

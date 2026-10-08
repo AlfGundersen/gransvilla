@@ -3,14 +3,16 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { RichText } from '@/components/RichText'
 import { SharedImage } from '@/components/SharedImage'
+import { WarmImage } from '@/components/WarmImage'
 import { MaybeWatermark } from '@/components/Watermark'
 import { localeHref } from '@/lib/i18n/href'
 import { alternatesFor } from '@/lib/i18n/metadata'
 import { getTranslator, translateContent } from '@/lib/i18n/server'
 import { getBlurDataURL } from '@/lib/sanity/blur'
-import { urlFor } from '@/lib/sanity/image'
+import { pageHeroSrc, urlFor } from '@/lib/sanity/image'
 import { sanityFetch } from '@/lib/sanity/live'
 import { arrangementerSettingsQuery, eventsQuery } from '@/lib/sanity/queries'
+import { pageHeroImage, warmTarget } from '@/lib/warm-image'
 import type { ArrangementerSettings, Event } from '@/types/sanity'
 import styles from './page.module.css'
 
@@ -118,6 +120,7 @@ export default async function ArrangementerPage({ params }: Params) {
                     {/* Only the cards are named. The hero above can fall back
                         to events[0]'s image, and naming both would put the
                         same view-transition-name on screen twice. */}
+                    <WarmImage {...warmTarget(pageHeroImage(pageHeroSrc(event.featuredImage)))} />
                     <SharedImage name={`page-image-${event.slug.current}`}>
                       <Image
                         src={urlFor(event.featuredImage)
