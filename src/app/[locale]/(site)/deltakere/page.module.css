@@ -82,39 +82,43 @@
 
 .day {
   padding: var(--space-xs) var(--space-sm);
-  border: 1px solid var(--color-skeleton);
+  border: 1px solid var(--color-border);
+  background: transparent;
   color: var(--color-foreground);
+  font: inherit;
   font-size: var(--text-sm);
-  text-decoration: none;
   white-space: nowrap;
+  cursor: pointer;
 }
 
-.day[aria-current='page'] {
-  border-color: var(--color-primary);
+.day[aria-pressed='true'] {
   background: var(--color-primary);
   color: var(--color-white);
-}
-
-.daySeats {
-  margin-left: var(--space-xs);
-  opacity: 0.6;
 }
 
 .filter {
   padding: var(--space-xs) var(--space-md);
   border: 1px solid var(--color-border);
+  background: transparent;
   color: var(--color-foreground);
-  text-decoration: none;
+  font: inherit;
+  cursor: pointer;
 }
 
-.filter[aria-current='page'] {
+.filter[aria-pressed='true'] {
   background: var(--color-primary);
   color: var(--color-white);
 }
 
 .toggle {
   margin-left: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
   color: var(--color-foreground);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .event {
@@ -164,11 +168,33 @@
   padding-left: 1.2em;
 }
 
+.tableScroll {
+  margin-top: var(--space-md);
+  overflow-x: auto;
+}
+
 .table {
   width: 100%;
-  margin-top: var(--space-md);
+  min-width: 44rem;
   border-collapse: collapse;
+  table-layout: fixed;
   font-size: var(--text-sm);
+}
+
+.colName {
+  width: 24%;
+}
+
+.colNumber {
+  width: 6rem;
+}
+
+.colContact {
+  width: 15rem;
+}
+
+.colOrder {
+  width: 6rem;
 }
 
 .table th,
@@ -184,6 +210,7 @@
 }
 
 .table .number {
+  padding-right: var(--space-lg);
   text-align: right;
 }
 
@@ -209,6 +236,12 @@
 }
 
 @media print {
+  /* Only the lists go on paper: not the header, footer, cart or cookie banner */
+  :global(body):has(.page) > :not(:global([data-site])),
+  :global([data-site]):has(.page) > :not(:global(main)) {
+    display: none !important;
+  }
+
   .page {
     max-width: none;
     padding: 0;
