@@ -99,3 +99,19 @@ export function isPastVariantDate(title: string, now: number = Date.now()): bool
     return wallClock - osloOffsetMinutes(wallClock) * 60_000 <= now
   })
 }
+
+/**
+ * A sortable number for a dated variant title, or null when it is not one.
+ *
+ * Only for putting dates in order: it is the wall-clock time read as if it
+ * were UTC, which sorts correctly without caring about the offset.
+ */
+export function variantDateOrder(title: string): number | null {
+  const trimmed = title.trim()
+  const timed = trimmed.match(VARIANT_DATE)
+  const dayOnly = timed ? null : trimmed.match(VARIANT_DAY)
+  if (!timed && !dayOnly) return null
+
+  const [, day, month, year, hour = 0, minute = 0] = (timed ?? dayOnly ?? []).map(Number)
+  return Date.UTC(year, month - 1, day, hour, minute)
+}
