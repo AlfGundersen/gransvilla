@@ -82,7 +82,7 @@
 
 .day {
   padding: var(--space-xs) var(--space-sm);
-  border: 1px solid var(--color-skeleton);
+  border: 1px solid var(--color-border);
   color: var(--color-foreground);
   font-size: var(--text-sm);
   text-decoration: none;
@@ -90,14 +90,8 @@
 }
 
 .day[aria-current='page'] {
-  border-color: var(--color-primary);
   background: var(--color-primary);
   color: var(--color-white);
-}
-
-.daySeats {
-  margin-left: var(--space-xs);
-  opacity: 0.6;
 }
 
 .filter {

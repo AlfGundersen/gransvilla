@@ -179,10 +179,7 @@ export default async function DeltakerePage({ searchParams }: Props) {
   )
 
   // The lists arrive in date order, so the days come out in calendar order
-  const days = new Map<string, number>()
-  for (const list of inScope) {
-    days.set(dayOf(list.date), (days.get(dayOf(list.date)) ?? 0) + list.seats)
-  }
+  const days = new Set(inScope.map((list) => dayOf(list.date)))
   const day = dag && days.has(dag) ? dag : undefined
   const visible = day ? inScope.filter((list) => dayOf(list.date) === day) : inScope
 
@@ -232,17 +229,14 @@ export default async function DeltakerePage({ searchParams }: Props) {
           >
             Alle datoer
           </Link>
-          {[...days].map(([name, seats]) => (
+          {[...days].map((name) => (
             <Link
               key={name}
               href={listHref({ product, day: name, showPast })}
               className={styles.day}
               aria-current={day === name ? 'page' : undefined}
             >
-              {dayLabel(name)}{' '}
-              <span className={styles.daySeats}>
-                {seats} {seats === 1 ? 'plass' : 'plasser'}
-              </span>
+              {dayLabel(name)}
             </Link>
           ))}
         </nav>
