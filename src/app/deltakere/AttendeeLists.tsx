@@ -68,32 +68,42 @@ function EventList({ list }: { list: AttendeeList }) {
         </div>
       )}
 
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th scope="col">Navn</th>
-            <th scope="col" className={styles.number}>
-              Antall
-            </th>
-            <th scope="col">Allergier</th>
-            <th scope="col">Kontakt</th>
-            <th scope="col">Bestilling</th>
-          </tr>
-        </thead>
-        <tbody>
-          {list.attendees.map((attendee) => (
-            <tr key={attendee.order}>
-              <td>{attendee.name}</td>
-              <td className={styles.number}>{attendee.quantity}</td>
-              <td>{attendee.allergies}</td>
-              <td>
-                <Contact email={attendee.email} phone={attendee.phone} />
-              </td>
-              <td>{attendee.order}</td>
+      <div className={styles.tableScroll}>
+        <table className={styles.table}>
+          {/* Fixed widths, so showing or hiding a contact never moves the others */}
+          <colgroup>
+            <col className={styles.colName} />
+            <col className={styles.colNumber} />
+            <col />
+            <col className={styles.colContact} />
+            <col className={styles.colOrder} />
+          </colgroup>
+          <thead>
+            <tr>
+              <th scope="col">Navn</th>
+              <th scope="col" className={styles.number}>
+                Antall
+              </th>
+              <th scope="col">Allergier</th>
+              <th scope="col">Kontakt</th>
+              <th scope="col">Bestilling</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {list.attendees.map((attendee) => (
+              <tr key={attendee.order}>
+                <td>{attendee.name}</td>
+                <td className={styles.number}>{attendee.quantity}</td>
+                <td>{attendee.allergies}</td>
+                <td>
+                  <Contact email={attendee.email} phone={attendee.phone} />
+                </td>
+                <td>{attendee.order}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </section>
   )
 }

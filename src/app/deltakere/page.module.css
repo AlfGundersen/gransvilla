@@ -168,11 +168,33 @@
   padding-left: 1.2em;
 }
 
+.tableScroll {
+  margin-top: var(--space-md);
+  overflow-x: auto;
+}
+
 .table {
   width: 100%;
-  margin-top: var(--space-md);
+  min-width: 44rem;
   border-collapse: collapse;
+  table-layout: fixed;
   font-size: var(--text-sm);
+}
+
+.colName {
+  width: 24%;
+}
+
+.colNumber {
+  width: 6rem;
+}
+
+.colContact {
+  width: 15rem;
+}
+
+.colOrder {
+  width: 6rem;
 }
 
 .table th,
@@ -188,6 +210,7 @@
 }
 
 .table .number {
+  padding-right: var(--space-lg);
   text-align: right;
 }
 
