@@ -2,7 +2,6 @@
 
 import parse from 'html-react-parser'
 import Link from 'next/link'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import { AllergyField } from '@/components/cart/AllergyField'
 import { useCart } from '@/context/CartContext'
@@ -41,9 +40,6 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
   const t = useT()
   const locale = useLocale()
   const numberLocale = locale === 'en' ? 'en-GB' : 'nb-NO'
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
 
   const [quantity, setQuantity] = useState(1)
   const [allergies, setAllergies] = useState('')
@@ -53,18 +49,14 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
     'idle' | 'loading' | 'success' | 'error'
   >('idle')
 
-  // Initialize from URL params if present, then fill in anything that has
-  // only one answer.
+  // Starts with anything that has only one answer. What the address asks for
+  // is applied once the page is in the browser (below): reading it here, with
+  // useSearchParams, would opt the whole page out of being rendered on the
+  // server — and stop it building at all without a loading state around it.
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>(() => {
     const initial: Record<string, string> = {}
     product.options?.forEach((option) => {
       if (option.name !== 'Title') {
-        const paramValue = searchParams.get(option.name)
-        if (paramValue && option.values.includes(paramValue)) {
-          initial[option.name] = paramValue
-          return
-        }
-
         // A single date left to sell is not a choice. Picking it here opens
         // the page on the real price and an add-to-cart button, instead of a
         // disabled "Velg en dato" the visitor has to satisfy first.
@@ -108,6 +100,35 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
   })
   const [isConfirmingDates, setIsConfirmingDates] = useState(false)
   const [isAddingDates, setIsAddingDates] = useState(false)
+
+  // A link can name the option to open on: /butikken/x?Dato=08.11.2026
+  // biome-ignore lint/correctness/useExhaustiveDependencies: read once, when the page arrives
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const asked: Record<string, string> = {}
+    for (const option of product.options ?? []) {
+      const value = params.get(option.name)
+      if (option.name !== 'Title' && value && option.values.includes(value)) {
+        asked[option.name] = value
+      }
+    }
+    if (Object.keys(asked).length === 0) return
+
+    setSelectedOptions((current) => ({ ...current, ...asked }))
+    if (dateOption && asked[dateOption.name]) setSelectedDates([asked[dateOption.name]])
+  }, [])
+
+  /** Puts the choice in the address without a navigation, so it can be shared. */
+  const writeQuery = (change: (params: URLSearchParams) => void) => {
+    const params = new URLSearchParams(window.location.search)
+    change(params)
+    const query = params.toString()
+    window.history.replaceState(
+      null,
+      '',
+      query ? `${window.location.pathname}?${query}` : window.location.pathname,
+    )
+  }
 
   // Build a set of option values that have no available variant.
   // For multi-option products this checks "value is reachable given currently
@@ -171,12 +192,9 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
     setSelectedOptions((prev) => {
       const newOptions = { ...prev, [optionName]: value }
 
-      // Update URL with new options
-      const params = new URLSearchParams(searchParams.toString())
-      Object.entries(newOptions).forEach(([key, val]) => {
-        params.set(key, val)
+      writeQuery((params) => {
+        for (const [key, val] of Object.entries(newOptions)) params.set(key, val)
       })
-      router.replace(`${pathname}?${params.toString()}`, { scroll: false })
 
       return newOptions
     })
@@ -204,11 +222,10 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
     setSelectedOptions(dates.length > 0 ? { [dateOption.name]: dates[0] } : {})
 
     // The address can only name one date, so it does when there is one
-    const params = new URLSearchParams(searchParams.toString())
-    if (dates.length === 1) params.set(dateOption.name, dates[0])
-    else params.delete(dateOption.name)
-    const query = params.toString()
-    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false })
+    writeQuery((params) => {
+      if (dates.length === 1) params.set(dateOption.name, dates[0])
+      else params.delete(dateOption.name)
+    })
   }
 
   const toggleDate = (value: string) => {
