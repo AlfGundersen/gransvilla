@@ -39,6 +39,11 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET') return
   if (url.origin !== self.location.origin) return
 
+  // The staff lists hold names, allergies and contact details. Left to the
+  // browser, so they are never written to the cache below and never served
+  // from it after someone has logged out.
+  if (url.pathname.startsWith('/deltakere')) return
+
   // HTML pages: network-first with offline fallback
   if (request.headers.get('accept')?.includes('text/html')) {
     event.respondWith(

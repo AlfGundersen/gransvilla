@@ -236,6 +236,12 @@
 }
 
 @media print {
+  /* Only the lists go on paper: not the header, footer, cart or cookie banner */
+  :global(body):has(.page) > :not(:global([data-site])),
+  :global([data-site]):has(.page) > :not(:global(main)) {
+    display: none !important;
+  }
+
   .page {
     max-width: none;
     padding: 0;

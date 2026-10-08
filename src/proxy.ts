@@ -65,12 +65,10 @@ async function hiddenProductHandles(): Promise<Set<string>> {
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // Studio, the staff pages, API routes and metadata files are single-locale.
-  // Anything with a file extension is a static asset.
+  // Studio, API routes and metadata files are single-locale. Anything with a
+  // file extension is a static asset.
   if (
     pathname.startsWith('/studio') ||
-    pathname === '/deltakere' ||
-    pathname.startsWith('/deltakere/') ||
     pathname.startsWith('/api') ||
     pathname === '/sitemap.xml' ||
     pathname === '/robots.txt' ||
