@@ -90,6 +90,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           </p>
         )}
       </div>
+
       <div className={styles.shopImageWrapper}>
         {product.images[0] && (
           <WarmImage {...warmTarget(productHeroImage(product.images[0].url))} />
@@ -155,6 +156,8 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
         </div>
       </div>
+
+      {/* Mobile-only details section */}
       <div className={styles.shopMobileDetails}>
         <div className={styles.shopMobileHeader}>
           <h3 className={styles.shopProductTitle}>{product.title}</h3>
@@ -188,16 +191,18 @@ export default function ProductCard({ product }: ProductCardProps) {
           </Link>
         </div>
       </div>
-      opensModal && (
-      <VariantModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        productTitle={product.title}
-        variants={product.variants}
-        currencyCode={product.currencyCode}
-        askAllergies={product.askAllergies}
-      />
-      )
+
+      {/* Variant selection modal */}
+      {opensModal && (
+        <VariantModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          productTitle={product.title}
+          variants={product.variants}
+          currencyCode={product.currencyCode}
+          askAllergies={product.askAllergies}
+        />
+      )}
     </div>
   )
 }
