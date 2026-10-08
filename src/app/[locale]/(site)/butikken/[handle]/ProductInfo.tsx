@@ -240,7 +240,12 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
                         } ${isSoldOut ? styles.productInfoOptionButtonSoldOut : ''}`}
                         onClick={() => handleOptionChange(option.name, value)}
                       >
-                        {formatVariantTitle(value, locale)}
+                        {formatVariantTitle(value, locale)}{' '}
+                        {isSoldOut && (
+                          <span className={styles.productInfoOptionSoldOutLabel}>
+                            {t('Utsolgt')}
+                          </span>
+                        )}
                       </button>
                     )
                   })}

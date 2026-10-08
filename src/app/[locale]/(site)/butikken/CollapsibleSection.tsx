@@ -6,15 +6,18 @@ import styles from './page.module.css'
 interface CollapsibleSectionProps {
   title: string
   description?: string | null
+  /** Start unfolded on mobile; the visitor can still fold it away */
+  defaultOpen?: boolean
   children: React.ReactNode
 }
 
 export default function CollapsibleSection({
   title,
   description,
+  defaultOpen = false,
   children,
 }: CollapsibleSectionProps) {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(defaultOpen)
   const contentRef = useRef<HTMLDivElement>(null)
   const [height, setHeight] = useState<number>(0)
 
