@@ -24,11 +24,20 @@ const ATTENDEE_ORDERS_QUERY = /* GraphQL */ `
       nodes {
         name
         cancelledAt
+        email
+        phone
         customer {
           displayName
+          defaultEmailAddress {
+            emailAddress
+          }
+          defaultPhoneNumber {
+            phoneNumber
+          }
         }
         billingAddress {
           name
+          phone
         }
         lineItems(first: 30) {
           nodes {
@@ -49,8 +58,14 @@ const ATTENDEE_ORDERS_QUERY = /* GraphQL */ `
 interface AdminOrder {
   name: string
   cancelledAt: string | null
-  customer: { displayName: string | null } | null
-  billingAddress: { name: string | null } | null
+  email: string | null
+  phone: string | null
+  customer: {
+    displayName: string | null
+    defaultEmailAddress: { emailAddress: string | null } | null
+    defaultPhoneNumber: { phoneNumber: string | null } | null
+  } | null
+  billingAddress: { name: string | null; phone: string | null } | null
   lineItems: {
     nodes: {
       title: string
@@ -74,6 +89,9 @@ export interface Attendee {
   name: string
   quantity: number
   allergies: string
+  /** Checkout asks for one or the other, so either may be empty */
+  email: string
+  phone: string
 }
 
 /** Everyone booked on one date of one product. */
@@ -161,6 +179,12 @@ export async function getAttendeeLists(): Promise<AttendeeList[]> {
           quantity: line.currentQuantity,
           allergies:
             line.customAttributes.find((attribute) => attribute.key === ALLERGY_ATTRIBUTE)?.value ||
+            '',
+          email: order.email || order.customer?.defaultEmailAddress?.emailAddress || '',
+          phone:
+            order.phone ||
+            order.billingAddress?.phone ||
+            order.customer?.defaultPhoneNumber?.phoneNumber ||
             '',
         })
       }
