@@ -1,0 +1,12 @@
+#!/bin/sh
+# Stops a push that would not build. Every push to GitHub starts a build on
+# Netlify, and one that fails there has cost a build and shipped nothing.
+#
+# Typecheck, the logic tests, and a full production build: about a minute.
+# Skip it for once with `git push --no-verify`.
+echo "pre-push: typecheck, unit tests and production build (about a minute)…"
+pnpm verify || {
+  echo
+  echo "pre-push: not pushed. Fix the above, or push with --no-verify to skip the check."
+  exit 1
+}
