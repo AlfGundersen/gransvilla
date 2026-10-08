@@ -105,6 +105,18 @@
   background-color: var(--color-accent);
 }
 
+:global(html.inverted) .confirm {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: #fff;
+}
+
+:global(html.inverted) .confirm:hover {
+  border-color: var(--color-foreground);
+  background-color: var(--color-foreground);
+  color: var(--color-background);
+}
+
 .cancel {
   flex: none;
   border: 1px solid var(--color-border);

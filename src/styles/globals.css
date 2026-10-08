@@ -26,6 +26,9 @@
   --color-accent: #C44467;
   --color-border: #000000;
   --color-white: #ffffff;
+  /* Text on a --color-primary background. White on black here; the dark theme
+     turns primary to cream, and white on cream cannot be read. */
+  --color-on-primary: #ffffff;
   --color-overlay: rgba(0, 0, 0, 0.3);
   /* Loading placeholders. These were referenced by the skeletons but never
      defined, which made every `background: linear-gradient(... var(--color-muted) ...)`
@@ -327,6 +330,7 @@ html.inverted {
   --color-background: #1a1818;
   --color-foreground: #F5F0E3;
   --color-primary: #F5F0E3;
+  --color-on-primary: #1a1818;
   --color-secondary: #c9c4b7;
   --color-border: #F5F0E3;
   --color-muted: #272423;

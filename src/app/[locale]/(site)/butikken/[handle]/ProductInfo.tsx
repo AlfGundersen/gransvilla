@@ -405,6 +405,16 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
         </div>
       )}
 
+      {/* Said before the button is pressed, so the one quantity above is not
+          taken to be the only chance to set it */}
+      {selectedDateVariants.length > 1 && (
+        <p className={styles.productInfoDatesHint}>
+          {t(
+            'Antallet gjelder alle valgte datoer. Du kan endre det for hver dato i neste steg, før noe legges i handlekurven.',
+          )}
+        </p>
+      )}
+
       {/* Add to Cart or Coming Soon */}
       {product.comingSoon ? (
         <>

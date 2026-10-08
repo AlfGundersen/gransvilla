@@ -43,7 +43,7 @@
   justify-content: space-between;
   align-items: center;
   padding: var(--space-lg);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-background) 15%, transparent);
 }
 
 .title {
@@ -80,7 +80,7 @@
 
 .empty p {
   font-size: var(--text-lg);
-  color: rgba(255, 255, 255, 0.6);
+  color: color-mix(in srgb, var(--color-background) 60%, transparent);
 }
 
 .continueLink {
@@ -117,7 +117,7 @@
   gap: var(--space-md);
   padding-bottom: var(--space-lg);
   margin-bottom: var(--space-lg);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-background) 15%, transparent);
 }
 
 .item:last-child {
@@ -131,7 +131,7 @@
   width: 80px;
   height: 80px;
   flex-shrink: 0;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: color-mix(in srgb, var(--color-background) 10%, transparent);
 }
 
 .itemImage img {
@@ -161,7 +161,7 @@
 
 .itemVariant {
   font-size: var(--text-sm);
-  color: rgba(255, 255, 255, 0.6);
+  color: color-mix(in srgb, var(--color-background) 60%, transparent);
   margin: 0;
   font-weight: 300;
 }
@@ -184,7 +184,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid color-mix(in srgb, var(--color-background) 15%, transparent);
 }
 
 .quantityButton {
@@ -218,7 +218,7 @@
   background: none;
   border: none;
   font-size: var(--text-sm);
-  color: rgba(255, 255, 255, 0.6);
+  color: color-mix(in srgb, var(--color-background) 60%, transparent);
   cursor: pointer;
   text-decoration: underline;
   transition: color var(--transition-fast);
@@ -237,7 +237,7 @@
 /* Footer */
 .footer {
   padding: var(--space-lg);
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-top: 1px solid color-mix(in srgb, var(--color-background) 15%, transparent);
 }
 
 .subtotal {
@@ -256,7 +256,7 @@
 
 .shippingNote {
   font-size: var(--text-sm);
-  color: rgba(255, 255, 255, 0.6);
+  color: color-mix(in srgb, var(--color-background) 60%, transparent);
   margin: 0 0 var(--space-lg) 0;
 }
 
@@ -293,7 +293,7 @@
   font-family: var(--font-heading);
   font-size: var(--text-base);
   text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid color-mix(in srgb, var(--color-background) 15%, transparent);
   cursor: pointer;
   transition: border-color var(--transition-fast);
 }
@@ -316,7 +316,7 @@
 .spinner {
   width: 24px;
   height: 24px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid color-mix(in srgb, var(--color-background) 20%, transparent);
   border-top-color: var(--color-background);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
