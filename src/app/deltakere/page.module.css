@@ -83,13 +83,15 @@
 .day {
   padding: var(--space-xs) var(--space-sm);
   border: 1px solid var(--color-border);
+  background: transparent;
   color: var(--color-foreground);
+  font: inherit;
   font-size: var(--text-sm);
-  text-decoration: none;
   white-space: nowrap;
+  cursor: pointer;
 }
 
-.day[aria-current='page'] {
+.day[aria-pressed='true'] {
   background: var(--color-primary);
   color: var(--color-white);
 }
@@ -97,18 +99,26 @@
 .filter {
   padding: var(--space-xs) var(--space-md);
   border: 1px solid var(--color-border);
+  background: transparent;
   color: var(--color-foreground);
-  text-decoration: none;
+  font: inherit;
+  cursor: pointer;
 }
 
-.filter[aria-current='page'] {
+.filter[aria-pressed='true'] {
   background: var(--color-primary);
   color: var(--color-white);
 }
 
 .toggle {
   margin-left: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
   color: var(--color-foreground);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .event {

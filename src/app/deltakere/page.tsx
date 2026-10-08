@@ -1,13 +1,13 @@
 import { cookies } from 'next/headers'
-import Link from 'next/link'
 import { type AttendeeList, getAttendeeLists, isAdminConfigured } from '@/lib/shopify/admin'
 import { isStaffAuthConfigured, isStaffSession, STAFF_COOKIE } from '@/lib/staff-auth'
+import { AttendeeLists } from './AttendeeLists'
 import { login, logout } from './actions'
-import { Contact } from './Contact'
 import { PrintButton } from './PrintButton'
 import styles from './page.module.css'
 
-// Reads a cookie and shows live orders: never prerendered, never cached
+// Reads a cookie and shows live orders: never prerendered, never cached. The
+// orders are fetched once per load; the filters then work on them in the browser.
 export const dynamic = 'force-dynamic'
 
 interface Props {
@@ -19,105 +19,12 @@ const LOGIN_ERRORS: Record<string, string> = {
   sperret: 'For mange forsøk. Vent ti minutter og prøv igjen.',
 }
 
-interface Filter {
-  product?: string
-  /** A day as the variant titles write it: `08.11.2026` */
-  day?: string
-  showPast: boolean
-}
-
-function listHref({ product, day, showPast }: Filter): string {
-  const params = new URLSearchParams()
-  if (product) params.set('produkt', product)
-  if (day) params.set('dag', day)
-  if (showPast) params.set('vis', 'alle')
-  const query = params.toString()
-  return query ? `/deltakere?${query}` : '/deltakere'
-}
-
-/** The day of a dated variant title, with or without a time after it. */
-function dayOf(date: string): string {
-  return date.slice(0, 10)
-}
-
-const DAY_LABEL = new Intl.DateTimeFormat('nb-NO', {
-  weekday: 'short',
-  day: 'numeric',
-  month: 'short',
-  timeZone: 'UTC',
-})
-
-/** `08.11.2026` as `søn. 8. nov.` */
-function dayLabel(day: string): string {
-  const [date, month, year] = day.split('.').map(Number)
-  return DAY_LABEL.format(Date.UTC(year, month - 1, date))
-}
-
 function Message({ children }: { children: React.ReactNode }) {
   return (
     <main className={styles.page}>
       <h1 className={styles.title}>Deltakerlister</h1>
       <p>{children}</p>
     </main>
-  )
-}
-
-function EventList({ list }: { list: AttendeeList }) {
-  const withAllergies = list.attendees.filter((attendee) => attendee.allergies)
-
-  return (
-    <section className={styles.event}>
-      <header className={styles.eventHeader}>
-        <h2 className={styles.eventTitle}>
-          {list.product} <span className={styles.eventDate}>{list.date}</span>
-        </h2>
-        <p className={styles.eventCount}>
-          {list.seats} {list.seats === 1 ? 'plass' : 'plasser'} · {list.attendees.length}{' '}
-          {list.attendees.length === 1 ? 'bestilling' : 'bestillinger'}
-        </p>
-      </header>
-
-      {withAllergies.length > 0 && (
-        <div className={styles.allergies}>
-          <h3 className={styles.allergiesTitle}>Allergier</h3>
-          <ul className={styles.allergiesList}>
-            {withAllergies.map((attendee) => (
-              <li key={attendee.order}>
-                <strong>{attendee.name}</strong> ({attendee.quantity}{' '}
-                {attendee.quantity === 1 ? 'plass' : 'plasser'}): {attendee.allergies}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th scope="col">Navn</th>
-            <th scope="col" className={styles.number}>
-              Antall
-            </th>
-            <th scope="col">Allergier</th>
-            <th scope="col">Kontakt</th>
-            <th scope="col">Bestilling</th>
-          </tr>
-        </thead>
-        <tbody>
-          {list.attendees.map((attendee) => (
-            <tr key={attendee.order}>
-              <td>{attendee.name}</td>
-              <td className={styles.number}>{attendee.quantity}</td>
-              <td>{attendee.allergies}</td>
-              <td>
-                <Contact email={attendee.email} phone={attendee.phone} />
-              </td>
-              <td>{attendee.order}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </section>
   )
 }
 
@@ -169,20 +76,6 @@ export default async function DeltakerePage({ searchParams }: Props) {
     return <Message>Kunne ikke hente bestillingene fra Shopify. Prøv igjen om litt.</Message>
   }
 
-  const showPast = vis === 'alle'
-  const products = [...new Set(lists.map((list) => list.product))].sort((a, b) =>
-    a.localeCompare(b, 'nb'),
-  )
-  const product = produkt && products.includes(produkt) ? produkt : undefined
-  const inScope = lists.filter(
-    (list) => (showPast || !list.past) && (!product || list.product === product),
-  )
-
-  // The lists arrive in date order, so the days come out in calendar order
-  const days = new Set(inScope.map((list) => dayOf(list.date)))
-  const day = dag && days.has(dag) ? dag : undefined
-  const visible = day ? inScope.filter((list) => dayOf(list.date) === day) : inScope
-
   return (
     <main className={styles.page}>
       <div className={styles.top}>
@@ -197,56 +90,10 @@ export default async function DeltakerePage({ searchParams }: Props) {
         </div>
       </div>
 
-      <nav className={styles.filters} aria-label="Filter">
-        <Link
-          href={listHref({ day, showPast })}
-          className={styles.filter}
-          aria-current={product ? undefined : 'page'}
-        >
-          Alle
-        </Link>
-        {products.map((name) => (
-          <Link
-            key={name}
-            href={listHref({ product: name, day, showPast })}
-            className={styles.filter}
-            aria-current={product === name ? 'page' : undefined}
-          >
-            {name}
-          </Link>
-        ))}
-        <Link href={listHref({ product, showPast: !showPast })} className={styles.toggle}>
-          {showPast ? 'Skjul tidligere datoer' : 'Vis tidligere datoer'}
-        </Link>
-      </nav>
-
-      {days.size > 0 && (
-        <nav className={styles.days} aria-label="Dato">
-          <Link
-            href={listHref({ product, showPast })}
-            className={styles.day}
-            aria-current={day ? undefined : 'page'}
-          >
-            Alle datoer
-          </Link>
-          {[...days].map((name) => (
-            <Link
-              key={name}
-              href={listHref({ product, day: name, showPast })}
-              className={styles.day}
-              aria-current={day === name ? 'page' : undefined}
-            >
-              {dayLabel(name)}
-            </Link>
-          ))}
-        </nav>
-      )}
-
-      {visible.length === 0 ? (
-        <p>Ingen bestillinger på kommende datoer.</p>
-      ) : (
-        visible.map((list) => <EventList key={`${list.product}\n${list.date}`} list={list} />)
-      )}
+      <AttendeeLists
+        lists={lists}
+        initial={{ product: produkt, day: dag, showPast: vis === 'alle' }}
+      />
     </main>
   )
 }
