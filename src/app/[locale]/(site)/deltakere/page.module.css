@@ -43,25 +43,90 @@
   color: var(--color-foreground);
 }
 
+/* The login stands alone in the middle of the page, like a door */
+.loginPage {
+  display: grid;
+  place-items: center;
+  min-height: 60vh;
+  padding: var(--space-xl) var(--container-padding);
+}
+
 .login {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-sm);
-  max-width: 20rem;
+  width: 100%;
+  max-width: 22rem;
+}
+
+.loginTitle {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: var(--text-4xl);
+  text-align: center;
+}
+
+.loginIntro {
+  margin: var(--space-xs) 0 var(--space-lg);
+  text-align: center;
+  opacity: 0.7;
+}
+
+.label {
+  margin-bottom: var(--space-xs);
+  font-family: var(--font-heading);
+  font-weight: 300;
 }
 
 .input {
   width: 100%;
-  padding: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
   border: 1px solid var(--color-border);
-  background: var(--color-white);
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-foreground);
   font: inherit;
+  transition: background-color var(--transition-fast);
+}
+
+.input:focus-visible {
+  outline: 2px solid var(--color-foreground);
+  outline-offset: 2px;
+  background: var(--color-white);
+}
+
+.input[aria-invalid='true'] {
+  border-color: var(--color-accent);
 }
 
 .error {
-  margin: 0;
+  margin: var(--space-xs) 0 0;
   color: var(--color-accent);
+  font-size: var(--text-sm);
+}
+
+.loginButton {
+  margin-top: var(--space-md);
+  padding: var(--space-sm) var(--space-lg);
+  border: 1px solid var(--color-foreground);
+  background: var(--color-foreground);
+  color: var(--color-background);
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.loginButton:hover:not(:disabled) {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+}
+
+.loginButton:disabled {
+  opacity: 0.6;
+  cursor: default;
 }
 
 .filters,
