@@ -1,13 +1,9 @@
 import { cookies } from 'next/headers'
 import Link from 'next/link'
-import {
-  type Attendee,
-  type AttendeeList,
-  getAttendeeLists,
-  isAdminConfigured,
-} from '@/lib/shopify/admin'
+import { type AttendeeList, getAttendeeLists, isAdminConfigured } from '@/lib/shopify/admin'
 import { isStaffAuthConfigured, isStaffSession, STAFF_COOKIE } from '@/lib/staff-auth'
 import { login, logout } from './actions'
+import { Contact } from './Contact'
 import { PrintButton } from './PrintButton'
 import styles from './page.module.css'
 
@@ -66,19 +62,6 @@ function Message({ children }: { children: React.ReactNode }) {
   )
 }
 
-/** Kept folded away: the list is read far more often than anyone is rung. */
-function Contact({ attendee }: { attendee: Attendee }) {
-  if (!attendee.email && !attendee.phone) return null
-
-  return (
-    <details className={styles.contact}>
-      <summary className={styles.contactButton}>Vis kontakt</summary>
-      {attendee.phone && <a href={`tel:${attendee.phone}`}>{attendee.phone}</a>}
-      {attendee.email && <a href={`mailto:${attendee.email}`}>{attendee.email}</a>}
-    </details>
-  )
-}
-
 function EventList({ list }: { list: AttendeeList }) {
   const withAllergies = list.attendees.filter((attendee) => attendee.allergies)
 
@@ -127,7 +110,7 @@ function EventList({ list }: { list: AttendeeList }) {
               <td className={styles.number}>{attendee.quantity}</td>
               <td>{attendee.allergies}</td>
               <td>
-                <Contact attendee={attendee} />
+                <Contact email={attendee.email} phone={attendee.phone} />
               </td>
               <td>{attendee.order}</td>
             </tr>
