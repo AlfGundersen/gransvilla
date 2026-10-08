@@ -2,7 +2,8 @@
    butikken/page.module.css. Selectors are doubled up with .section so they
    outrank the single-class shop rules whatever order the two files load in. */
 
-.section .infoContent {
+.section .infoContent,
+.infoBlocks {
   display: flex;
   flex-direction: column;
   gap: var(--space-lg);
@@ -33,17 +34,44 @@
   text-decoration: underline;
 }
 
-/* Two columns rather than the shop's three: the text takes one half and the
-   products the other, one to a row, so both get more room than a category in
-   the shop does. The shop's right-hand rule and padding assume a second product
-   beside each one, which there never is here. */
+/* Three equal columns on a wide screen: logo, text, products. The text and
+   the logo share the shop's sidebar, which takes two of the three; the
+   products are one to a row in the third, the width a card has in the shop.
+   The shop's right-hand rule and padding assume a second product beside each
+   one, which there never is here. */
 @media (min-width: 1024px) {
   /* Doubled: .section sits on the same element as .shopSection, and at equal
      specificity the winner is whichever file the bundler emits last. That was
-     this one in development and the shop's in the production build, which put
-     the live page back on the shop's one-third / two-thirds. */
+     this one in development and the shop's in the production build. */
   .section.section {
+    grid-template-columns: 2fr 1fr;
+  }
+
+  /* The gap is the same room the shop leaves either side of the rule between
+     the text and the products, so the three columns sit evenly. */
+  .section .infoContentWithLogo {
+    display: grid;
     grid-template-columns: 1fr 1fr;
+    align-items: start;
+    gap: calc(var(--space-lg) * 2);
+  }
+
+  /* The rule between the logo and the text, matching the shop's own between
+     the text and the products. Drawn on the sidebar rather than the text so
+     it runs the height of the section, not just of the paragraphs. The sidebar
+     is padded on the right only, which is what the subtraction accounts for. */
+  .section .infoWithLogo {
+    position: relative;
+  }
+
+  .section .infoWithLogo::after {
+    content: '';
+    position: absolute;
+    top: var(--space-lg);
+    bottom: var(--space-lg);
+    left: calc((100% - var(--space-lg)) / 2);
+    width: 1px;
+    background-color: var(--color-border);
   }
 }
 
@@ -53,18 +81,15 @@
 
 .section .productColumn {
   padding-right: 0;
-  /* The card is about twice the width it has in the shop, and the hover text
-     set at the shop's size left most of the box empty. */
-  --product-description-size: var(--text-2xl);
-  --product-description-leading: 1.45;
 }
 
-/* Side by side, the card is half the window, so the text follows the window
-   down rather than outgrowing the box on a small laptop. Below this the
-   columns stack and the card is full width again. */
-@media (min-width: 1024px) {
+/* Stacked, the card is the full width of the page, about three times what it
+   has in the shop, and the hover text set at the shop's size left most of the
+   box empty. Side by side it is the shop's own width and needs no help. */
+@media (max-width: 1023px) {
   .section .productColumn {
-    --product-description-size: clamp(var(--text-lg), 1.75vw, var(--text-2xl));
+    --product-description-size: var(--text-2xl);
+    --product-description-leading: 1.45;
   }
 }
 

@@ -68,6 +68,33 @@
   gap: var(--space-sm);
 }
 
+/* Dates: equal columns, as many as fit. The minimum is the room one date
+   needs, so a phone still gets two to a row. */
+.productInfoOptionValuesDays,
+.productInfoOptionValuesTimed {
+  display: grid;
+  font-variant-numeric: tabular-nums;
+}
+
+.productInfoOptionValuesDays {
+  grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr));
+}
+
+.productInfoOptionValuesTimed {
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+}
+
+/* In English the month is written out: `8 November 2026, 14:00` */
+.productInfoOptionValuesDays:lang(en),
+.productInfoOptionValuesTimed:lang(en) {
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+}
+
+.productInfoOptionValuesDays .productInfoOptionButton,
+.productInfoOptionValuesTimed .productInfoOptionButton {
+  padding-inline: var(--space-xs);
+}
+
 .productInfoOptionButton {
   padding: var(--space-sm) var(--space-md);
   background: none;
@@ -90,28 +117,20 @@
   color: var(--color-background);
 }
 
-/* Sold out: the date steps back and says so, rather than being struck through */
+/* Sold out: the date fades back, at the same size as the rest */
 .productInfoOptionButtonSoldOut {
-  border-color: color-mix(in srgb, var(--color-border) 25%, transparent);
-  color: color-mix(in srgb, var(--color-foreground) 45%, transparent);
+  border-color: color-mix(in srgb, var(--color-border) 20%, transparent);
+  color: color-mix(in srgb, var(--color-foreground) 35%, transparent);
   cursor: default;
 }
 
 .productInfoOptionButtonSoldOut.productInfoOptionButtonActive {
-  color: color-mix(in srgb, var(--color-background) 70%, transparent);
-}
-
-.productInfoOptionSoldOutLabel {
-  display: block;
-  margin-top: 2px;
-  font-size: 0.625rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-background) 60%, transparent);
 }
 
 .productInfoOptionButtonSoldOut:hover,
 .productInfoOptionButtonSoldOut:focus-visible {
-  border-color: color-mix(in srgb, var(--color-border) 25%, transparent);
+  border-color: color-mix(in srgb, var(--color-border) 20%, transparent);
 }
 
 /* ===========================================

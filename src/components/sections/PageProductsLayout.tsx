@@ -15,8 +15,9 @@ interface PageProductsLayoutProps {
 }
 
 /**
- * A page that sells products, laid out like a category in /butikken: what the
- * page has to say in the left column, the products it sells in the right.
+ * A page that sells products, laid out like a category in /butikken: on a
+ * wide screen three equal columns — the logo, what the page has to say, and
+ * the products it sells.
  *
  * Built on the shop's own classes rather than a copy of them, so the two stay
  * in step. The one departure is on mobile, where the shop folds each category
@@ -40,8 +41,12 @@ export function PageProductsLayout({ page, products, children }: PageProductsLay
 
       <div className={shop.shopSections}>
         <section className={`${shop.shopSection} ${styles.section}`}>
-          <div className={`${shop.shopSidebar} ${styles.info}`}>
-            <div className={`${shop.shopSidebarContent} ${styles.infoContent}`}>
+          <div className={`${shop.shopSidebar} ${styles.info} ${logo ? styles.infoWithLogo : ''}`}>
+            <div
+              className={`${shop.shopSidebarContent} ${styles.infoContent} ${
+                logo ? styles.infoContentWithLogo : ''
+              }`}
+            >
               {logo && (
                 <Image
                   src={urlFor(logo).width(600).url()}
@@ -52,18 +57,20 @@ export function PageProductsLayout({ page, products, children }: PageProductsLay
                   priority
                 />
               )}
-              {textSections.map((section) => (
-                <div key={section._key} className={styles.infoBlock}>
-                  {section.overskrift && (
-                    <h2 className={shop.shopCategoryTitle}>{section.overskrift}</h2>
-                  )}
-                  {section.tekst && (
-                    <div className={styles.infoText}>
-                      <RichText value={section.tekst} />
-                    </div>
-                  )}
-                </div>
-              ))}
+              <div className={styles.infoBlocks}>
+                {textSections.map((section) => (
+                  <div key={section._key} className={styles.infoBlock}>
+                    {section.overskrift && (
+                      <h2 className={shop.shopCategoryTitle}>{section.overskrift}</h2>
+                    )}
+                    {section.tekst && (
+                      <div className={styles.infoText}>
+                        <RichText value={section.tekst} />
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
