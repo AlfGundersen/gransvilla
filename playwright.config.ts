@@ -38,7 +38,9 @@ export default defineConfig({
         // Built from scratch. Next keeps fetched data between local builds, and
         // a build that prerendered from last week's answers once served a 404
         // for a product that exists.
-        command: `rm -rf .next/cache/fetch-cache && pnpm build && pnpm exec next start -p ${PORT}`,
+        // `next build` directly: `pnpm build` also regenerates the PWA icons, which
+        // leaves four changed files behind after every run.
+        command: `rm -rf .next/cache/fetch-cache && pnpm exec next build && pnpm exec next start -p ${PORT}`,
         url: `http://localhost:${PORT}/kontakt`,
         timeout: 300_000,
         reuseExistingServer: false,

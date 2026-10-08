@@ -16,7 +16,7 @@
     "typecheck": "tsc --noEmit",
     "test:unit": "playwright test --config tests/unit/playwright.config.ts",
     "test:e2e": "playwright test",
-    "verify": "pnpm typecheck && pnpm test:unit && pnpm build",
+    "verify": "pnpm typecheck && pnpm test:unit && next build",
     "prepare": "git config core.hooksPath .githooks || true"
   },
   "dependencies": {
