@@ -44,6 +44,14 @@
   gap: var(--space-sm);
 }
 
+/* On a phone the variant modal pins its one button to the bottom with a
+   margin above it. Here there are two side by side, and that margin pushed
+   the second one down out of line with the first. */
+.actions > button {
+  position: static;
+  margin-top: 0;
+}
+
 .cancel {
   flex: none;
   padding: var(--space-md) var(--space-lg);
