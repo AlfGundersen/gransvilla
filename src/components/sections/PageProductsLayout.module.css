@@ -16,6 +16,11 @@
   height: auto;
 }
 
+/* A dark logo on the dark theme: turned into the same cream ink as the text */
+:global(html.inverted) .section .logo {
+  filter: var(--invert-ink);
+}
+
 .infoText {
   font-size: var(--text-base);
   line-height: 1.6;

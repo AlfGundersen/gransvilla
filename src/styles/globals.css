@@ -402,6 +402,29 @@ html.inverted img[src*="logo"] {
 }
 
 /*
+ * Images arrive the same way the page does. One that has not loaded is held
+ * back, and fades up when it has (<ImageFade> marks it). No blurred stand-in
+ * first: that was a second picture snapping into a third.
+ *
+ * An animation rather than a transition, and filling backwards only, so it
+ * neither overrides the transitions images already have (the hover zoom) nor
+ * holds their opacity once it is done.
+ */
+@keyframes image-in {
+  from {
+    opacity: 0;
+  }
+}
+
+html.image-fade [data-site] main img:not([data-loaded]) {
+  opacity: 0;
+}
+
+html.image-fade [data-site] main img[data-loaded=''] {
+  animation: image-in var(--page-in) var(--page-ease-in) backwards;
+}
+
+/*
  * The shell. Everything outside the page content is one snapshot: the header,
  * and the footer, which sits wherever the page above it ends. Swapped
  * instantly, the footer jumped to its new place the moment a link was

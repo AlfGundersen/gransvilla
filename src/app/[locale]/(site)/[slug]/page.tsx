@@ -216,8 +216,6 @@ export default async function SlugPage({ params }: Props) {
             alt={content.featuredImage.alt || content.featuredImage.assetAltText || content.title}
             className={styles.featuredImageImg}
             priority
-            placeholder={blurDataURL ? 'blur' : 'empty'}
-            blurDataURL={blurDataURL}
           />
         </SharedImage>
         <MaybeWatermark image={content.featuredImage} />

@@ -38,8 +38,6 @@ export function ImageTextSection({ data, eager = false, blurDataURL }: ImageText
             width={width}
             height={height}
             loading={eager ? 'eager' : 'lazy'}
-            placeholder={blurDataURL ? 'blur' : 'empty'}
-            blurDataURL={blurDataURL}
             className={styles.imageTextImage}
           />
           <MaybeWatermark image={data.bilde} />

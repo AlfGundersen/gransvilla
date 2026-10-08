@@ -169,8 +169,6 @@ export function GalleryClient({ images, columns, hasContent, watermarkSrc }: Gal
                 width={image.width}
                 height={image.height}
                 loading={index < columns ? 'eager' : 'lazy'}
-                placeholder={image.blurDataURL ? 'blur' : 'empty'}
-                blurDataURL={image.blurDataURL}
                 className={styles.galleryImage}
               />
               <WatermarkClient
