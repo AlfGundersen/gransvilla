@@ -159,6 +159,29 @@
   text-align: right;
 }
 
+.contactButton {
+  display: inline-block;
+  padding: 0 var(--space-sm);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  list-style: none;
+  white-space: nowrap;
+}
+
+.contactButton::-webkit-details-marker {
+  display: none;
+}
+
+.contact[open] .contactButton {
+  display: none;
+}
+
+.contact a {
+  display: block;
+  color: var(--color-foreground);
+  overflow-wrap: anywhere;
+}
+
 @media print {
   .page {
     max-width: none;
@@ -166,7 +189,8 @@
   }
 
   .actions,
-  .filters {
+  .filters,
+  .contact:not([open]) {
     display: none;
   }
 
