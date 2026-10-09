@@ -273,10 +273,16 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
             quantity: (quantities[i] ?? quantity) + (guestQuantities[i] ?? 0),
           })),
           // The surcharge is one variant whatever the day, so each line
-          // carries the date it is for
-          ...selectedDateVariants.flatMap(({ date }, i) =>
+          // names the lunch the guest has a seat on
+          ...selectedDateVariants.flatMap(({ variant }, i) =>
             guestAddon && guestQuantities[i] > 0
-              ? [{ variantId: guestAddon.variantId, quantity: guestQuantities[i], date }]
+              ? [
+                  {
+                    variantId: guestAddon.variantId,
+                    quantity: guestQuantities[i],
+                    guestOf: variant.id,
+                  },
+                ]
               : [],
           ),
         ].filter((line) => line.quantity > 0),

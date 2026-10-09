@@ -21,7 +21,7 @@ interface CartContextType {
   addToCart: (variantId: string, quantity?: number, allergies?: string) => Promise<void>
   /** Several lines in one request: they all land in the cart together, or none do */
   addLinesToCart: (
-    lines: { variantId: string; quantity: number; date?: string }[],
+    lines: { variantId: string; quantity: number; guestOf?: string }[],
     allergies?: string,
   ) => Promise<void>
   updateQuantity: (lineId: string, quantity: number) => Promise<void>
@@ -134,7 +134,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const addLinesToCart = useCallback(
-    async (lines: { variantId: string; quantity: number; date?: string }[], allergies?: string) => {
+    async (
+      lines: { variantId: string; quantity: number; guestOf?: string }[],
+      allergies?: string,
+    ) => {
       setIsLoading(true)
       setStockNotice(null)
       try {
@@ -240,7 +243,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  const cartCount = cart?.items.reduce((sum, item) => sum + item.quantity, 0) ?? 0
+  // A guest surcharge is part of a seat already counted, not one more thing
+  const cartCount =
+    cart?.items.reduce((sum, item) => sum + (item.guestOf ? 0 : item.quantity), 0) ?? 0
 
   return (
     <CartContext.Provider

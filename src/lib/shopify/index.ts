@@ -34,6 +34,13 @@ export const ALLERGY_ATTRIBUTE = 'Allergier'
 /** The date a line is for, where the variant itself has none: a guest surcharge */
 export const DATE_ATTRIBUTE = 'Dato'
 
+/**
+ * On a guest surcharge, the lunch variant the guest has a seat on, so the two
+ * lines can be kept in step. The underscore keeps it out of the checkout and
+ * off the receipt.
+ */
+export const GUEST_OF_ATTRIBUTE = '_gjestFor'
+
 type CartLineAttribute = { key: string; value: string }
 
 function displayCurrency(code: string): string {
@@ -116,6 +123,9 @@ function transformCart(cart: ShopifyCart): Cart {
       date:
         edge.node.attributes.find((attribute) => attribute.key === DATE_ATTRIBUTE)?.value ||
         undefined,
+      guestOf:
+        edge.node.attributes.find((attribute) => attribute.key === GUEST_OF_ATTRIBUTE)?.value ||
+        undefined,
     })),
     totalAmount: parseFloat(cart.cost.totalAmount.amount),
     currencyCode: displayCurrency(cart.cost.totalAmount.currencyCode),
@@ -183,13 +193,20 @@ export async function getProductByHandle(handle: string): Promise<Product | null
 
 /**
  * What the cart route checks before accepting a variant: its title, to turn
- * away a date that has been, and whether its product takes allergies at all.
+ * away a date that has been, whether its product takes allergies at all, and
+ * which surcharge a guest on it pays.
  */
 export async function getVariantForCart(
   variantId: string,
-): Promise<{ title: string; askAllergies: boolean } | null> {
+): Promise<{ title: string; askAllergies: boolean; guestAddonVariantId?: string } | null> {
   const data = await shopifyFetch<{
-    node: { title?: string; product?: { askAllergies: { value: string } | null } } | null
+    node: {
+      title?: string
+      product?: {
+        askAllergies: { value: string } | null
+        guestAddon?: ShopifyProduct['guestAddon']
+      }
+    } | null
   }>({
     query: VARIANT_FOR_CART_QUERY,
     variables: { id: variantId },
@@ -200,6 +217,7 @@ export async function getVariantForCart(
   return {
     title: data.node.title,
     askAllergies: data.node.product?.askAllergies?.value === 'true',
+    guestAddonVariantId: data.node.product?.guestAddon?.reference?.variants?.nodes[0]?.id,
   }
 }
 
@@ -315,6 +333,21 @@ export async function updateCartLine(
       cartId,
       lines: [{ id: lineId, quantity }],
     },
+  })
+
+  return transformCart(data.cartLinesUpdate.cart)
+}
+
+/** Several lines changed in one go; a quantity of 0 takes the line out. */
+export async function updateCartLines(
+  cartId: string,
+  lines: { id: string; quantity: number }[],
+): Promise<Cart> {
+  const data = await shopifyFetch<{
+    cartLinesUpdate: { cart: ShopifyCart }
+  }>({
+    query: UPDATE_CART_MUTATION,
+    variables: { cartId, lines },
   })
 
   return transformCart(data.cartLinesUpdate.cart)

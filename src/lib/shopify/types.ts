@@ -147,6 +147,8 @@ export interface CartItem {
   allergies?: string
   /** The date a line is for, where the variant does not say: a guest surcharge */
   date?: string
+  /** On a guest surcharge: the lunch variant the guest has a seat on */
+  guestOf?: string
 }
 
 export interface Cart {

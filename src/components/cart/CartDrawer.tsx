@@ -7,6 +7,7 @@ import { useCart } from '@/context/CartContext'
 import { localeHref } from '@/lib/i18n/href'
 import { useLocale, useT } from '@/lib/i18n/provider'
 import { formatVariantTitle } from '@/lib/i18n/variant-date'
+import type { CartItem } from '@/lib/shopify/types'
 import styles from './CartDrawer.module.css'
 
 export function CartDrawer() {
@@ -66,6 +67,11 @@ export function CartDrawer() {
       first.focus()
     }
   }, [])
+
+  // The lunch line a guest surcharge belongs under: the first line of the
+  // lunch it names. A surcharge with no lunch left is shown as a line itself.
+  const guestHost = (item: CartItem) =>
+    item.guestOf ? cart?.items.find((other) => other.variantId === item.guestOf) : undefined
 
   return (
     <>
@@ -127,74 +133,101 @@ export function CartDrawer() {
               </div>
             )}
             <div className={styles.items}>
-              {cart.items.map((item) => (
-                <div key={item.id} className={styles.item}>
-                  <div className={styles.itemImage}>
-                    {item.image && (
-                      <Image
-                        src={item.image.url}
-                        alt={item.image.altText || item.title}
-                        fill
-                        sizes="80px"
-                      />
-                    )}
-                  </div>
-                  <div className={styles.itemInfo}>
-                    <Link
-                      href={localeHref(`/butikken/${item.handle}`, locale)}
-                      className={styles.itemTitle}
-                      onClick={closeCart}
-                    >
-                      {t(item.title)}
-                    </Link>
-                    {item.variantTitle !== 'Default Title' && (
-                      <p className={styles.itemVariant}>
-                        {formatVariantTitle(item.variantTitle, locale)}
+              {cart.items
+                .filter((item) => !guestHost(item))
+                .map((item) => (
+                  <div key={item.id} className={styles.item}>
+                    <div className={styles.itemImage}>
+                      {item.image && (
+                        <Image
+                          src={item.image.url}
+                          alt={item.image.altText || item.title}
+                          fill
+                          sizes="80px"
+                        />
+                      )}
+                    </div>
+                    <div className={styles.itemInfo}>
+                      <Link
+                        href={localeHref(`/butikken/${item.handle}`, locale)}
+                        className={styles.itemTitle}
+                        onClick={closeCart}
+                      >
+                        {t(item.title)}
+                      </Link>
+                      {item.variantTitle !== 'Default Title' && (
+                        <p className={styles.itemVariant}>
+                          {formatVariantTitle(item.variantTitle, locale)}
+                        </p>
+                      )}
+                      {item.date && (
+                        <p className={styles.itemVariant}>
+                          {formatVariantTitle(item.date, locale)}
+                        </p>
+                      )}
+                      {item.allergies && (
+                        <p className={styles.itemVariant}>
+                          {t('Allergier')}: {item.allergies}
+                        </p>
+                      )}
+                      <p className={styles.itemPrice}>
+                        {item.price.toLocaleString(numberLocale)} {item.currencyCode}
                       </p>
-                    )}
-                    {item.date && (
-                      <p className={styles.itemVariant}>{formatVariantTitle(item.date, locale)}</p>
-                    )}
-                    {item.allergies && (
-                      <p className={styles.itemVariant}>
-                        {t('Allergier')}: {item.allergies}
-                      </p>
-                    )}
-                    <p className={styles.itemPrice}>
-                      {item.price.toLocaleString(numberLocale)} {item.currencyCode}
-                    </p>
-                    <div className={styles.itemActions}>
-                      <div className={styles.quantity}>
+                      {/* A guest is part of the lunch they come to, not a thing of
+                        its own: shown here, with what it adds */}
+                      {cart.items
+                        .filter((guest) => guestHost(guest)?.id === item.id)
+                        .map((guest) => (
+                          <p key={guest.id} className={styles.itemGuest}>
+                            <span>
+                              {t('Herav')} {guest.quantity}{' '}
+                              {guest.quantity === 1 ? t('gjest') : t('gjester')} (+
+                              {(guest.price * guest.quantity).toLocaleString(numberLocale)}{' '}
+                              {guest.currencyCode})
+                            </span>
+                            <button
+                              type="button"
+                              className={styles.removeButton}
+                              onClick={() => updateQuantity(guest.id, guest.quantity - 1)}
+                              disabled={isLoading}
+                            >
+                              {t('Fjern gjest')}
+                            </button>
+                          </p>
+                        ))}
+                      <div className={styles.itemActions}>
+                        <div className={styles.quantity}>
+                          <button
+                            className={styles.quantityButton}
+                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            disabled={isLoading || item.quantity <= 1}
+                            aria-label={t('Reduser antall')}
+                          >
+                            -
+                          </button>
+                          <span className={styles.quantityValue}>{item.quantity}</span>
+                          <button
+                            className={styles.quantityButton}
+                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            // A guest comes with a seat, so is added from the lunch
+                            disabled={isLoading || Boolean(item.guestOf)}
+                            aria-label={t('Øk antall')}
+                          >
+                            +
+                          </button>
+                        </div>
                         <button
-                          className={styles.quantityButton}
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          disabled={isLoading || item.quantity <= 1}
-                          aria-label={t('Reduser antall')}
-                        >
-                          -
-                        </button>
-                        <span className={styles.quantityValue}>{item.quantity}</span>
-                        <button
-                          className={styles.quantityButton}
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          className={styles.removeButton}
+                          onClick={() => removeFromCart(item.id)}
                           disabled={isLoading}
-                          aria-label={t('Øk antall')}
+                          aria-label={t('Fjern fra handlekurv')}
                         >
-                          +
+                          {t('Fjern')}
                         </button>
                       </div>
-                      <button
-                        className={styles.removeButton}
-                        onClick={() => removeFromCart(item.id)}
-                        disabled={isLoading}
-                        aria-label={t('Fjern fra handlekurv')}
-                      >
-                        {t('Fjern')}
-                      </button>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
 
             <div className={styles.footer}>
