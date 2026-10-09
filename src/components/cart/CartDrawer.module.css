@@ -172,20 +172,26 @@
   margin: 0;
 }
 
-/* The guests among a lunch's seats, and the way to take one out */
+/* The guests among a lunch's seats, on a row of their own under the line's
+   controls, with the way to take one out */
 .itemGuest {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: var(--space-sm);
-  margin: var(--space-xs) 0 0;
+  margin: var(--space-sm) 0 0;
+  padding-top: var(--space-sm);
+  border-top: 1px solid color-mix(in srgb, var(--color-background) 15%, transparent);
   font-size: var(--text-sm);
+  white-space: nowrap;
+}
+
+.itemGuestPrice {
+  color: color-mix(in srgb, var(--color-background) 60%, transparent);
 }
 
 .itemGuest button {
   flex: none;
-  padding: 0;
-  white-space: nowrap;
 }
 
 .itemActions {
