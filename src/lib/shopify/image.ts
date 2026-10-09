@@ -1,6 +1,9 @@
 /**
  * Transform Shopify CDN image URL with size and crop parameters.
- * When a focal point is set in Shopify admin, the crop will respect it.
+ *
+ * The CDN knows nothing of the focal point set in the admin: asked to crop, it
+ * crops around the middle. The focal point is applied where the image is
+ * shown, with `focalPosition` below.
  */
 export function shopifyImageUrl(
   url: string,
@@ -36,8 +39,20 @@ export function shopifyImageUrl(
 }
 
 /**
+ * Where to hold an image when its box crops it, as a CSS `object-position`:
+ * the focal point set on it in the Shopify admin, or nothing — and so the
+ * middle — where none has been.
+ */
+export function focalPosition(image?: {
+  focalPoint?: { x: number; y: number }
+}): string | undefined {
+  if (!image?.focalPoint) return undefined
+  const percent = (value: number) => `${Math.round(Math.min(1, Math.max(0, value)) * 1000) / 10}%`
+  return `${percent(image.focalPoint.x)} ${percent(image.focalPoint.y)}`
+}
+
+/**
  * Get optimized Shopify image URL for Next.js Image component.
- * Uses Shopify's CDN transformation with focal point support.
  */
 export function getShopifyImageProps(
   image: { url: string; altText?: string | null; width?: number; height?: number },

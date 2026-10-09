@@ -6,7 +6,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { useCart } from '@/context/CartContext'
 import { localeHref } from '@/lib/i18n/href'
 import { useLocale, useT } from '@/lib/i18n/provider'
-import { shopifyImageUrl } from '@/lib/shopify/image'
+import { focalPosition, shopifyImageUrl } from '@/lib/shopify/image'
 import type { Product } from '@/lib/shopify/types'
 import styles from './EventProductsSection.module.css'
 
@@ -89,6 +89,7 @@ export function EventProductCard({ product }: EventProductCardProps) {
             alt={productImage.altText || product.title}
             fill
             className={styles.eventProductImage}
+            style={{ objectPosition: focalPosition(productImage) }}
             sizes="(max-width: 767px) 50vw, (max-width: 1024px) 50vw, 33vw"
           />
         </div>

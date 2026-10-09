@@ -32,6 +32,18 @@ export const COLLECTIONS_QUERY = `
                     }
                   }
                 }
+                media(first: 5) {
+                  nodes {
+                    ... on MediaImage {
+                      image {
+                        url
+                      }
+                      presentation {
+                        asJson(format: IMAGE)
+                      }
+                    }
+                  }
+                }
                 variants(first: 50) {
                   edges {
                     node {
@@ -109,6 +121,18 @@ export const PRODUCTS_QUERY = `
               }
             }
           }
+          media(first: 5) {
+            nodes {
+              ... on MediaImage {
+                image {
+                  url
+                }
+                presentation {
+                  asJson(format: IMAGE)
+                }
+              }
+            }
+          }
           variants(first: 50) {
             edges {
               node {
@@ -178,6 +202,18 @@ export const PRODUCT_BY_HANDLE_QUERY = `
             altText
             width
             height
+          }
+        }
+      }
+      media(first: 10) {
+        nodes {
+          ... on MediaImage {
+            image {
+              url
+            }
+            presentation {
+              asJson(format: IMAGE)
+            }
           }
         }
       }
@@ -262,6 +298,18 @@ export const CREATE_CART_MUTATION = `
                         }
                       }
                     }
+                    media(first: 1) {
+                      nodes {
+                        ... on MediaImage {
+                          image {
+                            url
+                          }
+                          presentation {
+                            asJson(format: IMAGE)
+                          }
+                        }
+                      }
+                    }
                   }
                 }
               }
@@ -311,6 +359,18 @@ export const ADD_TO_CART_MUTATION = `
                         node {
                           url
                           altText
+                        }
+                      }
+                    }
+                    media(first: 1) {
+                      nodes {
+                        ... on MediaImage {
+                          image {
+                            url
+                          }
+                          presentation {
+                            asJson(format: IMAGE)
+                          }
                         }
                       }
                     }
@@ -365,6 +425,18 @@ export const GET_CART_QUERY = `
                       }
                     }
                   }
+                  media(first: 1) {
+                    nodes {
+                      ... on MediaImage {
+                        image {
+                          url
+                        }
+                        presentation {
+                          asJson(format: IMAGE)
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -413,6 +485,18 @@ export const UPDATE_CART_MUTATION = `
                         node {
                           url
                           altText
+                        }
+                      }
+                    }
+                    media(first: 1) {
+                      nodes {
+                        ... on MediaImage {
+                          image {
+                            url
+                          }
+                          presentation {
+                            asJson(format: IMAGE)
+                          }
                         }
                       }
                     }
@@ -465,6 +549,18 @@ export const REMOVE_FROM_CART_MUTATION = `
                         node {
                           url
                           altText
+                        }
+                      }
+                    }
+                    media(first: 1) {
+                      nodes {
+                        ... on MediaImage {
+                          image {
+                            url
+                          }
+                          presentation {
+                            asJson(format: IMAGE)
+                          }
                         }
                       }
                     }
@@ -534,6 +630,18 @@ export const UPDATE_CART_BUYER_MUTATION = `
                         node {
                           url
                           altText
+                        }
+                      }
+                    }
+                    media(first: 1) {
+                      nodes {
+                        ... on MediaImage {
+                          image {
+                            url
+                          }
+                          presentation {
+                            asJson(format: IMAGE)
+                          }
                         }
                       }
                     }
