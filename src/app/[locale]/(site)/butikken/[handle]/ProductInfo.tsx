@@ -37,7 +37,6 @@ function optionDatesClass(values: string[]): string {
 }
 
 export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
-  const { guestAddon } = product
   const t = useT()
   const locale = useLocale()
   const numberLocale = locale === 'en' ? 'en-GB' : 'nb-NO'
@@ -99,6 +98,9 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
       ? only
       : null
   }, [product.options])
+
+  // A guest is tied to a date's seat, so only a product sold by date takes one
+  const guestAddon = dateOption ? product.guestAddon : undefined
 
   const { addLinesToCart } = useCart()
   const [selectedDates, setSelectedDates] = useState<string[]>(() => {
@@ -633,8 +635,8 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
             currencyCode={product.currencyCode}
             allergies={product.askAllergies ? allergies.trim() : undefined}
             guest={
-              guestPrice !== null && showGuests
-                ? { price: guestPrice, quantity: guests }
+              guestAddon && showGuests
+                ? { surcharge: guestAddon.price, quantity: guests }
                 : undefined
             }
           />

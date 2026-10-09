@@ -37,7 +37,7 @@ export function VariantModal({
   variants,
   currencyCode,
   askAllergies = false,
-  guestAddon,
+  guestAddon: linkedGuestAddon,
 }: VariantModalProps) {
   const { addLinesToCart } = useCart()
   const [selectedIds, setSelectedIds] = useState<string[]>([])
@@ -59,6 +59,11 @@ export function VariantModal({
     const sellable = variants.filter((variant) => variant.availableForSale)
     return sellable.length === 1 ? sellable[0].id : null
   }, [variants])
+
+  // A guest is tied to a date's seat, so only variants that are dates take one
+  const guestAddon = variants.every((v) => variantDateOrder(v.title) !== null)
+    ? linkedGuestAddon
+    : undefined
 
   // The same rule as the product page here too: where the choice is between
   // dates, several can be booked in one go.
@@ -181,7 +186,9 @@ export function VariantModal({
               quantity={1}
               currencyCode={currencyCode}
               allergies={askAllergies ? allergies.trim() : undefined}
-              guest={withGuest && guestAddon ? { price: guestPrice, quantity: 1 } : undefined}
+              guest={
+                withGuest && guestAddon ? { surcharge: guestAddon.price, quantity: 1 } : undefined
+              }
               onCancel={() => setIsConfirming(false)}
               onConfirm={handleAddToCart}
             />

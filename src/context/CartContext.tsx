@@ -245,7 +245,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   // A guest surcharge is part of a seat already counted, not one more thing
   const cartCount =
-    cart?.items.reduce((sum, item) => sum + (item.guestOf ? 0 : item.quantity), 0) ?? 0
+    cart?.items.reduce(
+      (sum, item) =>
+        sum +
+        (item.guestOf && cart.items.some((other) => other.variantId === item.guestOf)
+          ? 0
+          : item.quantity),
+      0,
+    ) ?? 0
 
   return (
     <CartContext.Provider
