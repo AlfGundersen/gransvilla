@@ -5,13 +5,15 @@ import { rateLimit } from '@/lib/rate-limit'
 import {
   ALLERGY_ATTRIBUTE,
   DATE_ATTRIBUTE,
+  GUEST_OF_ATTRIBUTE,
   addLinesToCart,
   createCartWithLines,
   getCart,
   getVariantForCart,
-  removeFromCart,
-  updateCartLine,
+  updateCartLines,
 } from '@/lib/shopify'
+import { changeLine, settleGuests } from '@/lib/shopify/guest-seats'
+import type { Cart } from '@/lib/shopify/types'
 
 const MAX_ALLERGIES_LENGTH = 100
 
@@ -41,6 +43,31 @@ export async function GET(request: NextRequest) {
   }
 }
 
+/**
+ * Takes out any guest left without a seat. Run after every change, since
+ * Shopify can also cap a line to the stock that is left.
+ */
+async function withGuestsSettled(cart: Cart): Promise<Cart> {
+  const updates = settleGuests(cart.items)
+  return updates.length > 0 ? updateCartLines(cart.id, updates) : cart
+}
+
+/**
+ * Sets one line's quantity, and whatever has to follow it: guests when their
+ * seats go, the seat when its guest goes. Null where the change is not one the
+ * cart makes.
+ */
+async function setLineQuantity(
+  cartId: string,
+  lineId: string,
+  quantity: number,
+): Promise<Cart | null> {
+  const before = await getCart(cartId)
+  const updates = changeLine(before?.items ?? [], lineId, quantity)
+  if (!updates) return null
+  return withGuestsSettled(await updateCartLines(cartId, updates))
+}
+
 /** Far more than a month of lunches; enough to stop a request padding a cart */
 const MAX_LINES = 40
 
@@ -48,7 +75,8 @@ const MAX_LINES = 40
 //
 // Takes one line as `{ variantId, quantity }`, or several as
 // `{ lines: [{ variantId, quantity }] }`. Several are added in one go, so they
-// either all land in the cart or none do.
+// either all land in the cart or none do. A guest surcharge also names the
+// lunch variant the guest has a seat on, as `guestOf`.
 export async function POST(request: NextRequest) {
   const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
   const limited = rateLimit(`cart:${ip}`, { limit: 30, windowMs: 60_000 })
@@ -65,12 +93,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Between 1 and 40 lines are required' }, { status: 400 })
     }
 
-    const wanted: { variantId: string; quantity: number; date?: string }[] = []
+    const wanted: { variantId: string; quantity: number; guestOf?: string }[] = []
     for (const line of requested) {
-      const { variantId, quantity, date } = (line ?? {}) as {
+      const { variantId, quantity, guestOf } = (line ?? {}) as {
         variantId?: unknown
         quantity?: unknown
-        date?: unknown
+        guestOf?: unknown
       }
 
       if (!isNonEmptyString(variantId)) {
@@ -84,13 +112,11 @@ export async function POST(request: NextRequest) {
         )
       }
 
-      // The date a guest surcharge is for. Only a date is let through, so
-      // this cannot be used to write arbitrary text onto an order line
-      if (date !== undefined && (typeof date !== 'string' || variantDateOrder(date) === null)) {
-        return NextResponse.json({ error: 'Date must be a date' }, { status: 400 })
+      if (guestOf !== undefined && !isNonEmptyString(guestOf)) {
+        return NextResponse.json({ error: 'Valid guestOf is required' }, { status: 400 })
       }
 
-      wanted.push({ variantId, quantity, date })
+      wanted.push({ variantId, quantity, guestOf })
     }
 
     if (allergies !== undefined && typeof allergies !== 'string') {
@@ -103,21 +129,39 @@ export async function POST(request: NextRequest) {
     }
 
     // A page rendered before the date passed can still offer it
-    if (
-      variants.some((variant) => variant && isPastVariantDate(variant.title)) ||
-      wanted.some((line) => line.date && isPastVariantDate(line.date))
-    ) {
+    // A guest surcharge is only taken for a dated lunch that says this is its
+    // surcharge. The date written on the line is then the lunch's own, not
+    // something the request made up.
+    const lunches = await Promise.all(
+      wanted.map((line) => (line.guestOf ? getVariantForCart(line.guestOf) : null)),
+    )
+    const badGuest = wanted.some(
+      (line, i) =>
+        line.guestOf &&
+        (lunches[i]?.guestAddonVariantId !== line.variantId ||
+          variantDateOrder(lunches[i]?.title ?? '') === null),
+    )
+    if (badGuest) {
+      return NextResponse.json({ error: 'Valid guestOf is required' }, { status: 400 })
+    }
+
+    if ([...variants, ...lunches].some((variant) => variant && isPastVariantDate(variant.title))) {
       return NextResponse.json({ error: apiMessages.datePassed }, { status: 409 })
     }
 
     // Only kept for a product that asks for it, so the attribute cannot be
     // used to write arbitrary text onto any order line.
     const allergyText = (allergies ?? '').replace(/\s+/g, ' ').trim().slice(0, MAX_ALLERGIES_LENGTH)
-    const lines = wanted.map(({ variantId, quantity, date }, i) => ({
+    const lines = wanted.map(({ variantId, quantity, guestOf }, i) => ({
       variantId,
       quantity,
       attributes: [
-        ...(date ? [{ key: DATE_ATTRIBUTE, value: date }] : []),
+        ...(guestOf && lunches[i]
+          ? [
+              { key: DATE_ATTRIBUTE, value: lunches[i].title },
+              { key: GUEST_OF_ATTRIBUTE, value: guestOf },
+            ]
+          : []),
         ...(allergyText && variants[i]?.askAllergies
           ? [{ key: ALLERGY_ATTRIBUTE, value: allergyText }]
           : []),
@@ -139,7 +183,7 @@ export async function POST(request: NextRequest) {
       cart = await createCartWithLines(lines)
     }
 
-    return NextResponse.json({ cart })
+    return NextResponse.json({ cart: await withGuestsSettled(cart) })
   } catch (error) {
     console.error('Failed to add to cart:', error)
     return NextResponse.json({ error: 'Failed to add to cart' }, { status: 500 })
@@ -162,7 +206,13 @@ export async function PATCH(request: NextRequest) {
       )
     }
 
-    const cart = await updateCartLine(cartId, lineId, quantity)
+    const cart = await setLineQuantity(cartId, lineId, quantity)
+    if (!cart) {
+      return NextResponse.json(
+        { error: 'A guest is added together with a seat, from the product' },
+        { status: 400 },
+      )
+    }
     return NextResponse.json({ cart })
   } catch (error) {
     console.error('Failed to update cart:', error)
@@ -179,7 +229,7 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'Valid cartId and lineId are required' }, { status: 400 })
     }
 
-    const cart = await removeFromCart(cartId, lineId)
+    const cart = await setLineQuantity(cartId, lineId, 0)
     return NextResponse.json({ cart })
   } catch (error) {
     console.error('Failed to remove from cart:', error)

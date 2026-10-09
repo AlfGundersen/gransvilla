@@ -110,7 +110,7 @@ export function VariantModal({
   /**
    * `quantities` and `guests` follow the order of the chosen dates; without
    * them, one each and no guest. A guest is one more lunch plus the surcharge,
-   * which carries the date it is for.
+   * which names the lunch the guest has a seat on.
    */
   const handleAddToCart = async (quantities?: number[], guests: number[] = []) => {
     if (selectedIds.length === 0 || isAdding) return
@@ -127,7 +127,7 @@ export function VariantModal({
           })),
           ...chosen.flatMap((variant, i) =>
             guestAddon && guests[i] > 0
-              ? [{ variantId: guestAddon.variantId, quantity: guests[i], date: variant.title }]
+              ? [{ variantId: guestAddon.variantId, quantity: guests[i], guestOf: variant.id }]
               : [],
           ),
         ].filter((line) => line.quantity > 0),

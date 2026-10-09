@@ -84,14 +84,80 @@ test.describe('bringing a guest', () => {
     expect(titles).toEqual([chosen[0], chosen[2]].sort())
   })
 
-  test('only a date is accepted as the date a line is for', async ({ page }) => {
+  test('a surcharge is only taken for a lunch that says it is its surcharge', async ({ page }) => {
     const refused = await page.request.post('/api/cart', {
       data: {
         cartId: null,
-        lines: [{ variantId: 'gid://shopify/ProductVariant/1', quantity: 1, date: 'not a date' }],
+        lines: [
+          {
+            variantId: 'gid://shopify/ProductVariant/1',
+            quantity: 1,
+            guestOf: 'gid://shopify/ProductVariant/2',
+          },
+        ],
       },
     })
     expect(refused.status()).toBe(400)
+  })
+
+  test('in the cart, a guest and the seat go together', async ({ page }) => {
+    const response = await page.goto(LUNCH)
+    test.skip(!response?.ok(), 'the lunch is not for sale')
+    await dismissCookieBanner(page)
+
+    const addGuest = page.getByRole('button', { name: /Legg til gjest/ })
+    const dates = availableDates(page)
+    test.skip(
+      !(await addGuest.isVisible().catch(() => false)) || (await dates.count()) < 2,
+      'no guest surcharge linked, or fewer than two dates left',
+    )
+
+    // A member and a guest on each of two dates
+    await dates.nth(0).click()
+    await dates.nth(1).click()
+    await addGuest.click()
+    await page.getByRole('button', { name: /Legg i handlekurv \(2/ }).click()
+    const dialog = page.getByRole('dialog').filter({ hasText: 'Bekreft datoer' })
+    await Promise.all([
+      page.waitForResponse((r) => r.url().endsWith('/api/cart') && r.request().method() === 'POST'),
+      dialog.getByRole('button', { name: 'Legg i handlekurv' }).click(),
+    ])
+
+    type Line = { id: string; variantId: string; quantity: number; guestOf?: string }
+    const change = (method: 'PATCH' | 'DELETE', lineId: string, quantity?: number) =>
+      page.evaluate(
+        async ({ method, lineId, quantity }) => {
+          const cartId = localStorage.getItem('gransvilla-cart-id')
+          const response = await fetch('/api/cart', {
+            method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ cartId, lineId, quantity }),
+          })
+          return { status: response.status, items: (await response.json()).cart?.items as Line[] }
+        },
+        { method, lineId, quantity },
+      )
+
+    const start = (await cartLines(page)) as unknown as Line[]
+    const [firstGuest, secondGuest] = start.filter((line) => line.guestOf)
+    expect(start.filter((line) => line.guestOf)).toHaveLength(2)
+    const seatOf = (lines: Line[], guest: Line) =>
+      lines.find((line) => line.variantId === guest.guestOf)
+
+    // A guest cannot be added from the cart
+    expect((await change('PATCH', firstGuest.id, 2)).status).toBe(400)
+
+    // Removing the lunch removes its guest
+    const firstSeat = seatOf(start, firstGuest)
+    if (!firstSeat) throw new Error('the first guest has no seat')
+    const afterLunch = await change('DELETE', firstSeat.id)
+    expect(afterLunch.items.some((line) => line.id === firstGuest.id)).toBe(false)
+    expect(afterLunch.items.some((line) => line.id === secondGuest.id)).toBe(true)
+
+    // Removing the guest takes the guest's seat, and leaves the member's
+    const afterGuest = await change('DELETE', secondGuest.id)
+    expect(afterGuest.items.filter((line) => line.guestOf)).toHaveLength(0)
+    expect(seatOf(afterGuest.items, secondGuest)?.quantity).toBe(1)
   })
 
   test('the week ahead is shown first, and the rest on request', async ({ page }) => {

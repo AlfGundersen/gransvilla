@@ -172,6 +172,22 @@
   margin: 0;
 }
 
+/* The guests among a lunch's seats, and the way to take one out */
+.itemGuest {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin: var(--space-xs) 0 0;
+  font-size: var(--text-sm);
+}
+
+.itemGuest button {
+  flex: none;
+  padding: 0;
+  white-space: nowrap;
+}
+
 .itemActions {
   display: flex;
   align-items: center;
