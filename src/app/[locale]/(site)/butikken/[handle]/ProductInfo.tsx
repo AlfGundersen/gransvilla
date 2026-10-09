@@ -339,7 +339,7 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
               <fieldset key={option.name} className={styles.productInfoOptionGroup}>
                 <legend className={styles.productInfoOptionLabel}>
                   {option.name}
-                  {option === dateOption && (
+                  {option === dateOption && option.values.length > 1 && (
                     <span className={styles.productInfoOptionHint}>
                       {' '}
                       ({t('du kan velge flere')})
