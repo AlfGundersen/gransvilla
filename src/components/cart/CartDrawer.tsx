@@ -173,28 +173,6 @@ export function CartDrawer() {
                       <p className={styles.itemPrice}>
                         {item.price.toLocaleString(numberLocale)} {item.currencyCode}
                       </p>
-                      {/* A guest is part of the lunch they come to, not a thing of
-                        its own: shown here, with what it adds */}
-                      {cart.items
-                        .filter((guest) => guestHost(guest)?.id === item.id)
-                        .map((guest) => (
-                          <p key={guest.id} className={styles.itemGuest}>
-                            <span>
-                              {t('Herav')} {guest.quantity}{' '}
-                              {guest.quantity === 1 ? t('gjest') : t('gjester')} (+
-                              {(guest.price * guest.quantity).toLocaleString(numberLocale)}{' '}
-                              {guest.currencyCode})
-                            </span>
-                            <button
-                              type="button"
-                              className={styles.removeButton}
-                              onClick={() => updateQuantity(guest.id, guest.quantity - 1)}
-                              disabled={isLoading}
-                            >
-                              {t('Fjern gjest')}
-                            </button>
-                          </p>
-                        ))}
                       <div className={styles.itemActions}>
                         <div className={styles.quantity}>
                           <button
@@ -225,6 +203,29 @@ export function CartDrawer() {
                           {t('Fjern')}
                         </button>
                       </div>
+                      {/* A guest is part of the lunch they come to, not a thing of
+                        its own: shown beneath it, with what each one adds */}
+                      {cart.items
+                        .filter((guest) => guestHost(guest)?.id === item.id)
+                        .map((guest) => (
+                          <p key={guest.id} className={styles.itemGuest}>
+                            <span>
+                              {guest.quantity} {guest.quantity === 1 ? t('gjest') : t('gjester')}
+                              <span className={styles.itemGuestPrice}>
+                                {' '}
+                                à {guest.price.toLocaleString(numberLocale)} {guest.currencyCode}
+                              </span>
+                            </span>
+                            <button
+                              type="button"
+                              className={styles.removeButton}
+                              onClick={() => updateQuantity(guest.id, guest.quantity - 1)}
+                              disabled={isLoading}
+                            >
+                              {t('Fjern gjest')}
+                            </button>
+                          </p>
+                        ))}
                     </div>
                   </div>
                 ))}
