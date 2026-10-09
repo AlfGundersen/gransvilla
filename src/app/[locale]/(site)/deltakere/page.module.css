@@ -251,7 +251,13 @@
 }
 
 .colNumber {
-  width: 6rem;
+  width: 9rem;
+}
+
+/* How many of the seats are guests */
+.guests {
+  color: var(--color-secondary);
+  white-space: nowrap;
 }
 
 .colContact {

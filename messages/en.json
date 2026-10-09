@@ -190,6 +190,9 @@
   "GJELDER FOR FRAMDRIFT-MEDLEMMER": "FOR FRAMDRIFT MEMBERS ONLY",
   "Gjelder medlemmer hos Framdrift": "For members of Framdrift",
   "GJELDER MEDLEMMER HOS FRAMDRIFT": "APPLIES TO FRAMDRIFT MEMBERS",
+  "Gjest": "Guest",
+  "Gjest lagt til": "Guest added",
+  "Gjestetillegg lunsj": "Guest supplement, lunch",
   "Godta alle": "Accept all",
   "Google": "Google",
   "Grans Villa": "Grans Villa",
@@ -300,6 +303,7 @@
   "Ledige helger fra 1. januar 2027.": "Weekends available from 1 January 2027.",
   "Ledige lørdager fra september 2027.": "Saturdays available from September 2027.",
   "Legg i handlekurv": "Add to cart",
+  "Legg til gjest": "Add a guest",
   "Legger til...": "Adding...",
   "Lei Grans Villa til bryllup. Plass til 100 gjester. Stor hage til servering og vielser i tillegg til historiske lokaler inne.": "Hire Grans Villa for your wedding. Room for 100 guests, a large garden for receptions and ceremonies, and historic rooms indoors.",
   "Lei Grans Villa til private selskap. Plass til 100 gjester. Stor hage til servering og arrangementer i tillegg til historiske lokaler inne.": "Rent “ Grans Villa ” at Private events. Seats 100 guests. Large garden for dining and events, in addition to historic indoor spaces.",
@@ -332,6 +336,7 @@
   "med ordrenummer og beskrivelse. Selger vil forsøke å rette feilen uten ugrunnet opphold, og vurdere prisavslag eller refusjon der det er aktuelt.": "including the order number and description. The seller will attempt to correct the error without undue delay and consider a price reduction or refund where appropriate.",
   "Med sin romslige hage, nydelige plassering og historiske arkitektur er Grans Villa et helt unikt sted for private arrangementer. Nyt en meny med deilig mat og drikke skreddersydd etter deres ønsker og behov.": "With its spacious garden, beautiful location and historic architecture, Grans Villa is a truly unique venue for private occasions. Enjoy a menu of delicious food and drink, tailored to your wishes and needs.",
   "Med sin romslige hage, nydelige plassering og historiske arkitektur er Grans Villa et helt unikt sted for private arrangementer. Nyt en meny med deilig og eksklusiv mat og drikke skreddersydd etter deres ønsker og behov.": "With its spacious garden, beautiful setting, and historic architecture, Grans Villa is a truly unique venue for private events. Enjoy a menu of delicious and exclusive food and drinks tailored to your wishes and needs.",
+  "Medlem": "Member",
   "Meld deg på nyhetsbrev": "Sign up for our newsletter",
   "Meld deg på nyhetsbrevet": "Sign up for the newsletter",
   "Meld deg på nyhetsbrevet for å få beskjed når dette blir tilgjengelig.": "Sign up for the newsletter to be notified when this becomes available.",
@@ -481,6 +486,7 @@
   "Vipps": "Vipps",
   "VIS": "VIS",
   "Vis adressen i Google Maps (åpnes i nytt vindu)": "View the address on Google Maps (opens in a new window)",
+  "Vis flere datoer": "Show more dates",
   "Vis mer": "Find out more",
   "Vis mer om": "Show more about"
 }

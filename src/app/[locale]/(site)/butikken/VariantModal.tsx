@@ -6,6 +6,7 @@ import { AllergyField } from '@/components/cart/AllergyField'
 import { useCart } from '@/context/CartContext'
 import { useLocale, useT } from '@/lib/i18n/provider'
 import { formatVariantTitle, variantDateOrder } from '@/lib/i18n/variant-date'
+import type { GuestAddon } from '@/lib/shopify/types'
 import { DatesSummary } from './DatesSummary'
 import styles from './VariantModal.module.css'
 
@@ -25,6 +26,8 @@ interface VariantModalProps {
   currencyCode: string
   /** Ask for allergies before adding, for products that send them to the kitchen */
   askAllergies?: boolean
+  /** Set where a guest can be brought along, for a surcharge */
+  guestAddon?: GuestAddon
 }
 
 export function VariantModal({
@@ -34,6 +37,7 @@ export function VariantModal({
   variants,
   currencyCode,
   askAllergies = false,
+  guestAddon,
 }: VariantModalProps) {
   const { addLinesToCart } = useCart()
   const [selectedIds, setSelectedIds] = useState<string[]>([])
@@ -41,6 +45,8 @@ export function VariantModal({
   const [isConfirming, setIsConfirming] = useState(false)
   const [isAdding, setIsAdding] = useState(false)
   const [allergies, setAllergies] = useState('')
+  // A guest is asked for; how many, and on which dates, is settled in the summary
+  const [withGuest, setWithGuest] = useState(false)
   const modalRef = useRef<HTMLDivElement>(null)
   const t = useT()
   const locale = useLocale()
@@ -67,6 +73,7 @@ export function VariantModal({
       setSelectedIds(soleAvailableVariantId ? [soleAvailableVariantId] : [])
       setIsConfirming(false)
       setAllergies('')
+      setWithGuest(false)
     }
   }, [isOpen, soleAvailableVariantId])
 
@@ -100,15 +107,30 @@ export function VariantModal({
     )
   }
 
-  /** `quantities` follows the order of the chosen dates; without it, one each */
-  const handleAddToCart = async (quantities?: number[]) => {
+  /**
+   * `quantities` and `guests` follow the order of the chosen dates; without
+   * them, one each and no guest. A guest is one more lunch plus the surcharge,
+   * which carries the date it is for.
+   */
+  const handleAddToCart = async (quantities?: number[], guests: number[] = []) => {
     if (selectedIds.length === 0 || isAdding) return
 
     setIsConfirming(false)
     setIsAdding(true)
     try {
+      const chosen = variants.filter((v) => selectedIds.includes(v.id))
       await addLinesToCart(
-        selectedIds.map((variantId, i) => ({ variantId, quantity: quantities?.[i] ?? 1 })),
+        [
+          ...chosen.map((variant, i) => ({
+            variantId: variant.id,
+            quantity: (quantities?.[i] ?? 1) + (guests[i] ?? 0),
+          })),
+          ...chosen.flatMap((variant, i) =>
+            guestAddon && guests[i] > 0
+              ? [{ variantId: guestAddon.variantId, quantity: guests[i], date: variant.title }]
+              : [],
+          ),
+        ].filter((line) => line.quantity > 0),
         askAllergies ? allergies : undefined,
       )
       onClose()
@@ -121,8 +143,16 @@ export function VariantModal({
 
   if (!isOpen) return null
 
+  // What a guest pays in all: the lunch and the surcharge
+  const guestPrice = guestAddon
+    ? parseFloat((variants.find((v) => selectedIds.includes(v.id)) ?? variants[0]).price.amount) +
+      guestAddon.price
+    : 0
   const selectedVariants = variants.filter((v) => selectedIds.includes(v.id))
-  const total = selectedVariants.reduce((sum, v) => sum + parseFloat(v.price.amount), 0)
+  const total = selectedVariants.reduce(
+    (sum, v) => sum + parseFloat(v.price.amount) + (withGuest && guestAddon ? guestPrice : 0),
+    0,
+  )
   // A product with nothing to choose only opens this to ask for allergies
   const isDefaultOnly = variants.length === 1 && variants[0].title === 'Default Title'
 
@@ -151,6 +181,7 @@ export function VariantModal({
               quantity={1}
               currencyCode={currencyCode}
               allergies={askAllergies ? allergies.trim() : undefined}
+              guest={withGuest && guestAddon ? { price: guestPrice, quantity: 1 } : undefined}
               onCancel={() => setIsConfirming(false)}
               onConfirm={handleAddToCart}
             />
@@ -206,10 +237,29 @@ export function VariantModal({
               </div>
             )}
 
+            {guestAddon && (
+              <button
+                type="button"
+                className={`${styles.guestToggle} ${withGuest ? styles.guestToggleOn : ''}`}
+                aria-pressed={withGuest}
+                onClick={() => setWithGuest(!withGuest)}
+              >
+                {withGuest ? '✓ ' : '+ '}
+                {withGuest ? t('Gjest lagt til') : t('Legg til gjest')} (
+                {guestPrice.toLocaleString(numberLocale)} {currencyCode})
+              </button>
+            )}
+
             <button
               type="button"
               className={styles.addButton}
-              onClick={() => (selectedIds.length > 1 ? setIsConfirming(true) : handleAddToCart())}
+              // With a guest there are two kinds of seat to count, so even one
+              // date goes by way of the summary
+              onClick={() =>
+                selectedIds.length > 1 || (withGuest && guestAddon)
+                  ? setIsConfirming(true)
+                  : handleAddToCart()
+              }
               disabled={selectedIds.length === 0 || isAdding}
             >
               {isAdding

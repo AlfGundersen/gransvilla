@@ -49,8 +49,9 @@ function EventList({ list }: { list: AttendeeList }) {
           {list.product} <span className={styles.eventDate}>{list.date}</span>
         </h2>
         <p className={styles.eventCount}>
-          {list.seats} {list.seats === 1 ? 'plass' : 'plasser'} · {list.attendees.length}{' '}
-          {list.attendees.length === 1 ? 'bestilling' : 'bestillinger'}
+          {list.seats} {list.seats === 1 ? 'plass' : 'plasser'}
+          {list.guests > 0 && ` (${list.guests} ${list.guests === 1 ? 'gjest' : 'gjester'})`} ·{' '}
+          {list.attendees.length} {list.attendees.length === 1 ? 'bestilling' : 'bestillinger'}
         </p>
       </header>
 
@@ -93,7 +94,15 @@ function EventList({ list }: { list: AttendeeList }) {
             {list.attendees.map((attendee) => (
               <tr key={attendee.order}>
                 <td>{attendee.name}</td>
-                <td className={styles.number}>{attendee.quantity}</td>
+                <td className={styles.number}>
+                  {attendee.quantity}
+                  {attendee.guests > 0 && (
+                    <span className={styles.guests}>
+                      {' '}
+                      ({attendee.guests} {attendee.guests === 1 ? 'gjest' : 'gjester'})
+                    </span>
+                  )}
+                </td>
                 <td>{attendee.allergies}</td>
                 <td>
                   <Contact email={attendee.email} phone={attendee.phone} />

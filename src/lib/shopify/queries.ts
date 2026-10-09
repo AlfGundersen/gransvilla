@@ -59,6 +59,20 @@ export const COLLECTIONS_QUERY = `
                 askAllergies: metafield(namespace: "custom", key: "ask_allergies") {
                   value
                 }
+                guestAddon: metafield(namespace: "custom", key: "guest_addon") {
+                  reference {
+                    ... on Product {
+                      variants(first: 1) {
+                        nodes {
+                          id
+                          price {
+                            amount
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
               }
             }
           }
@@ -122,6 +136,20 @@ export const PRODUCTS_QUERY = `
           askAllergies: metafield(namespace: "custom", key: "ask_allergies") {
             value
           }
+          guestAddon: metafield(namespace: "custom", key: "guest_addon") {
+            reference {
+              ... on Product {
+                variants(first: 1) {
+                  nodes {
+                    id
+                    price {
+                      amount
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -180,6 +208,20 @@ export const PRODUCT_BY_HANDLE_QUERY = `
       }
       askAllergies: metafield(namespace: "custom", key: "ask_allergies") {
         value
+      }
+      guestAddon: metafield(namespace: "custom", key: "guest_addon") {
+        reference {
+          ... on Product {
+            variants(first: 1) {
+              nodes {
+                id
+                price {
+                  amount
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -529,6 +571,20 @@ export const VARIANT_FOR_CART_QUERY = `
         product {
           askAllergies: metafield(namespace: "custom", key: "ask_allergies") {
             value
+          }
+          guestAddon: metafield(namespace: "custom", key: "guest_addon") {
+            reference {
+              ... on Product {
+                variants(first: 1) {
+                  nodes {
+                    id
+                    price {
+                      amount
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }

@@ -152,6 +152,9 @@ export function CartDrawer() {
                         {formatVariantTitle(item.variantTitle, locale)}
                       </p>
                     )}
+                    {item.date && (
+                      <p className={styles.itemVariant}>{formatVariantTitle(item.date, locale)}</p>
+                    )}
                     {item.allergies && (
                       <p className={styles.itemVariant}>
                         {t('Allergier')}: {item.allergies}

@@ -51,6 +51,23 @@ export interface ShopifyProduct {
   askAllergies?: {
     value: string
   } | null
+  guestAddon?: {
+    reference: { variants?: { nodes: { id: string; price: { amount: string } }[] } } | null
+  } | null
+}
+
+/**
+ * What a guest pays on top of a lunch, and the variant that charges it.
+ *
+ * A lunch a member can bring a guest to points at this product through the
+ * metafield `custom.guest_addon` in Shopify. A guest is booked as one more
+ * lunch plus this surcharge, not as a variant of their own, because the
+ * kitchen has one number of seats a day for members and guests together — and
+ * Shopify counts stock per variant.
+ */
+export interface GuestAddon {
+  variantId: string
+  price: number
 }
 
 export interface ShopifyCartLine {
@@ -110,6 +127,8 @@ export interface Product {
   comingSoon: boolean
   /** The product page asks the buyer for allergies and sends them with the order */
   askAllergies: boolean
+  /** Set where a guest can be brought along, for a surcharge */
+  guestAddon?: GuestAddon
 }
 
 export interface CartItem {
@@ -126,6 +145,8 @@ export interface CartItem {
   }
   handle: string
   allergies?: string
+  /** The date a line is for, where the variant does not say: a guest surcharge */
+  date?: string
 }
 
 export interface Cart {

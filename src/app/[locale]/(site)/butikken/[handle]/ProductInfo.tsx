@@ -37,11 +37,18 @@ function optionDatesClass(values: string[]): string {
 }
 
 export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
+  const { guestAddon } = product
   const t = useT()
   const locale = useLocale()
   const numberLocale = locale === 'en' ? 'en-GB' : 'nb-NO'
 
   const [quantity, setQuantity] = useState(1)
+  // Guests brought along, on top of the members counted in `quantity`
+  const [guests, setGuests] = useState(0)
+  // Most who book are members on their own, so the guest row is asked for
+  const [showGuests, setShowGuests] = useState(false)
+  // A month of lunches is a wall of dates; the week ahead is what is usually wanted
+  const [showAllDates, setShowAllDates] = useState(false)
   const [allergies, setAllergies] = useState('')
   const [email, setEmail] = useState('')
   const [consent, setConsent] = useState(false)
@@ -215,6 +222,21 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
     })
   }, [dateOption, selectedDates, product.variants])
 
+  // The dates on show: the week from the first one, for a product sold day by
+  // day. A dated event has few enough to show them all, and each is a choice
+  // in its own right. A date already chosen is never hidden.
+  const visibleDates = useMemo(() => {
+    if (!dateOption) return []
+    const all = dateOption.values
+    if (showAllDates || all.some((value) => value.includes('kl'))) return all
+    const first = Math.min(...all.map((value) => variantDateOrder(value) ?? Infinity))
+    const week = 7 * 24 * 60 * 60 * 1000
+    return all.filter(
+      (value) =>
+        (variantDateOrder(value) ?? Infinity) < first + week || selectedDates.includes(value),
+    )
+  }, [dateOption, showAllDates, selectedDates])
+
   /** Keeps the single-date state and the address in step with the dates chosen. */
   const applyDates = (dates: string[]) => {
     if (!dateOption) return
@@ -238,18 +260,32 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
     )
   }
 
-  const addSelectedDates = async (quantities: number[]) => {
+  // A guest is one more lunch, which takes a seat like any other, plus the
+  // surcharge. `guestQuantities` is empty where no guest can be brought.
+  const addSelectedDates = async (quantities: number[], guestQuantities: number[] = []) => {
     setIsConfirmingDates(false)
     setIsAddingDates(true)
     try {
       await addLinesToCart(
-        selectedDateVariants.map(({ variant }, i) => ({
-          variantId: variant.id,
-          quantity: quantities[i] ?? quantity,
-        })),
+        [
+          ...selectedDateVariants.map(({ variant }, i) => ({
+            variantId: variant.id,
+            quantity: (quantities[i] ?? quantity) + (guestQuantities[i] ?? 0),
+          })),
+          // The surcharge is one variant whatever the day, so each line
+          // carries the date it is for
+          ...selectedDateVariants.flatMap(({ date }, i) =>
+            guestAddon && guestQuantities[i] > 0
+              ? [{ variantId: guestAddon.variantId, quantity: guestQuantities[i], date }]
+              : [],
+          ),
+        ].filter((line) => line.quantity > 0),
         product.askAllergies ? allergies : undefined,
       )
       setAllergies('')
+      setGuests(0)
+      setShowGuests(false)
+      setQuantity(1)
       applyDates([])
     } catch (error) {
       // Nothing was added, so the dates stay chosen, ready to try again
@@ -273,22 +309,27 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
 
   // Cap quantity when variant changes and has less stock
   useEffect(() => {
-    if (maxQuantity !== null && quantity > maxQuantity) {
+    if (maxQuantity !== null && quantity + guests > maxQuantity) {
+      setGuests(0)
       setQuantity(Math.max(1, maxQuantity))
     }
-  }, [maxQuantity, quantity])
+  }, [maxQuantity, quantity, guests])
+
+  // Members and guests share the seats, and at least one person is booked
+  const seatsFull = maxQuantity !== null && quantity + guests >= maxQuantity
+  const minQuantity = guests > 0 ? 0 : 1
 
   const decreaseQuantity = () => {
-    if (quantity > 1) setQuantity(quantity - 1)
+    if (quantity > minQuantity) setQuantity(quantity - 1)
   }
 
   const increaseQuantity = () => {
-    if (maxQuantity === null || quantity < maxQuantity) {
-      setQuantity(quantity + 1)
-    }
+    if (!seatsFull) setQuantity(quantity + 1)
   }
 
   const variantPrice = selectedVariant ? parseFloat(selectedVariant.price.amount) : product.price
+  // What a guest pays in all: the lunch and the surcharge
+  const guestPrice = guestAddon ? variantPrice + guestAddon.price : null
 
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -339,7 +380,7 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
               <fieldset key={option.name} className={styles.productInfoOptionGroup}>
                 <legend className={styles.productInfoOptionLabel}>
                   {option.name}
-                  {option === dateOption && (
+                  {option === dateOption && option.values.length > 1 && (
                     <span className={styles.productInfoOptionHint}>
                       {' '}
                       ({t('du kan velge flere')})
@@ -351,7 +392,7 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
                   role={option === dateOption ? 'group' : 'radiogroup'}
                   aria-label={option.name}
                 >
-                  {option.values.map((value) => {
+                  {(option === dateOption ? visibleDates : option.values).map((value) => {
                     const isSoldOut = soldOutValues.has(`${option.name}::${value}`)
                     // Dates are switched on and off; anything else is one of several
                     const isDate = option === dateOption
@@ -378,6 +419,15 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
                     )
                   })}
                 </div>
+                {option === dateOption && visibleDates.length < option.values.length && (
+                  <button
+                    type="button"
+                    className={styles.productInfoTextButton}
+                    onClick={() => setShowAllDates(true)}
+                  >
+                    {t('Vis flere datoer')}
+                  </button>
+                )}
                 {/* Said where the dates are picked, so the one quantity further
                     down is not taken to be the only chance to set it */}
                 {option === dateOption && selectedDateVariants.length > 1 && (
@@ -395,13 +445,22 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
       {!product.comingSoon && (
         <div className={styles.productInfoOrderRow}>
           <div className={styles.productInfoQuantitySection}>
-            <label className={styles.productInfoQuantityLabel}>{t('Antall')}</label>
+            <label className={styles.productInfoQuantityLabel}>
+              {/* Once a guest is counted beside it, this one says who it counts */}
+              {showGuests ? t('Medlem') : t('Antall')}
+              {showGuests && (
+                <span className={styles.productInfoOptionHint}>
+                  {' '}
+                  ({variantPrice.toLocaleString(numberLocale)} {product.currencyCode})
+                </span>
+              )}
+            </label>
             <div className={styles.productInfoQuantity}>
               <button
                 type="button"
                 className={styles.productInfoQuantityButton}
                 onClick={decreaseQuantity}
-                disabled={quantity <= 1}
+                disabled={quantity <= minQuantity}
                 aria-label={t('Reduser antall')}
               >
                 -
@@ -411,7 +470,7 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
                 type="button"
                 className={styles.productInfoQuantityButton}
                 onClick={increaseQuantity}
-                disabled={maxQuantity !== null && quantity >= maxQuantity}
+                disabled={seatsFull}
                 aria-label={t('Øk antall')}
               >
                 +
@@ -419,6 +478,53 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
             </div>
             {maxQuantity !== null && maxQuantity <= 10 && maxQuantity > 0 && (
               <p className={styles.productInfoStockWarning}>Kun {maxQuantity} igjen på lager</p>
+            )}
+            {guestAddon && guestPrice !== null && !showGuests && (
+              <button
+                type="button"
+                className={`${styles.productInfoOptionButton} ${styles.productInfoAddGuest}`}
+                onClick={() => {
+                  setShowGuests(true)
+                  if (!seatsFull) setGuests(1)
+                }}
+              >
+                + {t('Legg til gjest')} ({guestPrice.toLocaleString(numberLocale)}{' '}
+                {product.currencyCode})
+              </button>
+            )}
+            {guestAddon && guestPrice !== null && showGuests && (
+              <>
+                <span
+                  className={`${styles.productInfoQuantityLabel} ${styles.productInfoGuestLabel}`}
+                >
+                  {t('Gjest')}
+                  <span className={styles.productInfoOptionHint}>
+                    {' '}
+                    ({guestPrice.toLocaleString(numberLocale)} {product.currencyCode})
+                  </span>
+                </span>
+                <div className={styles.productInfoQuantity}>
+                  <button
+                    type="button"
+                    className={styles.productInfoQuantityButton}
+                    onClick={() => setGuests(guests - 1)}
+                    disabled={guests <= (quantity > 0 ? 0 : 1)}
+                    aria-label={`${t('Reduser antall')}: ${t('Gjest')}`}
+                  >
+                    -
+                  </button>
+                  <span className={styles.productInfoQuantityValue}>{guests}</span>
+                  <button
+                    type="button"
+                    className={styles.productInfoQuantityButton}
+                    onClick={() => setGuests(guests + 1)}
+                    disabled={seatsFull}
+                    aria-label={`${t('Øk antall')}: ${t('Gjest')}`}
+                  >
+                    +
+                  </button>
+                </div>
+              </>
             )}
           </div>
           {/* Beside the quantity where there is room, wrapping underneath where there is not */}
@@ -520,8 +626,25 @@ export function ProductInfo({ product, relatedEvents }: ProductInfoProps) {
             quantity={quantity}
             currencyCode={product.currencyCode}
             allergies={product.askAllergies ? allergies.trim() : undefined}
+            guest={
+              guestPrice !== null && showGuests
+                ? { price: guestPrice, quantity: guests }
+                : undefined
+            }
           />
         </>
+      ) : guestAddon && guests > 0 && selectedDateVariants.length === 1 ? (
+        // One date with a guest is two lines, so it goes the way several dates do
+        <button
+          type="button"
+          className={`${buttonStyles.button} site-button`}
+          onClick={() => addSelectedDates([quantity], [guests])}
+          disabled={isAddingDates}
+          aria-busy={isAddingDates}
+          aria-live="polite"
+        >
+          {isAddingDates ? t('Legger til...') : t('Legg i handlekurv')}
+        </button>
       ) : selectedVariant ? (
         <AddToCartButton
           variantId={selectedVariant.id}

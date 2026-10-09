@@ -11,6 +11,7 @@ import { shopifyImageUrl } from '@/lib/shopify/image'
 import { productHeroImage, warmTarget } from '@/lib/warm-image'
 import styles from './page.module.css'
 import { VariantModal } from './VariantModal'
+import type { GuestAddon } from '@/lib/shopify/types'
 
 type Variant = {
   id: string
@@ -31,6 +32,7 @@ type ProductCardProps = {
     variants: Variant[]
     comingSoon?: boolean
     askAllergies?: boolean
+    guestAddon?: GuestAddon
   }
 }
 
@@ -183,6 +185,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           variants={product.variants}
           currencyCode={product.currencyCode}
           askAllergies={product.askAllergies}
+          guestAddon={product.guestAddon}
         />
       )}
     </div>
