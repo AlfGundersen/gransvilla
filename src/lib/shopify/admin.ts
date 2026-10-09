@@ -161,8 +161,14 @@ export async function getAttendeeLists(): Promise<AttendeeList[]> {
     for (const order of data.orders.nodes) {
       if (order.cancelledAt) continue
 
-      // This order's attendee on each date, for its guest surcharges to find
-      const booked = new Map<string, { attendee: Attendee; list: AttendeeList }>()
+      // This order's attendees by the date they are booked on, for its guest
+      // surcharges to find. The surcharge also names the lunch variant, but
+      // reading a line's variant here would take access to products, which
+      // this token is kept without; two dated products on one date in one
+      // order is the only case the date alone gets wrong.
+      const booked = new Map<string, { attendee: Attendee; list: AttendeeList }[]>()
+      const book = (key: string, seat: { attendee: Attendee; list: AttendeeList }) =>
+        booked.set(key, [...(booked.get(key) ?? []), seat])
 
       for (const line of order.lineItems.nodes) {
         const date = line.variantTitle?.trim()
@@ -201,7 +207,7 @@ export async function getAttendeeLists(): Promise<AttendeeList[]> {
             '',
         }
         list.attendees.push(attendee)
-        if (!booked.has(date)) booked.set(date, { attendee, list })
+        book(date, { attendee, list })
       }
 
       for (const line of order.lineItems.nodes) {
@@ -210,13 +216,17 @@ export async function getAttendeeLists(): Promise<AttendeeList[]> {
         const date = line.customAttributes
           .find((attribute) => attribute.key === DATE_ATTRIBUTE)
           ?.value?.trim()
-        const seat = date ? booked.get(date) : undefined
-        if (!seat) continue
+        const seats = booked.get(date ?? '') ?? []
 
-        // Never more guests than the seats they sit on
-        const guests = Math.min(line.currentQuantity, seat.attendee.quantity - seat.attendee.guests)
-        seat.attendee.guests += guests
-        seat.list.guests += guests
+        // A lunch can sit on several lines of one order; the guests fill them
+        // in turn, never more than the seats there are
+        let left = line.currentQuantity
+        for (const seat of seats) {
+          const guests = Math.min(left, seat.attendee.quantity - seat.attendee.guests)
+          seat.attendee.guests += guests
+          seat.list.guests += guests
+          left -= guests
+        }
       }
     }
 

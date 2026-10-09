@@ -12,8 +12,11 @@ interface DatesSummaryProps {
   quantity: number
   currencyCode: string
   allergies?: string
-  /** Where a guest can come along: what one pays, and how many each date starts with */
-  guest?: { price: number; quantity: number }
+  /**
+   * Where a guest can come along: what one pays on top of the date's own
+   * price, and how many each date starts with
+   */
+  guest?: { surcharge: number; quantity: number }
   onCancel: () => void
   /**
    * Called with the seats settled on for each date, in the order of `dates`,
@@ -62,7 +65,7 @@ export function DatesSummary({
     (sum, date, i) =>
       removed.includes(i)
         ? sum
-        : sum + date.price * quantities[i] + (guest?.price ?? 0) * guests[i],
+        : sum + date.price * quantities[i] + (guest ? date.price + guest.surcharge : 0) * guests[i],
     0,
   )
 
@@ -82,7 +85,7 @@ export function DatesSummary({
             label: t('Gjest'),
             value: guests[i],
             min: quantities[i] > 0 ? 0 : 1,
-            price: guest.price,
+            price: dates[i].price + guest.surcharge,
             step: (by: number) => stepGuests(i, by),
           },
         ]
@@ -96,7 +99,7 @@ export function DatesSummary({
           if (removed.includes(i)) return null
           const title = formatVariantTitle(date.title, locale)
           return (
-            <li key={date.title} className={styles.date}>
+            <li key={date.title} className={`${styles.date} ${guest ? styles.dateStacked : ''}`}>
               <span className={styles.dateTitle}>{title}</span>
               <span className={styles.rows}>
                 {rows(i).map((row) => (

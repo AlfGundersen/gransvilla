@@ -25,6 +25,27 @@
   font-size: var(--text-sm);
 }
 
+/* With two kinds of seat each date is a small block of its own: the date as
+   its heading, the bin beside it, and a row for members and one for guests */
+.dateStacked {
+  grid-template-columns: 1fr auto;
+  row-gap: var(--space-xs);
+  padding: var(--space-md) 0;
+}
+
+.dateStacked .dateTitle {
+  font-size: var(--text-lg);
+}
+
+.dateStacked .rows {
+  grid-row: 2;
+  grid-column: 1 / -1;
+}
+
+.dateStacked .rowLabel {
+  color: var(--color-foreground);
+}
+
 /* No room for all three side by side: the date and its bin above the seats */
 @media (max-width: 480px) {
   .date {

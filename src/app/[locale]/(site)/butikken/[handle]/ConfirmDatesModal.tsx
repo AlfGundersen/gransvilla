@@ -18,8 +18,8 @@ interface ConfirmDatesModalProps {
   quantity: number
   currencyCode: string
   allergies?: string
-  /** Where a guest can come along: what one pays, and how many each date starts with */
-  guest?: { price: number; quantity: number }
+  /** Where a guest can come along: the surcharge, and how many each date starts with */
+  guest?: { surcharge: number; quantity: number }
 }
 
 /**
