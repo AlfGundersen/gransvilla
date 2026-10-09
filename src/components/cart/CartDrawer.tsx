@@ -169,7 +169,7 @@ export function CartDrawer() {
                       )}
                       {item.allergies && (
                         <p className={styles.itemVariant}>
-                          {t('Allergier')}: {item.allergies}
+                          {t('Mathensyn')}: {item.allergies}
                         </p>
                       )}
                       <p className={styles.itemPrice}>

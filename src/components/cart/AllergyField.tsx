@@ -24,7 +24,7 @@ export function AllergyField({ value, onChange, disabled }: AllergyFieldProps) {
   return (
     <div className={styles.field}>
       <label htmlFor={id} className={styles.label}>
-        {t('Allergier')}
+        {t('Mathensyn')}
       </label>
       <textarea
         id={id}

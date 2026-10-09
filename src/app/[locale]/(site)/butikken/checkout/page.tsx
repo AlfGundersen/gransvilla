@@ -107,7 +107,7 @@ export default function CheckoutPage() {
                 )}
                 {item.allergies && (
                   <p className={styles.checkoutItemVariant}>
-                    {t('Allergier')}: {item.allergies}
+                    {t('Mathensyn')}: {item.allergies}
                   </p>
                 )}
                 <p className={styles.checkoutItemMeta}>

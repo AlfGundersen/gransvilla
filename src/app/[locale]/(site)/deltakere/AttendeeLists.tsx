@@ -57,7 +57,7 @@ function EventList({ list }: { list: AttendeeList }) {
 
       {withAllergies.length > 0 && (
         <div className={styles.allergies}>
-          <h3 className={styles.allergiesTitle}>Allergier</h3>
+          <h3 className={styles.allergiesTitle}>Mathensyn</h3>
           <ul className={styles.allergiesList}>
             {withAllergies.map((attendee) => (
               <li key={attendee.order}>
@@ -85,7 +85,7 @@ function EventList({ list }: { list: AttendeeList }) {
               <th scope="col" className={styles.number}>
                 Antall
               </th>
-              <th scope="col">Allergier</th>
+              <th scope="col">Mathensyn</th>
               <th scope="col">Kontakt</th>
               <th scope="col">Bestilling</th>
             </tr>

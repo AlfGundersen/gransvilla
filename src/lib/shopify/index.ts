@@ -28,6 +28,10 @@ export type Collection = {
  * The line item attribute a buyer's allergies travel under. Shopify shows it
  * beneath the line in checkout, on the order and on the packing slip, so the
  * key is the Norwegian word the kitchen reads.
+ *
+ * The site calls the field "Mathensyn" now. The key is left as it was: the
+ * Shopify Flow that tags these orders looks for it by name, and orders
+ * already placed carry it.
  */
 export const ALLERGY_ATTRIBUTE = 'Allergier'
 
