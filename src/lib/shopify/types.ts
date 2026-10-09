@@ -3,6 +3,19 @@ export interface ShopifyImage {
   altText: string | null
   width: number
   height: number
+  /** Where in the image to keep in view when it is cropped, each 0–1 from the top left */
+  focalPoint?: { x: number; y: number }
+}
+
+/**
+ * A product's media, asked for beside its images for the one thing the image
+ * itself does not carry: the focal point set on it in the Shopify admin.
+ */
+export interface ShopifyMedia {
+  nodes: {
+    image?: { url: string }
+    presentation?: { asJson: { focalPoint?: { x: string; y: string } } | null } | null
+  }[]
 }
 
 export interface ShopifyPrice {
@@ -36,6 +49,7 @@ export interface ShopifyProduct {
       node: ShopifyImage
     }[]
   }
+  media?: ShopifyMedia
   variants: {
     edges: {
       node: ShopifyProductVariant
@@ -92,6 +106,7 @@ export interface ShopifyCartLine {
           }
         }[]
       }
+      media?: ShopifyMedia
     }
   }
 }
@@ -142,6 +157,7 @@ export interface CartItem {
   image?: {
     url: string
     altText: string | null
+    focalPoint?: { x: number; y: number }
   }
   handle: string
   allergies?: string

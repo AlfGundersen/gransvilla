@@ -7,6 +7,7 @@ import { useCart } from '@/context/CartContext'
 import { localeHref } from '@/lib/i18n/href'
 import { useLocale, useT } from '@/lib/i18n/provider'
 import { formatVariantTitle } from '@/lib/i18n/variant-date'
+import { focalPosition } from '@/lib/shopify/image'
 import type { CartItem } from '@/lib/shopify/types'
 import styles from './CartDrawer.module.css'
 
@@ -143,6 +144,7 @@ export function CartDrawer() {
                           src={item.image.url}
                           alt={item.image.altText || item.title}
                           fill
+                          style={{ objectPosition: focalPosition(item.image) }}
                           sizes="80px"
                         />
                       )}

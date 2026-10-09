@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { useState } from 'react'
-import { shopifyImageUrl } from '@/lib/shopify/image'
+import { focalPosition, shopifyImageUrl } from '@/lib/shopify/image'
 import { productHeroImage } from '@/lib/warm-image'
 import styles from './ProductGallery.module.css'
 
@@ -11,6 +11,7 @@ interface ProductImage {
   altText: string | null
   width?: number
   height?: number
+  focalPoint?: { x: number; y: number }
 }
 
 interface ProductGalleryProps {
@@ -42,6 +43,7 @@ export function ProductGallery({ images, title, handle }: ProductGalleryProps) {
           {...productHeroImage(selectedImage.url)}
           alt={selectedImage.altText || title}
           className={styles.productGalleryImage}
+          style={{ objectPosition: focalPosition(selectedImage) }}
           priority
         />
       </div>
@@ -62,6 +64,7 @@ export function ProductGallery({ images, title, handle }: ProductGalleryProps) {
                 alt={image.altText || `${title} ${idx + 1}`}
                 fill
                 className={styles.productGalleryImage}
+                style={{ objectPosition: focalPosition(image) }}
                 sizes="80px"
               />
             </button>

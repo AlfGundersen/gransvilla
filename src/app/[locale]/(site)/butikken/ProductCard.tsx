@@ -7,7 +7,7 @@ import { WarmImage } from '@/components/WarmImage'
 import { useCart } from '@/context/CartContext'
 import { localeHref } from '@/lib/i18n/href'
 import { useLocale, useT } from '@/lib/i18n/provider'
-import { shopifyImageUrl } from '@/lib/shopify/image'
+import { focalPosition, shopifyImageUrl } from '@/lib/shopify/image'
 import { productHeroImage, warmTarget } from '@/lib/warm-image'
 import styles from './page.module.css'
 import { VariantModal } from './VariantModal'
@@ -28,7 +28,11 @@ type ProductCardProps = {
     description: string
     price: number
     currencyCode: string
-    images: { url: string; altText: string | null }[]
+    images: {
+      url: string
+      altText: string | null
+      focalPoint?: { x: number; y: number }
+    }[]
     variants: Variant[]
     comingSoon?: boolean
     askAllergies?: boolean
@@ -103,6 +107,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             alt={product.images[0].altText || product.title}
             fill
             className={styles.shopImage}
+            style={{ objectPosition: focalPosition(product.images[0]) }}
             sizes="(max-width: 767px) 100vw, 33vw"
           />
         )}

@@ -6,7 +6,7 @@ import { localeHref } from '@/lib/i18n/href'
 import { getTranslator, translateContent } from '@/lib/i18n/server'
 import { getHiddenProductHandles } from '@/lib/sanity/hiddenProducts'
 import { getProducts } from '@/lib/shopify'
-import { shopifyImageUrl } from '@/lib/shopify/image'
+import { focalPosition, shopifyImageUrl } from '@/lib/shopify/image'
 import { productHeroImage, warmTarget } from '@/lib/warm-image'
 import type { FeaturedProductSection } from '@/types/sanity'
 import styles from './FeaturedProductSection.module.css'
@@ -86,6 +86,7 @@ export async function FeaturedProductSectionComponent({
                 width={productImage.width || 800}
                 height={productImage.height || 600}
                 className={styles.featProductImage}
+                style={{ objectPosition: focalPosition(productImage) }}
               />
             </SharedImage>
           </div>

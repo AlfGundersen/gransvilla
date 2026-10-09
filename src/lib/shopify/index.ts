@@ -13,7 +13,7 @@ import {
   UPDATE_CART_MUTATION,
   VARIANT_FOR_CART_QUERY,
 } from './queries'
-import type { Cart, CartItem, Product, ShopifyCart, ShopifyProduct } from './types'
+import type { Cart, CartItem, Product, ShopifyCart, ShopifyMedia, ShopifyProduct } from './types'
 
 // Collection type
 export type Collection = {
@@ -48,6 +48,30 @@ function displayCurrency(code: string): string {
 }
 
 // Helper to transform Shopify product to simplified format
+/**
+ * Puts the focal point set on an image in the Shopify admin onto the image.
+ *
+ * It lives on the product's media rather than on the image, so the two are
+ * matched on the file they share. An image nobody has set a focal point on is
+ * left without one, and is cropped around its middle as before.
+ */
+function withFocalPoints<T extends { url: string }>(
+  images: T[],
+  media?: ShopifyMedia,
+): (T & { focalPoint?: { x: number; y: number } })[] {
+  const file = (url: string) => url.split('?')[0]
+  return images.map((image) => {
+    const point = media?.nodes.find(
+      (node) => node.image && file(node.image.url) === file(image.url),
+    )?.presentation?.asJson?.focalPoint
+    const x = Number(point?.x)
+    const y = Number(point?.y)
+    return point && Number.isFinite(x) && Number.isFinite(y)
+      ? { ...image, focalPoint: { x, y } }
+      : image
+  })
+}
+
 function transformProduct(product: ShopifyProduct): Product {
   // Shopify does not know a variant titled `08.11.2026 kl. 12:00` is a date,
   // so one that has been stays for sale until it is deleted there. Dropped
@@ -91,7 +115,10 @@ function transformProduct(product: ShopifyProduct): Product {
     descriptionHtml: product.descriptionHtml,
     price,
     currencyCode: displayCurrency(product.priceRange.minVariantPrice.currencyCode),
-    images: product.images.edges.map((edge) => edge.node),
+    images: withFocalPoints(
+      product.images.edges.map((edge) => edge.node),
+      product.media,
+    ),
     variants,
     options,
     comingSoon: product.comingSoon?.value === 'true',
@@ -115,7 +142,10 @@ function transformCart(cart: ShopifyCart): Cart {
       quantity: edge.node.quantity,
       price: parseFloat(edge.node.merchandise.price.amount),
       currencyCode: displayCurrency(edge.node.merchandise.price.currencyCode),
-      image: edge.node.merchandise.product.images.edges[0]?.node,
+      image: withFocalPoints(
+        edge.node.merchandise.product.images.edges.slice(0, 1).map((image) => image.node),
+        edge.node.merchandise.product.media,
+      )[0],
       handle: edge.node.merchandise.product.handle,
       allergies:
         edge.node.attributes.find((attribute) => attribute.key === ALLERGY_ATTRIBUTE)?.value ||
