@@ -169,7 +169,7 @@ export function DatesSummary({
 
       {allergies && (
         <p className={styles.allergies}>
-          {t('Allergier')}: {allergies}
+          {t('Mathensyn')}: {allergies}
         </p>
       )}
 
