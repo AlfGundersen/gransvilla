@@ -31,6 +31,9 @@ export type Collection = {
  */
 export const ALLERGY_ATTRIBUTE = 'Allergier'
 
+/** The date a line is for, where the variant itself has none: a guest surcharge */
+export const DATE_ATTRIBUTE = 'Dato'
+
 type CartLineAttribute = { key: string; value: string }
 
 function displayCurrency(code: string): string {
@@ -45,6 +48,7 @@ function transformProduct(product: ShopifyProduct): Product {
   const allVariants = product.variants.edges.map((edge) => edge.node)
   const variants = allVariants.filter((variant) => !isPastVariantDate(variant.title))
   const droppedPast = variants.length < allVariants.length
+  const guestAddon = product.guestAddon?.reference?.variants?.nodes[0]
 
   // The options list is separate from the variants, and would go on offering
   // a date no variant is left to back.
@@ -85,6 +89,9 @@ function transformProduct(product: ShopifyProduct): Product {
     options,
     comingSoon: product.comingSoon?.value === 'true',
     askAllergies: product.askAllergies?.value === 'true',
+    guestAddon: guestAddon
+      ? { variantId: guestAddon.id, price: parseFloat(guestAddon.price.amount) }
+      : undefined,
   }
 }
 
@@ -105,6 +112,9 @@ function transformCart(cart: ShopifyCart): Cart {
       handle: edge.node.merchandise.product.handle,
       allergies:
         edge.node.attributes.find((attribute) => attribute.key === ALLERGY_ATTRIBUTE)?.value ||
+        undefined,
+      date:
+        edge.node.attributes.find((attribute) => attribute.key === DATE_ATTRIBUTE)?.value ||
         undefined,
     })),
     totalAmount: parseFloat(cart.cost.totalAmount.amount),

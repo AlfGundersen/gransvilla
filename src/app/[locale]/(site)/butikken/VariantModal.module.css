@@ -22,7 +22,7 @@
   position: relative;
   background: var(--color-background);
   border: 1px solid var(--color-foreground);
-  max-width: 520px;
+  max-width: 600px;
   width: 100%;
   max-height: 85vh;
   overflow-y: auto;
@@ -156,6 +156,31 @@
 
 .allergies {
   margin-bottom: var(--space-lg);
+}
+
+/* Bringing a guest: looks like a date that can be switched on */
+.guestToggle {
+  display: block;
+  margin-bottom: var(--space-lg);
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-foreground);
+  font: inherit;
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+.guestToggleOn {
+  border-color: var(--color-foreground);
+  background: var(--color-foreground);
+  color: var(--color-background);
+}
+
+:global(html.inverted) .guestToggleOn {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: #fff;
 }
 
 .addButton {

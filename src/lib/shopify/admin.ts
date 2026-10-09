@@ -1,6 +1,6 @@
 import 'server-only'
 import { isPastVariantDate, variantDateOrder } from '@/lib/i18n/variant-date'
-import { ALLERGY_ATTRIBUTE } from './index'
+import { ALLERGY_ATTRIBUTE, DATE_ATTRIBUTE } from './index'
 
 const domain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN!
 
@@ -88,6 +88,8 @@ export interface Attendee {
   order: string
   name: string
   quantity: number
+  /** How many of those seats are guests, paid for with the guest surcharge */
+  guests: number
   allergies: string
   /** Checkout asks for one or the other, so either may be empty */
   email: string
@@ -100,6 +102,8 @@ export interface AttendeeList {
   date: string
   past: boolean
   seats: number
+  /** How many of the seats are guests */
+  guests: number
   attendees: Attendee[]
 }
 
@@ -138,6 +142,10 @@ async function adminFetch<T>(query: string, variables: Record<string, unknown>):
  * cancelled order is gone and a refunded seat is no longer counted. Only
  * lines sold on a dated variant are attendees; a cup bought in the same order
  * is not.
+ *
+ * A guest is sold as one more seat plus a surcharge line, which has no dated
+ * variant but carries the date as an attribute. That line is not a seat of its
+ * own: it says how many of the order's seats that day are guests.
  */
 export async function getAttendeeLists(): Promise<AttendeeList[]> {
   const lists = new Map<string, AttendeeList & { order: number }>()
@@ -153,6 +161,9 @@ export async function getAttendeeLists(): Promise<AttendeeList[]> {
     for (const order of data.orders.nodes) {
       if (order.cancelledAt) continue
 
+      // This order's attendee on each date, for its guest surcharges to find
+      const booked = new Map<string, { attendee: Attendee; list: AttendeeList }>()
+
       for (const line of order.lineItems.nodes) {
         const date = line.variantTitle?.trim()
         const dateOrder = date ? variantDateOrder(date) : null
@@ -166,6 +177,7 @@ export async function getAttendeeLists(): Promise<AttendeeList[]> {
             date,
             past: isPastVariantDate(date, now),
             seats: 0,
+            guests: 0,
             attendees: [],
             order: dateOrder,
           }
@@ -173,10 +185,11 @@ export async function getAttendeeLists(): Promise<AttendeeList[]> {
         }
 
         list.seats += line.currentQuantity
-        list.attendees.push({
+        const attendee: Attendee = {
           order: order.name,
           name: order.customer?.displayName || order.billingAddress?.name || 'Uten navn',
           quantity: line.currentQuantity,
+          guests: 0,
           allergies:
             line.customAttributes.find((attribute) => attribute.key === ALLERGY_ATTRIBUTE)?.value ||
             '',
@@ -186,7 +199,24 @@ export async function getAttendeeLists(): Promise<AttendeeList[]> {
             order.billingAddress?.phone ||
             order.customer?.defaultPhoneNumber?.phoneNumber ||
             '',
-        })
+        }
+        list.attendees.push(attendee)
+        if (!booked.has(date)) booked.set(date, { attendee, list })
+      }
+
+      for (const line of order.lineItems.nodes) {
+        if (line.currentQuantity <= 0 || variantDateOrder(line.variantTitle?.trim() ?? '') !== null)
+          continue
+        const date = line.customAttributes
+          .find((attribute) => attribute.key === DATE_ATTRIBUTE)
+          ?.value?.trim()
+        const seat = date ? booked.get(date) : undefined
+        if (!seat) continue
+
+        // Never more guests than the seats they sit on
+        const guests = Math.min(line.currentQuantity, seat.attendee.quantity - seat.attendee.guests)
+        seat.attendee.guests += guests
+        seat.list.guests += guests
       }
     }
 

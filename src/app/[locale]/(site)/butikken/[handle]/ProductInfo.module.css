@@ -187,6 +187,36 @@
   color: var(--color-secondary);
 }
 
+/* Looks like the date buttons, so it reads as something to press */
+.productInfoAddGuest {
+  align-self: flex-start;
+  margin-top: var(--space-xs);
+  white-space: nowrap;
+}
+
+/* The guest counter sits under the first, a little apart from it */
+.productInfoGuestLabel {
+  margin-top: var(--space-sm);
+}
+
+/* A quiet way to more: the rest of the dates, the guest row */
+.productInfoTextButton {
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-foreground);
+  font: inherit;
+  font-size: var(--text-sm);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+
+.productInfoTextButton:hover {
+  color: var(--color-accent);
+}
+
 .productInfoQuantitySection {
   display: flex;
   flex-direction: column;

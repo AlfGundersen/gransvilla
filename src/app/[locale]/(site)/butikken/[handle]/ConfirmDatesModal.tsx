@@ -10,7 +10,7 @@ interface ConfirmDatesModalProps {
   isOpen: boolean
   onClose: () => void
   /** Called with the seats settled on for each date, in the order of `dates` */
-  onConfirm: (quantities: number[]) => void
+  onConfirm: (quantities: number[], guests: number[]) => void
   productTitle: string
   /** The dates about to be added, in calendar order */
   dates: { title: string; price: number; max?: number | null }[]
@@ -18,6 +18,8 @@ interface ConfirmDatesModalProps {
   quantity: number
   currencyCode: string
   allergies?: string
+  /** Where a guest can come along: what one pays, and how many each date starts with */
+  guest?: { price: number; quantity: number }
 }
 
 /**
@@ -36,6 +38,7 @@ export function ConfirmDatesModal({
   quantity,
   currencyCode,
   allergies,
+  guest,
 }: ConfirmDatesModalProps) {
   const t = useT()
 
@@ -88,6 +91,7 @@ export function ConfirmDatesModal({
           quantity={quantity}
           currencyCode={currencyCode}
           allergies={allergies}
+          guest={guest}
           onCancel={onClose}
           onConfirm={onConfirm}
         />

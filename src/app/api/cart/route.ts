@@ -1,9 +1,10 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { apiMessages } from '@/lib/api-messages'
-import { isPastVariantDate } from '@/lib/i18n/variant-date'
+import { isPastVariantDate, variantDateOrder } from '@/lib/i18n/variant-date'
 import { rateLimit } from '@/lib/rate-limit'
 import {
   ALLERGY_ATTRIBUTE,
+  DATE_ATTRIBUTE,
   addLinesToCart,
   createCartWithLines,
   getCart,
@@ -64,9 +65,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Between 1 and 40 lines are required' }, { status: 400 })
     }
 
-    const wanted: { variantId: string; quantity: number }[] = []
+    const wanted: { variantId: string; quantity: number; date?: string }[] = []
     for (const line of requested) {
-      const { variantId, quantity } = (line ?? {}) as { variantId?: unknown; quantity?: unknown }
+      const { variantId, quantity, date } = (line ?? {}) as {
+        variantId?: unknown
+        quantity?: unknown
+        date?: unknown
+      }
 
       if (!isNonEmptyString(variantId)) {
         return NextResponse.json({ error: 'Valid variantId is required' }, { status: 400 })
@@ -79,7 +84,13 @@ export async function POST(request: NextRequest) {
         )
       }
 
-      wanted.push({ variantId, quantity })
+      // The date a guest surcharge is for. Only a date is let through, so
+      // this cannot be used to write arbitrary text onto an order line
+      if (date !== undefined && (typeof date !== 'string' || variantDateOrder(date) === null)) {
+        return NextResponse.json({ error: 'Date must be a date' }, { status: 400 })
+      }
+
+      wanted.push({ variantId, quantity, date })
     }
 
     if (allergies !== undefined && typeof allergies !== 'string') {
@@ -92,19 +103,25 @@ export async function POST(request: NextRequest) {
     }
 
     // A page rendered before the date passed can still offer it
-    if (variants.some((variant) => variant && isPastVariantDate(variant.title))) {
+    if (
+      variants.some((variant) => variant && isPastVariantDate(variant.title)) ||
+      wanted.some((line) => line.date && isPastVariantDate(line.date))
+    ) {
       return NextResponse.json({ error: apiMessages.datePassed }, { status: 409 })
     }
 
     // Only kept for a product that asks for it, so the attribute cannot be
     // used to write arbitrary text onto any order line.
     const allergyText = (allergies ?? '').replace(/\s+/g, ' ').trim().slice(0, MAX_ALLERGIES_LENGTH)
-    const lines = wanted.map((line, i) => ({
-      ...line,
-      attributes:
-        allergyText && variants[i]?.askAllergies
+    const lines = wanted.map(({ variantId, quantity, date }, i) => ({
+      variantId,
+      quantity,
+      attributes: [
+        ...(date ? [{ key: DATE_ATTRIBUTE, value: date }] : []),
+        ...(allergyText && variants[i]?.askAllergies
           ? [{ key: ALLERGY_ATTRIBUTE, value: allergyText }]
-          : [],
+          : []),
+      ],
     }))
 
     let cart
